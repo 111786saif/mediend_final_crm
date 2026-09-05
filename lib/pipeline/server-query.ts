@@ -471,27 +471,9 @@ export function statusBucketWhere(
       }
     case 'closed':
       return {
-        AND: [
-          {
-            OR: [
-              contains('closed'),
-              contains('call done'),
-              contains('c/w done'),
-              contains('wa done'),
-              contains('scan done'),
-              contains('order booked'),
-              contains('policy booked'),
-              { status: '24' },
-              { status: '25' },
-              { status: '29' },
-              { status: '30' },
-              { status: '31' },
-              { status: '32' },
-              { status: '38' },
-              { status: '40' },
-            ],
-          },
-          { NOT: contains('ipd done') },
+        OR: [
+          { status: { equals: 'Closed', mode: 'insensitive' } },
+          { status: '25' },
         ],
       }
     default:
@@ -596,22 +578,34 @@ export function buildPipelineFiltersWhere(
     const globalSearchWhere = buildPipelineGlobalSearchWhere(params.search)
 
     if (phone) {
+      const searchTargets = [phone.last10]
+      if (phone.last10.length === 10) {
+        searchTargets.push(`${phone.last10.slice(0, 5)} ${phone.last10.slice(5)}`)
+      }
       and.push({
         OR: [
           globalSearchWhere,
-          { phoneNumber: { contains: phone.last10 } },
-          { alternateNumber: { contains: phone.last10 } },
-          { whatsapp: { contains: phone.last10 } },
+          ...searchTargets.flatMap((target) => [
+            { phoneNumber: { contains: target } },
+            { alternateNumber: { contains: target } },
+            { whatsapp: { contains: target } },
+          ]),
         ],
       })
     } else if (pureDigits.length > 0 && /^[\d\s+\-().]+$/.test(trimmedSearch)) {
       const searchTarget = pureDigits.length >= 10 ? pureDigits.slice(-10) : pureDigits
+      const searchTargets = [searchTarget]
+      if (searchTarget.length === 10) {
+        searchTargets.push(`${searchTarget.slice(0, 5)} ${searchTarget.slice(5)}`)
+      }
       and.push({
         OR: [
           globalSearchWhere,
-          { phoneNumber: { contains: searchTarget } },
-          { alternateNumber: { contains: searchTarget } },
-          { whatsapp: { contains: searchTarget } },
+          ...searchTargets.flatMap((target) => [
+            { phoneNumber: { contains: target } },
+            { alternateNumber: { contains: target } },
+            { whatsapp: { contains: target } },
+          ]),
         ],
       })
     } else {
@@ -1016,6 +1010,7 @@ function buildNumericGlobalSearchWhere(query: string): Prisma.LeadWhereInput | u
 
   const parsed = Number.parseInt(query, 10)
   if (!Number.isFinite(parsed)) return undefined
+  if (parsed < -2147483648 || parsed > 2147483647) return undefined
 
   const or: Prisma.LeadWhereInput[] = []
 
@@ -1023,9 +1018,11 @@ function buildNumericGlobalSearchWhere(query: string): Prisma.LeadWhereInput | u
     or.push({ age: parsed })
   }
 
-  or.push({ duplCount: parsed })
+  if (parsed >= 0 && parsed <= 1000) {
+    or.push({ duplCount: parsed })
+  }
 
-  return or.length === 1 ? or[0] : { OR: or }
+  return or.length === 0 ? undefined : or.length === 1 ? or[0] : { OR: or }
 }
 
 function buildPipelineGlobalSearchWhere(query: string): Prisma.LeadWhereInput {
@@ -1060,9 +1057,15 @@ function buildPipelineGlobalSearchWhere(query: string): Prisma.LeadWhereInput {
   // If query contains 4 or more digits, include phone search
   const digitMatch = q.replace(/\D/g, '')
   if (digitMatch.length >= 4) {
-    or.push({ phoneNumber: { contains: digitMatch } })
-    or.push({ alternateNumber: { contains: digitMatch } })
-    or.push({ whatsapp: { contains: digitMatch } })
+    const phoneTargets = [digitMatch]
+    if (digitMatch.length === 10) {
+      phoneTargets.push(`${digitMatch.slice(0, 5)} ${digitMatch.slice(5)}`)
+    }
+    for (const target of phoneTargets) {
+      or.push({ phoneNumber: { contains: target } })
+      or.push({ alternateNumber: { contains: target } })
+      or.push({ whatsapp: { contains: target } })
+    }
   }
 
   if (numericWhere) {

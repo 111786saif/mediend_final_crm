@@ -62,6 +62,9 @@ export async function GET(request: NextRequest) {
         alternateNumber: canViewPhone
           ? lead.alternateNumber
           : (lead.alternateNumber ? maskPhoneNumber(lead.alternateNumber) : null),
+        whatsapp: canViewPhone
+          ? lead.whatsapp
+          : (lead.whatsapp ? maskPhoneNumber(lead.whatsapp) : null),
       }
       delete (base as Record<string, unknown>).leadRemarkEntries
       return base

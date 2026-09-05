@@ -41,6 +41,7 @@ export async function GET(request: NextRequest) {
     // Find leads with chat activity, ordered by most recent message
     const latestPerLead = await prisma.caseChatMessage.groupBy({
       by: ['leadId'],
+      where: Object.keys(where).length > 0 ? { lead: where } : undefined,
       _max: { createdAt: true },
       orderBy: { _max: { createdAt: 'desc' } },
       take: 200,

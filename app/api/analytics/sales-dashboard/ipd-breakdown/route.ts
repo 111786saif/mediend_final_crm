@@ -22,8 +22,9 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
+    const tz = searchParams.get('tz')
 
-    const dateFilter = buildDateRange(startDate, endDate)
+    const dateFilter = buildDateRange(startDate, endDate, tz)
 
     const bdIdFilter = await getSalesDashboardBdIdFilter(user)
     const teamScope: Prisma.LeadWhereInput = bdIdFilter

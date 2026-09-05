@@ -1317,27 +1317,35 @@ function BdPerformanceTab({
 
 function SourceCampaignTab({ dateParams, variant }: { dateParams: string; variant: DashboardVariant }) {
   const [view, setView] = useState<'source' | 'campaign'>('source')
+  const [timezone, setTimezone] = useState<'IST' | 'UTC'>('UTC')
 
   const getQueryString = () => {
-    const qp = dateParams ? '?' + dateParams : ''
-    if (typeof window === 'undefined') return qp
-    const params = new URLSearchParams(window.location.search)
-    const dateSearchParams = new URLSearchParams(dateParams)
-    for (const [key, val] of dateSearchParams.entries()) {
-      params.set(key, val)
+    const params = new URLSearchParams()
+    if (dateParams) {
+      const dateSearchParams = new URLSearchParams(dateParams)
+      for (const [key, val] of dateSearchParams.entries()) {
+        params.set(key, val)
+      }
     }
+    if (typeof window !== 'undefined') {
+      const windowParams = new URLSearchParams(window.location.search)
+      for (const [key, val] of windowParams.entries()) {
+        params.set(key, val)
+      }
+    }
+    params.set('tz', timezone)
     return '?' + params.toString()
   }
 
   const qp = getQueryString()
 
   const { data: ipdBreakdown } = useQuery<IpdBreakdown>({
-    queryKey: ['sales-dashboard', variant, 'ipd-breakdown', dateParams, qp],
+    queryKey: ['sales-dashboard', variant, 'ipd-breakdown', dateParams, timezone, qp],
     queryFn: () => apiGet<IpdBreakdown>(`/api/analytics/sales-dashboard/ipd-breakdown${qp}`),
   })
 
   const { data: leadsBreakdown } = useQuery<LeadsBreakdown>({
-    queryKey: ['sales-dashboard', variant, 'leads-breakdown', dateParams, qp],
+    queryKey: ['sales-dashboard', variant, 'leads-breakdown', dateParams, timezone, qp],
     queryFn: () => apiGet<LeadsBreakdown>(`/api/analytics/sales-dashboard/leads-breakdown${qp}`),
   })
 
@@ -1355,37 +1363,66 @@ function SourceCampaignTab({ dateParams, variant }: { dateParams: string; varian
   const pieData = rows.slice(0, 8).filter((r) => r.ipd > 0)
 
   const { data: teamMappingData } = useQuery<any[]>({
-    queryKey: ['sales-dashboard', variant, 'team-mappings', view, dateParams, qp],
+    queryKey: ['sales-dashboard', variant, 'team-mappings', view, dateParams, timezone, qp],
     queryFn: () => apiGet<any[]>(`/api/analytics/sales-dashboard/team-mappings${qp}&type=${view}`),
   })
 
-
-
   return (
     <div className="space-y-4">
-      <div className="bg-muted p-1 rounded-xl inline-flex gap-1 border border-border shadow-inner">
-        <button
-          onClick={() => setView('source')}
-          className={cn(
-            "px-5 py-2 rounded-lg text-xs transition-all duration-300 font-bold uppercase tracking-wider",
-            view === 'source'
-              ? "bg-background text-foreground shadow-sm"
-              : "bg-transparent text-muted-foreground hover:text-foreground hover:bg-background/50"
-          )}
-        >
-          Source
-        </button>
-        <button
-          onClick={() => setView('campaign')}
-          className={cn(
-            "px-5 py-2 rounded-lg text-xs transition-all duration-300 font-bold uppercase tracking-wider",
-            view === 'campaign'
-              ? "bg-background text-foreground shadow-sm"
-              : "bg-transparent text-muted-foreground hover:text-foreground hover:bg-background/50"
-          )}
-        >
-          Campaign
-        </button>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="bg-muted p-1 rounded-xl inline-flex gap-1 border border-border shadow-inner">
+          <button
+            onClick={() => setView('source')}
+            className={cn(
+              "px-5 py-2 rounded-lg text-xs transition-all duration-300 font-bold uppercase tracking-wider",
+              view === 'source'
+                ? "bg-background text-foreground shadow-sm"
+                : "bg-transparent text-muted-foreground hover:text-foreground hover:bg-background/50"
+            )}
+          >
+            Source
+          </button>
+          <button
+            onClick={() => setView('campaign')}
+            className={cn(
+              "px-5 py-2 rounded-lg text-xs transition-all duration-300 font-bold uppercase tracking-wider",
+              view === 'campaign'
+                ? "bg-background text-foreground shadow-sm"
+                : "bg-transparent text-muted-foreground hover:text-foreground hover:bg-background/50"
+            )}
+          >
+            Campaign
+          </button>
+        </div>
+
+        {/* Timezone Toggle (IST vs UTC) */}
+        <div className="flex items-center gap-2 bg-muted/60 p-1 rounded-xl border border-border">
+          <span className="text-[11px] font-semibold text-muted-foreground px-2">Timezone Filter:</span>
+          <button
+            type="button"
+            onClick={() => setTimezone('IST')}
+            className={cn(
+              "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200",
+              timezone === 'IST'
+                ? "bg-indigo-600 text-white shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            IST (UTC+5:30)
+          </button>
+          <button
+            type="button"
+            onClick={() => setTimezone('UTC')}
+            className={cn(
+              "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200",
+              timezone === 'UTC'
+                ? "bg-indigo-600 text-white shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            UTC
+          </button>
+        </div>
       </div>
 
       {/* Pie + table side by side */}

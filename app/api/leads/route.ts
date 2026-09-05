@@ -775,12 +775,14 @@ export async function GET(request: NextRequest) {
         const rest = { ...base } as Record<string, unknown>
         delete rest.phoneNumber
         delete rest.alternateNumber
+        delete rest.whatsapp
         return rest as typeof base
       }
       return {
         ...base,
         phoneNumber: canViewPhone ? lead.phoneNumber : (lead.phoneNumber ? maskPhoneNumber(lead.phoneNumber) : null),
         alternateNumber: canViewPhone ? lead.alternateNumber : (lead.alternateNumber ? maskPhoneNumber(lead.alternateNumber) : null),
+        whatsapp: canViewPhone ? lead.whatsapp : (lead.whatsapp ? maskPhoneNumber(lead.whatsapp) : null),
       }
     })
 

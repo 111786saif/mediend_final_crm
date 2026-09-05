@@ -169,6 +169,7 @@ type IncomingLeadRecord = {
     patientName: string | null
     phone: string | null
     alternatePhone?: string | null
+    whatsapp?: string | null
     email: string | null
   }
   campaign: {
@@ -182,6 +183,7 @@ type IncomingLeadRecord = {
     patientName: string
     phoneNumber: string
     alternateNumber?: string | null
+    whatsapp?: string | null
     category: string | null
     treatment: string | null
     assignedDate: string | null
@@ -281,6 +283,7 @@ type IncomingLeadTableRow = {
   email: string
   normalizedPhone: string
   alternatePhone: string
+  whatsapp: string
   assignedDate: string
   leadDate: string
   followUpDate: string
@@ -298,8 +301,11 @@ type IncomingLeadTableRow = {
 
 type ColumnType = 'string' | 'date'
 
+type IncomingLeadDataColumnId = keyof Omit<IncomingLeadTableRow, 'raw'>
+type IncomingLeadColumnId = IncomingLeadDataColumnId | 'actions'
+
 type IncomingLeadColumn = {
-  id: keyof Omit<IncomingLeadTableRow, 'raw'>
+  id: IncomingLeadColumnId
   label: string
   type: ColumnType
   defaultVisible?: boolean
@@ -409,6 +415,7 @@ const EMPTY_INCOMING_LEAD_EDIT_DRAFT: IncomingLeadEditDraft = {
 }
 
 const INCOMING_LEAD_COLUMNS: IncomingLeadColumn[] = [
+  { id: 'actions', label: 'Action', type: 'string' },
   { id: 'receivedAt', label: 'Received', type: 'date', cell: (row) => formatDateOnly(row.receivedAt) },
   { id: 'processedAt', label: 'Processed', type: 'date', cell: (row) => formatDateOnly(row.processedAt) },
   { id: 'status', label: 'Status', type: 'string', cell: (row) => webhookStatusBadge(row.status) },
@@ -424,6 +431,7 @@ const INCOMING_LEAD_COLUMNS: IncomingLeadColumn[] = [
   { id: 'email', label: 'Email', type: 'string' },
   { id: 'normalizedPhone', label: 'Phone', type: 'string', cell: (row) => <span className="font-mono text-sm">{row.normalizedPhone}</span> },
   { id: 'alternatePhone', label: 'Alternate Phone', type: 'string', cell: (row) => <span className="font-mono text-sm">{row.alternatePhone}</span> },
+  { id: 'whatsapp', label: 'WhatsApp Number', type: 'string', cell: (row) => <span className="font-mono text-sm">{row.whatsapp}</span> },
   { id: 'assignedDate', label: 'Assign Date', type: 'date', cell: (row) => formatDateOnly(row.assignedDate) },
   { id: 'leadDate', label: 'Lead Date', type: 'date', cell: (row) => formatDateOnly(row.leadDate) },
   { id: 'followUpDate', label: 'Follow up Date', type: 'date', cell: (row) => formatDateOnly(row.followUpDate) },
@@ -467,10 +475,11 @@ function readIncomingLeadColumnOrder(): IncomingLeadColumn['id'][] {
 }
 
 function getUniqueRowValues(rows: IncomingLeadTableRow[], columnId: IncomingLeadColumn['id']) {
+  if (columnId === 'actions') return []
   return Array.from(
     new Set(
       rows
-        .map((row) => String(row[columnId] ?? '').trim())
+        .map((row) => String(row[columnId as IncomingLeadDataColumnId] ?? '').trim())
         .filter((value) => value.length > 0 && value !== '—')
     )
   ).sort((left, right) => left.localeCompare(right, undefined, { sensitivity: 'base' }))
@@ -856,26 +865,28 @@ export function CrmIncomingLeadsPage() {
     [availableIncomingLeadColumns]
   )
 
-  const effectiveSearchColumn = useMemo<IncomingLeadColumn['id']>(
+  const effectiveSearchColumn = useMemo<IncomingLeadDataColumnId>(
     () =>
-      availableIncomingLeadColumns.some((column) => column.id === searchColumn)
-        ? searchColumn
-        : (availableIncomingLeadColumns[0]?.id ?? searchColumn),
+      availableIncomingLeadColumns.some((column) => column.id === searchColumn && column.id !== 'actions')
+        ? (searchColumn as IncomingLeadDataColumnId)
+        : 'patientName',
     [availableIncomingLeadColumns, searchColumn]
   )
   const serverPhoneSearch = useMemo(
     () =>
-      effectiveSearchColumn === 'normalizedPhone' || effectiveSearchColumn === 'alternatePhone'
+      effectiveSearchColumn === 'normalizedPhone' ||
+      effectiveSearchColumn === 'alternatePhone' ||
+      effectiveSearchColumn === 'whatsapp'
         ? parsePhoneSearchQuery(searchValue)
         : null,
     [effectiveSearchColumn, searchValue]
   )
 
-  const effectiveSortColumn = useMemo<IncomingLeadColumn['id']>(
+  const effectiveSortColumn = useMemo<IncomingLeadDataColumnId>(
     () =>
-      availableIncomingLeadColumns.some((column) => column.id === sortColumn)
-        ? sortColumn
-        : (availableIncomingLeadColumns[0]?.id ?? sortColumn),
+      availableIncomingLeadColumns.some((column) => column.id === sortColumn && column.id !== 'actions')
+        ? (sortColumn as IncomingLeadDataColumnId)
+        : 'receivedAt',
     [availableIncomingLeadColumns, sortColumn]
   )
 
@@ -887,7 +898,7 @@ export function CrmIncomingLeadsPage() {
         params.set('month', String(selectedMonth))
         params.set('year', String(selectedYear))
       }
-      if (serverPhoneSearch && (effectiveSearchColumn === 'normalizedPhone' || effectiveSearchColumn === 'alternatePhone')) {
+      if (serverPhoneSearch && (effectiveSearchColumn === 'normalizedPhone' || effectiveSearchColumn === 'alternatePhone' || effectiveSearchColumn === 'whatsapp')) {
         params.set('searchColumn', effectiveSearchColumn)
         params.set('searchValue', searchValue.trim())
       }
@@ -969,6 +980,10 @@ export function CrmIncomingLeadsPage() {
           incomingLead.processedLead?.alternateNumber ??
           incomingLead.summary.alternatePhone ??
           '—',
+        whatsapp:
+          incomingLead.processedLead?.whatsapp ??
+          incomingLead.summary.whatsapp ??
+          '—',
         assignedDate: incomingLead.processedLead?.assignedDate ?? '',
         leadDate: incomingLead.processedLead?.leadEntryDate ?? incomingLead.summary.leadDate ?? '',
         followUpDate: incomingLead.processedLead?.followUpDate ?? '',
@@ -1002,11 +1017,11 @@ export function CrmIncomingLeadsPage() {
   }, [availableIncomingLeadColumns, columnOrder])
 
   const visibleColumnDefinitions = useMemo(
-    () => orderedAvailableColumns.filter((column) => visibleColumns[column.id]),
+    () => orderedAvailableColumns.filter((column) => visibleColumns[column.id] !== false),
     [orderedAvailableColumns, visibleColumns]
   )
   const areAllIncomingLeadColumnsVisible = useMemo(
-    () => availableIncomingLeadColumns.every((column) => visibleColumns[column.id]),
+    () => availableIncomingLeadColumns.every((column) => visibleColumns[column.id] !== false),
     [availableIncomingLeadColumns, visibleColumns]
   )
 
@@ -1073,11 +1088,30 @@ export function CrmIncomingLeadsPage() {
       if (!normalizedSearch) return true
 
       if (effectiveSearchColumn === 'normalizedPhone' && serverPhoneSearch) {
-        return row.normalizedPhone.includes(serverPhoneSearch.last10) || row.normalizedPhone.toLowerCase().includes(normalizedSearch)
+        const formatted55 = serverPhoneSearch.last10.length === 10 ? `${serverPhoneSearch.last10.slice(0, 5)} ${serverPhoneSearch.last10.slice(5)}` : ''
+        return (
+          row.normalizedPhone.includes(serverPhoneSearch.last10) ||
+          (Boolean(formatted55) && row.normalizedPhone.includes(formatted55)) ||
+          row.normalizedPhone.toLowerCase().includes(normalizedSearch)
+        )
       }
 
       if (effectiveSearchColumn === 'alternatePhone' && serverPhoneSearch) {
-        return row.alternatePhone.includes(serverPhoneSearch.last10) || row.alternatePhone.toLowerCase().includes(normalizedSearch)
+        const formatted55 = serverPhoneSearch.last10.length === 10 ? `${serverPhoneSearch.last10.slice(0, 5)} ${serverPhoneSearch.last10.slice(5)}` : ''
+        return (
+          row.alternatePhone.includes(serverPhoneSearch.last10) ||
+          (Boolean(formatted55) && row.alternatePhone.includes(formatted55)) ||
+          row.alternatePhone.toLowerCase().includes(normalizedSearch)
+        )
+      }
+
+      if (effectiveSearchColumn === 'whatsapp' && serverPhoneSearch) {
+        const formatted55 = serverPhoneSearch.last10.length === 10 ? `${serverPhoneSearch.last10.slice(0, 5)} ${serverPhoneSearch.last10.slice(5)}` : ''
+        return (
+          row.whatsapp.includes(serverPhoneSearch.last10) ||
+          (Boolean(formatted55) && row.whatsapp.includes(formatted55)) ||
+          row.whatsapp.toLowerCase().includes(normalizedSearch)
+        )
       }
 
       const rawValue = String(row[effectiveSearchColumn] ?? '')
@@ -1648,11 +1682,13 @@ export function CrmIncomingLeadsPage() {
                         <SelectValue placeholder="Choose column" />
                       </SelectTrigger>
                       <SelectContent>
-                        {availableIncomingLeadColumns.map((column) => (
-                          <SelectItem key={column.id} value={column.id}>
-                            {column.label}
-                          </SelectItem>
-                        ))}
+                        {availableIncomingLeadColumns
+                          .filter((column) => column.id !== 'actions')
+                          .map((column) => (
+                            <SelectItem key={column.id} value={column.id}>
+                              {column.label}
+                            </SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -1736,11 +1772,13 @@ export function CrmIncomingLeadsPage() {
                         <SelectValue placeholder="Choose column" />
                       </SelectTrigger>
                       <SelectContent>
-                        {availableIncomingLeadColumns.map((column) => (
-                          <SelectItem key={column.id} value={column.id}>
-                            {column.label}
-                          </SelectItem>
-                        ))}
+                        {availableIncomingLeadColumns
+                          .filter((column) => column.id !== 'actions')
+                          .map((column) => (
+                            <SelectItem key={column.id} value={column.id}>
+                              {column.label}
+                            </SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -2109,9 +2147,8 @@ export function CrmIncomingLeadsPage() {
                             }
                           }}
                         >
-                          {columnOrder.map((colId) => {
-                            const column = availableIncomingLeadColumns.find((c) => c.id === colId)
-                            if (!column) return null
+                          {orderedAvailableColumns.map((column) => {
+                            const colId = column.id
                             const isDragging = draggingColId === colId
                             const isDropTop = dropIndicator?.id === colId && dropIndicator?.position === 'top'
                             const isDropBottom = dropIndicator?.id === colId && dropIndicator?.position === 'bottom'
@@ -2144,7 +2181,7 @@ export function CrmIncomingLeadsPage() {
                                   <input
                                     type="checkbox"
                                     id={`incoming-col-${colId}`}
-                                    checked={visibleColumns[colId] ?? false}
+                                    checked={visibleColumns[colId] !== false}
                                     onChange={(e) =>
                                       setVisibleColumns((current) => ({
                                         ...current,
@@ -2247,6 +2284,13 @@ export function CrmIncomingLeadsPage() {
                               </TableHead>
                             ) : null}
                             {visibleColumnDefinitions.map((column) => {
+                              if (column.id === 'actions') {
+                                return (
+                                  <TableHead key={column.id} className="w-[120px] text-right whitespace-nowrap">
+                                    {column.label}
+                                  </TableHead>
+                                )
+                              }
                               const config = filterConfigByField.get(column.id)
                               const filterType = config?.filterType ?? (column.type === 'date' ? 'dateRange' : 'multiSelect')
                               const filterOptions = config?.options ?? []
@@ -2282,14 +2326,13 @@ export function CrmIncomingLeadsPage() {
                                 </TableHead>
                               )
                             })}
-                            <TableHead className="w-[120px] text-right">Action</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
                           {isLoading ? (
                             <TableRow>
                               <TableCell
-                                colSpan={visibleColumnDefinitions.length + 2 + (canManuallyAssignFailedLeads ? 1 : 0)}
+                                colSpan={visibleColumnDefinitions.length + 1 + (canManuallyAssignFailedLeads ? 1 : 0)}
                                 className="py-10 text-center text-muted-foreground"
                               >
                                 Loading incoming leads...
@@ -2298,7 +2341,7 @@ export function CrmIncomingLeadsPage() {
                           ) : sortedRows.length === 0 ? (
                             <TableRow>
                               <TableCell
-                                colSpan={visibleColumnDefinitions.length + 2 + (canManuallyAssignFailedLeads ? 1 : 0)}
+                                colSpan={visibleColumnDefinitions.length + 1 + (canManuallyAssignFailedLeads ? 1 : 0)}
                                 className="py-10 text-center text-muted-foreground"
                               >
                                 No incoming leads matched the selected month or filters.
@@ -2323,35 +2366,42 @@ export function CrmIncomingLeadsPage() {
                                     ) : null}
                                   </TableCell>
                                 ) : null}
-                                {visibleColumnDefinitions.map((column) => (
-                                  <TableCell key={`${row.id}-${column.id}`}>
-                                    {column.cell ? column.cell(row) : row[column.id]}
-                                  </TableCell>
-                                ))}
-                                <TableCell className="text-right">
-                                  <div className="flex justify-end gap-2">
-                                    <Button
-                                      type="button"
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => openIncomingLeadSheet(row.raw, 'view')}
-                                    >
-                                      <Eye className="mr-2 h-4 w-4" />
-                                      View
-                                    </Button>
-                                    {canEditIncomingLeads ? (
-                                      <Button
-                                        type="button"
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => openIncomingLeadSheet(row.raw, 'edit')}
-                                      >
-                                        <Pencil className="mr-2 h-4 w-4" />
-                                        Edit
-                                      </Button>
-                                    ) : null}
-                                  </div>
-                                </TableCell>
+                                {visibleColumnDefinitions.map((column) => {
+                                  if (column.id === 'actions') {
+                                    return (
+                                      <TableCell key={`${row.id}-${column.id}`} className="text-right whitespace-nowrap">
+                                        <div className="flex justify-end gap-2">
+                                          <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => openIncomingLeadSheet(row.raw, 'view')}
+                                          >
+                                            <Eye className="mr-2 h-4 w-4" />
+                                            View
+                                          </Button>
+                                          {canEditIncomingLeads ? (
+                                            <Button
+                                              type="button"
+                                              variant="ghost"
+                                              size="sm"
+                                              onClick={() => openIncomingLeadSheet(row.raw, 'edit')}
+                                            >
+                                              <Pencil className="mr-2 h-4 w-4" />
+                                              Edit
+                                            </Button>
+                                          ) : null}
+                                        </div>
+                                      </TableCell>
+                                    )
+                                  }
+
+                                  return (
+                                    <TableCell key={`${row.id}-${column.id}`}>
+                                      {column.cell ? column.cell(row) : row[column.id as IncomingLeadDataColumnId]}
+                                    </TableCell>
+                                  )
+                                })}
                               </TableRow>
                             ))
                           )}

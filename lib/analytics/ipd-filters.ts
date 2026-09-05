@@ -95,17 +95,28 @@ export function ipdDoneDateFilter(
 export function buildDateRange(
   startDate: string | null | Date,
   endDate: string | null | Date,
+  timezone?: string | null,
 ): Prisma.DateTimeFilter {
   const filter: Prisma.DateTimeFilter = {}
+  const isUtc = timezone?.toUpperCase() === 'UTC'
+
   if (startDate) {
-    filter.gte = typeof startDate === 'string'
-      ? new Date(startDate + 'T00:00:00.000Z')
-      : startDate
+    if (typeof startDate === 'string') {
+      filter.gte = isUtc
+        ? new Date(`${startDate}T00:00:00.000Z`)
+        : new Date(`${startDate}T00:00:00.000+05:30`)
+    } else {
+      filter.gte = startDate
+    }
   }
   if (endDate) {
-    filter.lte = typeof endDate === 'string'
-      ? new Date(endDate + 'T23:59:59.999Z')
-      : endDate
+    if (typeof endDate === 'string') {
+      filter.lte = isUtc
+        ? new Date(`${endDate}T23:59:59.999Z`)
+        : new Date(`${endDate}T23:59:59.999+05:30`)
+    } else {
+      filter.lte = endDate
+    }
   }
   return filter
 }
