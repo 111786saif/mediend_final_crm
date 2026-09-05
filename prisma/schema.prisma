@@ -618,6 +618,7 @@ model User {
   leadRemarkEntriesAuthored LeadRemarkEntry[]   @relation("LeadRemarkEntryAuthor")
   leadQrCallAuditLogs      LeadQrCallAuditLog[] @relation("LeadQrCallAuditActor")
   leadQrPublicLinks        LeadQrPublicLink[]   @relation("LeadQrPublicLinkActor")
+  leadQrScanLinks          LeadQrScanLink[]     @relation("LeadQrScanLinkActor")
   leadCallNotes CallNote[] @relation("LeadCallNoteAuthor")
 
   // Outstanding payment installments
@@ -852,6 +853,7 @@ model Lead {
   leadRemarkEntries     LeadRemarkEntry[]
   qrCallAuditLogs       LeadQrCallAuditLog[]
   qrPublicLinks         LeadQrPublicLink[]
+  qrScanLinks           LeadQrScanLink[]
   crmAssignmentPreviewLogs CrmAssignmentPreviewLog[]
   opdSurgeryRemark      SurgeryRemarkMaster?     @relation("LeadOpdSurgeryRemark", fields: [opdSurgeryRemarkCode], references: [code], onDelete: SetNull, onUpdate: Cascade)
   opdReasonNoSurgery    ReasonNoSurgeryMaster?   @relation("LeadOpdReasonNoSurgery", fields: [opdReasonNoSurgeryCode], references: [code], onDelete: SetNull, onUpdate: Cascade)
@@ -941,6 +943,7 @@ model LeadQrCallAuditLog {
 
 model LeadQrPublicLink {
   id           String   @id @default(cuid())
+  token        String   @unique
   leadId       String
   lead         Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
   actorUserId  String
@@ -952,6 +955,20 @@ model LeadQrPublicLink {
   @@index([leadId, createdAt])
   @@index([actorUserId, createdAt])
   @@index([expiresAt])
+}
+
+model LeadQrScanLink {
+  id            String   @id @default(cuid())
+  token         String   @unique
+  leadId        String
+  lead          Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  actorUserId   String
+  actorUser     User     @relation("LeadQrScanLinkActor", fields: [actorUserId], references: [id], onDelete: Cascade)
+  lastScannedAt DateTime?
+  createdAt     DateTime @default(now())
+
+  @@index([leadId, createdAt])
+  @@index([actorUserId, createdAt])
 }
 
 model LeadStageEvent {
@@ -1238,6 +1255,9 @@ model IncomingLead {
   status                   String   @default("PENDING") // PENDING, PROCESSED, FAILED, DUPLICATE
   externalCampaignId       String?
   normalizedPhone          String?
+  circle                   String?
+  category                 String?
+  treatment                String?
   processedLeadId          String?
   selectedTeamLeadUserId   String?
   selectedTeamLeadEmployeeId String?

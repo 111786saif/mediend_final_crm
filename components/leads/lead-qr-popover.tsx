@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { Phone, QrCode } from "lucide-react"
 import { QRCodeSVG } from "qrcode.react"
 import { Button } from "@/components/ui/button"
@@ -55,7 +55,9 @@ export function LeadQrPopover({
   const { user } = useAuth()
   const [open, setOpen] = useState(false)
   const [qrUrl, setQrUrl] = useState<string | null>(null)
+  const [qrExpiresAt, setQrExpiresAt] = useState<number | null>(null)
   const [isPreparingQr, setIsPreparingQr] = useState(false)
+  const isPreparingQrRef = useRef(false)
   const normalized = normalizePhone(phoneNumber ?? "")
   const normalizedAlt = normalizePhone(alternateNumber ?? "")
   const canInitiateCall = Boolean(normalized) || Boolean(normalizedAlt) || allowServerSidePhoneLookup
@@ -64,15 +66,6 @@ export function LeadQrPopover({
     () => patientName ? patientName.split(" ")[0] : "lead",
     [patientName]
   )
-
-  useEffect(() => {
-    setQrUrl(null)
-    setIsPreparingQr(false)
-  }, [leadId])
-
-  if (!canUseLeadQr(user?.role)) {
-    return null
-  }
 
   async function logQrViewed() {
     try {
@@ -91,29 +84,59 @@ export function LeadQrPopover({
     }
   }
 
-  async function preparePublicQrLink() {
-    if (qrUrl || isPreparingQr || !canInitiateCall) {
-      return
+  useEffect(() => {
+    if (!qrExpiresAt) return
+
+    const timeout = window.setTimeout(() => {
+      setQrUrl(null)
+      setQrExpiresAt(null)
+    }, Math.max(qrExpiresAt - Date.now(), 0))
+
+    return () => window.clearTimeout(timeout)
+  }, [qrExpiresAt])
+
+  useEffect(() => {
+    if (!open || qrUrl || isPreparingQrRef.current || !canInitiateCall) return
+
+    let cancelled = false
+
+    async function preparePublicQrLink() {
+      try {
+        isPreparingQrRef.current = true
+        setIsPreparingQr(true)
+        const response = await fetch(`/api/leads/${leadId}/qr-call/public-link`, {
+          method: "POST",
+        })
+        const payload = await response.json().catch(() => null)
+        const nextUrl =
+          payload?.data?.landingUrl && typeof payload.data.landingUrl === "string"
+            ? payload.data.landingUrl
+            : null
+        const expiresAt =
+          typeof payload?.data?.expiresAt === "string"
+            ? new Date(payload.data.expiresAt).getTime()
+            : Number.NaN
+
+        if (!cancelled && response.ok && nextUrl && Number.isFinite(expiresAt)) {
+          setQrUrl(nextUrl)
+          setQrExpiresAt(expiresAt)
+        }
+      } catch {
+        // Leave the QR empty if public-link generation fails.
+      } finally {
+        isPreparingQrRef.current = false
+        if (!cancelled) setIsPreparingQr(false)
+      }
     }
 
-    try {
-      setIsPreparingQr(true)
-      const response = await fetch(`/api/leads/${leadId}/qr-call/public-link`, {
-        method: "POST",
-      })
-      const payload = await response.json().catch(() => null)
-      const nextUrl =
-        payload?.data?.landingUrl && typeof payload.data.landingUrl === "string"
-          ? payload.data.landingUrl
-          : null
-      if (response.ok && nextUrl) {
-        setQrUrl(nextUrl)
-      }
-    } catch {
-      // Leave the QR empty if public-link generation fails.
-    } finally {
-      setIsPreparingQr(false)
+    void preparePublicQrLink()
+    return () => {
+      cancelled = true
     }
+  }, [canInitiateCall, leadId, open, qrUrl])
+
+  if (!canUseLeadQr(user?.role)) {
+    return null
   }
 
   return (
@@ -123,7 +146,6 @@ export function LeadQrPopover({
         setOpen(nextOpen)
         if (nextOpen) {
           void logQrViewed()
-          void preparePublicQrLink()
         }
       }}
     >

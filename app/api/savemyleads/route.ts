@@ -117,6 +117,9 @@ export async function POST(request: Request) {
         },
         externalCampaignId: extracted.campaignId || null,
         normalizedPhone: normalizePhoneToLast10(extracted.phone) ?? null,
+        circle: extracted.circle,
+        category: extracted.category,
+        treatment: extracted.treatment,
       },
       select: {
         id: true,
@@ -282,7 +285,7 @@ export async function GET() {
     message: 'SaveMyLeads webhook endpoint is ready',
     endpoint: '/api/savemyleads',
     method: 'POST',
-    expectedFields: ['campaignId', 'name', 'phone', 'email'],
+    expectedFields: ['campaignId', 'name', 'phone', 'email', 'circle', 'category', 'treatment'],
     activeBusinessMonth: month,
     activeBusinessYear: year,
   })
