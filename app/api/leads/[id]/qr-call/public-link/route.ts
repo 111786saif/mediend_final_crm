@@ -52,15 +52,14 @@ export async function POST(
     })
 
     const origin = resolvePublicOrigin(request)
-    const encodedId = encodeURIComponent(publicLink.id)
+    const encodedToken = encodeURIComponent(publicLink.token)
 
     return Response.json({
       success: true,
       data: {
         publicLinkId: publicLink.id,
         expiresAt: publicLink.expiresAt,
-        landingUrl: `${origin}/lead-contact/${encodedId}`,
-        callUrl: `${origin}/api/lead-contact/${encodedId}/call`,
+        landingUrl: `${origin}/lead-contact/${encodedToken}`,
       },
     })
   } catch (error) {

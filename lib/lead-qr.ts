@@ -1,5 +1,13 @@
 import { prisma } from '@/lib/prisma'
 import { logCrmActivity } from '@/lib/crm-activity'
+import { randomBytes } from 'crypto'
+
+const QR_CONTACT_SESSION_DURATION_MS = 3 * 60 * 1000
+
+function createOpaqueQrToken() {
+  // The public URL contains no lead or user identifier and has 256 bits of entropy.
+  return randomBytes(32).toString('base64url')
+}
 
 export type LeadQrAuditLead = {
   id: string
@@ -131,26 +139,79 @@ export async function createLeadQrPublicLink(params: {
   leadId: string
   actorUserId: string
 }) {
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+  const expiresAt = new Date(Date.now() + QR_CONTACT_SESSION_DURATION_MS)
   return prisma.leadQrPublicLink.create({
     data: {
+      token: createOpaqueQrToken(),
       leadId: params.leadId,
       actorUserId: params.actorUserId,
       expiresAt,
     },
     select: {
       id: true,
+      token: true,
       expiresAt: true,
     },
   })
 }
 
-export async function loadLeadQrPublicLink(id: string) {
+export async function createLeadQrScanLink(params: {
+  leadId: string
+  actorUserId: string
+}) {
+  return prisma.leadQrScanLink.create({
+    data: {
+      token: createOpaqueQrToken(),
+      leadId: params.leadId,
+      actorUserId: params.actorUserId,
+    },
+    select: {
+      id: true,
+      token: true,
+    },
+  })
+}
+
+export async function openLeadQrScanLink(token: string) {
+  const scanLink = await prisma.leadQrScanLink.findUnique({
+    where: { token },
+    select: {
+      id: true,
+      leadId: true,
+      actorUserId: true,
+    },
+  })
+
+  if (!scanLink) {
+    return null
+  }
+
+  const [publicLink] = await prisma.$transaction([
+    prisma.leadQrPublicLink.create({
+      data: {
+        token: createOpaqueQrToken(),
+        leadId: scanLink.leadId,
+        actorUserId: scanLink.actorUserId,
+        expiresAt: new Date(Date.now() + QR_CONTACT_SESSION_DURATION_MS),
+      },
+      select: { token: true },
+    }),
+    prisma.leadQrScanLink.update({
+      where: { id: scanLink.id },
+      data: { lastScannedAt: new Date() },
+    }),
+  ])
+
+  return publicLink
+}
+
+export async function loadLeadQrPublicLink(token: string) {
   const link = await prisma.leadQrPublicLink.findUnique({
-    where: { id },
+    where: { token },
     select: {
       id: true,
       expiresAt: true,
+      createdAt: true,
       lead: {
         select: {
           id: true,
@@ -175,7 +236,14 @@ export async function loadLeadQrPublicLink(id: string) {
     },
   })
 
-  if (!link || link.expiresAt.getTime() < Date.now()) {
+  const expiresAt = link
+    ? Math.min(
+        link.expiresAt.getTime(),
+        link.createdAt.getTime() + QR_CONTACT_SESSION_DURATION_MS
+      )
+    : 0
+
+  if (!link || expiresAt < Date.now()) {
     return null
   }
 

@@ -141,12 +141,28 @@ function extractSaveMyLeadsFields(payload: unknown) {
   const name = record.name ?? record.patientName ?? record.patient_name ?? null
   const phone = record.phone ?? record.phoneNumber ?? record.mobile ?? record.mobileNumber ?? null
   const email = record.email ?? null
+  const circle = record.circle ?? record.Circle ?? record.city ?? record.city_option ?? null
+  const category = record.category ?? record.Category ?? null
+  const treatment = record.treatment ?? record.Treatment ?? null
+  const source = record.source ?? record.Source ?? null
+  const campaignName = record.campaignName ?? record.campaign_name ?? record.Lead_Source ?? null
+
+  const clean = (value: unknown) => {
+    if (value == null) return null
+    const normalized = String(value).trim()
+    return normalized || null
+  }
 
   return {
-    campaignId: campaignId == null ? null : String(campaignId).trim(),
-    patientName: name == null ? null : String(name).trim(),
-    phone: phone == null ? null : String(phone).trim(),
-    email: email == null ? null : String(email).trim(),
+    campaignId: clean(campaignId),
+    patientName: clean(name),
+    phone: clean(phone),
+    email: clean(email),
+    circle: clean(circle),
+    category: clean(category),
+    treatment: clean(treatment),
+    source: clean(source),
+    campaignName: clean(campaignName),
   }
 }
 
@@ -482,6 +498,15 @@ export async function PATCH(
     if (normalizedFields.Patient_Number !== undefined) {
       incomingLeadUpdateData.normalizedPhone = nextNormalizedPhone
     }
+    if (normalizedFields.Circle !== undefined) {
+      incomingLeadUpdateData.circle = normalizedFields.Circle
+    }
+    if (normalizedFields.Category !== undefined) {
+      incomingLeadUpdateData.category = normalizedFields.Category
+    }
+    if (normalizedFields.Treatment !== undefined) {
+      incomingLeadUpdateData.treatment = normalizedFields.Treatment
+    }
 
     let processedLeadUpdateData: Awaited<
       ReturnType<typeof buildProcessedLeadUpdateData>
@@ -571,6 +596,11 @@ export async function PATCH(
               patientName: extracted.patientName,
               phone: extracted.phone,
               email: extracted.email,
+              circle: extracted.circle,
+              category: extracted.category,
+              treatment: extracted.treatment,
+              source: extracted.source,
+              campaignName: extracted.campaignName,
               receivedAt: existing.receivedAt,
             })
           }
