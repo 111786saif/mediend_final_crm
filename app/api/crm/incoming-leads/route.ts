@@ -138,7 +138,10 @@ export async function GET(request: NextRequest) {
         ? parsePhoneSearchQuery(parsed.data.searchValue)
         : null
     const filteredIncomingLeads =
-      visibleScopeUserIds === null
+      // An exact phone lookup is needed to recover failed, still-unassigned
+      // incoming leads. Page access is already enforced above; ordinary table
+      // browsing remains limited to the user's ownership scope.
+      visibleScopeUserIds === null || phoneSearch !== null
         ? incomingLeads
         : incomingLeads.filter((incomingLead) => {
             const processedLead = incomingLead.processedLeadId

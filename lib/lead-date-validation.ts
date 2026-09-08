@@ -8,6 +8,21 @@ export function formatDateTimeLocalValue(date: Date) {
   return `${date.getFullYear()}-${padDatePart(date.getMonth() + 1)}-${padDatePart(date.getDate())}T${padDatePart(date.getHours())}:${padDatePart(date.getMinutes())}`
 }
 
+export function formatDateTimeLocalValueInTimeZone(date: Date, timeZone: string) {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(date)
+  const values = new Map(parts.map((part) => [part.type, part.value]))
+
+  return `${values.get('year')}-${values.get('month')}-${values.get('day')}T${values.get('hour')}:${values.get('minute')}`
+}
+
 export function getLeadDateInputMaxValue(now = new Date()) {
   const endOfToday = new Date(
     now.getFullYear(),

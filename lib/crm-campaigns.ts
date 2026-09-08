@@ -10,6 +10,7 @@ import type { CrmAssignmentDryRunResult } from '@/lib/crm-assignment'
 import { employeeHasAnyCircle, employeeHasCircle, parseEmployeeCircleList } from '@/lib/employee-circles'
 import { getManagementChain } from '@/lib/hierarchy'
 import { getLeadTeamLeadIdForAssigneeManager } from '@/lib/lead-ownership'
+import { withGeneratedManualLeadRef } from '@/lib/manual-lead-ref'
 import { prisma } from '@/lib/prisma'
 import { resolveInboundSubStatus } from '@/lib/sub-status'
 import {
@@ -1378,53 +1379,58 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
   const finalCategory = cleanStr(input.category) ?? cleanStr(campaign.category)
   const finalTreatment = cleanStr(input.treatment) ?? cleanStr(campaign.treatment)
   const finalSource = cleanStr(campaign.source.name) ?? cleanStr(input.source) ?? 'SaveMyLeads'
+  const payloadCampaignName = cleanStr(input.campaignName)
   const finalCampaignName =
-    cleanStr(campaign.leadSource.name) ??
     cleanStr(campaign.displayName) ??
-    cleanStr(input.campaignName)
+    payloadCampaignName ??
+    campaign.externalCampaignId
 
   const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone, finalTreatment)
   const isDuplicate = Boolean(duplicateLead) || hasPriorIncomingDuplicate
 
   const systemUserId = await getDefaultSystemUserId()
-  const leadRef = `SML-${campaign.externalCampaignId}-${crypto.randomUUID()}`
   const resolvedSubStatus = await resolveInboundSubStatus(input.subStatus)
   const teamLeadId = await getLeadTeamLeadIdForAssigneeManager(selectedBd.userId)
 
-  const lead = await prisma.lead.create({
-    data: {
-      leadRef,
-      patientName: input.patientName.trim(),
-      age: 0,
-      sex: 'Not Specified',
-      phoneNumber: input.phone.trim(),
-      status: isDuplicate ? DUPLICATE_LEAD_STATUS : 'New Lead',
-      pipelineStage: PipelineStage.SALES,
-      flowType: FlowType.INSURANCE,
-      hospitalName: 'Not Specified',
-      createdById: systemUserId,
-      updatedById: systemUserId,
-      createdDate: receivedAt,
-      leadEntryDate: receivedAt,
-      assignedDate: receivedAt,
-      source: finalSource,
-      campaignName: finalCampaignName,
-      campaignId: campaign.externalCampaignId,
-      category: finalCategory,
-      treatment: finalTreatment,
-      treatmentMasterId: finalTreatment === cleanStr(campaign.treatment) ? (campaign.treatmentMasterId ?? null) : null,
-      subStatus: resolvedSubStatus,
-      circle: finalCircle,
-      bdeName: selectedBd.user.name,
-      bdId: selectedBd.userId,
-      teamLeadId,
-      duplCount: 0,
-    },
-    select: {
-      id: true,
-      leadRef: true,
-    },
-  })
+  const lead = await withGeneratedManualLeadRef((leadRef) =>
+    prisma.lead.create({
+      data: {
+        leadRef,
+        patientName: input.patientName.trim(),
+        age: 0,
+        sex: 'Not Specified',
+        phoneNumber: input.phone.trim(),
+        status: isDuplicate ? DUPLICATE_LEAD_STATUS : 'New Lead',
+        pipelineStage: PipelineStage.SALES,
+        flowType: FlowType.INSURANCE,
+        hospitalName: 'Not Specified',
+        createdById: systemUserId,
+        updatedById: systemUserId,
+        createdDate: receivedAt,
+        leadEntryDate: receivedAt,
+        assignedDate: receivedAt,
+        source: finalSource,
+        campaignName: finalCampaignName,
+        campaignId: campaign.externalCampaignId,
+        category: finalCategory,
+        treatment: finalTreatment,
+        treatmentMasterId:
+          finalTreatment === cleanStr(campaign.treatment)
+            ? (campaign.treatmentMasterId ?? null)
+            : null,
+        subStatus: resolvedSubStatus,
+        circle: finalCircle,
+        bdeName: selectedBd.user.name,
+        bdId: selectedBd.userId,
+        teamLeadId,
+        duplCount: 0,
+      },
+      select: {
+        id: true,
+        leadRef: true,
+      },
+    })
+  )
 
   if (selectedBd?.userId) {
     await createLeadAssignedNotification({
