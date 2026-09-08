@@ -591,7 +591,7 @@ async function processManualAssignedSaveMyLeadsLead(
   const isDuplicate = Boolean(duplicateLead) || hasPriorIncomingDuplicate
 
   const { month } = getBusinessMonthYear(incomingLead.receivedAt)
-  const finalSource = cleanStr(campaign?.source.name) ?? cleanStr(extracted.source) ?? 'SaveMyLeads'
+  const finalSource = cleanStr(campaign?.source.name) ?? cleanStr(extracted.source)
   const payloadCampaignName = cleanStr(extracted.campaignName)
   const fallbackCampaignName = extracted.campaignId
   const finalCampaignName =

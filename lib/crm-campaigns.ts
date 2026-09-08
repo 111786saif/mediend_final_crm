@@ -1378,7 +1378,7 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
   const finalCircle = explicitCircle ?? (campaignCircles.length === 1 ? campaignCircles[0] : '')
   const finalCategory = cleanStr(input.category) ?? cleanStr(campaign.category)
   const finalTreatment = cleanStr(input.treatment) ?? cleanStr(campaign.treatment)
-  const finalSource = cleanStr(campaign.source.name) ?? cleanStr(input.source) ?? 'SaveMyLeads'
+  const finalSource = cleanStr(campaign.source.name) ?? cleanStr(input.source)
   const payloadCampaignName = cleanStr(input.campaignName)
   const finalCampaignName =
     cleanStr(campaign.displayName) ??
