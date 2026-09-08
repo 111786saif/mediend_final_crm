@@ -16,9 +16,7 @@ import {
   MANUAL_MYSQL_LEAD_SECTION_ORDER,
 } from '@/lib/manual-mysql-lead-import'
 import {
-  formatDateTimeLocalValue,
-  getLeadDateInputMaxValue,
-  isLeadDateAfterToday,
+  formatDateTimeLocalValueInTimeZone,
   LEAD_DATE_FUTURE_ERROR,
 } from '@/lib/lead-date-validation'
 import { Button } from '@/components/ui/button'
@@ -123,6 +121,40 @@ const HIDDEN_FORM_FIELD_KEYS = new Set([
 ])
 
 const HIDDEN_FORM_SECTIONS = new Set(['Communication', 'Tracking'])
+const INDIA_TIME_ZONE = 'Asia/Kolkata'
+
+function getCurrentIndiaDateTimeLocalValue(now = new Date()) {
+  return formatDateTimeLocalValueInTimeZone(now, INDIA_TIME_ZONE)
+}
+
+function getIndiaLeadDateInputMaxValue(now = new Date()) {
+  return `${getCurrentIndiaDateTimeLocalValue(now).slice(0, 10)}T23:59`
+}
+
+function isValidDateTimeLocalValue(value: string) {
+  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/)
+  if (!match) return false
+
+  const [, yearText, monthText, dayText, hourText, minuteText] = match
+  const year = Number(yearText)
+  const month = Number(monthText)
+  const day = Number(dayText)
+  const hour = Number(hourText)
+  const minute = Number(minuteText)
+  const validationDate = new Date(Date.UTC(year, month - 1, day, hour, minute))
+
+  return (
+    validationDate.getUTCFullYear() === year &&
+    validationDate.getUTCMonth() === month - 1 &&
+    validationDate.getUTCDate() === day &&
+    validationDate.getUTCHours() === hour &&
+    validationDate.getUTCMinutes() === minute
+  )
+}
+
+function isLeadDateAfterIndiaToday(value: string, now = new Date()) {
+  return value.slice(0, 10) > getCurrentIndiaDateTimeLocalValue(now).slice(0, 10)
+}
 
 function convertDateTimeLocalToMysql(value: string) {
   const trimmed = value.trim()
@@ -132,9 +164,11 @@ function convertDateTimeLocalToMysql(value: string) {
 }
 
 function getMonthNameFromDateTimeLocal(value: string) {
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return ''
-  return new Intl.DateTimeFormat('en-US', { month: 'long' }).format(date)
+  const month = Number(value.slice(5, 7))
+  if (!Number.isInteger(month) || month < 1 || month > 12) return ''
+  return new Intl.DateTimeFormat('en-US', { month: 'long', timeZone: 'UTC' }).format(
+    new Date(Date.UTC(2000, month - 1, 1))
+  )
 }
 
 function mergeCsvTexts(csvChunks: string[]) {
@@ -189,7 +223,7 @@ export function IncomingLeadsManualCreateDialog({
     createEmptyManualMySQLLeadValues
   )
   const [manualLeadDate, setManualLeadDate] = useState(() =>
-    formatDateTimeLocalValue(new Date())
+    getCurrentIndiaDateTimeLocalValue()
   )
   const [csvText, setCsvText] = useState('')
   const [uploadedCsvFileNames, setUploadedCsvFileNames] = useState<string[]>([])
@@ -236,7 +270,7 @@ export function IncomingLeadsManualCreateDialog({
   const resetState = () => {
     setActiveTab('form')
     setFormValues(createEmptyManualMySQLLeadValues())
-    setManualLeadDate(formatDateTimeLocalValue(new Date()))
+    setManualLeadDate(getCurrentIndiaDateTimeLocalValue())
     setCsvText('')
     setUploadedCsvFileNames([])
   }
@@ -297,13 +331,12 @@ export function IncomingLeadsManualCreateDialog({
   }
 
   const submitForm = () => {
-    const parsedLeadDate = new Date(manualLeadDate)
-    if (Number.isNaN(parsedLeadDate.getTime())) {
+    if (!isValidDateTimeLocalValue(manualLeadDate)) {
       toast.error('Lead date is invalid')
       return
     }
 
-    if (isLeadDateAfterToday(parsedLeadDate)) {
+    if (isLeadDateAfterIndiaToday(manualLeadDate)) {
       toast.error(LEAD_DATE_FUTURE_ERROR)
       return
     }
@@ -393,7 +426,7 @@ export function IncomingLeadsManualCreateDialog({
                         type="datetime-local"
                         value={manualLeadDate}
                         onChange={(event) => setManualLeadDate(event.target.value)}
-                        max={getLeadDateInputMaxValue()}
+                        max={getIndiaLeadDateInputMaxValue()}
                       />
                       <p className="mt-1 text-xs text-muted-foreground">
                         This fills lead entry date, create date, and month. Only today or older dates are allowed.

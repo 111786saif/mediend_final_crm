@@ -949,6 +949,8 @@ export function CrmIncomingLeadsPage() {
       const mappedCampaign = incomingLead.externalCampaignId
         ? campaignByExternalId.get(incomingLead.externalCampaignId)
         : null
+      const unmappedCampaignLabel =
+        incomingLead.externalCampaignId ?? incomingLead.summary.campaignId ?? 'No campaign ID'
 
       return {
         id: incomingLead.id,
@@ -958,7 +960,7 @@ export function CrmIncomingLeadsPage() {
         source: incomingLead.source ?? '—',
         externalCampaignId: incomingLead.externalCampaignId ?? '—',
         payloadCampaignId: incomingLead.summary.campaignId ?? '—',
-        campaignName: incomingLead.campaign?.displayName ?? 'Unmapped campaign',
+        campaignName: incomingLead.campaign?.displayName ?? `${unmappedCampaignLabel} (Unmapped)`,
         campaignSource: mappedCampaign?.source.name ?? '—',
         leadSource: mappedCampaign?.leadSource.name ?? '—',
         category:
@@ -1087,31 +1089,12 @@ export function CrmIncomingLeadsPage() {
 
       if (!normalizedSearch) return true
 
-      if (effectiveSearchColumn === 'normalizedPhone' && serverPhoneSearch) {
-        const formatted55 = serverPhoneSearch.last10.length === 10 ? `${serverPhoneSearch.last10.slice(0, 5)} ${serverPhoneSearch.last10.slice(5)}` : ''
-        return (
-          row.normalizedPhone.includes(serverPhoneSearch.last10) ||
-          (Boolean(formatted55) && row.normalizedPhone.includes(formatted55)) ||
-          row.normalizedPhone.toLowerCase().includes(normalizedSearch)
-        )
-      }
-
-      if (effectiveSearchColumn === 'alternatePhone' && serverPhoneSearch) {
-        const formatted55 = serverPhoneSearch.last10.length === 10 ? `${serverPhoneSearch.last10.slice(0, 5)} ${serverPhoneSearch.last10.slice(5)}` : ''
-        return (
-          row.alternatePhone.includes(serverPhoneSearch.last10) ||
-          (Boolean(formatted55) && row.alternatePhone.includes(formatted55)) ||
-          row.alternatePhone.toLowerCase().includes(normalizedSearch)
-        )
-      }
-
-      if (effectiveSearchColumn === 'whatsapp' && serverPhoneSearch) {
-        const formatted55 = serverPhoneSearch.last10.length === 10 ? `${serverPhoneSearch.last10.slice(0, 5)} ${serverPhoneSearch.last10.slice(5)}` : ''
-        return (
-          row.whatsapp.includes(serverPhoneSearch.last10) ||
-          (Boolean(formatted55) && row.whatsapp.includes(formatted55)) ||
-          row.whatsapp.toLowerCase().includes(normalizedSearch)
-        )
+      if (
+        serverPhoneSearch &&
+        ['normalizedPhone', 'alternatePhone', 'whatsapp'].includes(effectiveSearchColumn)
+      ) {
+        // The API already performed an exact last-10-digit match before masking phone data.
+        return true
       }
 
       const rawValue = String(row[effectiveSearchColumn] ?? '')
@@ -2541,7 +2524,11 @@ export function CrmIncomingLeadsPage() {
                   <div>
                     <p className="text-xs uppercase tracking-wide text-muted-foreground">Campaign Name</p>
                     <p className="font-medium">
-                      {selectedIncomingLead.campaign?.displayName ?? 'Unmapped campaign'}
+                      {selectedIncomingLead.campaign?.displayName ?? (
+                        selectedIncomingLead.externalCampaignId ??
+                        selectedIncomingLead.summary.campaignId ??
+                        'No campaign ID'
+                      ) + ' (Unmapped)'}
                     </p>
                   </div>
                   <div>

@@ -145,7 +145,7 @@ function extractSaveMyLeadsFields(payload: unknown) {
   const category = record.category ?? record.Category ?? null
   const treatment = record.treatment ?? record.Treatment ?? null
   const source = record.source ?? record.Source ?? null
-  const campaignName = record.campaignName ?? record.campaign_name ?? record.Lead_Source ?? null
+  const campaignName = record.campaignName ?? record.campaign_name ?? null
 
   const clean = (value: unknown) => {
     if (value == null) return null

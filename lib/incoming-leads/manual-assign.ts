@@ -149,7 +149,7 @@ function extractSaveMyLeadsFields(payload: unknown) {
   const category = record.category ?? record.Category ?? null
   const treatment = record.treatment ?? record.Treatment ?? null
   const source = record.source ?? record.Source ?? null
-  const campaignName = record.campaignName ?? record.campaign_name ?? record.Lead_Source ?? null
+  const campaignName = record.campaignName ?? record.campaign_name ?? null
 
   const clean = (v: unknown) => {
     if (v == null) return null
@@ -446,27 +446,18 @@ async function processManualAssignedMySQLLead(
     bdeName: bd.userName,
     teamLeadId: bd.managerLeadId,
   } as any
-  const createdLead =
-    incomingLead.source === MANUAL_MYSQL_INCOMING_SOURCE
-      ? await withGeneratedManualLeadRef((leadRef) =>
-          prisma.lead.create({
-            data: {
-              ...leadCreateData,
-              leadRef,
-            },
-            select: {
-              id: true,
-              leadRef: true,
-            },
-          })
-        )
-      : await prisma.lead.create({
-          data: leadCreateData,
-          select: {
-            id: true,
-            leadRef: true,
-          },
-        })
+  const createdLead = await withGeneratedManualLeadRef((leadRef) =>
+    prisma.lead.create({
+      data: {
+        ...leadCreateData,
+        leadRef,
+      },
+      select: {
+        id: true,
+        leadRef: true,
+      },
+    })
+  )
 
   await logCrmActivity({
     action: 'CRM_LEAD_CREATED',
@@ -527,19 +518,6 @@ async function processManualAssignedSaveMyLeadsLead(
 ): Promise<ManualAssignResultItem> {
   const extracted = extractSaveMyLeadsFields(incomingLead.payload)
 
-  if (!extracted.campaignId) {
-    const error = 'campaignId is required.'
-    await prisma.incomingLead.update({
-      where: { id: incomingLead.id },
-      data: {
-        status: 'FAILED',
-        errorMessage: error,
-        processedAt: new Date(),
-      },
-    })
-    return { incomingLeadId: incomingLead.id, status: 'failed', error }
-  }
-
   if (!extracted.patientName) {
     const error = 'name is required.'
     await prisma.incomingLead.update({
@@ -588,19 +566,11 @@ async function processManualAssignedSaveMyLeadsLead(
     priorIncomingLead && !priorIncomingLead.processedLeadId
   )
 
-  const campaign = await loadWebhookCampaign(extracted.campaignId)
-  if (!campaign || !campaign.isActive) {
-    const error = 'Campaign is not configured or inactive.'
-    await prisma.incomingLead.update({
-      where: { id: incomingLead.id },
-      data: {
-        status: 'FAILED',
-        errorMessage: error,
-        processedAt: new Date(),
-      },
-    })
-    return { incomingLeadId: incomingLead.id, status: 'failed', error }
-  }
+  // A manual BD selection is an explicit override of campaign routing. Campaign
+  // details enrich the created lead when available, but cannot block assignment.
+  const campaign = extracted.campaignId
+    ? await loadWebhookCampaign(extracted.campaignId)
+    : null
 
   const cleanStr = (v: unknown): string | null => {
     if (v == null) return null
@@ -611,58 +581,64 @@ async function processManualAssignedSaveMyLeadsLead(
     return s
   }
 
-  const campaignCircles = getCampaignCircleNames(campaign)
+  const campaignCircles = campaign ? getCampaignCircleNames(campaign) : []
   const explicitCircle = cleanStr(extracted.circle)
   const finalCircle = explicitCircle ?? (campaignCircles.length === 1 ? campaignCircles[0] : '')
-  const finalCategory = cleanStr(extracted.category) ?? cleanStr(campaign.category)
-  const finalTreatment = cleanStr(extracted.treatment) ?? cleanStr(campaign.treatment)
+  const finalCategory = cleanStr(extracted.category) ?? cleanStr(campaign?.category)
+  const finalTreatment = cleanStr(extracted.treatment) ?? cleanStr(campaign?.treatment)
 
   const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone, finalTreatment)
   const isDuplicate = Boolean(duplicateLead) || hasPriorIncomingDuplicate
 
   const { month } = getBusinessMonthYear(incomingLead.receivedAt)
-  const leadRef = `SML-${campaign.externalCampaignId}-${crypto.randomUUID()}`
-  const finalSource = cleanStr(campaign.source.name) ?? cleanStr(extracted.source) ?? 'SaveMyLeads'
+  const finalSource = cleanStr(campaign?.source.name) ?? cleanStr(extracted.source) ?? 'SaveMyLeads'
+  const payloadCampaignName = cleanStr(extracted.campaignName)
+  const fallbackCampaignName = extracted.campaignId
   const finalCampaignName =
-    cleanStr(campaign.leadSource.name) ??
-    cleanStr(campaign.displayName) ??
-    cleanStr(extracted.campaignName)
+    cleanStr(campaign?.displayName) ??
+    payloadCampaignName ??
+    fallbackCampaignName
 
-  const lead = await prisma.lead.create({
-    data: {
-      leadRef,
-      patientName: extracted.patientName || 'Unknown',
-      age: 0,
-      sex: 'Not Specified',
-      phoneNumber: extracted.phone || '0000000000',
-      status: isDuplicate ? DUPLICATE_LEAD_STATUS : 'New Lead',
-      pipelineStage: PipelineStage.SALES,
-      flowType: FlowType.INSURANCE,
-      hospitalName: 'Not Specified',
-      createdById: systemUserId,
-      updatedById: systemUserId,
-      createdDate: incomingLead.receivedAt,
-      leadEntryDate: incomingLead.receivedAt,
-      assignedDate: incomingLead.receivedAt,
-      source: finalSource,
-      campaignName: finalCampaignName,
-      campaignId: campaign.externalCampaignId,
-      category: finalCategory,
-      treatment: finalTreatment,
-      treatmentMasterId: finalTreatment === cleanStr(campaign.treatment) ? (campaign.treatmentMasterId ?? null) : null,
-      bdeName: bd.userName,
-      bdId: bd.userId,
-      teamLeadId: bd.managerLeadId,
-      patientEmail: extracted.email || null,
-      circle: finalCircle,
-      month: `${month}`,
-      duplCount: 0,
-    },
-    select: {
-      id: true,
-      leadRef: true,
-    },
-  })
+  const lead = await withGeneratedManualLeadRef((leadRef) =>
+    prisma.lead.create({
+      data: {
+        leadRef,
+        patientName: extracted.patientName || 'Unknown',
+        age: 0,
+        sex: 'Not Specified',
+        phoneNumber: extracted.phone || '0000000000',
+        status: isDuplicate ? DUPLICATE_LEAD_STATUS : 'New Lead',
+        pipelineStage: PipelineStage.SALES,
+        flowType: FlowType.INSURANCE,
+        hospitalName: 'Not Specified',
+        createdById: systemUserId,
+        updatedById: systemUserId,
+        createdDate: incomingLead.receivedAt,
+        leadEntryDate: incomingLead.receivedAt,
+        assignedDate: incomingLead.receivedAt,
+        source: finalSource,
+        campaignName: finalCampaignName,
+        campaignId: extracted.campaignId,
+        category: finalCategory,
+        treatment: finalTreatment,
+        treatmentMasterId:
+          finalTreatment === cleanStr(campaign?.treatment)
+            ? (campaign?.treatmentMasterId ?? null)
+            : null,
+        bdeName: bd.userName,
+        bdId: bd.userId,
+        teamLeadId: bd.managerLeadId,
+        patientEmail: extracted.email || null,
+        circle: finalCircle,
+        month: `${month}`,
+        duplCount: 0,
+      },
+      select: {
+        id: true,
+        leadRef: true,
+      },
+    })
+  )
 
   await logCrmActivity({
     action: 'CRM_LEAD_CREATED',
@@ -678,6 +654,7 @@ async function processManualAssignedSaveMyLeadsLead(
       incomingLeadId: incomingLead.id,
       leadRef: lead.leadRef,
       source: incomingLead.source,
+      campaignRoutingBypassed: !campaign?.isActive,
     },
   })
 
@@ -692,7 +669,7 @@ async function processManualAssignedSaveMyLeadsLead(
     where: { id: incomingLead.id },
     data: {
       status: isDuplicate ? 'DUPLICATE' : 'PROCESSED',
-      externalCampaignId: campaign.externalCampaignId,
+      externalCampaignId: extracted.campaignId,
       normalizedPhone,
       processedLeadId: lead.id,
       selectedTeamLeadUserId: bd.managerUserId,
