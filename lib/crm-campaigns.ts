@@ -1200,7 +1200,9 @@ async function chooseBdForTeamLead(
     prisma.incomingLead.groupBy({
       by: ['selectedBdUserId'],
       where: {
-        status: 'PROCESSED',
+        // Duplicate leads still consume the selected BD's time and must count
+        // toward the campaign's Daily max.
+        status: { in: ['PROCESSED', 'DUPLICATE'] },
         externalCampaignId,
         selectedTeamLeadEmployeeId: teamLeadEmployeeId,
         receivedAt: {
@@ -1240,7 +1242,7 @@ async function chooseBdForTeamLead(
 
     const maxLeadsPerDay = dailyLimitByBdEmployeeId.get(candidate.id)
     if (!maxLeadsPerDay || maxLeadsPerDay <= 0) {
-      return true
+      return false
     }
 
     const assignedToday = dailyCountByUserId.get(candidate.userId) ?? 0
@@ -1251,19 +1253,19 @@ async function chooseBdForTeamLead(
     const hasLeaveBlocked = candidates.some((candidate) => leaveSet.has(candidate.id))
     const hasDailyLimitBlocked = candidates.some((candidate) => {
       const maxLeadsPerDay = dailyLimitByBdEmployeeId.get(candidate.id)
-      if (!maxLeadsPerDay || maxLeadsPerDay <= 0) return false
+      if (!maxLeadsPerDay || maxLeadsPerDay <= 0) return true
       const assignedToday = dailyCountByUserId.get(candidate.userId) ?? 0
       return assignedToday >= maxLeadsPerDay
     })
 
     if (hasLeaveBlocked && hasDailyLimitBlocked) {
-      throw new Error('Selected Team Lead has no BDs available because they are absent or have reached their daily lead limit.')
+      throw new Error('Selected Team Lead has no BDs available because they are absent, have no Daily max configured, or have reached their daily lead limit.')
     }
     if (hasLeaveBlocked) {
       throw new Error('Selected Team Lead has no BDs available because all matching BDs are absent for the day.')
     }
     if (hasDailyLimitBlocked) {
-      throw new Error('Selected Team Lead has no BDs available because all matching BDs have reached their daily lead limit.')
+      throw new Error('Selected Team Lead has no BDs available because all matching BDs have no Daily max configured or have reached their daily lead limit.')
     }
     throw new Error('Selected Team Lead has no active BD users available for assignment.')
   }

@@ -1476,20 +1476,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     [optimisticallyOpenedLeadIds]
   )
 
-  const handleRowClick = useCallback(
-    (id: string, alreadyOpened: boolean) => {
-      markLeadOpened(id, alreadyOpened)
-      // router.push(`/patient/${id}`)
-      window.open(`/patient/${id}`, '_blank', 'noopener,noreferrer')
-    },
-    [markLeadOpened]
-  )
-
-
-  // const handleRowClick = useCallback((id: string) => {
-  //   window.open(`/patient/${id}`, '_blank', 'noopener,noreferrer')
-  // }, [])
-
   const handleEditLead = useCallback((id: string, alreadyOpened: boolean) => {
     markLeadOpened(id, alreadyOpened)
     setEditingLeadId(id)
@@ -2695,7 +2681,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                     data={tableRows}
                     isLoading={isLoading}
                     emptyMessage="No leads match filters"
-                    onRowClick={(lead) => handleRowClick(lead.id, isLeadOpened(lead))}
                     rowClassName={(lead) =>
                       isLeadOpened(lead)
                         ? 'bg-[#E4EEFF] hover:bg-[#D9E7FF] shadow-[inset_0_1px_0_0_rgba(175,196,255,0.9),inset_0_-1px_0_0_rgba(175,196,255,0.9)] dark:bg-[#2A3B60] dark:hover:bg-[#334874] dark:shadow-[inset_0_1px_0_0_rgba(93,124,199,0.95),inset_0_-1px_0_0_rgba(93,124,199,0.95)] font-medium'
