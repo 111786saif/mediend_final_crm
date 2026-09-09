@@ -1200,7 +1200,9 @@ async function chooseBdForTeamLead(
     prisma.incomingLead.groupBy({
       by: ['selectedBdUserId'],
       where: {
-        status: 'PROCESSED',
+        // Duplicate leads still consume the selected BD's time and must count
+        // toward the campaign's Daily max.
+        status: { in: ['PROCESSED', 'DUPLICATE'] },
         externalCampaignId,
         selectedTeamLeadEmployeeId: teamLeadEmployeeId,
         receivedAt: {
