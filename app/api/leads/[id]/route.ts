@@ -565,6 +565,7 @@ export async function PATCH(
       parsedFollowUpDateInput.provided && previousFollowUpDateIso !== nextFollowUpDateIso
     const leadProfileChanged =
       (body.patientName !== undefined && body.patientName !== lead.patientName) ||
+      (body.alternateNumber !== undefined && body.alternateNumber !== lead.alternateNumber) ||
       (body.whatsapp !== undefined && body.whatsapp !== lead.whatsapp) ||
       (body.city !== undefined &&
         (typeof body.city === 'string' ? body.city.trim() || null : body.city ?? null) !== currentLeadCity) ||

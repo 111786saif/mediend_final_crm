@@ -84,8 +84,6 @@ function monthKeyOf(value: unknown): string | null {
 /* ─── Stage / bucket definitions ─────────────────────────────────────────── */
 
 const BUCKET_OF_STAGE: Partial<Record<CaseStage, Bucket>> = {
-  [CaseStage.OPD_SCHEDULED]: 'KYP',
-  [CaseStage.OPD_DONE]: 'KYP',
   [CaseStage.KYP_BASIC_PENDING]: 'KYP',
   [CaseStage.KYP_BASIC_COMPLETE]: 'KYP',
   [CaseStage.KYP_DETAILED_PENDING]: 'KYP',

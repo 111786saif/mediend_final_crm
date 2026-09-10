@@ -112,6 +112,7 @@ const PIPELINE_MULTI_COLUMN_FILTER_FIELDS = new Set<PipelineMultiColumnFilterFie
   'doctor',
   'healthInsurance',
   'preferredLocation',
+  'subStatus',
 ])
 
 export interface PipelineQueryParams {
@@ -1120,12 +1121,25 @@ function buildPipelineMultiSelectWhere(
       return buildExactInsensitiveStringWhere('surgeonName', values)
     case 'healthInsurance':
       return buildExactInsensitiveStringWhere('insuranceName', values)
+    case 'subStatus':
+      return buildSubStatusFilterWhere(values)
     case 'city':
     case 'preferredLocation':
       return buildExactInsensitiveStringWhere('circle', values)
     default:
       return undefined
   }
+}
+
+function buildSubStatusFilterWhere(values: string[]): Prisma.LeadWhereInput | undefined {
+  const or: Prisma.LeadWhereInput[] = []
+  for (const rawValue of values) {
+    const val = rawValue.trim()
+    if (!val) continue
+    or.push({ subStatus: { contains: val, mode: 'insensitive' } })
+  }
+  if (or.length === 0) return undefined
+  return or.length === 1 ? or[0] : { OR: or }
 }
 
 function buildPipelineMonthFilterWhere(values: string[]): Prisma.LeadWhereInput | undefined {
@@ -1505,8 +1519,14 @@ export function applyPipelineColumnFilters(
   }
 
   return leads.filter((lead) =>
-    multiFilters.every((filter) =>
-      filter.value.includes(getPipelineLeadColumnFilterValue(lead, filter.field)),
-    ),
+    multiFilters.every((filter) => {
+      const leadVal = getPipelineLeadColumnFilterValue(lead, filter.field)
+      if (filter.field === 'subStatus') {
+        return filter.value.some((val) =>
+          leadVal.toLowerCase().includes(val.toLowerCase()),
+        )
+      }
+      return filter.value.includes(leadVal)
+    }),
   )
 }
