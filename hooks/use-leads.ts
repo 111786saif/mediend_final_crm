@@ -78,6 +78,14 @@ export interface Lead {
     id: string
     name: string
     email: string
+    role?: string
+    employee?: {
+      manager?: {
+        user?: {
+          name?: string | null
+        } | null
+      } | null
+    } | null
   }
   updatedBy?: {
     id: string

@@ -94,7 +94,7 @@ export async function GET(request: NextRequest) {
       }),
     ])
 
-    const knownStatuses = ['PROCESSED', 'DUPLICATE', 'FAILED', 'PENDING']
+    const knownStatuses = ['PROCESSED', 'DUPLICATE', 'FAILED', 'BUCKET', 'PENDING']
     const statusOptions = toOptions([
       ...knownStatuses,
       ...incomingStatuses.map((s) => s.status),

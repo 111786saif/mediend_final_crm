@@ -483,7 +483,7 @@ export async function PATCH(
     const canViewPhone = String(currentUser.role) === 'ADMIN'
     const shouldAttemptReprocess =
       !existing.processedLeadId &&
-      (existing.status === 'FAILED' || existing.status === 'PENDING' || routingChanged)
+      (existing.status === 'FAILED' || existing.status === 'BUCKET' || existing.status === 'PENDING' || routingChanged)
 
     const incomingLeadUpdateData: Record<string, unknown> = {
       payload: nextPayload,

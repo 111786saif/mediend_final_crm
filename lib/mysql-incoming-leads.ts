@@ -42,8 +42,8 @@ function mysqlIncomingExternalRef(leadRef: string, source: string) {
   return `${source}:${leadRef}`
 }
 
-function normalizeMySQLCampaignId(value: string | null | undefined) {
-  const normalized = value?.trim()
+function normalizeMySQLCampaignId(value: string | number | null | undefined) {
+  const normalized = value == null ? '' : String(value).trim()
   return normalized ? normalized : null
 }
 
@@ -53,6 +53,22 @@ function normalizeAssignmentCity(value: string | null | undefined) {
   const lowered = normalized.toLowerCase()
   if (lowered === 'unknown' || lowered === 'not specified') return null
   return normalized
+}
+
+function normalizeOptionalString(value: unknown) {
+  if (value == null) return null
+  const normalized = String(value).trim()
+  return normalized || null
+}
+
+function normalizeAssignmentDate(value: unknown) {
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? undefined : value
+  }
+  if (typeof value !== 'string' && typeof value !== 'number') return undefined
+
+  const parsed = new Date(value)
+  return Number.isNaN(parsed.getTime()) ? undefined : parsed
 }
 
 function getMySQLIncomingPayloadRecord(payload: unknown) {
@@ -270,6 +286,10 @@ export async function processMySQLIncomingLead(
   const hasPriorIncomingDuplicate = Boolean(
     priorIncomingLead && !priorIncomingLead.processedLeadId
   )
+  const duplicateIncomingLeadId =
+    incomingLead.source === MYSQL_INCOMING_SOURCE && hasPriorIncomingDuplicate
+      ? priorIncomingLead?.id ?? null
+      : null
   const assignedAt = new Date()
 
   const leadData =
@@ -286,32 +306,82 @@ export async function processMySQLIncomingLead(
       : typeof mysqlLead.city_option === 'string' && mysqlLead.city_option.trim()
         ? mysqlLead.city_option.trim()
         : null
-  const assignmentCity = normalizeAssignmentCity(leadData.circle) ?? normalizeAssignmentCity(rawCity)
+  const assignmentCity =
+    normalizeAssignmentCity(normalizeOptionalString(leadData.circle)) ??
+    normalizeAssignmentCity(rawCity)
+  const assignmentCategory = normalizeOptionalString(leadData.category)
+  const assignmentDate =
+    incomingLead.source === MANUAL_MYSQL_INCOMING_SOURCE
+      ? assignedAt
+      : normalizeAssignmentDate(leadData.assignedDate) ??
+        normalizeAssignmentDate(leadData.createdDate) ??
+        assignedAt
 
   const assignmentPreview = await previewImportedLeadAssignment({
     externalCampaignId: mysqlCampaignId,
     city: assignmentCity,
-    category: leadData.category ?? null,
-    assignmentDate:
-      incomingLead.source === MANUAL_MYSQL_INCOMING_SOURCE
-        ? assignedAt
-        : leadData.assignedDate ?? leadData.createdDate,
+    category: assignmentCategory,
+    assignmentDate,
   })
 
   if (!assignmentPreview.assignment) {
+    const shouldBucket =
+      incomingLead.source === MYSQL_INCOMING_SOURCE &&
+      assignmentPreview.campaignMatched &&
+      assignmentPreview.campaignActive !== false
     const errorMessage = `CRM auto-assignment failed for ${sourceLabel} lead ${sourceLeadRef}: ${assignmentPreview.explanation}`
     await prisma.incomingLead.update({
       where: { id: incomingLead.id },
       data: {
-        status: 'FAILED',
-        errorMessage,
+        status: duplicateIncomingLeadId ? 'DUPLICATE' : shouldBucket ? 'BUCKET' : 'FAILED',
+        errorMessage: duplicateIncomingLeadId
+          ? `Duplicate phone number. Existing incoming lead: ${duplicateIncomingLeadId}`
+          : errorMessage,
         processedAt: new Date(),
-        selectedTeamLeadUserId: assignmentPreview.assignment?.teamLead?.userId ?? null,
-        selectedTeamLeadEmployeeId: assignmentPreview.assignment?.teamLead?.employeeId ?? null,
-        selectedBdUserId: assignmentPreview.assignment?.bd.userId ?? null,
+        selectedTeamLeadUserId: null,
+        selectedTeamLeadEmployeeId: null,
+        selectedBdUserId: null,
       },
     })
-    return { status: 'failed' as const, error: errorMessage }
+    if (duplicateIncomingLeadId) {
+      return {
+        status: 'duplicate' as const,
+        leadId: undefined,
+        leadRef: undefined,
+        assignedBdName: null,
+      }
+    }
+    return { status: shouldBucket ? ('bucketed' as const) : ('failed' as const), error: errorMessage }
+  }
+
+  if (
+    incomingLead.source === MYSQL_INCOMING_SOURCE &&
+    assignmentPreview.campaignMatched &&
+    assignmentPreview.requiresManualAssignment
+  ) {
+    const errorMessage = `Campaign matched, but no BD is available for assignment: ${assignmentPreview.explanation}`
+    await prisma.incomingLead.update({
+      where: { id: incomingLead.id },
+      data: {
+        status: duplicateIncomingLeadId ? 'DUPLICATE' : 'BUCKET',
+        errorMessage: duplicateIncomingLeadId
+          ? `Duplicate phone number. Existing incoming lead: ${duplicateIncomingLeadId}`
+          : errorMessage,
+        processedAt: new Date(),
+        selectedTeamLeadUserId: assignmentPreview.assignment.teamLead?.userId ?? null,
+        selectedTeamLeadEmployeeId: assignmentPreview.assignment.teamLead?.employeeId ?? null,
+        selectedBdUserId: null,
+      },
+    })
+    if (duplicateIncomingLeadId) {
+      return {
+        status: 'duplicate' as const,
+        leadId: undefined,
+        leadRef: undefined,
+        assignedBdName: null,
+      }
+    }
+    return { status: 'bucketed' as const, error: errorMessage }
   }
 
   const { updatedDate, ...leadDataForCreate } = leadData
@@ -323,11 +393,8 @@ export async function processMySQLIncomingLead(
     assignmentContext: {
       externalCampaignId: mysqlCampaignId,
       city: assignmentCity,
-      category: leadData.category ?? null,
-      assignmentDate:
-        incomingLead.source === MANUAL_MYSQL_INCOMING_SOURCE
-          ? assignedAt
-          : leadData.assignedDate ?? leadData.createdDate,
+      category: assignmentCategory,
+      assignmentDate,
     },
     leadData: {
       ...leadDataForCreate,
@@ -381,7 +448,7 @@ export async function processQueuedMySQLIncomingLeads(
   const queue = await prisma.incomingLead.findMany({
     where: {
       source: { in: Array.from(MYSQL_SHAPED_INCOMING_SOURCES) },
-      status: { in: ['PENDING', 'FAILED'] },
+      status: { in: ['PENDING', 'FAILED', 'BUCKET'] },
       processedLeadId: null,
     },
     orderBy: { receivedAt: 'asc' },
@@ -391,12 +458,14 @@ export async function processQueuedMySQLIncomingLeads(
 
   let processed = 0
   let failed = 0
+  let bucketed = 0
 
   for (const item of queue) {
     try {
       const result = await processMySQLIncomingLead(item.id, deps)
       if (result.status === 'processed') processed++
       else if (result.status === 'failed') failed++
+      else if (result.status === 'bucketed') bucketed++
     } catch {
       failed++
     }
@@ -406,5 +475,6 @@ export async function processQueuedMySQLIncomingLeads(
     queued: queue.length,
     processed,
     failed,
+    bucketed,
   }
 }

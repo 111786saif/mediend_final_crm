@@ -1303,7 +1303,26 @@ export const pipelineTableSelect = {
       name: true,
     },
   },
-  bd: { select: { id: true, name: true } },
+  bd: {
+    select: {
+      id: true,
+      name: true,
+      role: true,
+      employee: {
+        select: {
+          manager: {
+            select: {
+              user: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
   admissionRecord: { select: { surgeryDate: true } },
   plRecord: { select: { bdmName: true, managerName: true, doctorName: true, hospitalName: true } },
   dischargeSheet: { select: { doctorName: true, hospitalName: true } },

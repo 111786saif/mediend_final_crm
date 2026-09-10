@@ -176,6 +176,7 @@ export async function POST(request: NextRequest) {
     let updatedCount = 0
     let errorCount = 0
     let assignmentFailedCount = 0
+    let bucketCount = 0
     const syncedLeadIds: number[] = []
     const syncedLeadRefsById = new Map<number, string>()
     const leadsToUpdate: Array<{ leadRef: string; data: any }> = []
@@ -239,6 +240,9 @@ export async function POST(request: NextRequest) {
             errorCount++
             errorDetails.push({ leadId: mysqlLead.id, error: result.error })
             console.log(`[mysql-sync:daily] leadRef=${leadRef} failed assignment`)
+          } else if (result.status === 'bucketed') {
+            bucketCount++
+            console.log(`[mysql-sync:daily] leadRef=${leadRef} placed in assignment bucket`)
           }
         }
       } catch (error) {
@@ -391,8 +395,10 @@ export async function POST(request: NextRequest) {
       updated: updatedCount,
       errors: errorCount,
       assignmentFailed: assignmentFailedCount,
+      bucketed: bucketCount,
       queueRetryProcessed: queueRetryResult.processed,
       queueRetryFailed: queueRetryResult.failed,
+      queueRetryBucketed: queueRetryResult.bucketed,
       remarksSynced,
       lastSyncedDate: maxDate.toISOString(),
       lastSyncedId: maxId,

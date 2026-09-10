@@ -178,6 +178,7 @@ export async function POST(request: Request) {
       receivedAt,
     })
     const responseData = {
+      bucketed: result.bucketed,
       deduplicated: result.deduplicated,
       leadId: result.leadId,
       leadRef: result.leadRef,
@@ -194,6 +195,7 @@ export async function POST(request: Request) {
           receivedAt: receivedAt.toISOString(),
           campaignId: extracted.campaignId,
           leadId: responseData.leadId,
+          bucketed: responseData.bucketed,
           deduplicated: responseData.deduplicated,
           teamLead: responseData.teamLead,
           bd: responseData.bd,
@@ -210,7 +212,11 @@ export async function POST(request: Request) {
       entityLabel: extracted.campaignId,
       status: 'SUCCESS',
       request,
-      summary: responseData.deduplicated
+      summary: responseData.bucketed
+        ? `Placed SaveMyLeads webhook in the assignment bucket for campaign ${extracted.campaignId}`
+        : responseData.deduplicated && !responseData.leadId
+        ? `Recorded duplicate SaveMyLeads webhook for campaign ${extracted.campaignId}`
+        : responseData.deduplicated
         ? `Processed duplicate SaveMyLeads webhook and created a duplicate lead for campaign ${extracted.campaignId}`
         : `Processed SaveMyLeads webhook for campaign ${extracted.campaignId}`,
       metadata: {
@@ -218,6 +224,7 @@ export async function POST(request: Request) {
         campaignId: extracted.campaignId,
         patientName: extracted.name,
         normalizedPhone: normalizePhoneToLast10(extracted.phone),
+        bucketed: responseData.bucketed,
         deduplicated: responseData.deduplicated,
         leadId: responseData.leadId,
         leadRef: responseData.leadRef,
@@ -228,7 +235,11 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: responseData.deduplicated
+      message: responseData.bucketed
+        ? 'Incoming lead placed in assignment bucket'
+        : responseData.deduplicated && !responseData.leadId
+        ? 'Duplicate incoming lead recorded'
+        : responseData.deduplicated
         ? 'Duplicate lead created successfully'
         : 'Lead created successfully',
       incomingLeadId: incomingLead.id,
