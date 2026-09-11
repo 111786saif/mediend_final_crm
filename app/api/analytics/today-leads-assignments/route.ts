@@ -3,14 +3,12 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { getLeadPipelineBucket } from '@/lib/pipeline-lead-buckets'
 import { getSalesDashboardBdIdFilter } from '@/lib/analytics/sales-dashboard-access'
 import { isSubtreeScopedSalesRole } from '@/lib/sales-hierarchy-roles'
 
 /**
- * Get today's actionable lead assignments grouped by BD.
- * Returns count of leads assigned today (IST), excluding inactive statuses
- * like Junk, Lost, and DNP which should not appear as "new leads".
+ * Get today's lead assignments grouped by BD.
+ * Returns count of all leads assigned today (IST).
  */
 export async function GET(request: NextRequest) {
   try {
@@ -46,7 +44,7 @@ export async function GET(request: NextRequest) {
 
     const leads = await prisma.lead.findMany({
       where: {
-        createdDate: {
+        assignedDate: {
           gte: todayStartUTC,
           lte: todayEndUTC,
         },
@@ -72,13 +70,8 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: {
-        createdDate: 'desc',
+        assignedDate: 'desc',
       },
-    })
-
-    const activeLeads = leads.filter((lead) => {
-      const bucket = getLeadPipelineBucket(lead.status)
-      return bucket !== 'junk' && bucket !== 'lost' && bucket !== 'dnp'
     })
 
     const bdMap = new Map<
@@ -93,12 +86,12 @@ export async function GET(request: NextRequest) {
           id: string
           leadRef: string
           patientName: string
-          createdDate: Date
+          assignedDate: Date | null
         }>
       }
     >()
 
-    activeLeads.forEach((lead) => {
+    leads.forEach((lead) => {
       const bdId = lead.bdId
       if (!bdMap.has(bdId)) {
         bdMap.set(bdId, {
@@ -117,7 +110,7 @@ export async function GET(request: NextRequest) {
         id: lead.id,
         leadRef: lead.leadRef,
         patientName: lead.patientName,
-        createdDate: lead.createdDate,
+        assignedDate: lead.assignedDate,
       })
     })
 
@@ -125,8 +118,7 @@ export async function GET(request: NextRequest) {
 
     return successResponse({
       date: todayStart.toISOString().split('T')[0],
-      totalLeads: activeLeads.length,
-      excludedInactiveLeads: leads.length - activeLeads.length,
+      totalLeads: leads.length,
       assignments,
     })
   } catch (error) {

@@ -536,7 +536,7 @@ export function LeadEditDrawer({
   const statusRequiresCity = isStatusRequiringCity(effectiveLeadStatus)
   const statusRequiresModeOfPayment = isStatusRequiringModeOfPayment(effectiveLeadStatus)
   const ageChanged = effectiveAge !== (lead?.age == null ? '' : String(lead.age))
-  const alternateNumberChanged = isSuperAdmin && (effectiveAlternateNumber !== (lead?.alternateNumber ?? ''))
+  const alternateNumberChanged = effectiveAlternateNumber !== (lead?.alternateNumber ?? '')
   const subStatusChanged = isSuperAdmin && (effectiveSubStatus !== (lead?.subStatus ?? ''))
   const sexChanged = effectiveSex !== currentNormalizedSex
   const cityChanged = effectiveCity !== (lead?.city ?? '')
@@ -877,20 +877,16 @@ export function LeadEditDrawer({
                       />
                     </div>
 
-                    {isSuperAdmin ? (
-                      <div className="space-y-2">
-                        <Label htmlFor="drawer-whatsapp">WhatsApp</Label>
-                        <Input
-                          id="drawer-whatsapp"
-                          value={effectiveWhatsapp}
-                          onChange={(e) => setWhatsappDraft(e.target.value)}
-                          disabled={!canEditLeadProfile || saving}
-                          placeholder="Enter WhatsApp number"
-                        />
-                      </div>
-                    ) : (
-                      <ReadonlyField label="WhatsApp" value={formatMaskedPhone(lead.whatsapp)} />
-                    )}
+                    <div className="space-y-2">
+                      <Label htmlFor="drawer-whatsapp">WhatsApp</Label>
+                      <Input
+                        id="drawer-whatsapp"
+                        value={effectiveWhatsapp}
+                        onChange={(e) => setWhatsappDraft(e.target.value)}
+                        disabled={!canEditLeadProfile || saving}
+                        placeholder="Enter WhatsApp number"
+                      />
+                    </div>
                   </div>
 
                   <div className="grid gap-4 md:grid-cols-2">
@@ -1053,20 +1049,16 @@ export function LeadEditDrawer({
 
                   <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
                     <ReadonlyField label="Phone" value={formatMaskedPhone(lead.phoneNumber)} />
-                    {isSuperAdmin ? (
-                      <div className="space-y-1.5">
-                        <Label htmlFor="drawer-alternate-number" className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">Alternate Phone</Label>
-                        <Input
-                          id="drawer-alternate-number"
-                          value={effectiveAlternateNumber}
-                          onChange={(e) => setAlternateNumberDraft(e.target.value)}
-                          disabled={!canEditLeadProfile || saving}
-                          placeholder="Enter alternate phone number"
-                        />
-                      </div>
-                    ) : (
-                      <ReadonlyField label="Alternate Phone" value={formatMaskedPhone(lead.alternateNumber)} />
-                    )}
+                    <div className="space-y-1.5">
+                      <Label htmlFor="drawer-alternate-number" className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">Alternate Phone</Label>
+                      <Input
+                        id="drawer-alternate-number"
+                        value={effectiveAlternateNumber}
+                        onChange={(e) => setAlternateNumberDraft(e.target.value)}
+                        disabled={!canEditLeadProfile || saving}
+                        placeholder="Enter alternate phone number"
+                      />
+                    </div>
                     <ReadonlyField label="Circle" value={formatDisplayValue(lead.circle)} />
                     <ReadonlyField label="Current Owner" value={currentAssigneeName} />
                   </div>

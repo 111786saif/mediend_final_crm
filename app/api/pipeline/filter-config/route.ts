@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
         orderBy: { name: 'asc' },
       }),
       prisma.user.findMany({
-        where: { role: UserRole.BD },
+        where: { role: { in: [UserRole.BD, UserRole.TEAM_LEAD] } },
         select: { name: true },
         orderBy: { name: 'asc' },
       }),

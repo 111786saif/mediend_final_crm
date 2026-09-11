@@ -999,6 +999,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   }
 
   const availableColumns = useMemo(() => getPipelineColumnDefinitions(variant), [variant])
+  const allowedColumnIds = useMemo(() => new Set(availableColumns.map((c) => c.id)), [availableColumns])
   const orderedAvailableColumnIds = useMemo(() => {
     const defaultIds = availableColumns.map((c) => c.id)
     if (!columnOrder.length) return defaultIds
@@ -1635,7 +1636,8 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     const defs: ColumnDef<Lead>[] = []
 
     // Helper to push a toggleable column
-    const addCol = (colId: PipelineColumnId, def: Omit<ColumnDef<Lead>, 'id'>) =>
+    const addCol = (colId: PipelineColumnId, def: Omit<ColumnDef<Lead>, 'id'>) => {
+      if (!allowedColumnIds.has(colId)) return
       defs.push({
         id: colId,
         enableHiding: true,
@@ -1654,6 +1656,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
           )
         }
       })
+    }
 
     // S.No. (serial number — compact sticky left column)
     addCol('sno', {
@@ -2064,6 +2067,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     getHeaderFilterProps, handleSort, handleEditLead, isLeadOpened,
     markLeadOpened, optimisticallyOpenedLeadIds, noteCounts,
     toggleLeadSelection, visibleColumns, callingLeadId, handleInitiateCall,
+    allowedColumnIds,
   ])
 
 
