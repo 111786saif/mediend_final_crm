@@ -15,6 +15,37 @@ const KNOWLARITY_URL =
   process.env.KNOWLARITY_MAKECALL_URL ||
   'https://kpi.knowlarity.com/Basic/v1/account/call/makecall'
 
+function maskPhone(value: string | null | undefined) {
+  const digits = value?.replace(/\D+/g, '') ?? ''
+  if (!digits) return null
+  return `${'*'.repeat(Math.max(0, digits.length - 4))}${digits.slice(-4)}`
+}
+
+function summarizeKnowlarityResponse(value: unknown) {
+  const raw = typeof value === 'string' ? value : JSON.stringify(value)
+  if (!raw) return null
+
+  // Keep production logs useful without exposing full phone numbers from provider payloads.
+  return raw.replace(/\d{7,}/g, (number) => maskPhone(number) ?? '***').slice(0, 2_000)
+}
+
+function providerEndpointForLog(url: string) {
+  try {
+    const parsed = new URL(url)
+    return `${parsed.origin}${parsed.pathname}`
+  } catch {
+    return 'invalid-configured-url'
+  }
+}
+
+function logMakeCall(
+  attemptId: string,
+  event: string,
+  details: Record<string, unknown> = {}
+) {
+  console.log('[make-call]', { attemptId, event, ...details })
+}
+
 async function authorizeLeadAccess(request: NextRequest, id: string) {
   const user = await getSessionWithFreshUser()
   if (!user) {
@@ -92,15 +123,32 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const attemptId = crypto.randomUUID()
+
   try {
     const { id } = await params
     const auth = await authorizeLeadAccess(request, id)
     if (auth.response || !auth.user || !auth.lead) {
+      logMakeCall(attemptId, 'authorization_failed', { leadId: id })
       return auth.response!
     }
 
+    logMakeCall(attemptId, 'started', {
+      leadId: auth.lead.id,
+      leadRef: auth.lead.leadRef,
+      actorUserId: auth.user.id,
+      actorRole: auth.user.role,
+    })
+
     const config = getKnowlarityConfig()
     if (!config) {
+      logMakeCall(attemptId, 'configuration_missing', {
+        leadId: auth.lead.id,
+        hasAuthKey: Boolean(process.env.KNOWLARITY_AUTH_KEY?.trim()),
+        hasApiKey: Boolean(process.env.KNOWLARITY_X_API_KEY?.trim()),
+        hasKNumber: Boolean(process.env.KNOWLARITY_K_NUMBER?.trim()),
+        hasCallerId: Boolean(process.env.KNOWLARITY_CALLER_ID?.trim()),
+      })
       return errorResponse(
         'Knowlarity calling is not configured. Please set KNOWLARITY_AUTH_KEY, KNOWLARITY_X_API_KEY, KNOWLARITY_K_NUMBER, and KNOWLARITY_CALLER_ID.',
         500
@@ -110,6 +158,7 @@ export async function POST(
     const actor = await resolveActorKnowlaritySettings(auth.user.id)
 
     if (!actor) {
+      logMakeCall(attemptId, 'actor_not_found', { actorUserId: auth.user.id })
       return unauthorizedResponse()
     }
 
@@ -117,7 +166,23 @@ export async function POST(
     const agentNumber = normalizeLeadQrPhone(actor.knowlarityPhoneNumber ?? '')
     const callerId = actor.knowlarityCallerId?.trim() || config.callerId
 
+    logMakeCall(attemptId, 'call_inputs_resolved', {
+      leadId: auth.lead.id,
+      leadRef: auth.lead.leadRef,
+      customerNumber: maskPhone(customerNumber),
+      agentNumber: maskPhone(agentNumber),
+      configuredKnowlarityNumber: maskPhone(actor.knowlarityPhoneNumber),
+      callerId: maskPhone(callerId),
+      callerIdSource: actor.knowlarityCallerId?.trim() ? 'employee' : 'environment',
+      notificationsEnabled: actor.knowlarityNotificationsEnabled,
+    })
+
     if (!customerNumber) {
+      logMakeCall(attemptId, 'invalid_customer_number', {
+        leadId: auth.lead.id,
+        leadRef: auth.lead.leadRef,
+        rawCustomerNumber: maskPhone(auth.lead.phoneNumber),
+      })
       await logCrmActivity({
         action: 'CRM_LEAD_WORKSPACE_CALL_FAILED',
         entityType: 'CRM_LEAD_QR',
@@ -141,6 +206,12 @@ export async function POST(
     }
 
     if (!agentNumber) {
+      logMakeCall(attemptId, 'invalid_agent_number', {
+        leadId: auth.lead.id,
+        actorUserId: actor.id,
+        actorPhoneNumber: maskPhone(actor.phoneNumber),
+        configuredKnowlarityNumber: maskPhone(actor.knowlarityPhoneNumber),
+      })
       await logCrmActivity({
         action: 'CRM_LEAD_WORKSPACE_CALL_FAILED',
         entityType: 'CRM_LEAD_QR',
@@ -165,6 +236,10 @@ export async function POST(
     }
 
     if (!callerId) {
+      logMakeCall(attemptId, 'missing_caller_id', {
+        leadId: auth.lead.id,
+        actorUserId: actor.id,
+      })
       await logCrmActivity({
         action: 'CRM_LEAD_WORKSPACE_CALL_FAILED',
         entityType: 'CRM_LEAD_QR',
@@ -186,6 +261,11 @@ export async function POST(
       })
       return errorResponse('Your Knowlarity caller ID is not configured.', 400)
     }
+
+    logMakeCall(attemptId, 'provider_request_started', {
+      leadId: auth.lead.id,
+      endpoint: providerEndpointForLog(KNOWLARITY_URL),
+    })
 
     const response = await fetch(KNOWLARITY_URL, {
       method: 'POST',
@@ -211,6 +291,14 @@ export async function POST(
     } catch {
       responseBody = responseText
     }
+
+    logMakeCall(attemptId, 'provider_response_received', {
+      leadId: auth.lead.id,
+      status: response.status,
+      statusText: response.statusText,
+      ok: response.ok,
+      responsePreview: summarizeKnowlarityResponse(responseBody),
+    })
 
     const userAgent = request.headers.get('user-agent')
     const ipAddress = getLeadQrClientIp(request.headers)
@@ -280,7 +368,10 @@ export async function POST(
       },
     })
   } catch (error) {
-    console.error('POST /api/leads/[id]/make-call', error)
+    console.error('[make-call] unexpected_error', {
+      attemptId,
+      error: error instanceof Error ? error.message : String(error),
+    })
     return errorResponse('Failed to initiate call.', 500)
   }
 }
