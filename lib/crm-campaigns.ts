@@ -723,6 +723,8 @@ export async function previewCampaignLeadAssignment(
         assignment: null,
         candidateDiagnostics: [],
         explanation: `Campaign "${campaign.displayName}" is inactive.`,
+        campaignMatched: true,
+        campaignActive: false,
       },
     }
   }
@@ -745,6 +747,8 @@ export async function previewCampaignLeadAssignment(
         assignment: null,
         candidateDiagnostics: [],
         explanation: error instanceof Error ? error.message : 'Campaign Team Lead selection failed.',
+        campaignMatched: true,
+        campaignActive: true,
       },
     }
   }
@@ -836,6 +840,9 @@ export async function previewCampaignLeadAssignment(
           },
         ],
         explanation: `${bdSelectionError} Lead will be assigned to Team Lead "${selectedAssignment.teamLeadUser.name}" so it remains visible for manual reassignment.`,
+        requiresManualAssignment: true,
+        campaignMatched: true,
+        campaignActive: true,
       },
     }
   }
@@ -1333,7 +1340,46 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
   }
 
   const preferredCircles = getCampaignCircleNames(campaign)
-  const selectedAssignment = await chooseTeamLeadAssignment(campaign, routingDate, preferredCircles)
+  let selectedAssignment: Awaited<ReturnType<typeof chooseTeamLeadAssignment>>
+  try {
+    selectedAssignment = await chooseTeamLeadAssignment(campaign, routingDate, preferredCircles)
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'Campaign Team Lead selection failed.'
+    const isIncomingDuplicate = hasPriorIncomingDuplicate && priorIncomingLead
+    await prisma.incomingLead.update({
+      where: { id: input.incomingLeadId },
+      data: {
+        status: isIncomingDuplicate ? 'DUPLICATE' : 'BUCKET',
+        externalCampaignId: campaign.externalCampaignId,
+        normalizedPhone,
+        processedLeadId: null,
+        selectedTeamLeadUserId: null,
+        selectedTeamLeadEmployeeId: null,
+        selectedBdUserId: null,
+        errorMessage: isIncomingDuplicate
+          ? `Duplicate phone number. Existing incoming lead: ${priorIncomingLead.id}`
+          : errorMessage,
+        processedAt: receivedAt,
+      },
+    })
+    return {
+      success: true,
+      bucketed: !isIncomingDuplicate,
+      deduplicated: Boolean(isIncomingDuplicate),
+      leadId: null,
+      leadRef: null,
+      campaign: {
+        id: campaign.id,
+        externalCampaignId: campaign.externalCampaignId,
+        displayName: campaign.displayName,
+      },
+      teamLead: null,
+      bd: null,
+      assignedToTeamLeadFallback: false,
+    }
+  }
+
   let selectedBd: {
     id: string
     userId: string
@@ -1343,7 +1389,6 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
       role: UserRole
     }
   }
-  let assignedToTeamLeadFallback = false
   try {
     selectedBd = await chooseBdForTeamLead(
       campaign.externalCampaignId,
@@ -1353,16 +1398,45 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
       campaign.department?.name ?? null,
       routingDate
     )
-  } catch {
-    assignedToTeamLeadFallback = true
-    selectedBd = {
-      id: selectedAssignment.teamLeadEmployeeId,
-      userId: selectedAssignment.teamLeadUserId,
-      user: {
-        id: selectedAssignment.teamLeadUserId,
-        name: selectedAssignment.teamLeadUser.name,
-        role: selectedAssignment.teamLeadUser.role,
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'No eligible BD is available for this campaign.'
+    const isIncomingDuplicate = hasPriorIncomingDuplicate && priorIncomingLead
+    await prisma.incomingLead.update({
+      where: { id: input.incomingLeadId },
+      data: {
+        status: isIncomingDuplicate ? 'DUPLICATE' : 'BUCKET',
+        externalCampaignId: campaign.externalCampaignId,
+        normalizedPhone,
+        processedLeadId: null,
+        selectedTeamLeadUserId: selectedAssignment.teamLeadUserId,
+        selectedTeamLeadEmployeeId: selectedAssignment.teamLeadEmployeeId,
+        selectedBdUserId: null,
+        processedAt: receivedAt,
+        errorMessage: isIncomingDuplicate
+          ? `Duplicate phone number. Existing incoming lead: ${priorIncomingLead.id}`
+          : `Campaign matched, but no BD is available for assignment: ${errorMessage}`,
       },
+    })
+
+    return {
+      success: true,
+      bucketed: !isIncomingDuplicate,
+      deduplicated: Boolean(isIncomingDuplicate),
+      leadId: null,
+      leadRef: null,
+      campaign: {
+        id: campaign.id,
+        externalCampaignId: campaign.externalCampaignId,
+        displayName: campaign.displayName,
+      },
+      teamLead: {
+        employeeId: selectedAssignment.teamLeadEmployeeId,
+        userId: selectedAssignment.teamLeadUserId,
+        name: selectedAssignment.teamLeadUser.name,
+      },
+      bd: null,
+      assignedToTeamLeadFallback: false,
     }
   }
 
@@ -1452,7 +1526,7 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
       processedLeadId: lead.id,
       selectedTeamLeadUserId: selectedAssignment.teamLeadUserId,
       selectedTeamLeadEmployeeId: selectedAssignment.teamLeadEmployeeId,
-      selectedBdUserId: assignedToTeamLeadFallback ? null : selectedBd.userId,
+      selectedBdUserId: selectedBd.userId,
       processedAt: receivedAt,
       errorMessage: duplicateLead
         ? `Duplicate phone number. Existing lead: ${duplicateLead.leadRef}. Duplicate count: ${duplicateLead.duplCount}`
@@ -1464,6 +1538,7 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
 
   return {
     success: true,
+    bucketed: false,
     deduplicated: isDuplicate,
     leadId: lead.id,
     leadRef: lead.leadRef,
@@ -1482,6 +1557,6 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
       userId: selectedBd.userId,
       name: selectedBd.user.name,
     },
-    assignedToTeamLeadFallback,
+    assignedToTeamLeadFallback: false,
   }
 }

@@ -293,7 +293,7 @@ export interface MapMySQLLeadResult {
   phoneNumber: string
   alternateNumber: string | null
   attendantName: string | null
-  bdId: string
+  bdId: string | null
   status: string
   pipelineStage: PipelineStage
   circle: string
@@ -309,9 +309,9 @@ export interface MapMySQLLeadResult {
   [key: string]: unknown
 }
 
-export type MapMySQLLeadDraftResult = Omit<MapMySQLLeadResult, 'bdId'> & {
-  bdId: string | null
-}
+// Avoid Omit here: MapMySQLLeadResult has an index signature and Omit would
+// erase the concrete field types needed by the incoming-lead processor.
+export type MapMySQLLeadDraftResult = MapMySQLLeadResult
 
 /**
  * Maps MySQL lead row to Prisma Lead create/update data (synchronous when BD is in bdMap).

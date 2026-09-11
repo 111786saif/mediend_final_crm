@@ -16,7 +16,7 @@ type RetryIncomingLeadsBody = {
 
 type RetryIncomingLeadResultItem = {
   incomingLeadId: string
-  status: 'processed' | 'already_processed' | 'duplicate' | 'failed' | 'skipped'
+  status: 'processed' | 'already_processed' | 'duplicate' | 'failed' | 'bucketed' | 'skipped'
   leadId?: string
   leadRef?: string
   assignedBdName?: string | null
@@ -138,16 +138,17 @@ export async function POST(request: NextRequest) {
     let processedCount = 0
     let duplicateCount = 0
     let failedCount = 0
+    let bucketCount = 0
     let skippedCount = 0
     const results: RetryIncomingLeadResultItem[] = []
 
     for (const incomingLead of orderedIncomingLeads) {
-      if (incomingLead.status !== 'FAILED') {
+      if (incomingLead.status !== 'FAILED' && incomingLead.status !== 'BUCKET') {
         skippedCount += 1
         results.push({
           incomingLeadId: incomingLead.id,
           status: 'skipped',
-          error: 'Only failed incoming leads can be retried.',
+          error: 'Only failed or bucket incoming leads can be retried.',
         })
         continue
       }
@@ -174,6 +175,16 @@ export async function POST(request: NextRequest) {
             results.push({
               incomingLeadId: incomingLead.id,
               status: 'failed',
+              error: result.error,
+            })
+            continue
+          }
+
+          if (result.status === 'bucketed') {
+            bucketCount += 1
+            results.push({
+              incomingLeadId: incomingLead.id,
+              status: 'bucketed',
               error: result.error,
             })
             continue
@@ -221,6 +232,16 @@ export async function POST(request: NextRequest) {
             receivedAt: incomingLead.receivedAt,
           })
 
+          if (result.bucketed) {
+            bucketCount += 1
+            results.push({
+              incomingLeadId: incomingLead.id,
+              status: 'bucketed',
+              error: 'Campaign matched, but no BD is currently available for assignment.',
+            })
+            continue
+          }
+
           if (result.deduplicated) {
             duplicateCount += 1
           } else {
@@ -229,9 +250,9 @@ export async function POST(request: NextRequest) {
           results.push({
             incomingLeadId: incomingLead.id,
             status: result.deduplicated ? 'duplicate' : 'processed',
-            leadId: result.leadId,
-            leadRef: result.leadRef,
-            assignedBdName: result.bd.name,
+            leadId: result.leadId ?? undefined,
+            leadRef: result.leadRef ?? undefined,
+            assignedBdName: result.bd?.name ?? null,
           })
           continue
         }
@@ -269,6 +290,7 @@ export async function POST(request: NextRequest) {
         processedCount,
         duplicateCount,
         failedCount,
+        bucketCount,
         skippedCount,
         results,
       },

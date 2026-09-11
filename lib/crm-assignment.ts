@@ -71,6 +71,10 @@ export type CrmAssignmentDryRunResult = {
   }
   candidateDiagnostics: CandidateReason[]
   explanation: string
+  // Campaign routing could not select an eligible Team Lead or BD.
+  requiresManualAssignment?: boolean
+  campaignMatched?: boolean
+  campaignActive?: boolean
 }
 
 type LoadedRule = Prisma.CrmAssignmentRuleGetPayload<{

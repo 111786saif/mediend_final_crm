@@ -7,7 +7,10 @@ import {
   getCampaignForWebhook,
   previewCampaignLeadAssignment,
 } from '@/lib/crm-campaigns'
-import { dryRunCrmLeadAssignment } from '@/lib/crm-assignment'
+import {
+  dryRunCrmLeadAssignment,
+  type CrmAssignmentDryRunResult,
+} from '@/lib/crm-assignment'
 import {
   DUPLICATE_LEAD_STATUS,
   normalizeLeadPhoneToLast10,
@@ -16,6 +19,7 @@ import {
 
 export type ImportedLeadSource =
   | 'savemyleads'
+  | 'mysql'
   | 'csv'
   | 'api'
   | 'webhook'
@@ -35,7 +39,7 @@ export type ImportedLeadCreateInput = {
   assignmentContext: ImportedLeadAssignmentContext
   forceDuplicateStatus?: boolean
   generateManualLeadRef?: boolean
-  leadData: Omit<Prisma.LeadCreateInput, 'bd' | 'bdeName'> & {
+  leadData: Omit<Prisma.LeadUncheckedCreateInput, 'bdId' | 'bdeName'> & {
     bdId?: string | null
     bdeName?: string | null
     treatmentMasterId?: string | null
@@ -48,9 +52,9 @@ export type ImportedLeadIngestionResult = {
   leadId: string
   leadRef: string
   assignmentApplied: boolean
-  matchedRule: unknown
-  assignment: unknown
-  candidateDiagnostics: unknown
+  matchedRule: CrmAssignmentDryRunResult['matchedRule']
+  assignment: CrmAssignmentDryRunResult['assignment']
+  candidateDiagnostics: CrmAssignmentDryRunResult['candidateDiagnostics']
   explanation: string
   duplicateLeadId?: string
   duplicateLeadRef?: string
@@ -88,16 +92,22 @@ export async function previewImportedLeadAssignment(
     })
 
     if (campaignPreview.campaignFound) {
-      return campaignPreview.result
+      return {
+        ...campaignPreview.result,
+        campaignMatched: true,
+      }
     }
   }
 
-  return dryRunCrmLeadAssignment({
+  return {
+    ...(await dryRunCrmLeadAssignment({
     city: assignmentContext.city ?? null,
     category: assignmentContext.category ?? null,
     departmentId: assignmentContext.departmentId ?? null,
     assignmentDate: assignmentContext.assignmentDate,
-  })
+    })),
+    campaignMatched: false,
+  }
 }
 
 export async function createImportedLeadWithCrmAssignment(

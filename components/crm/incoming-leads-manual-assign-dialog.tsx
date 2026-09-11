@@ -158,9 +158,9 @@ export function IncomingLeadsManualAssignDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Assign Failed Incoming Leads</DialogTitle>
+          <DialogTitle>Assign Incoming Leads</DialogTitle>
           <DialogDescription>
-            Assign the selected failed incoming leads to one or more users. Selection order is used
+            Assign the selected incoming leads to one or more users. Selection order is used
             for round robin.
           </DialogDescription>
         </DialogHeader>

@@ -124,6 +124,7 @@ export async function POST(request: NextRequest) {
     let updatedCount = 0
     let errorCount = 0
     let assignmentFailedCount = 0
+    let bucketCount = 0
     let maxDate = lastSyncedDate
     let maxId: number | null = null
     const syncedLeadIds: number[] = []
@@ -195,6 +196,9 @@ export async function POST(request: NextRequest) {
             assignmentFailedCount++
             errorCount++
             console.log(`[mysql-sync] leadRef=${leadRef} failed assignment`)
+          } else if (result.status === 'bucketed') {
+            bucketCount++
+            console.log(`[mysql-sync] leadRef=${leadRef} placed in assignment bucket`)
           }
         }
       } catch (error) {
@@ -288,8 +292,10 @@ export async function POST(request: NextRequest) {
       updated: updatedCount,
       errors: errorCount,
       assignmentFailed: assignmentFailedCount,
+      bucketed: bucketCount,
       queueRetryProcessed: queueRetryResult.processed,
       queueRetryFailed: queueRetryResult.failed,
+      queueRetryBucketed: queueRetryResult.bucketed,
       executionTimeMs: executionTime,
     })
   } catch (error) {

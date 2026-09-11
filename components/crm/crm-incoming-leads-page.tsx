@@ -251,10 +251,11 @@ type IncomingLeadRetryResult = {
   processedCount: number
   duplicateCount: number
   failedCount: number
+  bucketCount: number
   skippedCount: number
   results: Array<{
     incomingLeadId: string
-    status: 'processed' | 'already_processed' | 'duplicate' | 'failed' | 'skipped'
+    status: 'processed' | 'already_processed' | 'duplicate' | 'failed' | 'bucketed' | 'skipped'
     leadId?: string
     leadRef?: string
     assignedBdName?: string | null
@@ -547,6 +548,8 @@ function webhookStatusBadge(status: string) {
       return <Badge className="bg-amber-500 text-white hover:bg-amber-500">Duplicate</Badge>
     case 'FAILED':
       return <Badge variant="destructive">Failed</Badge>
+    case 'BUCKET':
+      return <Badge className="bg-blue-600 text-white hover:bg-blue-600">Bucket</Badge>
     default:
       return <Badge variant="secondary">{status}</Badge>
   }
@@ -1191,7 +1194,11 @@ export function CrmIncomingLeadsPage() {
   const selectedRetryableLeadIds = useMemo(
     () =>
       rows
-        .filter((row) => selectedManualAssignLeadIds.includes(row.id) && row.status === 'FAILED')
+        .filter(
+          (row) =>
+            selectedManualAssignLeadIds.includes(row.id) &&
+            (row.status === 'FAILED' || row.status === 'BUCKET')
+        )
         .map((row) => row.id),
     [rows, selectedManualAssignLeadIds]
   )
@@ -1410,17 +1417,21 @@ export function CrmIncomingLeadsPage() {
     mutationFn: (payload: { incomingLeadIds: string[] }) =>
       apiPost<IncomingLeadRetryResult>('/api/crm/incoming-leads/retry', payload),
     onSuccess: async (result) => {
-      if (result.failedCount > 0) {
+      if (result.bucketCount > 0) {
+        toast.success(
+          `${result.bucketCount} incoming lead${result.bucketCount === 1 ? '' : 's'} moved to Bucket for manual assignment`
+        )
+      } else if (result.failedCount > 0) {
         toast.error(
-          `Retried ${result.processedCount} failed lead${result.processedCount === 1 ? '' : 's'}, ${result.failedCount} still failed`
+          `Retried ${result.processedCount} incoming lead${result.processedCount === 1 ? '' : 's'}, ${result.failedCount} still failed`
         )
       } else if (result.skippedCount > 0) {
         toast.success(
-          `Retried ${result.processedCount} failed lead${result.processedCount === 1 ? '' : 's'}, ${result.skippedCount} skipped`
+          `Retried ${result.processedCount} incoming lead${result.processedCount === 1 ? '' : 's'}, ${result.skippedCount} skipped`
         )
       } else {
         toast.success(
-          `Retried ${result.processedCount} failed lead${result.processedCount === 1 ? '' : 's'} successfully`
+          `Retried ${result.processedCount} incoming lead${result.processedCount === 1 ? '' : 's'} successfully`
         )
       }
 
@@ -1459,7 +1470,8 @@ export function CrmIncomingLeadsPage() {
     const processed = rows.filter((row) => row.status === 'PROCESSED').length
     const duplicates = rows.filter((row) => row.status === 'DUPLICATE').length
     const failed = rows.filter((row) => row.status === 'FAILED').length
-    return { total, processed, duplicates, failed }
+    const bucket = rows.filter((row) => row.status === 'BUCKET').length
+    return { total, processed, duplicates, failed, bucket }
   }, [rows])
 
   const errorMessage =
@@ -1619,7 +1631,7 @@ export function CrmIncomingLeadsPage() {
           </Card>
         ) : (
           <>
-            <div className="grid gap-3 grid-cols-2 md:grid-cols-2 2xl:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-3 2xl:grid-cols-5">
               <Card>
                 <CardHeader className="p-4 pb-3">
                   <CardDescription>Total webhooks</CardDescription>
@@ -1642,6 +1654,12 @@ export function CrmIncomingLeadsPage() {
                 <CardHeader className="p-4 pb-3">
                   <CardDescription>Failed</CardDescription>
                   <CardTitle>{formatWholeNumber(summary.failed)}</CardTitle>
+                </CardHeader>
+              </Card>
+              <Card>
+                <CardHeader className="p-4 pb-3">
+                  <CardDescription>Bucket</CardDescription>
+                  <CardTitle>{formatWholeNumber(summary.bucket)}</CardTitle>
                 </CardHeader>
               </Card>
             </div>

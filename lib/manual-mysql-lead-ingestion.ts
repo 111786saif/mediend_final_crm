@@ -26,7 +26,7 @@ export type ManualMySQLLeadIngestionItem = {
   leadId?: string
   leadRef?: string
   assignedBdName?: string | null
-  status: 'processed' | 'already_processed' | 'duplicate' | 'failed' | 'skipped'
+  status: 'processed' | 'already_processed' | 'duplicate' | 'bucketed' | 'failed' | 'skipped'
   error?: string
 }
 

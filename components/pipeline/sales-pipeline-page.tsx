@@ -754,7 +754,12 @@ function getLeadPlanningTreatmentText(lead: Lead) {
 }
 
 function getLeadTeamLeadText(lead: Lead) {
+  if (lead.bd?.role === 'TEAM_LEAD' || lead.bd?.role === 'ASSISTANT_CATEGORY_MANAGER') {
+    return lead.bd.name
+  }
+
   return (
+    lead.bd?.employee?.manager?.user?.name?.trim() ||
     (typeof lead.plRecord?.managerName === 'string' && lead.plRecord.managerName.trim()) ||
     (lead.teamLeadId != null ? String(lead.teamLeadId) : '—')
   )
