@@ -265,11 +265,6 @@ export function AppSidebar() {
       return canAccessSalesOpdMonitoring(role)
     }
 
-    // Inventory section: enabled for all roles as requested
-    if (item.title.startsWith('Inv ') || item.title === 'Inventory' || resourceKey.startsWith('inventory.')) {
-      return true
-    }
-
     // Full-access roles: allow if parent module is granted
     if (role === 'ADMIN' || role === 'TESTER' || role === 'MD') {
       const moduleKey = resourceKey.split('.')[0]

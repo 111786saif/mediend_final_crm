@@ -51,7 +51,16 @@ export function usePermissions() {
     if (!permissionsReady) return true
 
     const userPerm = permissions[resourceKey]
-    if (!userPerm) return false
+    if (!userPerm) {
+      // Default permission fallback: if key is under inventory.* and role is not BD, default to allowed (READ)
+      if (resourceKey.startsWith("inventory")) {
+        const userRole = user?.role
+        if (userRole !== "BD") {
+          return true
+        }
+      }
+      return false
+    }
 
     const userRank = PERMISSION_RANKS[userPerm.level] ?? 0
     const requiredRank = PERMISSION_RANKS[requiredLevel] ?? 0

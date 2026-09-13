@@ -268,7 +268,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className={cn("space-y-4 w-full", className)}>
       {/* Table Toolbar controls: Columns Visibility dropdown & CSV Export */}
-      {(enableExport || enableColumnVisibility || columnVisibility !== undefined) && (
+      {(enableExport || enableColumnVisibility) && (
         <div className="flex items-center justify-end gap-2 px-4 py-1">
           {enableExport && (
             <Button
@@ -282,7 +282,7 @@ export function DataTable<TData, TValue>({
             </Button>
           )}
 
-          {(enableColumnVisibility || columnVisibility !== undefined) && (
+          {enableColumnVisibility && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button

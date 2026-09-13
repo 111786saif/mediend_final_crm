@@ -36,6 +36,7 @@ import {
   X,
 } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { usePermissions } from "@/hooks/use-permissions";
 import type {
   Audit,
   InventoryState,
@@ -68,6 +69,21 @@ const tabs = [
 
 type Tab = (typeof tabs)[number][0];
 
+const TAB_RESOURCE_KEYS: Record<Tab, string> = {
+  Overview: "inventory.overview",
+  Stock: "inventory.stock",
+  Purchases: "inventory.purchases",
+  "Transfers & kits": "inventory.transfers",
+  Sales: "inventory.sales",
+  Payments: "inventory.payments",
+  "Implant P&L": "inventory.implant_pnl",
+  "Delivery expenses": "inventory.delivery_expenses",
+  Vendors: "inventory.vendors",
+  "Implant catalog": "inventory.catalog",
+  Locations: "inventory.locations",
+  "Activity log": "inventory.activity",
+};
+
 const short = (id: string) => id.slice(0, 8).toUpperCase();
 
 function Badge({
@@ -94,12 +110,47 @@ function Table({
   heads,
   rows,
   empty = "No records found.",
+  tabKey,
 }: {
   heads: string[];
   rows: ReactNode[][];
   empty?: string;
+  tabKey?: Tab;
 }) {
+  const { hasAccess } = usePermissions();
   const [columnFilters, setColumnFilters] = useState<Record<string, any>>({});
+
+  // Map header titles to column entity keys
+  const getColKey = (head: string) => {
+    const map: Record<string, string> = {
+      Item: "item",
+      Size: "size",
+      Location: "location",
+      Quantity: "quantity",
+      "Unit cost": "unitCost",
+      Expiry: "expiry",
+      Status: "status",
+      Vendor: "vendor",
+      Date: "date",
+      Total: "total",
+    };
+    return map[head] || head.toLowerCase().replace(/[^a-z0-9]/g, "");
+  };
+
+  const rbacColumnVisibility = useMemo(() => {
+    if (!tabKey) return undefined;
+    const tabResKey = TAB_RESOURCE_KEYS[tabKey];
+    if (!tabResKey) return undefined;
+
+    const vis: Record<string, boolean> = {};
+    heads.forEach((head, idx) => {
+      const colKey = getColKey(head);
+      const resKey = `${tabResKey}.column.${colKey}`;
+      // Default to allowed if specific column entity is not configured, otherwise query hasAccess
+      vis[`col_${idx}`] = hasAccess(resKey, "READ");
+    });
+    return vis;
+  }, [heads, tabKey, hasAccess]);
 
   // Convert legacy heads + array rows into TanStack ColumnDef schema with ColumnFilter header support
   const columns = useMemo<ColumnDef<ReactNode[]>[]>(() => {
@@ -181,6 +232,7 @@ function Table({
       emptyMessage={empty}
       enablePagination={filteredRows.length > 25}
       initialPageSize={25}
+      columnVisibility={rbacColumnVisibility}
       tableContainerClassName="border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 shadow-xs"
     />
   );
@@ -213,6 +265,7 @@ export default function InventoryModule({
   apiBase = "/api/inventory",
   initialTab = "Overview",
 }: InventoryModuleProps) {
+  const { hasAccess, permissionsReady } = usePermissions();
   const searchParams = useSearchParams();
   const tabParam = searchParams?.get("tab");
   const [snapshot, setSnapshot] = useState<Snapshot>(),
@@ -397,6 +450,21 @@ export default function InventoryModule({
         </div>
       </div>
     );
+
+  const currentTabAllowed = hasAccess(TAB_RESOURCE_KEYS[tab], "READ");
+
+  if (!currentTabAllowed && permissionsReady) {
+    return (
+      <div className="w-full p-8 text-center">
+        <div className="max-w-md mx-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-8 shadow-xs">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">Access Denied</h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            You do not have permission to view the <strong>{tab}</strong> tab. Please contact your administrator.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const s: InventoryState = snapshot.state,
     write = snapshot.actor.permissions.includes("write"),
@@ -736,7 +804,7 @@ export default function InventoryModule({
       )
       .slice(0, limit);
     return (
-      <Table
+      <Table tabKey={tab}
         heads={[
           "Implant / batch",
           "Size",
@@ -847,7 +915,7 @@ export default function InventoryModule({
               </div>
             )}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-              <section className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+              <section className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
                 <div className="flex justify-between items-center gap-4 p-4 md:px-6 border-b border-slate-200 dark:border-slate-800">
                   <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">Stock at a glance</h2>
                   <div className="flex items-center gap-3">
@@ -897,7 +965,7 @@ export default function InventoryModule({
                   <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">Recent activity</h2>
                   {link("Full activity log", () => navigate("Activity log"))}
                 </div>
-                <Table
+                <Table tabKey={tab}
                   heads={["When", "Action", "Changed by"]}
                   rows={audit
                     .slice(0, 5)
@@ -1116,7 +1184,7 @@ export default function InventoryModule({
               </div>
             </div>
             <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-              <Table
+              <Table tabKey={tab}
                 heads={[
                   "Transfer",
                   "Route",
@@ -1250,7 +1318,7 @@ export default function InventoryModule({
             </div>
             <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
               {paymentView === "HISTORY" ? (
-                <Table
+                <Table tabKey={tab}
                   heads={[
                     "Date",
                     "Direction",
@@ -1375,7 +1443,7 @@ export default function InventoryModule({
                   <Download size={16} /> Export P&L
                 </button>
               </div>
-              <Table
+              <Table tabKey={tab}
                 heads={[
                   "Implant / batch",
                   "Size",
@@ -1445,7 +1513,7 @@ export default function InventoryModule({
                   <Download size={16} /> Export
                 </button>
               </div>
-              <Table
+              <Table tabKey={tab}
                 heads={[
                   "Date / transfer",
                   "Route",
@@ -1527,7 +1595,7 @@ export default function InventoryModule({
                 Show deleted records
               </label>
             </div>
-            <Table
+            <Table tabKey={tab}
               heads={["Name", "Details", "Status", "Actions"]}
               rows={masters.map((r) => [
                 <strong className="font-semibold text-slate-900 dark:text-slate-100">{r.name}</strong>,
@@ -1585,7 +1653,7 @@ export default function InventoryModule({
             <div className="flex items-center flex-wrap gap-3 p-4 border-b border-slate-200 dark:border-slate-800">
               <SearchBox query={query} set={setQuery} />
             </div>
-            <Table
+            <Table tabKey={tab}
               heads={[
                 "When (IST)",
                 "Action",

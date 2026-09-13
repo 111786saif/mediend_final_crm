@@ -37,6 +37,21 @@ const FINANCE_SECTION = [
   'finance.fin_doctor_payoff',
 ] as const
 
+const INVENTORY_SECTION = [
+  'inventory.overview',
+  'inventory.stock',
+  'inventory.purchases',
+  'inventory.transfers',
+  'inventory.sales',
+  'inventory.payments',
+  'inventory.implant_pnl',
+  'inventory.delivery_expenses',
+  'inventory.vendors',
+  'inventory.catalog',
+  'inventory.locations',
+  'inventory.activity',
+] as const
+
 // Predefined allowed sections/pages for each role
 const roleAllowedSections: Record<string, string[]> = {
   MD: [
@@ -55,13 +70,14 @@ const roleAllowedSections: Record<string, string[]> = {
     'insurance_pl.insurance', 'insurance_pl.cash_cases', 'insurance_pl.pl_ledger', 'insurance_pl.pl_surgery',
     'insurance_pl.pl_outstanding', 'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
     ...FINANCE_SECTION, 'finance.md_team_approvals', 'finance.fin_sales_team_cost', 'finance.master_seating_cost',
+    ...INVENTORY_SECTION, 'inventory',
     'actions', 'crm',
   ],
   ADMIN: [
-    'main', 'hrm', 'myhrms', 'sales', 'insurance_pl', 'finance', 'actions', 'crm',
+    'main', 'hrm', 'myhrms', 'sales', 'insurance_pl', 'finance', 'inventory', 'actions', 'crm',
   ],
   TESTER: [
-    'main', 'hrm', 'myhrms', 'sales', 'insurance_pl', 'finance', 'actions', 'crm',
+    'main', 'hrm', 'myhrms', 'sales', 'insurance_pl', 'finance', 'inventory', 'actions', 'crm',
   ],
 
   /** Project Head — no finance module */
@@ -80,6 +96,7 @@ const roleAllowedSections: Record<string, string[]> = {
     'sales.sales_head_targets', 'sales.sales_pnl',
     'insurance_pl.insurance', 'insurance_pl.cash_cases', 'insurance_pl.pl_ledger',
     'insurance_pl.pl_surgery', 'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
+    ...INVENTORY_SECTION, 'inventory',
     'actions.reset_step',
   ],
 
@@ -88,6 +105,7 @@ const roleAllowedSections: Record<string, string[]> = {
     'hrm.people_org', 'hrm.onboarding', 'hrm.compensation_docs', 'hrm.engagement',
     'main.it_permissions', 'main.it_pnl', 'sales.campaign_cpl',
     ...MYHRMS, 'myhrms.ask_md_approval',
+    ...INVENTORY_SECTION, 'inventory',
   ],
 
   HR_HEAD: [
@@ -95,6 +113,7 @@ const roleAllowedSections: Record<string, string[]> = {
     'main.dept_targets', 'hrm.hr_dashboard', 'hrm.recruitment',
     ...MYHRMS, 'myhrms.ask_md_approval',
     ...HRM_CORE,
+    ...INVENTORY_SECTION, 'inventory',
   ],
 
   FINANCE_HEAD: [
@@ -108,6 +127,7 @@ const roleAllowedSections: Record<string, string[]> = {
     'main.company_pnl', 'main.targeted_pnl', 'main.md_pnl', 'main.it_pnl', 'main.loan_demat_revenue',
     ...MYHRMS,
     ...FINANCE_SECTION,
+    ...INVENTORY_SECTION, 'inventory',
   ],
 
   SALES_HEAD: [
@@ -119,6 +139,7 @@ const roleAllowedSections: Record<string, string[]> = {
     'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
     ...MYHRMS, 'myhrms.ask_md_approval', 'main.incentive',
     'crm.incoming_leads', 'crm.churn_rules',
+    ...INVENTORY_SECTION, 'inventory',
     'actions.reset_step',
   ],
 
@@ -126,6 +147,7 @@ const roleAllowedSections: Record<string, string[]> = {
     'main.home', 'main.tasks', 'main.calendar', 'main.meets',
     'insurance_pl.insurance', 'insurance_pl.cash_cases', 'main.chat',
     ...MYHRMS, 'myhrms.ask_md_approval',
+    ...INVENTORY_SECTION, 'inventory',
   ],
 
   PL_HEAD: [
@@ -135,12 +157,14 @@ const roleAllowedSections: Record<string, string[]> = {
     'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
     ...MYHRMS, 'myhrms.ask_md_approval',
     'sales.sales_pnl',
+    ...INVENTORY_SECTION, 'inventory',
   ],
 
   OUTSTANDING_HEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard', 'main.md_outstanding',
     'insurance_pl.pl_outstanding',
     ...MYHRMS, 'myhrms.ask_md_approval',
+    ...INVENTORY_SECTION, 'inventory',
   ],
 
   DIGITAL_MARKETING_HEAD: [
