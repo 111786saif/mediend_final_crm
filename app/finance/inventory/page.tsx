@@ -411,6 +411,12 @@ function InventoryContent() {
           <h1 className="text-3xl font-bold">Inventory Management</h1>
           <p className="text-muted-foreground mt-1">Manage items, locations, purchases, and issues</p>
         </div>
+        <Button variant="outline" asChild>
+          <Link href="/inventory?tab=Transfers+%26+kits">
+            <Boxes className="mr-2 h-4 w-4" />
+            Transfer Stock
+          </Link>
+        </Button>
       </div>
 
       {/* Dashboard Summary Cards */}

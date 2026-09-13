@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { type ColumnDef } from "@tanstack/react-table";
 import {
   Activity,
+  AlertTriangle,
   ArrowLeftRight,
   Box,
   Calendar,
@@ -849,7 +850,10 @@ export default function InventoryModule({
               <section className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
                 <div className="flex justify-between items-center gap-4 p-4 md:px-6 border-b border-slate-200 dark:border-slate-800">
                   <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">Stock at a glance</h2>
-                  {link("View all", () => navigate("Stock"))}
+                  <div className="flex items-center gap-3">
+                    {link("Transfer stock & kits", () => navigate("Transfers & kits"))}
+                    {link("View all", () => navigate("Stock"))}
+                  </div>
                 </div>
                 {stockTable(6)}
               </section>
@@ -887,24 +891,71 @@ export default function InventoryModule({
                 </div>
               </section>
             </div>
-            <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-              <div className="flex justify-between items-center gap-4 p-4 md:px-6 border-b border-slate-200 dark:border-slate-800">
-                <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">Recent activity</h2>
-                {link("Full activity log", () => navigate("Activity log"))}
-              </div>
-              <Table
-                heads={["When", "Action", "Changed by"]}
-                rows={audit
-                  .slice(0, 5)
-                  .map((a) => [
-                    new Date(a.at).toLocaleString("en-IN", {
-                      timeZone: "Asia/Kolkata",
-                    }),
-                    auditLabel(a),
-                    a.actorName,
-                  ])}
-              />
-            </section>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+              <section className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                <div className="flex justify-between items-center gap-4 p-4 md:px-6 border-b border-slate-200 dark:border-slate-800">
+                  <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">Recent activity</h2>
+                  {link("Full activity log", () => navigate("Activity log"))}
+                </div>
+                <Table
+                  heads={["When", "Action", "Changed by"]}
+                  rows={audit
+                    .slice(0, 5)
+                    .map((a) => [
+                      new Date(a.at).toLocaleString("en-IN", {
+                        timeZone: "Asia/Kolkata",
+                      }),
+                      auditLabel(a),
+                      a.actorName,
+                    ])}
+                />
+              </section>
+              <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                <div className="flex justify-between items-center gap-4 p-4 md:px-6 border-b border-slate-200 dark:border-slate-800">
+                  <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">Need attention</h2>
+                  <AlertTriangle size={18} className="text-amber-500" />
+                </div>
+                <div className="divide-y divide-slate-200 dark:divide-slate-800">
+                  {s.locations
+                    .filter((l) => !l.archived)
+                    .map((l) => {
+                      const locBalances = stockRows.filter((r) => r.b.locationId === l.id);
+                      const alerts = locBalances.filter(
+                        (r) => r.status === "Low stock" || r.status === "Empty" || r.status === "Expired" || r.status === "Quarantined"
+                      );
+                      const alertPct = locBalances.length > 0 ? Math.min(100, Math.round((alerts.length / locBalances.length) * 100)) : 0;
+                      return (
+                        <div className="p-4 hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors" key={l.id}>
+                          <div className="flex justify-between gap-2 text-xs font-semibold text-slate-900 dark:text-slate-100">
+                            <span>{l.name}</span>
+                            <b className={alerts.length > 0 ? "text-amber-600 dark:text-amber-400 font-bold" : "text-emerald-600 dark:text-emerald-400"}>
+                              {alerts.length > 0 ? `${alerts.length} alert${alerts.length > 1 ? "s" : ""}` : "Healthy"}
+                            </b>
+                          </div>
+                          <small className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5 truncate">
+                            {alerts.length > 0
+                              ? alerts.map((a) => `${a.p.name} (${a.status})`).join(", ")
+                              : `${l.locationType} · Stock levels normal`}
+                          </small>
+                          <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full mt-2.5 overflow-hidden">
+                            <div
+                              className={`h-full rounded-full transition-all ${
+                                alerts.length > 0
+                                  ? "bg-gradient-to-r from-amber-500 to-rose-500"
+                                  : "bg-emerald-500/40"
+                              }`}
+                              style={{ width: `${alerts.length > 0 ? Math.max(15, alertPct) : 100}%` }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  {!s.locations.length && (
+                    <p className="text-center py-8 text-slate-400 text-xs">No locations found.</p>
+                  )}
+                </div>
+              </section>
+            </div>
           </>
         );
       case "Stock":
@@ -1711,6 +1762,15 @@ export default function InventoryModule({
                 }}
               >
                 <RotateCcw className="mr-1.5 h-4 w-4" /> Reset
+              </Button>
+            )}
+            {tab === "Overview" && (
+              <Button
+                variant="outline"
+                className="px-4 py-2 text-xs font-semibold"
+                onClick={() => navigate("Transfers & kits")}
+              >
+                <ArrowLeftRight className="mr-1.5 h-4 w-4" /> Transfer Stock
               </Button>
             )}
             {write && mainAction && (
