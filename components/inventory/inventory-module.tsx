@@ -122,17 +122,40 @@ function Table({
 
   const getColKey = (head: string) => {
     const map: Record<string, string> = {
+      // Stock
       Item: "item",
+      "Implant / batch": "item",
       Size: "size",
       Location: "location",
+      "On hand": "quantity",
       Quantity: "quantity",
       "Unit cost": "unitCost",
       Expiry: "expiry",
       Status: "status",
+
+      // Purchases & Sales shared/specific
+      Document: "document",
       Vendor: "vendor",
       "Vendor / billed to": "vendor",
-      Date: "date",
+      "Billed to": "billedTo",
+      "Case ref no.": "caseRefNo",
+      "Items & Location": "itemsLocation",
+      "Implant, Batch & Qty": "implantBatchQty",
+      "Unit price": "unitPrice",
+      "GST / type": "gstType",
       Total: "total",
+      Paid: "paid",
+      Outstanding: "outstanding",
+      "Handled by": "handledBy",
+      Actions: "actions",
+
+      // Transfers
+      Transfer: "transfer",
+      Route: "route",
+      Implants: "implants",
+      Units: "units",
+      "Case / type": "caseType",
+      "Courier & fee": "courierFee",
     };
     return map[head] || head.toLowerCase().replace(/[^a-z0-9]/g, "");
   };
