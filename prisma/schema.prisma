@@ -4803,3 +4803,140 @@ model AiToolCall {
   @@index([toolName, createdAt])
   @@index([denied])
 }
+
+model InventoryWorkspace {
+  workspaceId String   @id @map("workspace_id")
+  revision    BigInt   @default(0)
+
+  @@map("inventory_workspaces")
+}
+
+model InventoryAuditEvent {
+  workspaceId String   @map("workspace_id")
+  id          String
+  at          DateTime
+  data        Json
+
+  @@id([workspaceId, id])
+  @@index([workspaceId, at])
+  @@map("inventory_audit_events")
+}
+
+model InventoryCommandReceipt {
+  workspaceId String   @map("workspace_id")
+  requestId   String   @map("request_id")
+  bodyHash    String   @map("body_hash")
+  revision    BigInt
+
+  @@id([workspaceId, requestId])
+  @@map("inventory_command_receipts")
+}
+
+model InventoryVendor {
+  workspaceId String   @map("workspace_id")
+  id          String
+  data        Json
+
+  @@id([workspaceId, id])
+  @@map("inventory_vendors")
+}
+
+model InventoryProduct {
+  workspaceId String   @map("workspace_id")
+  id          String
+  data        Json
+
+  @@id([workspaceId, id])
+  @@map("inventory_products")
+}
+
+model InventoryLocation {
+  workspaceId String   @map("workspace_id")
+  id          String
+  data        Json
+
+  @@id([workspaceId, id])
+  @@map("inventory_locations")
+}
+
+model InventoryLot {
+  workspaceId String   @map("workspace_id")
+  id          String
+  data        Json
+
+  @@id([workspaceId, id])
+  @@map("inventory_lots")
+}
+
+model InventoryBalance {
+  workspaceId String   @map("workspace_id")
+  id          String
+  data        Json
+
+  @@id([workspaceId, id])
+  @@map("inventory_balances")
+}
+
+model InventoryPurchase {
+  workspaceId String   @map("workspace_id")
+  id          String
+  data        Json
+
+  @@id([workspaceId, id])
+  @@map("inventory_purchases")
+}
+
+model InventorySale {
+  workspaceId String   @map("workspace_id")
+  id          String
+  data        Json
+
+  @@id([workspaceId, id])
+  @@map("inventory_sales")
+}
+
+model InventoryTransfer {
+  workspaceId String   @map("workspace_id")
+  id          String
+  data        Json
+
+  @@id([workspaceId, id])
+  @@map("inventory_transfers")
+}
+
+model InventoryDelivery {
+  workspaceId String   @map("workspace_id")
+  id          String
+  data        Json
+
+  @@id([workspaceId, id])
+  @@map("inventory_deliveries")
+}
+
+model InventoryPayment {
+  workspaceId String   @map("workspace_id")
+  id          String
+  data        Json
+
+  @@id([workspaceId, id])
+  @@map("inventory_payments")
+}
+
+model InventoryAttachment {
+  workspaceId String   @map("workspace_id")
+  id          String
+  data        Json
+
+  @@id([workspaceId, id])
+  @@map("inventory_attachments")
+}
+
+model InventoryAttachmentBytes {
+  workspaceId String   @map("workspace_id")
+  id          String
+  bytes       Bytes
+
+  @@id([workspaceId, id])
+  @@map("inventory_attachment_bytes")
+}
+

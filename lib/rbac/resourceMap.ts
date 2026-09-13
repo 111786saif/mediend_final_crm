@@ -10,6 +10,7 @@ export const RESOURCE_MAP = {
   "sales": { label: "Sales & Marketing", component: "SalesGroup" },
   "insurance_pl": { label: "Outstanding & P&L", component: "InsurancePlGroup" },
   "finance": { label: "Finance & Accounts", component: "FinanceGroup" },
+  "inventory": { label: "Inventory Management", component: "InventoryGroup" },
   "actions": { label: "System Actions", component: "SystemActionsGroup" },
   "crm": { label: "CRM", component: "CrmGroup" },
 
@@ -52,6 +53,7 @@ export const RESOURCE_MAP = {
   "main.cumulative_report": { path: "/cumulative-report", component: "CumulativeReportPage" },
   "main.ipd_calendar": { path: "/ipd-calendar", component: "IPDCalendarPage" },
   "main.doctor_admin": { path: "/executive-assistant/doctor-admin", component: "DoctorAdminPage" },
+  "main.inventory": { path: "/inventory", component: "InventoryPage" },
 
   // CRM Group Pages
   "crm.campaigns": { path: "/crm/campaigns", component: "CrmCampaignsPage" },
@@ -124,6 +126,20 @@ export const RESOURCE_MAP = {
   "finance.fin_doctor_payoff": { path: "/finance/doctor-payoff-requests", component: "FinDoctorPayoffPage" },
   "finance.fin_sales_team_cost": { path: "/finance/sales-team-cost", component: "FinSalesTeamCostPage" },
   "finance.master_seating_cost": { path: "/finance/master-seating-cost", component: "MasterSeatingCostPage" },
+
+  // Inventory Group Pages
+  "inventory.overview": { path: "/inventory?tab=Overview", component: "InventoryOverviewPage" },
+  "inventory.stock": { path: "/inventory?tab=Stock", component: "InventoryStockPage" },
+  "inventory.purchases": { path: "/inventory?tab=Purchases", component: "InventoryPurchasesPage" },
+  "inventory.transfers": { path: "/inventory?tab=Transfers+%26+kits", component: "InventoryTransfersPage" },
+  "inventory.sales": { path: "/inventory?tab=Sales", component: "InventorySalesPage" },
+  "inventory.payments": { path: "/inventory?tab=Payments", component: "InventoryPaymentsPage" },
+  "inventory.implant_pnl": { path: "/inventory?tab=Implant+P%26L", component: "InventoryImplantPnLPage" },
+  "inventory.delivery_expenses": { path: "/inventory?tab=Delivery+expenses", component: "InventoryDeliveryExpensesPage" },
+  "inventory.vendors": { path: "/inventory?tab=Vendors", component: "InventoryVendorsPage" },
+  "inventory.catalog": { path: "/inventory?tab=Implant+catalog", component: "InventoryCatalogPage" },
+  "inventory.locations": { path: "/inventory?tab=Locations", component: "InventoryLocationsPage" },
+  "inventory.activity": { path: "/inventory?tab=Activity+log", component: "InventoryActivityPage" },
 
   // ENTITIES (Legacy Leaf Actions & static mapping)
   "leads.table.lead.column.phoneNumber": { component: "PhoneNumberColumn" },

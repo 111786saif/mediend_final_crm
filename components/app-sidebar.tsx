@@ -28,6 +28,7 @@ import {
   ChevronDown,
   DollarSign,
   LogOut,
+  Package,
   Shield,
   Sun,
   Moon,
@@ -109,6 +110,7 @@ function displayLabel(title: string): string {
   if (title.startsWith('Fin ')) return title.replace('Fin ', '')
   if (title.startsWith('CRM ')) return title.replace('CRM ', '')
   if (title.startsWith('Svc ')) return title.replace('Svc ', '')
+  if (title.startsWith('Inv ')) return title.replace('Inv ', '')
   return title
 }
 
@@ -140,6 +142,7 @@ export function AppSidebar() {
   }, [isMobile, setOpenMobile, navigatingRef])
   const [openSections, setOpenSections] = React.useState<Record<string, boolean>>({
     crm: pathname?.startsWith('/crm') ?? false,
+    inventory: pathname?.startsWith('/inventory') ?? false,
     finance: false,
     hr: false,
     myHrms: false,
@@ -252,6 +255,11 @@ export function AppSidebar() {
       return canAccessSalesOpdMonitoring(role)
     }
 
+    // Inventory section: enabled for all roles as requested
+    if (item.title.startsWith('Inv ') || item.title === 'Inventory' || resourceKey.startsWith('inventory.')) {
+      return true
+    }
+
     // Full-access roles: allow if parent module is granted
     if (role === 'ADMIN' || role === 'TESTER' || role === 'MD') {
       const moduleKey = resourceKey.split('.')[0]
@@ -270,6 +278,7 @@ export function AppSidebar() {
   const insurancePlItems: NavItemWithUrl[] = []
   const financeItems: NavItemWithUrl[] = []
   const crmItems: NavItemWithUrl[] = []
+  const inventoryItems: NavItemWithUrl[] = []
 
   for (const item of permitted) {
     if (item.title === 'mediend AI') continue // footer only
@@ -289,6 +298,8 @@ export function AppSidebar() {
       financeItems.push(item)
     } else if (prefix === 'crm') {
       crmItems.push(item)
+    } else if (prefix === 'inventory') {
+      inventoryItems.push(item)
     } else {
       primaryMainItems.push(item)
     }
@@ -300,6 +311,7 @@ export function AppSidebar() {
   const showInsurancePlSection = insurancePlItems.length > 0
   const showFinanceSection = financeItems.length > 0
   const showCrmSection = crmItems.length > 0
+  const showInventorySection = inventoryItems.length > 0
 
   const hrSectionBadge = showHrSection
     ? hrItems.reduce(
@@ -469,6 +481,16 @@ export function AppSidebar() {
             'Finance',
             <DollarSign className="h-4 w-4" />,
             financeItems
+          )}
+
+        {showInventorySection &&
+          renderCollapsible(
+            'inventory',
+            'Inventory',
+            <Package className="h-4 w-4" />,
+            inventoryItems,
+            0,
+            true
           )}
       </SidebarContent>
       <SidebarFooter className="border-t border-sidebar-border">
