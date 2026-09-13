@@ -49,6 +49,7 @@ interface DataTableProps<TData, TValue> {
   onExport?: (data: TData[]) => void
   columnVisibility?: VisibilityState
   onColumnVisibilityChange?: OnChangeFn<VisibilityState>
+  enableColumnVisibility?: boolean
   /** Controlled column order. When provided, overrides the internal drag-reorder state. */
   columnOrder?: ColumnOrderState
   /** Called when the user drag-reorders columns in the Columns dropdown. */
@@ -77,6 +78,7 @@ export function DataTable<TData, TValue>({
   onExport,
   columnVisibility,
   onColumnVisibilityChange,
+  enableColumnVisibility = false,
   columnOrder,
   onColumnOrderChange,
   footer,
@@ -266,7 +268,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className={cn("space-y-4 w-full", className)}>
       {/* Table Toolbar controls: Columns Visibility dropdown & CSV Export */}
-      {(enableExport || !columnVisibility) && (
+      {(enableExport || enableColumnVisibility || columnVisibility !== undefined) && (
         <div className="flex items-center justify-end gap-2 px-4 py-1">
           {enableExport && (
             <Button
@@ -280,7 +282,7 @@ export function DataTable<TData, TValue>({
             </Button>
           )}
 
-          {!columnVisibility && (
+          {(enableColumnVisibility || columnVisibility !== undefined) && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button

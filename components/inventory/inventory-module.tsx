@@ -2,30 +2,39 @@
 import {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
 } from "react";
+import { DataTable } from "@/components/ui/data-table";
+import { ColumnFilter } from "@/components/ui/column-filter";
+import { Button } from "@/components/ui/button";
+import { type ColumnDef } from "@tanstack/react-table";
 import {
   Activity,
   ArrowLeftRight,
   Box,
+  Calendar,
   ChevronRight,
   ClipboardList,
   Download,
   IndianRupee,
+  Info,
   LayoutDashboard,
   MapPin,
   Plus,
   RefreshCw,
+  RotateCcw,
   Search,
   ShoppingCart,
+  Sparkles,
   Truck,
   Users,
   Wallet,
   X,
 } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import type {
   Audit,
   InventoryState,
@@ -89,36 +98,90 @@ function Table({
   rows: ReactNode[][];
   empty?: string;
 }) {
+  const [columnFilters, setColumnFilters] = useState<Record<string, any>>({});
+
+  // Convert legacy heads + array rows into TanStack ColumnDef schema with ColumnFilter header support
+  const columns = useMemo<ColumnDef<ReactNode[]>[]>(() => {
+    return heads.map((head, idx) => {
+      // Determine filter options for string cells
+      const uniqueValues = Array.from(
+        new Set(
+          rows
+            .map((r) => {
+              const val = r[idx];
+              if (typeof val === "string" || typeof val === "number") return String(val);
+              return "";
+            })
+            .filter((v) => v !== "" && v !== "—")
+        )
+      );
+
+      return {
+        id: `col_${idx}`,
+        accessorFn: (row) => row[idx],
+        header: () => {
+          // If options exist or header is standard, attach ColumnFilter
+          if (uniqueValues.length > 0 && uniqueValues.length <= 100) {
+            return (
+              <ColumnFilter
+                options={uniqueValues}
+                value={columnFilters[`col_${idx}`]}
+                onChange={(val) =>
+                  setColumnFilters((prev) => ({ ...prev, [`col_${idx}`]: val }))
+                }
+                type={uniqueValues.length > 15 ? "search" : "multiSelect"}
+                trigger={
+                  <span className="cursor-pointer font-semibold text-slate-700 dark:text-slate-200 inline-flex items-center gap-1.5 hover:text-teal-600">
+                    {head}
+                  </span>
+                }
+              />
+            );
+          }
+          return (
+            <span className="text-[11px] tracking-wider uppercase text-slate-500 dark:text-slate-400 font-semibold">
+              {head}
+            </span>
+          );
+        },
+        cell: ({ row }) => (
+          <div className="text-slate-800 dark:text-slate-200">
+            {row.original[idx]}
+          </div>
+        ),
+      };
+    });
+  }, [heads, rows, columnFilters]);
+
+  // Apply column filters on local row arrays
+  const filteredRows = useMemo(() => {
+    return rows.filter((row) => {
+      return Object.entries(columnFilters).every(([colId, filterVal]) => {
+        if (!filterVal || (Array.isArray(filterVal) && filterVal.length === 0)) return true;
+        const colIdx = parseInt(colId.replace("col_", ""), 10);
+        const cellVal = row[colIdx];
+        const cellStr = typeof cellVal === "string" || typeof cellVal === "number" ? String(cellVal).toLowerCase() : "";
+
+        if (Array.isArray(filterVal)) {
+          return filterVal.some((fv) => cellStr.includes(String(fv).toLowerCase()));
+        }
+        if (typeof filterVal === "string") {
+          return cellStr.includes(filterVal.toLowerCase());
+        }
+        return true;
+      });
+    });
+  }, [rows, columnFilters]);
+
   return (
-    <div className="overflow-x-auto w-full">
-      <table className="w-full text-left border-collapse text-xs">
-        <thead>
-          <tr className="bg-slate-50 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800">
-            {heads.map((h) => (
-              <th key={h} className="text-[11px] tracking-wider uppercase text-slate-500 dark:text-slate-400 font-semibold px-4.5 py-3 whitespace-nowrap">
-                {h}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
-          {rows.map((r, i) => (
-            <tr key={i} className="group hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
-              {r.map((cell, j) => (
-                <td key={j} className="px-4.5 py-3.5 align-middle whitespace-nowrap text-slate-800 dark:text-slate-200">
-                  {cell}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {!rows.length && (
-        <div className="text-center py-12 px-4 text-slate-500 dark:text-slate-400 text-xs">
-          {empty}
-        </div>
-      )}
-    </div>
+    <DataTable
+      columns={columns}
+      data={filteredRows}
+      emptyMessage={empty}
+      enablePagination={filteredRows.length > 25}
+      initialPageSize={25}
+      tableContainerClassName="border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 shadow-xs"
+    />
   );
 }
 
@@ -132,10 +195,10 @@ function Stat({
   caption: string;
 }) {
   return (
-    <article className="relative overflow-hidden border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 p-5 shadow-sm hover:shadow-md transition-all before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:bg-gradient-to-r before:from-teal-500 before:to-blue-500">
-      <span className="text-xs font-medium text-slate-500 dark:text-slate-400">{label}</span>
-      <strong className="block text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 my-1.5 break-words">{value}</strong>
-      <small className="text-[11px] text-slate-500 dark:text-slate-400 block">{caption}</small>
+    <article className="relative overflow-hidden border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 px-3 py-2 sm:px-3.5 sm:py-2.5 shadow-2xs hover:shadow-xs transition-all">
+      <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider block">{label}</span>
+      <strong className="block text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 my-0.5 break-words">{value}</strong>
+      <small className="text-[10px] text-slate-500 dark:text-slate-400 block truncate">{caption}</small>
     </article>
   );
 }
@@ -288,11 +351,14 @@ export default function InventoryModule({
     }
   }
 
+  const router = useRouter();
+
   function navigate(next: Tab) {
     setTab(next);
     setQuery("");
     setLocation("");
     setStockStatus("");
+    router.push(`/inventory?tab=${encodeURIComponent(next)}`);
   }
 
   function open(request: FormRequest) {
@@ -303,30 +369,32 @@ export default function InventoryModule({
 
   if (!snapshot)
     return (
-      <section className="max-w-[1700px] mx-auto p-6 space-y-6">
-        <header className="flex justify-between items-center gap-5 p-6 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
-          <div>
-            <p className="flex items-center gap-1.5 tracking-wider text-[11px] font-bold uppercase text-teal-700 dark:text-teal-400 mb-1">MEDIEND WORKSPACE</p>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Inventory</h1>
+      <div className="w-full">
+        <header className="sticky top-0 z-20 bg-background/80 px-4 py-2 backdrop-blur-xl dark:bg-background/80 md:px-6 shrink-0 w-full min-w-0">
+          <div className="flex items-center justify-between gap-4 w-full min-w-0">
+            <div>
+              <h1 className="text-xl font-bold tracking-tight md:text-2xl text-foreground">
+                Inventory
+              </h1>
+            </div>
           </div>
         </header>
-        <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden p-12 text-center">
-          {loading ? (
-            <div className="text-slate-500 dark:text-slate-400 text-sm">Loading inventory…</div>
-          ) : (
-            <div className="space-y-4">
-              <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">Inventory is unavailable</h2>
-              <p className="text-sm text-slate-500 dark:text-slate-400">{error}</p>
-              <button
-                className="inline-flex items-center justify-center gap-2 border border-teal-700 bg-slate-900 hover:bg-slate-800 dark:bg-teal-600 dark:hover:bg-teal-500 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow-sm transition-all"
-                onClick={() => void refresh()}
-              >
-                Retry connection
-              </button>
-            </div>
-          )}
+        <div className="p-4 md:p-6">
+          <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden p-12 text-center">
+            {loading ? (
+              <div className="text-slate-500 dark:text-slate-400 text-sm font-medium">Loading inventory…</div>
+            ) : (
+              <div className="space-y-4">
+                <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">Inventory is unavailable</h2>
+                <p className="text-sm text-slate-500 dark:text-slate-400">{error}</p>
+                <Button onClick={() => void refresh()}>
+                  Retry connection
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
-      </section>
+      </div>
     );
 
   const s: InventoryState = snapshot.state,
@@ -346,16 +414,13 @@ export default function InventoryModule({
 
   const button = (label: string, request: FormRequest, danger = false) =>
     write ? (
-      <button
-        className={
-          danger
-            ? "inline-flex items-center justify-center gap-1.5 border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-950/30 hover:bg-red-100 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 text-xs font-semibold px-3 py-1.5 rounded-md transition-all"
-            : "inline-flex items-center justify-center gap-1.5 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-teal-50 hover:text-teal-700 dark:hover:bg-teal-950/40 dark:hover:text-teal-300 text-slate-800 dark:text-slate-200 text-xs font-semibold px-3 py-1.5 rounded-md shadow-sm transition-all"
-        }
+      <Button
+        variant={danger ? "destructive" : "outline"}
+        size="sm"
         onClick={() => open(request)}
       >
         {label}
-      </button>
+      </Button>
     ) : null;
 
   const link = (label: string, callback: () => void) => (
@@ -530,7 +595,7 @@ export default function InventoryModule({
         <label className="flex flex-col gap-1 text-xs font-medium text-slate-600 dark:text-slate-400">
           Implant
           <select
-            className="px-3 py-1.5 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="px-3 py-1.5 pr-8 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_0.75rem_center]"
             value={productFilter}
             onChange={(e) => setProductFilter(e.target.value)}
           >
@@ -736,7 +801,7 @@ export default function InventoryModule({
       case "Overview":
         return (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 mb-3">
               <Stat
                 label="Stock on hand"
                 value={totals.onHand}
@@ -759,13 +824,21 @@ export default function InventoryModule({
               />
             </div>
             {!s.products.length && (
-              <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 p-5 rounded-xl text-emerald-800 dark:text-emerald-300 text-sm leading-relaxed mb-6 shadow-sm space-y-3">
-                <h3 className="font-semibold text-base">Set up your inventory</h3>
-                <p>
-                  Add a vendor, an implant and a receiving location, then
-                  receive your first purchase.
-                </p>
-                <div className="flex gap-2 flex-wrap pt-1">
+              <div className="relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-gradient-to-r from-teal-500/10 via-emerald-500/10 to-teal-500/15 dark:from-teal-950/40 dark:via-emerald-950/30 dark:to-teal-900/30 border border-teal-500/30 dark:border-teal-500/40 p-4 sm:p-5 rounded-2xl shadow-xs mb-6">
+                <div className="flex items-center gap-3.5 min-w-0">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-600 text-white flex items-center justify-center shadow-md shadow-teal-500/20 shrink-0">
+                    <Sparkles size={20} />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                      Set up your inventory
+                    </h3>
+                    <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+                      Add a vendor, an implant and a receiving location to receive your first purchase.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-2 items-center shrink-0 flex-wrap w-full md:w-auto justify-end pt-1 md:pt-0">
                   {button("Add vendor", { kind: "vendor" })}
                   {button("Add implant", { kind: "product" })}
                   {button("Add location", { kind: "location" })}
@@ -776,7 +849,7 @@ export default function InventoryModule({
               <section className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
                 <div className="flex justify-between items-center gap-4 p-4 md:px-6 border-b border-slate-200 dark:border-slate-800">
                   <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">Stock at a glance</h2>
-                  {link("View all →", () => navigate("Stock"))}
+                  {link("View all", () => navigate("Stock"))}
                 </div>
                 {stockTable(6)}
               </section>
@@ -817,7 +890,7 @@ export default function InventoryModule({
             <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
               <div className="flex justify-between items-center gap-4 p-4 md:px-6 border-b border-slate-200 dark:border-slate-800">
                 <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">Recent activity</h2>
-                {link("Full activity log →", () => navigate("Activity log"))}
+                {link("Full activity log", () => navigate("Activity log"))}
               </div>
               <Table
                 heads={["When", "Action", "Changed by"]}
@@ -836,12 +909,35 @@ export default function InventoryModule({
         );
       case "Stock":
         return (
-          <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+          <div className="space-y-3.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 mb-3">
+              <Stat
+                label="Stock on hand"
+                value={totals.onHand}
+                caption={`${totals.inTransit} units in transit`}
+              />
+              <Stat
+                label="Stock value"
+                value={money(totals.stockValue)}
+                caption="Purchase cost, excluding GST"
+              />
+              <Stat
+                label="Receivables"
+                value={money(totals.receivable)}
+                caption="Outstanding sales collections"
+              />
+              <Stat
+                label="Payables"
+                value={money(totals.payable)}
+                caption="Outstanding vendor payments"
+              />
+            </div>
+            <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
             <div className="flex items-center flex-wrap gap-3 p-4 border-b border-slate-200 dark:border-slate-800">
               <SearchBox query={query} set={setQuery} />
               <select
                 aria-label="Location filter"
-                className="px-3 py-2 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="px-3 py-2 pr-8 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_0.75rem_center]"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
               >
@@ -854,7 +950,7 @@ export default function InventoryModule({
               </select>
               <select
                 aria-label="Stock status"
-                className="px-3 py-2 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="px-3 py-2 pr-8 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_0.75rem_center]"
                 value={stockStatus}
                 onChange={(e) => setStockStatus(e.target.value)}
               >
@@ -913,27 +1009,60 @@ export default function InventoryModule({
             </div>
             {stockTable()}
           </section>
-        );
+        </div>
+      );
       case "Purchases":
       case "Sales":
         return (
           <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
             <div className="flex items-center flex-wrap gap-3 p-4 border-b border-slate-200 dark:border-slate-800">
-              <SearchBox query={query} set={setQuery} />
-              <span className="text-xs text-slate-500 dark:text-slate-400">
-                Search document, vendor or billed-to name
-              </span>
+              <SearchBox query={query} set={setQuery} placeholder="Search document, vendor or billed-to name…" />
             </div>
             {documentTable(tab === "Purchases" ? "PURCHASE" : "SALE")}
           </section>
         );
-      case "Transfers & kits":
+      case "Transfers & kits": {
+        const inTransitCount = s.transfers.filter((t) => t.status === "IN_TRANSIT").length;
+        const awaitingReceiptCount = s.transfers.filter(
+          (t) => t.status === "IN_TRANSIT" && t.kind.toUpperCase().includes("TRANSFER")
+        ).length;
+        const receivedCount = s.transfers.filter((t) => t.status === "RECEIVED").length;
+        const surgeryKitsCount = s.transfers.filter(
+          (t) => t.kind.toUpperCase().includes("KIT") || t.caseReference
+        ).length;
+
         return (
-          <div className="space-y-6">
-            <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 p-4.5 rounded-xl text-emerald-800 dark:text-emerald-300 text-xs leading-relaxed shadow-sm">
-              Sending a kit is not a sale. Confirm receipt, sell only the
-              implants used, and return unused stock when needed. Delivery
-              expenses are recorded separately.
+          <div className="space-y-3.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 mb-3">
+              <Stat
+                label="In transit"
+                value={inTransitCount}
+                caption="Transfers pending receipt"
+              />
+              <Stat
+                label="Awaiting receipt"
+                value={awaitingReceiptCount}
+                caption="Inter-location stock in movement"
+              />
+              <Stat
+                label="Received"
+                value={receivedCount}
+                caption="Completed stock movements"
+              />
+              <Stat
+                label="Surgery kits"
+                value={surgeryKitsCount}
+                caption="Case-referenced & kit dispatches"
+              />
+            </div>
+            <div className="flex items-start gap-3 bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-800/50 p-4 rounded-xl text-blue-900 dark:text-blue-200 text-xs leading-relaxed shadow-xs">
+              <Info className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+              <div>
+                <strong className="font-semibold block text-blue-950 dark:text-blue-100 mb-0.5">Transfer & Kit Policy Note</strong>
+                <span>
+                  Sending a kit is not a sale. Confirm receipt, sell only the implants used, and return unused stock when needed. Delivery expenses are recorded separately.
+                </span>
+              </div>
             </div>
             <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
               <Table
@@ -1013,19 +1142,38 @@ export default function InventoryModule({
             </section>
           </div>
         );
-      case "Payments":
+      }
+      case "Payments": {
+        const collectedAmount = s.payments
+          .filter((p) => p.documentKind === "SALE")
+          .reduce((acc, p) => acc + p.amount, 0);
+
+        const paidToVendorsAmount = s.payments
+          .filter((p) => p.documentKind === "PURCHASE")
+          .reduce((acc, p) => acc + p.amount, 0);
+
         return (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-3.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 mb-3">
               <Stat
                 label="To collect"
                 value={money(totals.receivable)}
                 caption="Unpaid sale balances"
               />
               <Stat
+                label="Collected from sales"
+                value={money(collectedAmount)}
+                caption="Total customer payments received"
+              />
+              <Stat
                 label="To pay"
                 value={money(totals.payable)}
                 caption="Unpaid purchase balances"
+              />
+              <Stat
+                label="Paid to vendors"
+                value={money(paidToVendorsAmount)}
+                caption="Total vendor payments settled"
               />
             </div>
             <div className="flex gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl w-fit border border-slate-200 dark:border-slate-800">
@@ -1082,12 +1230,12 @@ export default function InventoryModule({
             </section>
           </div>
         );
+      }
       case "Implant P&L": {
         const r = profitReport(s, { from, to, productId: productFilter });
         return (
-          <div className="space-y-6">
-            {reportControls(true)}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="space-y-3.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 mb-3">
               <Stat
                 label="Selling value"
                 value={money(r.revenue)}
@@ -1113,12 +1261,14 @@ export default function InventoryModule({
                 caption="Profit ÷ selling value × 100"
               />
             </div>
-            <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 p-4.5 rounded-xl text-emerald-800 dark:text-emerald-300 text-xs leading-relaxed shadow-sm">
-              <strong>Delivery charges are not included in implant P&L.</strong>{" "}
-              Only posted sales and their original purchase costs are included.
-              Unsold stock is not expensed. Payments do not change profit. This
-              is a pre-GST product margin report; delivery, overheads, stock
-              write-offs and other expenses are separate.
+            <div className="flex items-start gap-3 bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-800/50 p-4 rounded-xl text-blue-900 dark:text-blue-200 text-xs leading-relaxed shadow-xs">
+              <Info className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+              <div>
+                <strong className="font-semibold block text-blue-950 dark:text-blue-100 mb-0.5">Implant P&L Calculation Note</strong>
+                <span>
+                  Delivery charges are not included in implant P&L. Only posted sales and their original purchase costs are included. Unsold stock is not expensed. Payments do not change profit. This is a pre-GST product margin report; delivery, overheads, stock write-offs and other expenses are separate.
+                </span>
+              </div>
             </div>
             <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
               <div className="flex justify-between items-center gap-4 p-4 md:px-6 border-b border-slate-200 dark:border-slate-800">
@@ -1210,8 +1360,7 @@ export default function InventoryModule({
       case "Delivery expenses": {
         const r = deliveryReport(s, { from, to });
         return (
-          <div className="space-y-6">
-            {reportControls()}
+          <div className="space-y-3.5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Stat
                 label="Delivery expenses"
@@ -1316,7 +1465,7 @@ export default function InventoryModule({
         return (
           <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
             <div className="flex items-center flex-wrap gap-4 p-4 border-b border-slate-200 dark:border-slate-800">
-              <SearchBox query={query} set={setQuery} />
+              <SearchBox query={query} set={setQuery} placeholder={`Search ${tab.toLowerCase()}…`} />
               <label className="text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2 cursor-pointer select-none">
                 <input
                   type="checkbox"
@@ -1371,7 +1520,7 @@ export default function InventoryModule({
                           archived: String(!r.archived),
                         },
                       },
-                      !r.archived,
+                      true,
                     )}
                 </div>,
               ])}
@@ -1384,9 +1533,6 @@ export default function InventoryModule({
           <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
             <div className="flex items-center flex-wrap gap-3 p-4 border-b border-slate-200 dark:border-slate-800">
               <SearchBox query={query} set={setQuery} />
-              <span className="text-xs text-slate-500 dark:text-slate-400">
-                Every successful write · actor · timestamp · before / after
-              </span>
             </div>
             <Table
               heads={[
@@ -1491,53 +1637,104 @@ export default function InventoryModule({
                 : undefined;
 
   return (
-    <section className="max-w-[1700px] mx-auto p-4 sm:p-6 space-y-6">
-      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-5 sm:p-6 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
-        <div>
-          <p className="flex items-center gap-1.5 tracking-wider text-[11px] font-bold uppercase text-teal-700 dark:text-teal-400 mb-1">
-            MEDIEND WORKSPACE <ChevronRight size={12} /> INVENTORY
-          </p>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">{tab === "Overview" ? "Inventory overview" : tab}</h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            {tab === "Overview"
-              ? "Every implant. Every location. One clear picture."
-              : "Manage your implant inventory with a complete record of every change."}
-          </p>
-        </div>
-        <div className="flex gap-2.5 items-center flex-wrap">
-          <button
-            className="inline-flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-semibold px-4 py-2 rounded-lg shadow-sm transition-all disabled:opacity-50"
-            onClick={() => void refresh()}
-            disabled={loading}
-          >
-            <RefreshCw size={16} className={loading ? "animate-spin" : ""} /> Refresh
-          </button>
-          {write && mainAction && (
-            <button className="inline-flex items-center justify-center gap-2 border border-teal-700 bg-slate-900 hover:bg-slate-800 dark:bg-teal-600 dark:hover:bg-teal-500 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow-sm transition-all" onClick={() => open(mainAction)}>
-              <Plus size={17} />
-              {mainAction.kind === "purchase"
-                ? "Receive purchase"
-                : mainAction.kind === "sale"
-                  ? "Record sale"
-                  : mainAction.kind === "transfer"
-                    ? "Transfer stock"
-                    : `Add ${mainAction.kind}`}
-            </button>
-          )}
+    <div className="w-full">
+      <header className="sticky top-0 z-20 bg-background/80 px-4 py-2 backdrop-blur-xl dark:bg-background/80 md:px-6 shrink-0 w-full min-w-0">
+        <div className="flex items-center justify-between gap-4 w-full min-w-0">
+          <div>
+            <h1 className="text-xl font-bold tracking-tight md:text-2xl text-foreground">
+              {tab === "Overview" ? "Inventory overview" : tab}
+            </h1>
+            <p className="text-xs text-muted-foreground hidden sm:block">
+              {tab === "Overview"
+                ? "Every implant. Every location. One clear picture."
+                : "Manage your implant inventory with a complete record of every change."}
+            </p>
+          </div>
+          <div className="flex items-center gap-2.5 flex-wrap">
+            {(tab === "Implant P&L" || tab === "Delivery expenses") && (
+              <div className="flex items-center gap-2 mr-1">
+                <div className="relative flex items-center border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 px-2.5 py-1.5 focus-within:ring-2 focus-within:ring-teal-500">
+                  <Calendar size={14} className="text-slate-400 shrink-0 mr-1.5 pointer-events-none" />
+                  <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-1 select-none">From:</span>
+                  <input
+                    type="date"
+                    aria-label="From date"
+                    className="bg-transparent text-slate-900 dark:text-slate-100 text-xs focus:outline-none font-medium cursor-pointer"
+                    value={from}
+                    max={to || undefined}
+                    onChange={(e) => {
+                      if (to && e.target.value > to) {
+                        setNotice("From must be before To.");
+                        return;
+                      }
+                      setFrom(e.target.value);
+                    }}
+                  />
+                </div>
+                <span className="text-xs text-slate-400 font-medium">to</span>
+                <div className="relative flex items-center border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 px-2.5 py-1.5 focus-within:ring-2 focus-within:ring-teal-500">
+                  <Calendar size={14} className="text-slate-400 shrink-0 mr-1.5 pointer-events-none" />
+                  <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-1 select-none">To:</span>
+                  <input
+                    type="date"
+                    aria-label="To date"
+                    className="bg-transparent text-slate-900 dark:text-slate-100 text-xs focus:outline-none font-medium cursor-pointer"
+                    value={to}
+                    min={from || undefined}
+                    onChange={(e) => {
+                      if (from && e.target.value < from) {
+                        setNotice("To must be after From.");
+                        return;
+                      }
+                      setTo(e.target.value);
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+            <Button
+              variant="outline"
+              className="px-4 py-2 text-xs font-semibold"
+              onClick={() => void refresh()}
+              disabled={loading}
+            >
+              <RefreshCw className={loading ? "animate-spin mr-1.5 h-4 w-4" : "mr-1.5 h-4 w-4"} /> Refresh
+            </Button>
+            {(tab === "Implant P&L" || tab === "Delivery expenses" || from || to || productFilter) && (
+              <Button
+                variant="outline"
+                className="px-4 py-2 text-xs font-semibold"
+                onClick={() => {
+                  setFrom("");
+                  setTo("");
+                  setProductFilter("");
+                }}
+              >
+                <RotateCcw className="mr-1.5 h-4 w-4" /> Reset
+              </Button>
+            )}
+            {write && mainAction && (
+              <Button className="px-4 py-2 text-xs font-semibold" onClick={() => open(mainAction)}>
+                <Plus className="mr-1.5 h-4 w-4" />
+                {mainAction.kind === "purchase"
+                  ? "Receive purchase"
+                  : mainAction.kind === "sale"
+                    ? "Record sale"
+                    : mainAction.kind === "transfer"
+                      ? "Transfer stock"
+                      : `Add ${mainAction.kind}`}
+              </Button>
+            )}
+          </div>
         </div>
       </header>
+      <div className="px-4 py-3 md:px-6 md:py-3.5 space-y-3.5">
       {error && (
         <p role="alert" className="text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30 p-3.5 rounded-lg border border-red-200 dark:border-red-800/40 text-xs">
           {error}
         </p>
       )}
       {content()}
-      <footer className="flex justify-between items-center gap-4 text-xs text-slate-400 dark:text-slate-500 pt-4 border-t border-slate-200 dark:border-slate-800 mt-8">
-        <span>Mediend inventory · INR · Dates and activity in India time</span>
-        <span>
-          {snapshot.actor.name} · Revision {s.revision}
-        </span>
-      </footer>
       {form && (
         <EntryForm
           key={`${form.kind}-${form.id ?? "new"}`}
@@ -1557,23 +1754,26 @@ export default function InventoryModule({
           {notice}
         </div>
       )}
-    </section>
+      </div>
+    </div>
   );
 }
 
 function SearchBox({
   query,
   set,
+  placeholder = "Search records…",
 }: {
   query: string;
   set: (s: string) => void;
+  placeholder?: string;
 }) {
   return (
     <label className="flex items-center relative flex-1 min-w-[200px]">
       <Search size={17} className="absolute left-3 text-slate-400 pointer-events-none" />
       <input
-        aria-label="Search records"
-        placeholder="Search records…"
+        aria-label={placeholder}
+        placeholder={placeholder}
         className="w-full pl-9 pr-3 py-2 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500"
         value={query}
         onChange={(e) => set(e.target.value)}

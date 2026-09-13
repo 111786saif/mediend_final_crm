@@ -40,7 +40,7 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import * as React from 'react'
 import logo from '@/public/logo-mediend.png'
 import { UserRole } from '@/generated/prisma/enums'
@@ -118,6 +118,7 @@ function displayLabel(title: string): string {
 export function AppSidebar() {
   const { user, logout, isTester, setActiveRole } = useAuth()
   const pathname = usePathname()
+  const searchParams = useSearchParams()
   const { isMobile, setOpenMobile, navigatingRef } = useSidebar()
   const { data: badgeCounts } = useBadgeCounts()
   const { data: unreadNotifications = [] } = useNotifications(true)
@@ -150,6 +151,15 @@ export function AppSidebar() {
     insurancePl: false,
   })
   const { hasAccess, permissionsReady } = usePermissions()
+
+  React.useEffect(() => {
+    if (pathname?.startsWith('/inventory')) {
+      setOpenSections((prev) => ({ ...prev, inventory: true }))
+    }
+    if (pathname?.startsWith('/crm')) {
+      setOpenSections((prev) => ({ ...prev, crm: true }))
+    }
+  }, [pathname])
 
   const toggleSection = (section: string) => {
     setOpenSections((prev) => ({
@@ -326,7 +336,11 @@ export function AppSidebar() {
 
   const renderNavItem = (item: NavItemWithUrl) => {
     const Icon = item.icon
-    const isActive = pathname === item.url || pathname.startsWith(item.url + '/')
+    const currentTab = searchParams?.get('tab')
+    const itemTab = item.url.includes('tab=') ? new URLSearchParams(item.url.split('?')[1] || '').get('tab') : null
+    const isActive = itemTab
+      ? currentTab === itemTab || (!currentTab && itemTab === 'Overview' && pathname === '/inventory')
+      : pathname === item.url || (item.url !== '/' && pathname.startsWith(item.url + '/'))
     const label = displayLabel(item.title)
     const badgeCount =
       item.title === 'Meets'
@@ -386,8 +400,14 @@ export function AppSidebar() {
             {useSub ? (
               <SidebarMenuSub className="mx-0 mt-1">
                 {items.map((item) => {
-                  const isActive =
-                    pathname === item.url || pathname.startsWith(item.url + '/')
+                  const currentFullUrl = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '')
+                  const currentTab = searchParams?.get('tab')
+                  const itemTab = item.url.includes('tab=') ? new URLSearchParams(item.url.split('?')[1] || '').get('tab') : null
+
+                  const isActive = itemTab
+                    ? currentTab === itemTab || (!currentTab && itemTab === 'Overview' && pathname === '/inventory')
+                    : pathname === item.url || (item.url !== '/' && pathname.startsWith(item.url + '/'))
+
                   return (
                     <SidebarMenuSubItem key={item.url}>
                       <SidebarMenuSubButton asChild isActive={isActive}>
