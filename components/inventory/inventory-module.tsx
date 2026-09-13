@@ -117,10 +117,9 @@ function Table({
   empty?: string;
   tabKey?: Tab;
 }) {
-  const { hasAccess } = usePermissions();
+  const { hasAccess, permissions } = usePermissions();
   const [columnFilters, setColumnFilters] = useState<Record<string, any>>({});
 
-  // Map header titles to column entity keys
   const getColKey = (head: string) => {
     const map: Record<string, string> = {
       Item: "item",
@@ -131,6 +130,7 @@ function Table({
       Expiry: "expiry",
       Status: "status",
       Vendor: "vendor",
+      "Vendor / billed to": "vendor",
       Date: "date",
       Total: "total",
     };
@@ -146,11 +146,17 @@ function Table({
     heads.forEach((head, idx) => {
       const colKey = getColKey(head);
       const resKey = `${tabResKey}.column.${colKey}`;
-      // Default to allowed if specific column entity is not configured, otherwise query hasAccess
-      vis[`col_${idx}`] = hasAccess(resKey, "READ");
+      // Check if specific column entity key exists in permissions map
+      const hasPermConfigured = permissions && Object.prototype.hasOwnProperty.call(permissions, resKey);
+      if (hasPermConfigured) {
+        vis[`col_${idx}`] = hasAccess(resKey, "READ");
+      } else {
+        // If column key is not explicitly registered/configured in permissions, default to visible
+        vis[`col_${idx}`] = true;
+      }
     });
     return vis;
-  }, [heads, tabKey, hasAccess]);
+  }, [heads, tabKey, hasAccess, permissions]);
 
   // Convert legacy heads + array rows into TanStack ColumnDef schema with ColumnFilter header support
   const columns = useMemo<ColumnDef<ReactNode[]>[]>(() => {

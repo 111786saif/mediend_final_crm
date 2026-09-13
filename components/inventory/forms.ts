@@ -79,6 +79,16 @@ export function initialValues(
     ...(request.defaults ?? {}),
   };
 
+  const activeVendors = state.vendors.filter((v) => !v.archived);
+  const activeLocations = state.locations.filter((l) => !l.archived);
+
+  if (activeVendors.length > 0) defaults.vendorId = activeVendors[0].id;
+  if (activeLocations.length > 0) {
+    defaults.locationId = activeLocations[0].id;
+    defaults.fromId = activeLocations[0].id;
+    defaults.toId = activeLocations.length > 1 ? activeLocations[1].id : activeLocations[0].id;
+  }
+
   if (!request.id) return defaults;
 
   switch (request.kind) {
@@ -138,10 +148,10 @@ export function formFields(kind: FormKind, state: InventoryState): FieldDef[] {
     case "vendor":
       return [
         { name: "name", label: "Vendor / Supplier Name" },
-        { name: "phone", label: "Contact Phone" },
+        { name: "phone", label: "Contact Phone", hint: "Optional. 10-digit Indian mobile number (e.g. 9876543210)", required: false },
         { name: "location", label: "City / Branch" },
         { name: "category", label: "Category", hint: "e.g. Orthopedic, Trauma, Spine" },
-        { name: "gstin", label: "GSTIN", hint: "Optional. 15-digit GST number", required: false },
+        { name: "gstin", label: "GSTIN", hint: "Optional. 15-character GSTIN (e.g. 07AAAAA0000A1Z5)", required: false },
       ];
     case "product":
       return [
@@ -157,7 +167,7 @@ export function formFields(kind: FormKind, state: InventoryState): FieldDef[] {
         { name: "name", label: "Location Name" },
         { name: "address", label: "Address / Ward / OT" },
         { name: "poc", label: "Point of Contact" },
-        { name: "phone", label: "Contact Phone" },
+        { name: "phone", label: "Contact Phone", hint: "Optional. 10-digit Indian mobile number (e.g. 9876543210)", required: false },
         { name: "locationType", label: "Type", type: "select", options: [{ value: "HOSPITAL", label: "Hospital OT / Store" }, { value: "WAREHOUSE", label: "Central Warehouse" }, { value: "TRANSIT", label: "In Transit" }] },
       ];
     case "purchase":

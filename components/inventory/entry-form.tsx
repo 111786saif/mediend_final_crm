@@ -25,9 +25,27 @@ export function EntryForm({
     [values, setValues] = useState(() =>
       initialValues(request, state, todayIndia()),
     ),
-    [lines, setLines] = useState<Line[]>([
-      { quantity: "1", unitCost: "0", unitPrice: "0", expiry: nextYear() },
-    ]),
+    [lines, setLines] = useState<Line[]>(() => {
+      const initialLocId = values.locationId || values.fromId;
+      const selectedLocation = state.locations.find(
+        (loc) => loc.id === initialLocId || loc.name.toLowerCase() === (initialLocId || "").toLowerCase()
+      );
+      const eligibleInitial = state.balances.filter(
+        (b) =>
+          (b.locationId === initialLocId || (selectedLocation && b.locationId === selectedLocation.id)) &&
+          b.quantity > 0 &&
+          !b.quarantined &&
+          state.lots.some((l) => l.id === b.lotId)
+      );
+      const defaultBalanceId = eligibleInitial.length > 0 ? eligibleInitial[0].id : "";
+
+      const activeProducts = state.products.filter((p) => !p.archived);
+      const defaultProductId = activeProducts.length > 0 ? activeProducts[0].id : "";
+      const defaultSize = activeProducts.length > 0 && activeProducts[0].sizes.length > 0 ? activeProducts[0].sizes[0] : "";
+      return [
+        { balanceId: defaultBalanceId, productId: defaultProductId, size: defaultSize, quantity: "1", unitCost: "0", unitPrice: "0", expiry: nextYear() },
+      ];
+    }),
     [file, setFile] = useState<File>(),
     [busy, setBusy] = useState(false),
     [error, setError] = useState("");
@@ -60,13 +78,28 @@ export function EntryForm({
   const p = (key: string) => parseRupees(values[key] || "0"),
     n = (key: string) => Number(values[key]);
 
-  const eligible = state.balances.filter(
-    (b) =>
-      b.locationId === (values.locationId || values.fromId) &&
-      b.quantity > 0 &&
-      !b.quarantined &&
-      state.lots.find((l) => l.id === b.lotId)!.expiry >= todayIndia(),
+  const selectedLocId = values.locationId || values.fromId || "";
+  const selectedLocation = state.locations.find(
+    (loc) =>
+      loc.id === selectedLocId ||
+      loc.name.toLowerCase() === selectedLocId.toLowerCase()
   );
+
+  const eligible = state.balances.filter((b) => {
+    if (b.quantity <= 0 || b.quarantined) return false;
+    if (!selectedLocId) return true;
+
+    // Check balance locationId against selectedLocId and selectedLocation.id / name
+    const bLoc = state.locations.find((l) => l.id === b.locationId || l.name.toLowerCase() === b.locationId.toLowerCase());
+    const matchLoc =
+      b.locationId === selectedLocId ||
+      b.locationId.toLowerCase() === selectedLocId.toLowerCase() ||
+      (selectedLocation && b.locationId === selectedLocation.id) ||
+      (bLoc && selectedLocation && bLoc.id === selectedLocation.id) ||
+      (bLoc && bLoc.name.toLowerCase() === selectedLocId.toLowerCase());
+
+    return !!matchLoc;
+  });
 
   let subtotal = 0;
   try {
@@ -374,16 +407,35 @@ export function EntryForm({
                     value={values[f.name] ?? ""}
                     className="w-full px-3 py-2 pr-8 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_0.75rem_center] disabled:opacity-50 disabled:bg-slate-50 dark:disabled:bg-slate-950"
                     onChange={(e) => {
-                      set(f.name, e.target.value);
-                      if (f.name === "locationId" || f.name === "fromId")
+                      const newLocId = e.target.value;
+                      set(f.name, newLocId);
+                      if (f.name === "locationId" || f.name === "fromId") {
+                        const selLoc = state.locations.find(
+                          (loc) => loc.id === newLocId || loc.name.toLowerCase() === (newLocId || "").toLowerCase()
+                        );
+                        const newEligible = state.balances.filter(
+                          (b) =>
+                            (b.locationId === newLocId || (selLoc && b.locationId === selLoc.id)) &&
+                            b.quantity > 0 &&
+                            !b.quarantined &&
+                            state.lots.some((l) => l.id === b.lotId)
+                        );
+                        const defaultBalanceId = newEligible.length > 0 ? newEligible[0].id : "";
+                        const activeProducts = state.products.filter((p) => !p.archived);
+                        const defaultProductId = activeProducts.length > 0 ? activeProducts[0].id : "";
+                        const defaultSize = activeProducts.length > 0 && activeProducts[0].sizes.length > 0 ? activeProducts[0].sizes[0] : "";
                         setLines([
                           {
+                            balanceId: defaultBalanceId,
+                            productId: defaultProductId,
+                            size: defaultSize,
                             quantity: "1",
                             unitPrice: "0",
                             unitCost: "0",
                             expiry: nextYear(),
                           },
                         ]);
+                      }
                     }}
                   >
                     {!f.options?.length && (
@@ -417,17 +469,26 @@ export function EntryForm({
                   <input
                     required={f.required !== false}
                     type={f.type === "money" ? "text" : (f.type ?? "text")}
-                    inputMode={f.type === "money" ? "decimal" : undefined}
+                    inputMode={f.name === "phone" ? "tel" : f.type === "money" ? "decimal" : undefined}
                     min={f.type === "number" ? 0 : undefined}
                     step={f.type === "number" ? 1 : undefined}
                     max={f.type === "date" ? todayIndia() : undefined}
-                    maxLength={200}
-                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all disabled:opacity-50 disabled:bg-slate-50 dark:disabled:bg-slate-950"
+                    maxLength={f.name === "phone" ? 10 : f.name === "gstin" ? 15 : 200}
+                    placeholder={f.name === "phone" ? "e.g. 9876543210" : f.name === "gstin" ? "e.g. 07AAAAA0000A1Z5" : undefined}
+                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all disabled:opacity-50 disabled:bg-slate-50 dark:disabled:bg-slate-950 uppercase-gstin"
                     value={values[f.name] ?? ""}
                     disabled={
                       f.name === "tax" && values.gstMode === "WITHOUT_GST"
                     }
-                    onChange={(e) => set(f.name, e.target.value)}
+                    onChange={(e) => {
+                      let val = e.target.value;
+                      if (f.name === "phone") {
+                        val = val.replace(/\D/g, "").slice(0, 10);
+                      } else if (f.name === "gstin") {
+                        val = val.toUpperCase().slice(0, 15);
+                      }
+                      set(f.name, val);
+                    }}
                   />
                 )}{" "}
                 {f.hint && <small className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">{f.hint}</small>}
@@ -534,7 +595,7 @@ export function EntryForm({
                         </>
                       ) : (
                         <label className="sm:col-span-2 flex flex-col gap-1 text-xs font-medium text-slate-600 dark:text-slate-400">
-                          Available batch
+                          Available Implant / Stock Item *
                           <select
                             required
                             className="w-full px-3 py-2 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
@@ -544,21 +605,33 @@ export function EntryForm({
                             }
                           >
                             <option value="">
-                              Select batch at this location
+                              {eligible.length === 0
+                                ? "No available stock items at selected location"
+                                : "Select item at this location"}
                             </option>
                             {eligible.map((b) => {
-                              const l = state.lots.find(
-                                (l) => l.id === b.lotId,
-                              )!;
+                              const l = state.lots.find((l) => l.id === b.lotId);
+                              let prodName = "";
+                              let sizeStr = "";
+                              let batchStr = "";
+
+                              if (l) {
+                                prodName = state.products.find((p) => p.id === l.productId)?.name ?? "";
+                                sizeStr = l.size ? ` · Size: ${l.size}` : "";
+                                batchStr = l.batch ? ` · Batch: ${l.batch}` : "";
+                              }
+
+                              // Fallback product resolution if lot reference is unlinked
+                              if (!prodName) {
+                                const foundProd = state.products.find(
+                                  (p) => p.id === b.lotId || p.id === (b as any).productId
+                                );
+                                prodName = foundProd?.name || `Implant Item (${b.id.slice(0, 8)})`;
+                              }
+
                               return (
                                 <option key={b.id} value={b.id}>
-                                  {
-                                    state.products.find(
-                                      (p) => p.id === l.productId,
-                                    )?.name
-                                  }{" "}
-                                  · {l.size} · {l.batch} · {b.quantity}{" "}
-                                  available
+                                  {prodName}{sizeStr}{batchStr} · ({b.quantity} available)
                                 </option>
                               );
                             })}

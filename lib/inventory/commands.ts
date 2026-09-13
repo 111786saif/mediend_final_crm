@@ -1,14 +1,21 @@
 import { z } from "zod";
 
+const phoneRegex = /^[6-9]\d{9}$/;
+const gstinRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+
 export const commandSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("vendor.save"),
     id: z.string().uuid().optional(),
     name: z.string().min(1, "Vendor name is required.").max(150),
-    phone: z.string().max(50).default(""),
+    phone: z.string().refine((val) => !val || phoneRegex.test(val.replace(/\s+/g, "")), {
+      message: "Please enter a valid 10-digit mobile number.",
+    }).default(""),
     location: z.string().max(150).default(""),
     category: z.string().max(100).default(""),
-    gstin: z.string().max(20).default(""),
+    gstin: z.string().refine((val) => !val || gstinRegex.test(val.trim().toUpperCase()), {
+      message: "Please enter a valid 15-character GSTIN (e.g. 07AAAAA0000A1Z5).",
+    }).default(""),
   }),
   z.object({
     type: z.literal("product.save"),
@@ -25,7 +32,9 @@ export const commandSchema = z.discriminatedUnion("type", [
     id: z.string().uuid().optional(),
     name: z.string().min(1, "Location name is required.").max(150),
     address: z.string().max(300).default(""),
-    phone: z.string().max(50).default(""),
+    phone: z.string().refine((val) => !val || phoneRegex.test(val.replace(/\s+/g, "")), {
+      message: "Please enter a valid 10-digit mobile number.",
+    }).default(""),
     poc: z.string().max(100).default(""),
     locationType: z.string().max(50).default("HOSPITAL"),
   }),
