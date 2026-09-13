@@ -232,15 +232,17 @@ function Table({
   }, [rows, columnFilters]);
 
   return (
-    <DataTable
-      columns={columns}
-      data={filteredRows}
-      emptyMessage={empty}
-      enablePagination={filteredRows.length > 25}
-      initialPageSize={25}
-      columnVisibility={rbacColumnVisibility}
-      tableContainerClassName="border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 shadow-xs"
-    />
+    <div className="w-full max-w-full overflow-x-auto min-w-0">
+      <DataTable
+        columns={columns}
+        data={filteredRows}
+        emptyMessage={empty}
+        enablePagination={filteredRows.length > 25}
+        initialPageSize={25}
+        columnVisibility={rbacColumnVisibility}
+        tableContainerClassName="border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 shadow-xs overflow-x-auto w-full max-w-full"
+      />
+    </div>
   );
 }
 
@@ -616,11 +618,14 @@ export default function InventoryModule({
           <Table
             heads={["Implant", "Size", "Batch", "Units"]}
             rows={t.lines.map((l) => {
-              const lot = s.lots.find((x) => x.id === l.lotId)!;
+              const lot = s.lots.find((x) => x.id === l.lotId);
+              const prod = lot
+                ? s.products.find((p) => p.id === lot.productId)
+                : s.products.find((p) => p.id === l.lotId);
               return [
-                name("products", lot.productId),
-                lot.size,
-                lot.batch,
+                prod?.name || (lot ? name("products", lot.productId) : "Item"),
+                lot?.size || "—",
+                lot?.batch || "—",
                 l.quantity,
               ];
             })}
@@ -697,20 +702,136 @@ export default function InventoryModule({
   );
 
   function documentTable(kind: "PURCHASE" | "SALE", onlyOutstanding = false) {
-    const docs = kind === "PURCHASE" ? s.purchases : s.sales;
+    if (kind === "PURCHASE") {
+      const purchases = s.purchases;
+      return (
+        <Table
+          tabKey="Purchases"
+          heads={[
+            "Document",
+            "Vendor",
+            "Items & Location",
+            "GST / type",
+            "Total",
+            "Paid",
+            "Outstanding",
+            "Handled by",
+            "Status",
+            "Actions",
+          ]}
+          rows={purchases
+            .filter(
+              (d) =>
+                (!onlyOutstanding ||
+                  (d.status === "POSTED" && paid(s, d.id) < d.total)) &&
+                matches(
+                  d.id,
+                  d.reference,
+                  name("vendors", d.vendorId),
+                  name("locations", d.locationId),
+                  d.handledBy,
+                  ...d.lines.map((l) => l.productName || name("products", l.productId)),
+                ),
+            )
+            .slice()
+            .reverse()
+            .map((d) => [
+              <div key="doc">
+                <strong className="font-semibold text-slate-900 dark:text-slate-100">{d.reference || short(d.id)}</strong>
+                <small className="text-[11px] text-slate-500 dark:text-slate-400 block">{d.date}</small>
+              </div>,
+              name("vendors", d.vendorId),
+              <div key="items" className="space-y-1 max-w-[240px]">
+                <div className="space-y-0.5">
+                  {d.lines.map((l, i) => (
+                    <div key={i} className="text-xs font-medium text-slate-900 dark:text-slate-100 truncate" title={`${l.productName || name("products", l.productId)}${l.size ? ` (${l.size})` : ""} × ${l.quantity}`}>
+                      {l.productName || name("products", l.productId)}{l.size ? ` (${l.size})` : ""} <span className="text-slate-500 font-semibold">× {l.quantity}</span>
+                    </div>
+                  ))}
+                </div>
+                <small className="text-[11px] text-teal-700 dark:text-teal-400 font-medium block">
+                  📍 {name("locations", d.locationId)}
+                </small>
+              </div>,
+              <div key="gst">
+                <Badge tone={d.gstMode === "WITH_GST" ? "blue" : "amber"}>
+                  {d.gstMode === "WITH_GST" ? "With GST" : "Without GST"}
+                </Badge>
+                <small className="text-[11px] text-slate-500 dark:text-slate-400 block">{d.documentType}</small>
+              </div>,
+              money(d.total),
+              (() => {
+                const docPayments = s.payments.filter((p) => p.documentId === d.id);
+                const methods = Array.from(new Set(docPayments.map((p) => p.method))).filter(Boolean);
+                return (
+                  <div key="paid">
+                    <span className="font-semibold text-slate-900 dark:text-slate-100 block">{money(paid(s, d.id))}</span>
+                    {methods.length > 0 ? (
+                      <small className="text-[11px] text-slate-500 dark:text-slate-400 block">
+                        {methods.map((m) => m.replaceAll("_", " ")).join(", ")}
+                      </small>
+                    ) : (
+                      <small className="text-[11px] text-slate-400 dark:text-slate-500 block">—</small>
+                    )}
+                  </div>
+                );
+              })(),
+              d.status === "VOID" ? "—" : money(d.total - paid(s, d.id)),
+              d.handledBy || "—",
+              <Badge
+                key="status"
+                tone={
+                  d.status === "VOID"
+                    ? "red"
+                    : paid(s, d.id) < d.total
+                      ? "amber"
+                      : "green"
+                }
+              >
+                {d.status === "VOID"
+                  ? "Void"
+                  : paid(s, d.id) === d.total
+                    ? "Paid"
+                    : paid(s, d.id) > 0
+                      ? "Part paid"
+                      : "Unpaid"}
+              </Badge>,
+              <div key="actions" className="flex gap-2 items-center flex-wrap">
+                {link("Details", () => docDetail(d, "PURCHASE"))}
+                {paymentButton(d, "PURCHASE")}
+                {admin &&
+                  d.status === "POSTED" &&
+                  paid(s, d.id) === 0 &&
+                  button(
+                    "Void",
+                    { kind: "void", id: d.id, defaults: { documentKind: "PURCHASE" } },
+                    true,
+                  )}
+              </div>,
+            ])}
+        />
+      );
+    }
+
+    const sales = s.sales;
     return (
       <Table
+        tabKey="Sales"
         heads={[
           "Document",
-          "Vendor / billed to",
+          "Billed to",
+          "Case ref no.",
+          "Implant, Batch & Qty",
+          "Unit price",
           "GST / type",
           "Total",
           "Paid",
           "Outstanding",
+          "Handled by",
           "Status",
           "Actions",
         ]}
-        rows={docs
+        rows={sales
           .filter(
             (d) =>
               (!onlyOutstanding ||
@@ -718,27 +839,69 @@ export default function InventoryModule({
               matches(
                 d.id,
                 d.reference,
-                "vendorId" in d ? name("vendors", d.vendorId) : d.billedTo,
+                d.billedTo,
+                d.caseReference,
+                d.handledBy,
+                ...d.lines.map((l) => `${l.productName || name("products", l.productId)} ${l.batch}`),
               ),
           )
           .slice()
           .reverse()
           .map((d) => [
-            <>
+            <div key="doc">
               <strong className="font-semibold text-slate-900 dark:text-slate-100">{d.reference || short(d.id)}</strong>
               <small className="text-[11px] text-slate-500 dark:text-slate-400 block">{d.date}</small>
-            </>,
-            "vendorId" in d ? name("vendors", d.vendorId) : d.billedTo,
-            <>
+            </div>,
+            d.billedTo || "—",
+            <span key="case" className="text-xs font-medium text-slate-900 dark:text-slate-100">
+              {d.caseReference || "—"}
+            </span>,
+            <div key="items" className="space-y-1 max-w-[240px]">
+              {d.lines.map((l, i) => (
+                <div key={i} className="text-xs">
+                  <strong className="font-semibold text-slate-900 dark:text-slate-100 block truncate" title={l.productName || name("products", l.productId)}>
+                    {l.productName || name("products", l.productId)}{l.size ? ` (${l.size})` : ""}
+                  </strong>
+                  <small className="text-[11px] text-slate-500 dark:text-slate-400 block">
+                    Batch: {l.batch || "—"} · <span className="font-semibold text-slate-700 dark:text-slate-300">Qty: {l.quantity}</span>
+                  </small>
+                </div>
+              ))}
+            </div>,
+            <div key="unitPrice" className="space-y-0.5">
+              {d.lines.map((l, i) => (
+                <div key={i} className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+                  {money(l.unitPrice)}
+                </div>
+              ))}
+            </div>,
+            <div key="gst">
               <Badge tone={d.gstMode === "WITH_GST" ? "blue" : "amber"}>
                 {d.gstMode === "WITH_GST" ? "With GST" : "Without GST"}
               </Badge>
               <small className="text-[11px] text-slate-500 dark:text-slate-400 block">{d.documentType}</small>
-            </>,
+            </div>,
             money(d.total),
-            money(paid(s, d.id)),
+            (() => {
+              const docPayments = s.payments.filter((p) => p.documentId === d.id);
+              const methods = Array.from(new Set(docPayments.map((p) => p.method))).filter(Boolean);
+              return (
+                <div key="paid">
+                  <span className="font-semibold text-slate-900 dark:text-slate-100 block">{money(paid(s, d.id))}</span>
+                  {methods.length > 0 ? (
+                    <small className="text-[11px] text-slate-500 dark:text-slate-400 block">
+                      {methods.map((m) => m.replaceAll("_", " ")).join(", ")}
+                    </small>
+                  ) : (
+                    <small className="text-[11px] text-slate-400 dark:text-slate-500 block">—</small>
+                  )}
+                </div>
+              );
+            })(),
             d.status === "VOID" ? "—" : money(d.total - paid(s, d.id)),
+            d.handledBy || "—",
             <Badge
+              key="status"
               tone={
                 d.status === "VOID"
                   ? "red"
@@ -755,15 +918,15 @@ export default function InventoryModule({
                     ? "Part paid"
                     : "Unpaid"}
             </Badge>,
-            <div className="flex gap-2 items-center flex-wrap">
-              {link("Details", () => docDetail(d, kind))}
-              {paymentButton(d, kind)}
+            <div key="actions" className="flex gap-2 items-center flex-wrap">
+              {link("Details", () => docDetail(d, "SALE"))}
+              {paymentButton(d, "SALE")}
               {admin &&
                 d.status === "POSTED" &&
                 paid(s, d.id) === 0 &&
                 button(
                   "Void",
-                  { kind: "void", id: d.id, defaults: { documentKind: kind } },
+                  { kind: "void", id: d.id, defaults: { documentKind: "SALE" } },
                   true,
                 )}
             </div>,
@@ -1194,8 +1357,10 @@ export default function InventoryModule({
                 heads={[
                   "Transfer",
                   "Route",
+                  "Implants",
                   "Units",
                   "Case / type",
+                  "Courier & fee",
                   "Status",
                   "Actions",
                 ]}
@@ -1203,20 +1368,48 @@ export default function InventoryModule({
                   .slice()
                   .reverse()
                   .map((t) => [
-                    <>
+                    <div key="transfer">
                       <strong className="font-semibold text-slate-900 dark:text-slate-100">{short(t.id)}</strong>
                       <small className="text-[11px] text-slate-500 dark:text-slate-400 block">{t.date}</small>
-                    </>,
-                    <>
+                    </div>,
+                    <div key="route">
                       {name("locations", t.fromId)}
                       <small className="text-[11px] text-slate-500 dark:text-slate-400 block">→ {name("locations", t.toId)}</small>
-                    </>,
+                    </div>,
+                    <div key="implants" className="space-y-0.5 max-w-[220px]">
+                      {t.lines.map((l, i) => {
+                        const lot = s.lots.find((x) => x.id === l.lotId);
+                        const prod = lot ? s.products.find((p) => p.id === lot.productId) : s.products.find((p) => p.id === l.lotId);
+                        const prodName = prod?.name || (lot ? name("products", lot.productId) : "Item");
+                        const sizeStr = lot?.size ? ` (${lot.size})` : "";
+                        return (
+                          <div key={i} className="text-xs font-medium text-slate-900 dark:text-slate-100 truncate" title={`${prodName}${sizeStr} × ${l.quantity}`}>
+                            {prodName}{sizeStr} <span className="text-slate-500 font-semibold">× {l.quantity}</span>
+                          </div>
+                        );
+                      })}
+                    </div>,
                     t.lines.reduce((a, l) => a + l.quantity, 0),
-                    <>
+                    <div key="case">
                       {t.caseReference || "—"}
                       <small className="text-[11px] text-slate-500 dark:text-slate-400 block">{t.kind.replaceAll("_", " ")}</small>
-                    </>,
+                    </div>,
+                    (() => {
+                      const del = s.deliveries.find((d) => d.transferId === t.id && !d.voided);
+                      if (!del) return <span key="del" className="text-slate-400 dark:text-slate-500 text-xs">—</span>;
+                      return (
+                        <div key="del">
+                          <strong className="font-semibold text-slate-900 dark:text-slate-100 block text-xs">
+                            {del.carrier || "Porter / Courier"}
+                          </strong>
+                          <small className="text-[11px] text-slate-500 dark:text-slate-400 block">
+                            {del.fee > 0 ? money(del.fee) : "No fee"}
+                          </small>
+                        </div>
+                      );
+                    })(),
                     <Badge
+                      key="status"
                       tone={
                         t.status === "IN_TRANSIT"
                           ? "amber"
@@ -1227,7 +1420,7 @@ export default function InventoryModule({
                     >
                       {t.status.replaceAll("_", " ")}
                     </Badge>,
-                    <div className="flex gap-2 items-center flex-wrap">
+                    <div key="actions" className="flex gap-2 items-center flex-wrap">
                       {link("Details", () => transferDetail(t.id))}
                       {t.status === "IN_TRANSIT" ? (
                         <>

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { X, Plus, Trash2 } from "lucide-react";
-import type { InventoryState, Transfer } from "@/lib/inventory/types";
+import type { InventoryState, Transfer, Balance } from "@/lib/inventory/types";
 import type { Command } from "@/lib/inventory/commands";
 import { commandSchema } from "@/lib/inventory/commands";
 import { parseRupees, formatMoney } from "@/lib/inventory/money";
@@ -21,22 +21,16 @@ export function EntryForm({
   onClose: () => void;
   onSubmit: (command: Command, file?: File) => Promise<void>;
 }) {
+  const isTransfer = request.kind === "transfer";
   const dialog = useRef<HTMLDialogElement>(null),
     [values, setValues] = useState(() =>
       initialValues(request, state, todayIndia()),
     ),
     [lines, setLines] = useState<Line[]>(() => {
-      const initialLocId = values.locationId || values.fromId;
-      const selectedLocation = state.locations.find(
-        (loc) => loc.id === initialLocId || loc.name.toLowerCase() === (initialLocId || "").toLowerCase()
-      );
-      const eligibleInitial = state.balances.filter(
-        (b) =>
-          (b.locationId === initialLocId || (selectedLocation && b.locationId === selectedLocation.id)) &&
-          b.quantity > 0 &&
-          !b.quarantined &&
-          state.lots.some((l) => l.id === b.lotId)
-      );
+      const initialLocId = isTransfer
+        ? (values.fromId || "")
+        : (values.locationId || values.fromId || "");
+      const eligibleInitial = getEligibleBalances(initialLocId, state);
       const defaultBalanceId = eligibleInitial.length > 0 ? eligibleInitial[0].id : "";
 
       const activeProducts = state.products.filter((p) => !p.archived);
@@ -78,28 +72,10 @@ export function EntryForm({
   const p = (key: string) => parseRupees(values[key] || "0"),
     n = (key: string) => Number(values[key]);
 
-  const selectedLocId = values.locationId || values.fromId || "";
-  const selectedLocation = state.locations.find(
-    (loc) =>
-      loc.id === selectedLocId ||
-      loc.name.toLowerCase() === selectedLocId.toLowerCase()
-  );
-
-  const eligible = state.balances.filter((b) => {
-    if (b.quantity <= 0 || b.quarantined) return false;
-    if (!selectedLocId) return true;
-
-    // Check balance locationId against selectedLocId and selectedLocation.id / name
-    const bLoc = state.locations.find((l) => l.id === b.locationId || l.name.toLowerCase() === b.locationId.toLowerCase());
-    const matchLoc =
-      b.locationId === selectedLocId ||
-      b.locationId.toLowerCase() === selectedLocId.toLowerCase() ||
-      (selectedLocation && b.locationId === selectedLocation.id) ||
-      (bLoc && selectedLocation && bLoc.id === selectedLocation.id) ||
-      (bLoc && bLoc.name.toLowerCase() === selectedLocId.toLowerCase());
-
-    return !!matchLoc;
-  });
+  const selectedLocId = isTransfer
+    ? (values.fromId || "")
+    : (values.locationId || "");
+  const eligible = getEligibleBalances(selectedLocId, state);
 
   let subtotal = 0;
   try {
@@ -205,6 +181,12 @@ export function EntryForm({
           };
           break;
         case "transfer":
+          if (values.fromId && values.toId && values.fromId === values.toId) {
+            throw Error("Source and destination locations must be different.");
+          }
+          if (lines.some((l) => !l.balanceId)) {
+            throw Error("Please select an item in stock for each transfer line.");
+          }
           command = {
             type: "transfer.dispatch",
             fromId: values.fromId,
@@ -409,17 +391,12 @@ export function EntryForm({
                     onChange={(e) => {
                       const newLocId = e.target.value;
                       set(f.name, newLocId);
-                      if (f.name === "locationId" || f.name === "fromId") {
-                        const selLoc = state.locations.find(
-                          (loc) => loc.id === newLocId || loc.name.toLowerCase() === (newLocId || "").toLowerCase()
-                        );
-                        const newEligible = state.balances.filter(
-                          (b) =>
-                            (b.locationId === newLocId || (selLoc && b.locationId === selLoc.id)) &&
-                            b.quantity > 0 &&
-                            !b.quarantined &&
-                            state.lots.some((l) => l.id === b.lotId)
-                        );
+                      const isLocationChange =
+                        (isTransfer && f.name === "fromId") ||
+                        (!isTransfer && (f.name === "locationId" || f.name === "fromId"));
+
+                      if (isLocationChange) {
+                        const newEligible = getEligibleBalances(newLocId, state);
                         const defaultBalanceId = newEligible.length > 0 ? newEligible[0].id : "";
                         const activeProducts = state.products.filter((p) => !p.archived);
                         const defaultProductId = activeProducts.length > 0 ? activeProducts[0].id : "";
@@ -595,7 +572,9 @@ export function EntryForm({
                         </>
                       ) : (
                         <label className="sm:col-span-2 flex flex-col gap-1 text-xs font-medium text-slate-600 dark:text-slate-400">
-                          Available Implant / Stock Item *
+                          {isTransfer
+                            ? "Available Item (in stock at source location) *"
+                            : "Available Implant / Stock Item *"}
                           <select
                             required
                             className="w-full px-3 py-2 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
@@ -606,32 +585,32 @@ export function EntryForm({
                           >
                             <option value="">
                               {eligible.length === 0
-                                ? "No available stock items at selected location"
-                                : "Select item at this location"}
+                                ? (isTransfer
+                                    ? "No available items in stock at selected source location"
+                                    : "No available stock items at selected location")
+                                : (isTransfer
+                                    ? "Select item at source location"
+                                    : "Select item at this location")}
                             </option>
                             {eligible.map((b) => {
-                              const l = state.lots.find((l) => l.id === b.lotId);
-                              let prodName = "";
-                              let sizeStr = "";
-                              let batchStr = "";
+                              const { productName, size, batch } = getBalanceItemInfo(b, state);
 
-                              if (l) {
-                                prodName = state.products.find((p) => p.id === l.productId)?.name ?? "";
-                                sizeStr = l.size ? ` · Size: ${l.size}` : "";
-                                batchStr = l.batch ? ` · Batch: ${l.batch}` : "";
-                              }
-
-                              // Fallback product resolution if lot reference is unlinked
-                              if (!prodName) {
-                                const foundProd = state.products.find(
-                                  (p) => p.id === b.lotId || p.id === (b as any).productId
+                              if (isTransfer) {
+                                // For transfer: Show ONLY item name (and size if specified) and available quantity in stock, NOT batch
+                                const sizeStr = size ? ` · Size: ${size}` : "";
+                                return (
+                                  <option key={b.id} value={b.id}>
+                                    {productName}{sizeStr} · ({b.quantity} in stock)
+                                  </option>
                                 );
-                                prodName = foundProd?.name || `Implant Item (${b.id.slice(0, 8)})`;
                               }
+
+                              const sizeStr = size ? ` · Size: ${size}` : "";
+                              const batchStr = batch ? ` · Batch: ${batch}` : "";
 
                               return (
                                 <option key={b.id} value={b.id}>
-                                  {prodName}{sizeStr}{batchStr} · ({b.quantity} available)
+                                  {productName}{sizeStr}{batchStr} · ({b.quantity} available)
                                 </option>
                               );
                             })}
@@ -639,12 +618,26 @@ export function EntryForm({
                         </label>
                       )}
                       <label className="flex flex-col gap-1 text-xs font-medium text-slate-600 dark:text-slate-400">
-                        Quantity
+                        <span>
+                          Quantity
+                          {(() => {
+                            const b = state.balances.find((bal) => bal.id === line.balanceId);
+                            return b ? (
+                              <span className="text-slate-400 dark:text-slate-500 font-normal ml-1">
+                                (max {b.quantity})
+                              </span>
+                            ) : null;
+                          })()}
+                        </span>
                         <input
                           required
                           type="number"
                           min="1"
-                          max="1000000"
+                          max={(() => {
+                            if (purchase) return 1000000;
+                            const b = state.balances.find((bal) => bal.id === line.balanceId);
+                            return b ? b.quantity : 1000000;
+                          })()}
                           step="1"
                           className="w-full px-3 py-2 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
                           value={line.quantity}
@@ -696,7 +689,7 @@ export function EntryForm({
                   ])
                 }
               >
-                <Plus size={16} /> Add item / size
+                <Plus size={16} /> {isTransfer ? "Add item to transfer" : "Add item / size"}
               </button>
               {request.kind !== "transfer" && (
                 <div className="flex justify-between items-center p-3 bg-slate-100 dark:bg-slate-800/60 rounded-lg text-xs font-medium">
@@ -742,6 +735,54 @@ function nextYear() {
   return d.toISOString().slice(0, 10);
 }
 
+function getEligibleBalances(locId: string, state: InventoryState): Balance[] {
+  if (!locId) return [];
+  const targetLoc = state.locations.find(
+    (l) =>
+      l.id === locId ||
+      l.id.toLowerCase() === locId.toLowerCase() ||
+      l.name.toLowerCase() === locId.toLowerCase()
+  );
+  const targetId = targetLoc ? targetLoc.id : locId;
+  const targetName = targetLoc ? targetLoc.name.toLowerCase() : locId.toLowerCase();
+
+  return state.balances.filter((b) => {
+    if (b.quantity <= 0 || b.quarantined) return false;
+
+    // Direct match against target location ID or target name
+    if (b.locationId === targetId || b.locationId.toLowerCase() === targetId.toLowerCase()) return true;
+    if (b.locationId.toLowerCase() === targetName) return true;
+
+    // Cross-match against state locations list
+    const bLoc = state.locations.find(
+      (l) => l.id === b.locationId || l.name.toLowerCase() === b.locationId.toLowerCase()
+    );
+    if (bLoc) {
+      if (bLoc.id === targetId || bLoc.name.toLowerCase() === targetName) return true;
+    }
+
+    return false;
+  });
+}
+
+function getBalanceItemInfo(b: Balance, state: InventoryState) {
+  const lot = state.lots.find((l) => l.id === b.lotId);
+  let product = lot ? state.products.find((p) => p.id === lot.productId) : undefined;
+
+  // Fallback product resolution if lot reference is unlinked or lotId refers to productId directly
+  if (!product) {
+    product = state.products.find(
+      (p) => p.id === b.lotId || p.id === (b as any).productId
+    );
+  }
+
+  const productName = product?.name || `Implant Item (${b.id.slice(0, 8)})`;
+  const size = lot?.size || "";
+  const batch = lot?.batch || "";
+
+  return { product, productName, size, batch };
+}
+
 function ReceiptLines({
   transfer,
   state,
@@ -757,11 +798,15 @@ function ReceiptLines({
       </strong>
       <ul className="list-disc list-inside text-xs space-y-1">
         {transfer.lines.map((l, i) => {
-          const lot = state.lots.find((x) => x.id === l.lotId)!;
+          const lot = state.lots.find((x) => x.id === l.lotId);
+          const product = lot
+            ? state.products.find((x) => x.id === lot.productId)
+            : state.products.find((p) => p.id === l.lotId);
+          const name = product?.name || "Item";
+          const details = [lot?.size, lot?.batch].filter(Boolean).join(" · ");
           return (
             <li key={i}>
-              {state.products.find((x) => x.id === lot.productId)?.name} ·{" "}
-              {lot.size} · {lot.batch} · {l.quantity} units
+              {name} {details ? `· ${details} ` : ""}· {l.quantity} units
             </li>
           );
         })}
