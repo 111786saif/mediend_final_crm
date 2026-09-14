@@ -18,8 +18,9 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'sales', label: 'Sales & Marketing', type: 'MODULE', parentKey: null, sortOrder: 4 },
   { key: 'insurance_pl', label: 'Outstanding & P&L', type: 'MODULE', parentKey: null, sortOrder: 5 },
   { key: 'finance', label: 'Finance & Accounts', type: 'MODULE', parentKey: null, sortOrder: 6 },
-  { key: 'actions', label: 'System Actions', type: 'MODULE', parentKey: null, sortOrder: 7 },
-  { key: 'crm', label: 'CRM', type: 'MODULE', parentKey: null, sortOrder: 8 },
+  { key: 'inventory', label: 'Inventory Management', type: 'MODULE', parentKey: null, sortOrder: 7 },
+  { key: 'actions', label: 'System Actions', type: 'MODULE', parentKey: null, sortOrder: 8 },
+  { key: 'crm', label: 'CRM', type: 'MODULE', parentKey: null, sortOrder: 9 },
 
   // SECTIONS (individual pages or sub-sections)
   
@@ -124,6 +125,59 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'finance.fin_doctor_payoff', label: 'Fin Doctor Payoff', type: 'SECTION', parentKey: 'finance', sortOrder: 16 },
   { key: 'finance.fin_sales_team_cost', label: 'Sales Team Cost', type: 'SECTION', parentKey: 'finance', sortOrder: 17 },
   { key: 'finance.master_seating_cost', label: 'Master Seating Cost', type: 'SECTION', parentKey: 'finance', sortOrder: 18 },
+
+  // Under inventory
+  { key: 'inventory.overview', label: 'Inv Overview', type: 'SECTION', parentKey: 'inventory', sortOrder: 1 },
+  { key: 'inventory.stock', label: 'Inv Stock', type: 'SECTION', parentKey: 'inventory', sortOrder: 2 },
+  { key: 'inventory.purchases', label: 'Inv Purchases', type: 'SECTION', parentKey: 'inventory', sortOrder: 3 },
+  { key: 'inventory.transfers', label: 'Inv Transfers & Kits', type: 'SECTION', parentKey: 'inventory', sortOrder: 4 },
+  { key: 'inventory.sales', label: 'Inv Sales', type: 'SECTION', parentKey: 'inventory', sortOrder: 5 },
+  { key: 'inventory.payments', label: 'Inv Payments', type: 'SECTION', parentKey: 'inventory', sortOrder: 6 },
+  { key: 'inventory.implant_pnl', label: 'Inv Implant P&L', type: 'SECTION', parentKey: 'inventory', sortOrder: 7 },
+  { key: 'inventory.delivery_expenses', label: 'Inv Delivery Expenses', type: 'SECTION', parentKey: 'inventory', sortOrder: 8 },
+  { key: 'inventory.vendors', label: 'Inv Vendors', type: 'SECTION', parentKey: 'inventory', sortOrder: 9 },
+  { key: 'inventory.catalog', label: 'Inv Implant Catalog', type: 'SECTION', parentKey: 'inventory', sortOrder: 10 },
+  { key: 'inventory.locations', label: 'Inv Locations', type: 'SECTION', parentKey: 'inventory', sortOrder: 11 },
+  { key: 'inventory.activity', label: 'Inv Activity Log', type: 'SECTION', parentKey: 'inventory', sortOrder: 12 },
+
+  // Inventory Table Column Entities (Access Matrix Column Controls)
+  { key: 'inventory.stock.column.item', label: 'Stock Column: Item Name', type: 'ENTITY', parentKey: 'inventory.stock', sortOrder: 1 },
+  { key: 'inventory.stock.column.size', label: 'Stock Column: Size', type: 'ENTITY', parentKey: 'inventory.stock', sortOrder: 2 },
+  { key: 'inventory.stock.column.location', label: 'Stock Column: Location', type: 'ENTITY', parentKey: 'inventory.stock', sortOrder: 3 },
+  { key: 'inventory.stock.column.quantity', label: 'Stock Column: Quantity', type: 'ENTITY', parentKey: 'inventory.stock', sortOrder: 4 },
+  { key: 'inventory.stock.column.unitCost', label: 'Stock Column: Unit Cost', type: 'ENTITY', parentKey: 'inventory.stock', sortOrder: 5 },
+  { key: 'inventory.stock.column.expiry', label: 'Stock Column: Expiry Date', type: 'ENTITY', parentKey: 'inventory.stock', sortOrder: 6 },
+  { key: 'inventory.stock.column.status', label: 'Stock Column: Status', type: 'ENTITY', parentKey: 'inventory.stock', sortOrder: 7 },
+
+  { key: 'inventory.purchases.column.document', label: 'Purchases Column: Document', type: 'ENTITY', parentKey: 'inventory.purchases', sortOrder: 1 },
+  { key: 'inventory.purchases.column.vendor', label: 'Purchases Column: Vendor', type: 'ENTITY', parentKey: 'inventory.purchases', sortOrder: 2 },
+  { key: 'inventory.purchases.column.itemsLocation', label: 'Purchases Column: Items & Location', type: 'ENTITY', parentKey: 'inventory.purchases', sortOrder: 3 },
+  { key: 'inventory.purchases.column.gstType', label: 'Purchases Column: GST / Type', type: 'ENTITY', parentKey: 'inventory.purchases', sortOrder: 4 },
+  { key: 'inventory.purchases.column.total', label: 'Purchases Column: Total Amount', type: 'ENTITY', parentKey: 'inventory.purchases', sortOrder: 5 },
+  { key: 'inventory.purchases.column.paid', label: 'Purchases Column: Paid', type: 'ENTITY', parentKey: 'inventory.purchases', sortOrder: 6 },
+  { key: 'inventory.purchases.column.outstanding', label: 'Purchases Column: Outstanding', type: 'ENTITY', parentKey: 'inventory.purchases', sortOrder: 7 },
+  { key: 'inventory.purchases.column.handledBy', label: 'Purchases Column: Handled By', type: 'ENTITY', parentKey: 'inventory.purchases', sortOrder: 8 },
+  { key: 'inventory.purchases.column.status', label: 'Purchases Column: Status', type: 'ENTITY', parentKey: 'inventory.purchases', sortOrder: 9 },
+
+  { key: 'inventory.transfers.column.transfer', label: 'Transfers Column: Transfer', type: 'ENTITY', parentKey: 'inventory.transfers', sortOrder: 1 },
+  { key: 'inventory.transfers.column.route', label: 'Transfers Column: Route', type: 'ENTITY', parentKey: 'inventory.transfers', sortOrder: 2 },
+  { key: 'inventory.transfers.column.implants', label: 'Transfers Column: Implants', type: 'ENTITY', parentKey: 'inventory.transfers', sortOrder: 3 },
+  { key: 'inventory.transfers.column.units', label: 'Transfers Column: Units', type: 'ENTITY', parentKey: 'inventory.transfers', sortOrder: 4 },
+  { key: 'inventory.transfers.column.caseType', label: 'Transfers Column: Case / Type', type: 'ENTITY', parentKey: 'inventory.transfers', sortOrder: 5 },
+  { key: 'inventory.transfers.column.courierFee', label: 'Transfers Column: Courier & Fee', type: 'ENTITY', parentKey: 'inventory.transfers', sortOrder: 6 },
+  { key: 'inventory.transfers.column.status', label: 'Transfers Column: Status', type: 'ENTITY', parentKey: 'inventory.transfers', sortOrder: 7 },
+
+  { key: 'inventory.sales.column.document', label: 'Sales Column: Document', type: 'ENTITY', parentKey: 'inventory.sales', sortOrder: 1 },
+  { key: 'inventory.sales.column.billedTo', label: 'Sales Column: Billed To', type: 'ENTITY', parentKey: 'inventory.sales', sortOrder: 2 },
+  { key: 'inventory.sales.column.caseRefNo', label: 'Sales Column: Case Ref No.', type: 'ENTITY', parentKey: 'inventory.sales', sortOrder: 3 },
+  { key: 'inventory.sales.column.implantBatchQty', label: 'Sales Column: Implant, Batch & Qty', type: 'ENTITY', parentKey: 'inventory.sales', sortOrder: 4 },
+  { key: 'inventory.sales.column.unitPrice', label: 'Sales Column: Unit Price', type: 'ENTITY', parentKey: 'inventory.sales', sortOrder: 5 },
+  { key: 'inventory.sales.column.gstType', label: 'Sales Column: GST / Type', type: 'ENTITY', parentKey: 'inventory.sales', sortOrder: 6 },
+  { key: 'inventory.sales.column.total', label: 'Sales Column: Total Amount', type: 'ENTITY', parentKey: 'inventory.sales', sortOrder: 7 },
+  { key: 'inventory.sales.column.paid', label: 'Sales Column: Paid', type: 'ENTITY', parentKey: 'inventory.sales', sortOrder: 8 },
+  { key: 'inventory.sales.column.outstanding', label: 'Sales Column: Outstanding', type: 'ENTITY', parentKey: 'inventory.sales', sortOrder: 9 },
+  { key: 'inventory.sales.column.handledBy', label: 'Sales Column: Handled By', type: 'ENTITY', parentKey: 'inventory.sales', sortOrder: 10 },
+  { key: 'inventory.sales.column.status', label: 'Sales Column: Status', type: 'ENTITY', parentKey: 'inventory.sales', sortOrder: 11 },
 
   // Under crm
   { key: 'crm.campaigns', label: 'CRM Campaigns', type: 'SECTION', parentKey: 'crm', sortOrder: 1 },

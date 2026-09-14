@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
@@ -52,9 +53,17 @@ function formatCurrency(amount: number) {
   }).format(amount)
 }
 
-export default function InventoryPage() {
+function InventoryContent() {
   const queryClient = useQueryClient()
-  const [activeTab, setActiveTab] = useState('items')
+  const searchParams = useSearchParams()
+  const tabParam = searchParams.get('tab')
+  const [activeTab, setActiveTab] = useState(tabParam || 'items')
+
+  useEffect(() => {
+    if (tabParam && ['items', 'locations', 'purchases', 'issues'].includes(tabParam)) {
+      setActiveTab(tabParam)
+    }
+  }, [tabParam])
   const [itemViewMode, setItemViewMode] = useState<'table' | 'grid'>('table')
   const [search, setSearch] = useState('')
   const [locationFilter, setLocationFilter] = useState<string>('all')
@@ -402,6 +411,12 @@ export default function InventoryPage() {
           <h1 className="text-3xl font-bold">Inventory Management</h1>
           <p className="text-muted-foreground mt-1">Manage items, locations, purchases, and issues</p>
         </div>
+        <Button variant="outline" asChild>
+          <Link href="/inventory?tab=Transfers+%26+kits">
+            <Boxes className="mr-2 h-4 w-4" />
+            Transfer Stock
+          </Link>
+        </Button>
       </div>
 
       {/* Dashboard Summary Cards */}
@@ -1482,5 +1497,13 @@ export default function InventoryPage() {
         </TabsContent>
       </Tabs>
     </div>
+  )
+}
+
+export default function InventoryPage() {
+  return (
+    <Suspense fallback={<div className="p-6 text-muted-foreground">Loading Inventory...</div>}>
+      <InventoryContent />
+    </Suspense>
   )
 }

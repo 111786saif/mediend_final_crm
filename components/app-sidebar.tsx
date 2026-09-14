@@ -28,6 +28,7 @@ import {
   ChevronDown,
   DollarSign,
   LogOut,
+  Package,
   Shield,
   Sun,
   Moon,
@@ -39,7 +40,7 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import * as React from 'react'
 import logo from '@/public/logo-mediend.png'
 import { UserRole } from '@/generated/prisma/enums'
@@ -109,6 +110,7 @@ function displayLabel(title: string): string {
   if (title.startsWith('Fin ')) return title.replace('Fin ', '')
   if (title.startsWith('CRM ')) return title.replace('CRM ', '')
   if (title.startsWith('Svc ')) return title.replace('Svc ', '')
+  if (title.startsWith('Inv ')) return title.replace('Inv ', '')
   return title
 }
 
@@ -116,6 +118,7 @@ function displayLabel(title: string): string {
 export function AppSidebar() {
   const { user, logout, isTester, setActiveRole } = useAuth()
   const pathname = usePathname()
+  const searchParams = useSearchParams()
   const { isMobile, setOpenMobile, navigatingRef } = useSidebar()
   const { data: badgeCounts } = useBadgeCounts()
   const { data: unreadNotifications = [] } = useNotifications(true)
@@ -140,6 +143,7 @@ export function AppSidebar() {
   }, [isMobile, setOpenMobile, navigatingRef])
   const [openSections, setOpenSections] = React.useState<Record<string, boolean>>({
     crm: pathname?.startsWith('/crm') ?? false,
+    inventory: pathname?.startsWith('/inventory') ?? false,
     finance: false,
     hr: false,
     myHrms: false,
@@ -147,6 +151,15 @@ export function AppSidebar() {
     insurancePl: false,
   })
   const { hasAccess, permissionsReady } = usePermissions()
+
+  React.useEffect(() => {
+    if (pathname?.startsWith('/inventory')) {
+      setOpenSections((prev) => ({ ...prev, inventory: true }))
+    }
+    if (pathname?.startsWith('/crm')) {
+      setOpenSections((prev) => ({ ...prev, crm: true }))
+    }
+  }, [pathname])
 
   const toggleSection = (section: string) => {
     setOpenSections((prev) => ({
@@ -270,6 +283,7 @@ export function AppSidebar() {
   const insurancePlItems: NavItemWithUrl[] = []
   const financeItems: NavItemWithUrl[] = []
   const crmItems: NavItemWithUrl[] = []
+  const inventoryItems: NavItemWithUrl[] = []
 
   for (const item of permitted) {
     if (item.title === 'mediend AI') continue // footer only
@@ -289,6 +303,8 @@ export function AppSidebar() {
       financeItems.push(item)
     } else if (prefix === 'crm') {
       crmItems.push(item)
+    } else if (prefix === 'inventory') {
+      inventoryItems.push(item)
     } else {
       primaryMainItems.push(item)
     }
@@ -300,6 +316,7 @@ export function AppSidebar() {
   const showInsurancePlSection = insurancePlItems.length > 0
   const showFinanceSection = financeItems.length > 0
   const showCrmSection = crmItems.length > 0
+  const showInventorySection = inventoryItems.length > 0
 
   const hrSectionBadge = showHrSection
     ? hrItems.reduce(
@@ -314,7 +331,11 @@ export function AppSidebar() {
 
   const renderNavItem = (item: NavItemWithUrl) => {
     const Icon = item.icon
-    const isActive = pathname === item.url || pathname.startsWith(item.url + '/')
+    const currentTab = searchParams?.get('tab')
+    const itemTab = item.url.includes('tab=') ? new URLSearchParams(item.url.split('?')[1] || '').get('tab') : null
+    const isActive = itemTab
+      ? currentTab === itemTab || (!currentTab && itemTab === 'Overview' && pathname === '/inventory')
+      : pathname === item.url || (item.url !== '/' && pathname.startsWith(item.url + '/'))
     const label = displayLabel(item.title)
     const badgeCount =
       item.title === 'Meets'
@@ -374,8 +395,14 @@ export function AppSidebar() {
             {useSub ? (
               <SidebarMenuSub className="mx-0 mt-1">
                 {items.map((item) => {
-                  const isActive =
-                    pathname === item.url || pathname.startsWith(item.url + '/')
+                  const currentFullUrl = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '')
+                  const currentTab = searchParams?.get('tab')
+                  const itemTab = item.url.includes('tab=') ? new URLSearchParams(item.url.split('?')[1] || '').get('tab') : null
+
+                  const isActive = itemTab
+                    ? currentTab === itemTab || (!currentTab && itemTab === 'Overview' && pathname === '/inventory')
+                    : pathname === item.url || (item.url !== '/' && pathname.startsWith(item.url + '/'))
+
                   return (
                     <SidebarMenuSubItem key={item.url}>
                       <SidebarMenuSubButton asChild isActive={isActive}>
@@ -469,6 +496,16 @@ export function AppSidebar() {
             'Finance',
             <DollarSign className="h-4 w-4" />,
             financeItems
+          )}
+
+        {showInventorySection &&
+          renderCollapsible(
+            'inventory',
+            'Inventory',
+            <Package className="h-4 w-4" />,
+            inventoryItems,
+            0,
+            true
           )}
       </SidebarContent>
       <SidebarFooter className="border-t border-sidebar-border">

@@ -51,7 +51,9 @@ export function usePermissions() {
     if (!permissionsReady) return true
 
     const userPerm = permissions[resourceKey]
-    if (!userPerm) return false
+    if (!userPerm) {
+      return false
+    }
 
     const userRank = PERMISSION_RANKS[userPerm.level] ?? 0
     const requiredRank = PERMISSION_RANKS[requiredLevel] ?? 0

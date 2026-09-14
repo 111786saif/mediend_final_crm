@@ -39,6 +39,11 @@ export function RouteGuard({ children }: { children: React.ReactNode }) {
     isAllowed = canAccessSalesOpdMonitoring(user?.role)
   }
 
+  // Inventory: allow for all roles as requested
+  if (!isAllowed && (matchedKey === 'main.inventory' || matchedKey?.startsWith('inventory.') || pathname === '/inventory' || pathname?.startsWith('/inventory'))) {
+    isAllowed = true
+  }
+
   return (
     <PermissionsGuard
       isLoading={isLoading}
