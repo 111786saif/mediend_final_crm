@@ -12,7 +12,6 @@ import { PieChart, Pie, Cell, Tooltip } from 'recharts'
 import { ArrowLeft, Users, Target, BarChart3, ChevronRight, TrendingUp, Clock, Filter, ArrowUpDown, ChevronDown, Loader2, Settings2, GripVertical } from 'lucide-react'
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -39,20 +38,6 @@ interface TeamDetailViewProps {
   onSelectNestedTeam?: (managerId: string) => void
 }
 
-function getMonthDateParams(monthStr: string): string {
-  if (!monthStr || monthStr === 'all') return ''
-  const [yStr, mStr] = monthStr.split('-')
-  const year = parseInt(yStr, 10)
-  const month = parseInt(mStr, 10)
-  if (isNaN(year) || isNaN(month)) return ''
-  const start = new Date(year, month - 1, 1)
-  const end = new Date(year, month, 0, 23, 59, 59, 999)
-  const pad = (n: number) => n.toString().padStart(2, '0')
-  const startStr = `${start.getFullYear()}-${pad(start.getMonth() + 1)}-${pad(start.getDate())}`
-  const endStr = `${end.getFullYear()}-${pad(end.getMonth() + 1)}-${pad(end.getDate())}`
-  return `startDate=${startStr}&endDate=${endStr}`
-}
-
 export function TeamDetailView({
   teamId,
   dateParams,
@@ -62,17 +47,8 @@ export function TeamDetailView({
   onSelectNestedTeam,
 }: TeamDetailViewProps) {
   const [selectedBdId, setSelectedBdId] = useState<string>('all')
-  const [selectedMonth, setSelectedMonth] = useState<string>('all')
   const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>({})
   const [columnOrder, setColumnOrder] = useState<string[]>([])
-
-  // Effective date parameters based on selectedMonth
-  const effectiveDateParams = useMemo(() => {
-    if (selectedMonth && selectedMonth !== 'all') {
-      return getMonthDateParams(selectedMonth)
-    }
-    return dateParams
-  }, [selectedMonth, dateParams])
 
   // Drag-to-reorder state for the custom Columns dropdown
   const [teamDraggingColId, setTeamDraggingColId] = useState<string | null>(null)
@@ -156,27 +132,21 @@ export function TeamDetailView({
   }
 
   const { data, isLoading } = useQuery<TeamDetail>({
-    queryKey: ['sales-dashboard', variant, 'team-detail-inline', teamId, effectiveDateParams],
-    queryFn: () => apiGet<TeamDetail>(`/api/analytics/sales-dashboard/team-detail?managerId=${teamId}${effectiveDateParams ? '&' + effectiveDateParams : ''}`),
+    queryKey: ['sales-dashboard', variant, 'team-detail-inline', teamId, dateParams],
+    queryFn: () => apiGet<TeamDetail>(`/api/analytics/sales-dashboard/team-detail?managerId=${teamId}${dateParams ? '&' + dateParams : ''}`),
     enabled: !!teamId,
   })
 
   const { data: bdDetailData, isLoading: isBdLoading } = useQuery<any>({
-    queryKey: ['sales-dashboard', variant, 'bd-detail-inline', selectedBdId, effectiveDateParams],
-    queryFn: () => apiGet<any>(`/api/analytics/sales-dashboard/bd-detail?bdId=${selectedBdId}${effectiveDateParams ? '&' + effectiveDateParams : ''}`),
+    queryKey: ['sales-dashboard', variant, 'bd-detail-inline', selectedBdId, dateParams],
+    queryFn: () => apiGet<any>(`/api/analytics/sales-dashboard/bd-detail?bdId=${selectedBdId}${dateParams ? '&' + dateParams : ''}`),
     enabled: !!selectedBdId && selectedBdId !== 'all',
   })
 
   const effectiveIncentiveMonth = useMemo(() => {
-    if (selectedMonth && selectedMonth !== 'all') {
-      const parts = selectedMonth.split('-')
-      if (parts.length === 2) {
-        return { month: parseInt(parts[1], 10), year: parseInt(parts[0], 10) }
-      }
-    }
     const d = dateRange?.from || new Date()
     return { month: d.getMonth() + 1, year: d.getFullYear() }
-  }, [selectedMonth, dateRange])
+  }, [dateRange])
 
   const { data: incentivesData } = useQuery<{ records: any[] }>({
     queryKey: ['incentives-list', effectiveIncentiveMonth.month, effectiveIncentiveMonth.year],
@@ -199,24 +169,32 @@ export function TeamDetailView({
   // Calculate dynamic KPIs based on selected BD
   const kpis = (selectedBdId !== 'all' && bdDetailData) ? {
     totalLeads: bdDetailData.kpis?.totalLeads ?? 0,
+    totalOpd: bdDetailData.kpis?.opdDone ?? bdDetailData.kpis?.totalOpd ?? 0,
     totalIpd: bdDetailData.kpis?.ipdDone ?? bdDetailData.kpis?.totalIpd ?? 0,
     conversionRate: bdDetailData.kpis?.conversionRate ?? 0,
     totalBill: bdDetailData.kpis?.billAmount ?? bdDetailData.kpis?.totalBill ?? 0,
     totalProfit: bdDetailData.kpis?.netProfit ?? 0,
   } : (activeMember ? {
     totalLeads: activeMember.leads ?? 0,
+    totalOpd: activeMember.opdDone ?? 0,
     totalIpd: activeMember.ipdDone ?? 0,
     conversionRate: activeMember.conversionRate ?? 0,
     totalBill: activeMember.billAmount ?? 0,
-    totalProfit: 0,
-  } : (data?.kpis ?? { totalLeads: 0, totalIpd: 0, conversionRate: 0, totalBill: 0, totalProfit: 0 }))
+    totalProfit: activeMember.netProfit ?? 0,
+  } : {
+    totalLeads: data?.kpis?.totalLeads ?? 0,
+    totalOpd: data?.kpis?.totalOpd ?? 0,
+    totalIpd: data?.kpis?.totalIpd ?? 0,
+    conversionRate: data?.kpis?.conversionRate ?? 0,
+    totalBill: data?.kpis?.totalBill ?? 0,
+    totalProfit: data?.kpis?.totalProfit ?? 0,
+  })
 
   // Pipeline derivations
-  const leadsToOpdMockRate = 0.65
-  const mockOpdCount = Math.round((kpis.totalLeads || 0) * leadsToOpdMockRate)
-  const leadsToOpdPercent = (kpis.totalLeads || 0) > 0 ? (mockOpdCount / (kpis.totalLeads || 0)) * 100 : 0
-  const opdToIpdPercent = mockOpdCount > 0 ? ((kpis.totalIpd || 0) / mockOpdCount) * 100 : 0
-  const overallConvPercent = kpis.conversionRate || 0
+  const opdCount = kpis.totalOpd || 0
+  const leadsToOpdPercent = (kpis.totalLeads || 0) > 0 ? (opdCount / (kpis.totalLeads || 0)) * 100 : 0
+  const opdToIpdPercent = opdCount > 0 ? ((kpis.totalIpd || 0) / opdCount) * 100 : 0
+  const overallConvPercent = (kpis.totalLeads || 0) > 0 ? ((kpis.totalIpd || 0) / (kpis.totalLeads || 0)) * 100 : (kpis.conversionRate || 0)
 
   const formatMonthName = (monthStr: string) => {
     if (!monthStr || monthStr === 'all') return 'All Months'
@@ -229,26 +207,6 @@ export function TeamDetailView({
 
   // Month-wise derivations directly from pre-computed backend response
   const headers = data?.monthWiseHeaders ?? { current: '', prev: '', prev2: '', prev3: '' }
-  const months = useMemo(() => {
-    const now = new Date()
-    const currentYear = now.getFullYear()
-    const set = new Set<string>()
-    if (headers.current) set.add(headers.current)
-    if (headers.prev) set.add(headers.prev)
-    if (headers.prev2) set.add(headers.prev2)
-    if (headers.prev3) set.add(headers.prev3)
-    if (Array.isArray(data?.monthWise)) {
-      for (const r of data.monthWise) {
-        if (r.month) set.add(r.month)
-      }
-    }
-    // Also include months of current year
-    for (let m = 1; m <= 12; m++) {
-      const pad = m.toString().padStart(2, '0')
-      set.add(`${currentYear}-${pad}`)
-    }
-    return Array.from(set).sort().reverse()
-  }, [headers, data?.monthWise])
 
   // Calculate dynamic total IPD for each period based on selected BD
   const totalCurrent = selectedBdId === 'all'
@@ -305,6 +263,12 @@ export function TeamDetailView({
       header: 'Leads',
       meta: { headerClassName: 'text-right', cellClassName: 'text-right tabular-nums' },
       cell: ({ row }) => row.original.leads ?? missingDataFallback
+    },
+    {
+      accessorKey: 'opdDone',
+      header: 'OPD',
+      meta: { headerClassName: 'text-right', cellClassName: 'text-right tabular-nums text-blue-600 dark:text-blue-400' },
+      cell: ({ row }) => (row.original as any).opdDone ?? 0
     },
     {
       accessorKey: 'ipdDone',
@@ -426,24 +390,6 @@ export function TeamDetailView({
 
         {/* Dropdowns on the right */}
         <div className="flex items-center gap-3">
-          {/* Month Select */}
-          <div className="flex flex-col">
-            <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Select Month</span>
-            <div className="relative">
-              <select
-                value={selectedMonth}
-                onChange={(e) => setSelectedMonth(e.target.value)}
-                className="appearance-none bg-background hover:bg-accent border border-slate-400 rounded px-3 py-1.5 pr-8 text-xs font-bold uppercase tracking-wider text-foreground dark:text-[#dce1ff] dark:bg-[#151e3c] dark:hover:bg-[#1f2847] dark:border-[#283150] transition-all cursor-pointer outline-none focus:ring-1 focus:ring-ring min-w-[120px]"
-              >
-                <option value="all" className="bg-background text-foreground dark:bg-[#151e3c]">All Months</option>
-                {months.map((m) => (
-                  <option key={m} value={m} className="bg-background text-foreground dark:bg-[#151e3c]">{formatMonthName(m)}</option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none transition-colors" />
-            </div>
-          </div>
-
           {/* BD Select */}
           <div className="flex flex-col">
             <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Select BD</span>
@@ -487,7 +433,7 @@ export function TeamDetailView({
           },
           {
             title: 'Conv. Rate',
-            value: kpis.conversionRate ? `${kpis.conversionRate.toFixed(1)}%` : missingDataFallback,
+            value: typeof kpis.conversionRate === 'number' ? `${kpis.conversionRate.toFixed(1)}%` : missingDataFallback,
             icon: <BarChart3 className="h-3.5 w-3.5" />,
             border: 'border-violet-500/10 hover:border-violet-500/50 hover:shadow-[0_0_15px_rgba(139,92,246,0.12)]',
             bg: 'bg-violet-500/[0.02]',
@@ -496,7 +442,7 @@ export function TeamDetailView({
           },
           {
             title: 'Net Profit',
-            value: kpis.totalProfit ? fmtK(kpis.totalProfit) : missingDataFallback,
+            value: typeof kpis.totalProfit === 'number' ? fmtK(kpis.totalProfit) : missingDataFallback,
             icon: <TrendingUp className="h-3.5 w-3.5" />,
             border: 'border-amber-500/10 hover:border-amber-500/50 hover:shadow-[0_0_15px_rgba(245,158,11,0.12)]',
             bg: 'bg-amber-500/[0.02]',
@@ -505,7 +451,7 @@ export function TeamDetailView({
           },
           {
             title: 'Bill Amount',
-            value: kpis.totalBill ? fmtK(kpis.totalBill) : missingDataFallback,
+            value: typeof kpis.totalBill === 'number' ? fmtK(kpis.totalBill) : missingDataFallback,
             icon: <span className="text-xs font-bold leading-none">$</span>,
             border: 'border-sky-500/10 hover:border-sky-500/50 hover:shadow-[0_0_15px_rgba(14,165,233,0.12)]',
             bg: 'bg-sky-500/[0.02]',
@@ -589,7 +535,7 @@ export function TeamDetailView({
                 <div className="flex-1 h-1.5 bg-blue-500/10 rounded-full overflow-hidden">
                   <div className="h-full bg-blue-500 rounded-full transition-all duration-500" style={{ width: `${leadsToOpdPercent}%` }}></div>
                 </div>
-                <span className="text-[9px] font-semibold text-muted-foreground whitespace-nowrap">{mockOpdCount}/{kpis.totalLeads}</span>
+                <span className="text-[9px] font-semibold text-muted-foreground whitespace-nowrap">{opdCount}/{kpis.totalLeads}</span>
               </div>
             </div>
 
@@ -603,7 +549,7 @@ export function TeamDetailView({
                 <div className="flex-1 h-1.5 bg-emerald-500/10 rounded-full overflow-hidden">
                   <div className="h-full bg-emerald-500 rounded-full transition-all duration-500" style={{ width: `${opdToIpdPercent}%` }}></div>
                 </div>
-                <span className="text-[9px] font-semibold text-muted-foreground whitespace-nowrap">{kpis.totalIpd}/{mockOpdCount}</span>
+                <span className="text-[9px] font-semibold text-muted-foreground whitespace-nowrap">{kpis.totalIpd}/{opdCount}</span>
               </div>
             </div>
 
@@ -737,7 +683,7 @@ export function TeamDetailView({
         <Card className="shadow-sm border-border w-full overflow-hidden">
           <div className="py-2.5 px-4 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <h3 className="text-base font-semibold text-foreground">Team Member Contribution</h3>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Button variant="outline" size="sm" className="h-8 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 <Filter className="h-3.5 w-3.5 mr-1" /> Filter
               </Button>

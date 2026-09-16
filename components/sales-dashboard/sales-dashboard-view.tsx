@@ -138,12 +138,13 @@ export interface TeamDetail {
     manager: { id: string; name: string; profilePicture: string | null } | null
     managerRole?: string
   }
-  kpis: { totalLeads: number; totalIpd: number; totalProfit: number; totalBill: number; conversionRate: number }
+  kpis: { totalLeads: number; totalOpd?: number; totalIpd: number; totalProfit: number; totalBill: number; conversionRate: number }
   members: Array<{
     id: string
     name: string
     profilePicture: string | null
     leads: number
+    opdDone?: number
     ipdDone: number
     conversionRate: number
     netProfit: number
@@ -164,7 +165,9 @@ export interface TeamDetail {
       bdId: string
       bdName: string
       leadCount: number
+      opdCount?: number
       ipdCount: number
+      billAmount?: number
     }>
   }
   monthWiseHeaders: { current: string; prev: string; prev2: string; prev3: string }
