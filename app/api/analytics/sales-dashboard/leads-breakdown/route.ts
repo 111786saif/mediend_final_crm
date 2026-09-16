@@ -4,7 +4,14 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getManagerGroups } from '@/lib/hierarchy'
-import { canonicalSalesCompletedWhere, buildDateRange } from '@/lib/analytics/ipd-filters'
+import {
+  buildDateRange,
+  leadConvertedWhere,
+  isLeadConverted,
+  normalizeCampaignName,
+  normalizeSourceName,
+  normalizeCircleName,
+} from '@/lib/analytics/ipd-filters'
 import {
   canAccessSalesDashboard,
   getSalesDashboardBdIdFilter,
@@ -72,19 +79,10 @@ export async function GET(request: NextRequest) {
     }
 
     const completedWhere: Prisma.LeadWhereInput = {
-      ...teamScope,
-      ...canonicalSalesCompletedWhere(dateFilter),
-    }
-    if (circle) {
-      completedWhere.circle = circle
-    }
-    if (teamId) {
-      const team = await prisma.departmentTeam.findUnique({
-        where: { id: teamId },
-        select: { members: { select: { userId: true } } },
-      })
-      const memberUserIds = team?.members.map((m) => m.userId) ?? []
-      completedWhere.bdId = { in: memberUserIds }
+      AND: [
+        allLeadsWhere,
+        leadConvertedWhere(),
+      ],
     }
 
     const [
@@ -101,56 +99,153 @@ export async function GET(request: NextRequest) {
       allLeadsForAge,
     ] = await Promise.all([
       prisma.lead.groupBy({ by: ['circle'], where: allLeadsWhere, _count: { id: true } }),
-      prisma.lead.groupBy({ by: ['circle'], where: completedWhere, _count: { id: true } }),
+      prisma.lead.groupBy({ by: ['circle'], where: completedWhere, _count: { id: true }, _sum: { billAmount: true, netProfit: true } }),
       prisma.lead.groupBy({ by: ['treatment'], where: { ...allLeadsWhere, treatment: { not: null } }, _count: { id: true } }),
-      prisma.lead.groupBy({ by: ['treatment'], where: { ...completedWhere, treatment: { not: null } }, _count: { id: true } }),
+      prisma.lead.groupBy({ by: ['treatment'], where: { AND: [allLeadsWhere, leadConvertedWhere(), { treatment: { not: null } }] }, _count: { id: true }, _sum: { billAmount: true, netProfit: true } }),
       prisma.lead.groupBy({ by: ['category'], where: allLeadsWhere, _count: { id: true } }),
-      prisma.lead.groupBy({ by: ['category'], where: completedWhere, _count: { id: true } }),
-      prisma.lead.groupBy({ by: ['source'], where: { ...allLeadsWhere, source: { not: null } }, _count: { id: true } }),
-      prisma.lead.groupBy({ by: ['source'], where: { ...completedWhere, source: { not: null } }, _count: { id: true } }),
-      prisma.lead.groupBy({ by: ['campaignName'], where: { ...allLeadsWhere, campaignName: { not: null } }, _count: { id: true } }),
-      prisma.lead.groupBy({ by: ['campaignName'], where: { ...completedWhere, campaignName: { not: null } }, _count: { id: true } }),
+      prisma.lead.groupBy({ by: ['category'], where: completedWhere, _count: { id: true }, _sum: { billAmount: true, netProfit: true } }),
+      prisma.lead.groupBy({ by: ['source'], where: allLeadsWhere, _count: { id: true } }),
+      prisma.lead.groupBy({ by: ['source'], where: completedWhere, _count: { id: true }, _sum: { billAmount: true, netProfit: true } }),
+      prisma.lead.groupBy({ by: ['campaignName'], where: allLeadsWhere, _count: { id: true } }),
+      prisma.lead.groupBy({ by: ['campaignName'], where: completedWhere, _count: { id: true }, _sum: { billAmount: true, netProfit: true } }),
       prisma.lead.findMany({
         where: allLeadsWhere,
-        select: { id: true, bdId: true, pipelineStage: true, surgeryDate: true, leadEntryDate: true, createdDate: true, campaignName: true, source: true },
+        select: {
+          id: true,
+          bdId: true,
+          pipelineStage: true,
+          caseStage: true,
+          surgeryDate: true,
+          leadEntryDate: true,
+          createdDate: true,
+          campaignName: true,
+          source: true,
+        },
       }),
     ])
 
-    const completedCircleMap = new Map(byCircleCompleted.map((c) => [c.circle, c._count.id]))
-    const byCircle = byCircleAll.map((c) => {
-      const total = c._count.id
-      const converted = completedCircleMap.get(c.circle) ?? 0
-      return { circle: c.circle, totalLeads: total, converted, conversionRate: total > 0 ? (converted / total) * 100 : 0 }
-    })
+    // Normalize and aggregate Circle
+    const circleMap = new Map<string, { total: number; converted: number; revenue: number; profit: number }>()
+    for (const c of byCircleAll) {
+      const name = normalizeCircleName(c.circle)
+      const cur = circleMap.get(name) ?? { total: 0, converted: 0, revenue: 0, profit: 0 }
+      cur.total += c._count.id
+      circleMap.set(name, cur)
+    }
+    for (const c of byCircleCompleted) {
+      const name = normalizeCircleName(c.circle)
+      const cur = circleMap.get(name) ?? { total: 0, converted: 0, revenue: 0, profit: 0 }
+      cur.converted += c._count.id
+      cur.revenue += c._sum?.billAmount ?? 0
+      cur.profit += c._sum?.netProfit ?? 0
+      circleMap.set(name, cur)
+    }
+    const byCircle = Array.from(circleMap.entries())
+      .filter(([_, data]) => data.total > 0)
+      .map(([circle, data]) => {
+        const conv = Math.min(data.converted, data.total)
+        return {
+          circle,
+          totalLeads: data.total,
+          converted: conv,
+          conversionRate: data.total > 0 ? (conv / data.total) * 100 : 0,
+          revenue: data.revenue,
+          profit: data.profit,
+        }
+      }).sort((a, b) => b.totalLeads - a.totalLeads)
 
-    const completedTreatmentMap = new Map(byTreatmentCompleted.map((t) => [t.treatment, t._count.id]))
+    // Disease / Treatment
+    const completedTreatmentMap = new Map(byTreatmentCompleted.map((t) => [t.treatment, { count: t._count.id, revenue: t._sum?.billAmount ?? 0, profit: t._sum?.netProfit ?? 0 }]))
     const byDisease = byTreatmentAll.map((t) => {
       const total = t._count.id
-      const converted = completedTreatmentMap.get(t.treatment) ?? 0
-      return { disease: t.treatment ?? 'Unknown', totalLeads: total, converted, conversionRate: total > 0 ? (converted / total) * 100 : 0 }
+      const convertedData = completedTreatmentMap.get(t.treatment)
+      const conv = Math.min(convertedData?.count ?? 0, total)
+      return {
+        disease: t.treatment ?? 'Unknown',
+        totalLeads: total,
+        converted: conv,
+        conversionRate: total > 0 ? (conv / total) * 100 : 0,
+        revenue: convertedData?.revenue ?? 0,
+        profit: convertedData?.profit ?? 0,
+      }
     }).sort((a, b) => b.totalLeads - a.totalLeads)
 
-    const completedCategoryMap = new Map(byCategoryCompleted.map((c) => [c.category ?? 'Uncategorized', c._count.id]))
+    // Category
+    const completedCategoryMap = new Map(byCategoryCompleted.map((c) => [c.category ?? 'Uncategorized', { count: c._count.id, revenue: c._sum?.billAmount ?? 0, profit: c._sum?.netProfit ?? 0 }]))
     const byCategory = byCategoryAll.map((c) => {
       const category = c.category?.trim() || 'Uncategorized'
       const total = c._count.id
-      const converted = completedCategoryMap.get(c.category ?? 'Uncategorized') ?? completedCategoryMap.get(category) ?? 0
-      return { category, totalLeads: total, converted, conversionRate: total > 0 ? (converted / total) * 100 : 0 }
+      const convertedData = completedCategoryMap.get(c.category ?? 'Uncategorized') ?? completedCategoryMap.get(category)
+      const conv = Math.min(convertedData?.count ?? 0, total)
+      return {
+        category,
+        totalLeads: total,
+        converted: conv,
+        conversionRate: total > 0 ? (conv / total) * 100 : 0,
+        revenue: convertedData?.revenue ?? 0,
+        profit: convertedData?.profit ?? 0,
+      }
     }).sort((a, b) => b.totalLeads - a.totalLeads)
 
-    const completedSourceMap = new Map(bySourceCompleted.map((s) => [s.source, s._count.id]))
-    const bySource = bySourceAll.map((s) => {
-      const total = s._count.id
-      const converted = completedSourceMap.get(s.source) ?? 0
-      return { source: s.source ?? 'Unknown', totalLeads: total, converted, conversionRate: total > 0 ? (converted / total) * 100 : 0 }
-    }).sort((a, b) => b.totalLeads - a.totalLeads)
+    // Normalize and aggregate Source
+    const sourceMap = new Map<string, { total: number; converted: number; revenue: number; profit: number }>()
+    for (const s of bySourceAll) {
+      const name = normalizeSourceName(s.source)
+      const cur = sourceMap.get(name) ?? { total: 0, converted: 0, revenue: 0, profit: 0 }
+      cur.total += s._count.id
+      sourceMap.set(name, cur)
+    }
+    for (const s of bySourceCompleted) {
+      const name = normalizeSourceName(s.source)
+      const cur = sourceMap.get(name) ?? { total: 0, converted: 0, revenue: 0, profit: 0 }
+      cur.converted += s._count.id
+      cur.revenue += s._sum?.billAmount ?? 0
+      cur.profit += s._sum?.netProfit ?? 0
+      sourceMap.set(name, cur)
+    }
+    const bySource = Array.from(sourceMap.entries())
+      .filter(([_, data]) => data.total > 0)
+      .map(([source, data]) => {
+        const conv = Math.min(data.converted, data.total)
+        return {
+          source,
+          totalLeads: data.total,
+          converted: conv,
+          conversionRate: data.total > 0 ? (conv / data.total) * 100 : 0,
+          revenue: data.revenue,
+          profit: data.profit,
+        }
+      }).sort((a, b) => b.totalLeads - a.totalLeads)
 
-    const completedCampaignMap = new Map(byCampaignCompleted.map((c) => [c.campaignName, c._count.id]))
-    const byCampaign = byCampaignAll.map((c) => {
-      const total = c._count.id
-      const converted = completedCampaignMap.get(c.campaignName) ?? 0
-      return { campaign: c.campaignName ?? 'Unknown', totalLeads: total, converted, conversionRate: total > 0 ? (converted / total) * 100 : 0 }
-    }).sort((a, b) => b.totalLeads - a.totalLeads)
+    // Normalize and aggregate Campaign
+    const campaignMap = new Map<string, { total: number; converted: number; revenue: number; profit: number }>()
+    for (const c of byCampaignAll) {
+      const name = normalizeCampaignName(c.campaignName)
+      const cur = campaignMap.get(name) ?? { total: 0, converted: 0, revenue: 0, profit: 0 }
+      cur.total += c._count.id
+      campaignMap.set(name, cur)
+    }
+    for (const c of byCampaignCompleted) {
+      const name = normalizeCampaignName(c.campaignName)
+      const cur = campaignMap.get(name) ?? { total: 0, converted: 0, revenue: 0, profit: 0 }
+      cur.converted += c._count.id
+      cur.revenue += c._sum?.billAmount ?? 0
+      cur.profit += c._sum?.netProfit ?? 0
+      campaignMap.set(name, cur)
+    }
+    const byCampaign = Array.from(campaignMap.entries())
+      .filter(([_, data]) => data.total > 0)
+      .map(([campaign, data]) => {
+        const conv = Math.min(data.converted, data.total)
+        return {
+          campaign,
+          totalLeads: data.total,
+          converted: conv,
+          conversionRate: data.total > 0 ? (conv / data.total) * 100 : 0,
+          revenue: data.revenue,
+          profit: data.profit,
+        }
+      }).sort((a, b) => b.totalLeads - a.totalLeads)
 
     // By-team breakdown: manager group (manager + direct subordinates) from org chart
     const managerGroups = await getManagerGroups()
@@ -173,7 +268,7 @@ export async function GET(request: NextRequest) {
       for (const lead of allLeadsForAge) {
         if (groupUserIds.has(lead.bdId)) {
           totalLeads++
-          if (lead.surgeryDate) converted++
+          if (isLeadConverted(lead)) converted++
         }
       }
       if (totalLeads > 0) {
@@ -194,7 +289,7 @@ export async function GET(request: NextRequest) {
       if (effectiveLeadDate) {
         const bucket = getLeadAgeBucket(effectiveLeadDate, asOf)
         ageBuckets[bucket].total += 1
-        if (lead.surgeryDate) ageBuckets[bucket].converted += 1
+        if (isLeadConverted(lead)) ageBuckets[bucket].converted += 1
       }
     })
     const leadAgeBreakdown = (['new', 'oneMonth', 'twoMonths', 'old'] as const).map((key) => ({
