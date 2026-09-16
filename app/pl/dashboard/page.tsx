@@ -215,23 +215,31 @@ export default function PLLedgerPage() {
   )
 
   const [bdFilter, setBdFilter] = useState<string[]>([])
+  const [managerFilter, setManagerFilter] = useState<string[]>([])
+  const [statusFilter, setStatusFilter] = useState<string[]>([])
   const [hospitalFilter, setHospitalFilter] = useState<string[]>([])
   const [doctorFilter, setDoctorFilter] = useState<string[]>([])
   const [outstandingFilter, setOutstandingFilter] = useState<string[]>([])
   const [categoryFilter, setCategoryFilter] = useState<string[]>([])
   const [circleFilter, setCircleFilter] = useState<string[]>([])
   const [paymentTypeFilter, setPaymentTypeFilter] = useState<string[]>([])
+  const [implantPaidByFilter, setImplantPaidByFilter] = useState<string[]>([])
   const [hospPayoutFilter, setHospPayoutFilter] = useState<string[]>([])
   const [docPayoutFilter, setDocPayoutFilter] = useState<string[]>([])
   const [invoiceFilter, setInvoiceFilter] = useState<string[]>([])
   const [treatmentFilter, setTreatmentFilter] = useState<string>('')
   const [patientFilter, setPatientFilter] = useState<string>('')
+  const [leadRefFilter, setLeadRefFilter] = useState<string>('')
+  const [leadReceivedDateFilter, setLeadReceivedDateFilter] = useState<string[]>([])
   const [admissionDateFilter, setAdmissionDateFilter] = useState<string[]>([])
   const [surgeryDateFilter, setSurgeryDateFilter] = useState<string[]>([])
   const [totalBillFilter, setTotalBillFilter] = useState<{ min: number | null; max: number | null } | null>(null)
   const [approvedAmountFilter, setApprovedAmountFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [amountPaidFilter, setAmountPaidFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [hospitalSharePctFilter, setHospitalSharePctFilter] = useState<{ min: number | null; max: number | null } | null>(null)
   const [hospitalShareAmtFilter, setHospitalShareAmtFilter] = useState<{ min: number | null; max: number | null } | null>(null)
   const [doctorChargesFilter, setDoctorChargesFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [implantFilter, setImplantFilter] = useState<{ min: number | null; max: number | null } | null>(null)
   const [netProfitFilter, setNetProfitFilter] = useState<{ min: number | null; max: number | null } | null>(null)
   const [selectedStage, setSelectedStage] = useState<string | null>(null)
 
@@ -244,24 +252,32 @@ export default function PLLedgerPage() {
         const saved = JSON.parse(raw)
         if (saved.selectedMonths) setSelectedMonths(saved.selectedMonths)
         if (saved.bdFilter) setBdFilter(saved.bdFilter)
+        if (saved.managerFilter) setManagerFilter(saved.managerFilter)
+        if (saved.statusFilter) setStatusFilter(saved.statusFilter)
         if (saved.hospitalFilter) setHospitalFilter(saved.hospitalFilter)
         if (saved.doctorFilter) setDoctorFilter(saved.doctorFilter)
         if (saved.outstandingFilter) setOutstandingFilter(saved.outstandingFilter)
         if (saved.categoryFilter) setCategoryFilter(saved.categoryFilter)
         if (saved.circleFilter) setCircleFilter(saved.circleFilter)
         if (saved.paymentTypeFilter) setPaymentTypeFilter(saved.paymentTypeFilter)
+        if (saved.implantPaidByFilter) setImplantPaidByFilter(saved.implantPaidByFilter)
         if (saved.hospPayoutFilter) setHospPayoutFilter(saved.hospPayoutFilter)
         if (saved.docPayoutFilter) setDocPayoutFilter(saved.docPayoutFilter)
         if (saved.invoiceFilter) setInvoiceFilter(saved.invoiceFilter)
         if (saved.tableMonthFilter) setTableMonthFilter(saved.tableMonthFilter)
         if (saved.treatmentFilter !== undefined) setTreatmentFilter(saved.treatmentFilter)
         if (saved.patientFilter !== undefined) setPatientFilter(saved.patientFilter)
+        if (saved.leadRefFilter !== undefined) setLeadRefFilter(saved.leadRefFilter)
+        if (saved.leadReceivedDateFilter) setLeadReceivedDateFilter(saved.leadReceivedDateFilter)
         if (saved.admissionDateFilter) setAdmissionDateFilter(saved.admissionDateFilter)
         if (saved.surgeryDateFilter) setSurgeryDateFilter(saved.surgeryDateFilter)
         if (saved.totalBillFilter !== undefined) setTotalBillFilter(saved.totalBillFilter)
         if (saved.approvedAmountFilter !== undefined) setApprovedAmountFilter(saved.approvedAmountFilter)
+        if (saved.amountPaidFilter !== undefined) setAmountPaidFilter(saved.amountPaidFilter)
+        if (saved.hospitalSharePctFilter !== undefined) setHospitalSharePctFilter(saved.hospitalSharePctFilter)
         if (saved.hospitalShareAmtFilter !== undefined) setHospitalShareAmtFilter(saved.hospitalShareAmtFilter)
         if (saved.doctorChargesFilter !== undefined) setDoctorChargesFilter(saved.doctorChargesFilter)
+        if (saved.implantFilter !== undefined) setImplantFilter(saved.implantFilter)
         if (saved.netProfitFilter !== undefined) setNetProfitFilter(saved.netProfitFilter)
         if (saved.selectedStage !== undefined) setSelectedStage(saved.selectedStage)
       }
@@ -277,24 +293,32 @@ export default function PLLedgerPage() {
       window.sessionStorage.setItem('pl-ledger-filters-v1', JSON.stringify({
         selectedMonths,
         bdFilter,
+        managerFilter,
+        statusFilter,
         hospitalFilter,
         doctorFilter,
         outstandingFilter,
         categoryFilter,
         circleFilter,
         paymentTypeFilter,
+        implantPaidByFilter,
         hospPayoutFilter,
         docPayoutFilter,
         invoiceFilter,
         tableMonthFilter,
         treatmentFilter,
         patientFilter,
+        leadRefFilter,
+        leadReceivedDateFilter,
         admissionDateFilter,
         surgeryDateFilter,
         totalBillFilter,
         approvedAmountFilter,
+        amountPaidFilter,
+        hospitalSharePctFilter,
         hospitalShareAmtFilter,
         doctorChargesFilter,
+        implantFilter,
         netProfitFilter,
         selectedStage,
       }))
@@ -305,24 +329,32 @@ export default function PLLedgerPage() {
     hydrated,
     selectedMonths,
     bdFilter,
+    managerFilter,
+    statusFilter,
     hospitalFilter,
     doctorFilter,
     outstandingFilter,
     categoryFilter,
     circleFilter,
     paymentTypeFilter,
+    implantPaidByFilter,
     hospPayoutFilter,
     docPayoutFilter,
     invoiceFilter,
     tableMonthFilter,
     treatmentFilter,
     patientFilter,
+    leadRefFilter,
+    leadReceivedDateFilter,
     admissionDateFilter,
     surgeryDateFilter,
     totalBillFilter,
     approvedAmountFilter,
+    amountPaidFilter,
+    hospitalSharePctFilter,
     hospitalShareAmtFilter,
     doctorChargesFilter,
+    implantFilter,
     netProfitFilter,
     selectedStage,
   ])
@@ -343,50 +375,32 @@ export default function PLLedgerPage() {
     staleTime: 5 * 60 * 1000, // cache 5 min — options rarely change
   })
 
-  const filterOptions = useMemo(() => {
-    const filters = filterConfig?.filters || []
-    const find = (field: string) => filters.find((f) => f.field === field)
-    return {
-      bds: find('bdm')?.options || [],
-      hospitals: find('hospital')?.options || [],
-      doctors: find('doctor')?.options || [],
-      managers: find('manager')?.options || [],
-      categories: find('category')?.options || [],
-      circles: find('circle')?.options || [],
-      paymentTypes: find('paymentType')?.options || [],
-      hospPayouts: find('hospPayout')?.options || [],
-      docPayouts: find('docPayout')?.options || [],
-      invoices: find('invoice')?.options || [],
-      totalBillBounds: { min: find('totalBill')?.min ?? 0, max: find('totalBill')?.max ?? 0 },
-      approvedAmountBounds: { min: find('approvedAmount')?.min ?? 0, max: find('approvedAmount')?.max ?? 0 },
-      hospitalShareAmtBounds: { min: find('hospitalShareAmt')?.min ?? 0, max: find('hospitalShareAmt')?.max ?? 0 },
-      doctorChargesBounds: { min: find('doctorCharges')?.min ?? 0, max: find('doctorCharges')?.max ?? 0 },
-      netProfitBounds: { min: find('netProfit')?.min ?? 0, max: find('netProfit')?.max ?? 0 },
-    }
-  }, [filterConfig])
-
   const { data: records, isLoading } = useQuery<Lead[]>({
     queryKey: [
       'pl', 'records', dateRange,
-      bdFilter, hospitalFilter, doctorFilter, outstandingFilter,
-      categoryFilter, circleFilter, paymentTypeFilter,
+      bdFilter, managerFilter, statusFilter, hospitalFilter, doctorFilter, outstandingFilter,
+      categoryFilter, circleFilter, paymentTypeFilter, implantPaidByFilter,
       hospPayoutFilter, docPayoutFilter, invoiceFilter,
-      treatmentFilter, patientFilter,
-      admissionDateFilter, surgeryDateFilter,
-      totalBillFilter, approvedAmountFilter, hospitalShareAmtFilter,
-      doctorChargesFilter, netProfitFilter,
+      treatmentFilter, patientFilter, leadRefFilter,
+      leadReceivedDateFilter, admissionDateFilter, surgeryDateFilter,
+      totalBillFilter, approvedAmountFilter, amountPaidFilter,
+      hospitalSharePctFilter, hospitalShareAmtFilter,
+      doctorChargesFilter, implantFilter, netProfitFilter,
     ],
     queryFn: async () => {
       const filters: Array<{ field: string; operator: string; value: unknown }> = []
 
       // multiSelect filters
       if (bdFilter.length > 0) filters.push({ field: 'bdm', operator: 'in', value: bdFilter })
+      if (managerFilter.length > 0) filters.push({ field: 'manager', operator: 'in', value: managerFilter })
+      if (statusFilter.length > 0) filters.push({ field: 'status', operator: 'in', value: statusFilter })
       if (hospitalFilter.length > 0) filters.push({ field: 'hospital', operator: 'in', value: hospitalFilter })
       if (doctorFilter.length > 0) filters.push({ field: 'doctor', operator: 'in', value: doctorFilter })
       if (outstandingFilter.length > 0) filters.push({ field: 'outstandingStatus', operator: 'in', value: outstandingFilter })
       if (categoryFilter.length > 0) filters.push({ field: 'category', operator: 'in', value: categoryFilter })
       if (circleFilter.length > 0) filters.push({ field: 'circle', operator: 'in', value: circleFilter })
       if (paymentTypeFilter.length > 0) filters.push({ field: 'paymentType', operator: 'in', value: paymentTypeFilter })
+      if (implantPaidByFilter.length > 0) filters.push({ field: 'implantPaidBy', operator: 'in', value: implantPaidByFilter })
       if (hospPayoutFilter.length > 0) filters.push({ field: 'hospPayout', operator: 'in', value: hospPayoutFilter })
       if (docPayoutFilter.length > 0) filters.push({ field: 'docPayout', operator: 'in', value: docPayoutFilter })
       if (invoiceFilter.length > 0) filters.push({ field: 'invoice', operator: 'in', value: invoiceFilter })
@@ -394,8 +408,11 @@ export default function PLLedgerPage() {
       // search filters
       if (treatmentFilter.trim()) filters.push({ field: 'treatment', operator: 'contains', value: treatmentFilter })
       if (patientFilter.trim()) filters.push({ field: 'patient', operator: 'contains', value: patientFilter })
+      if (leadRefFilter.trim()) filters.push({ field: 'leadRef', operator: 'contains', value: leadRefFilter })
 
       // dateRange filters
+      if (leadReceivedDateFilter.length === 2 && leadReceivedDateFilter[0])
+        filters.push({ field: 'leadReceived', operator: 'between', value: leadReceivedDateFilter })
       if (admissionDateFilter.length === 2 && admissionDateFilter[0])
         filters.push({ field: 'admissionDate', operator: 'between', value: admissionDateFilter })
       if (surgeryDateFilter.length === 2 && surgeryDateFilter[0])
@@ -406,10 +423,16 @@ export default function PLLedgerPage() {
         filters.push({ field: 'totalBill', operator: 'between', value: totalBillFilter })
       if (approvedAmountFilter && (approvedAmountFilter.min != null || approvedAmountFilter.max != null))
         filters.push({ field: 'approvedAmount', operator: 'between', value: approvedAmountFilter })
+      if (amountPaidFilter && (amountPaidFilter.min != null || amountPaidFilter.max != null))
+        filters.push({ field: 'amountPaid', operator: 'between', value: amountPaidFilter })
+      if (hospitalSharePctFilter && (hospitalSharePctFilter.min != null || hospitalSharePctFilter.max != null))
+        filters.push({ field: 'hospitalSharePct', operator: 'between', value: hospitalSharePctFilter })
       if (hospitalShareAmtFilter && (hospitalShareAmtFilter.min != null || hospitalShareAmtFilter.max != null))
         filters.push({ field: 'hospitalShareAmt', operator: 'between', value: hospitalShareAmtFilter })
       if (doctorChargesFilter && (doctorChargesFilter.min != null || doctorChargesFilter.max != null))
         filters.push({ field: 'doctorCharges', operator: 'between', value: doctorChargesFilter })
+      if (implantFilter && (implantFilter.min != null || implantFilter.max != null))
+        filters.push({ field: 'implant', operator: 'between', value: implantFilter })
       if (netProfitFilter && (netProfitFilter.min != null || netProfitFilter.max != null))
         filters.push({ field: 'netProfit', operator: 'between', value: netProfitFilter })
 
@@ -435,6 +458,71 @@ export default function PLLedgerPage() {
     },
     enabled: hydrated && !!dateRange.startDate && !!dateRange.endDate,
   })
+
+  const filterOptions = useMemo(() => {
+    const filters = filterConfig?.filters || []
+    const find = (field: string) => filters.find((f) => f.field === field)
+
+    // Merge config managers with unique managers present in loaded records
+    const configManagers = find('manager')?.options || []
+    const recordManagers = Array.from(
+      new Set(
+        records
+          ?.map((r) => resolvePlRow(r as unknown as Record<string, unknown>).manager)
+          .filter(Boolean) as string[]
+      )
+    ).map((m) => ({ label: m, value: m }))
+
+    const managerMap = new Map<string, { label: string; value: string }>()
+    for (const opt of [...configManagers, ...recordManagers]) {
+      if (opt.value && !managerMap.has(opt.value)) {
+        managerMap.set(opt.value, opt)
+      }
+    }
+
+    // Merge config statuses with unique statuses present in loaded records
+    const configStatuses = find('status')?.options || []
+    const recordStatuses = Array.from(
+      new Set(
+        records
+          ?.map((r) => resolvePlRow(r as unknown as Record<string, unknown>).status)
+          .filter(Boolean) as string[]
+      )
+    ).map((s) => ({ label: s, value: s }))
+
+    const statusMap = new Map<string, { label: string; value: string }>()
+    for (const opt of [...configStatuses, ...recordStatuses]) {
+      if (opt.value && !statusMap.has(opt.value)) {
+        statusMap.set(opt.value, opt)
+      }
+    }
+
+    return {
+      bds: find('bdm')?.options || [],
+      hospitals: find('hospital')?.options || [],
+      doctors: find('doctor')?.options || [],
+      managers: Array.from(managerMap.values()),
+      statuses: Array.from(statusMap.values()),
+      implantPaidBys: find('implantPaidBy')?.options || [
+        { label: 'Hospital', value: 'HOSPITAL' },
+        { label: 'Mediend', value: 'MEDIEND' },
+      ],
+      categories: find('category')?.options || [],
+      circles: find('circle')?.options || [],
+      paymentTypes: find('paymentType')?.options || [],
+      hospPayouts: find('hospPayout')?.options || [],
+      docPayouts: find('docPayout')?.options || [],
+      invoices: find('invoice')?.options || [],
+      totalBillBounds: { min: find('totalBill')?.min ?? 0, max: find('totalBill')?.max ?? 0 },
+      approvedAmountBounds: { min: find('approvedAmount')?.min ?? 0, max: find('approvedAmount')?.max ?? 0 },
+      amountPaidBounds: { min: find('amountPaid')?.min ?? 0, max: find('amountPaid')?.max ?? 0 },
+      hospitalSharePctBounds: { min: find('hospitalSharePct')?.min ?? 0, max: find('hospitalSharePct')?.max ?? 100 },
+      hospitalShareAmtBounds: { min: find('hospitalShareAmt')?.min ?? 0, max: find('hospitalShareAmt')?.max ?? 0 },
+      doctorChargesBounds: { min: find('doctorCharges')?.min ?? 0, max: find('doctorCharges')?.max ?? 0 },
+      implantBounds: { min: find('implant')?.min ?? 0, max: find('implant')?.max ?? 0 },
+      netProfitBounds: { min: find('netProfit')?.min ?? 0, max: find('netProfit')?.max ?? 0 },
+    }
+  }, [filterConfig, records])
 
   const { data: pipelineStats } = useQuery<PipelineStats>({
     queryKey: ['pl', 'pipeline-stats', dateRange],
@@ -464,36 +552,44 @@ export default function PLLedgerPage() {
   const [patientDrawerDateField, setPatientDrawerDateField] = useState<'surgery' | 'admission' | 'discharge'>('surgery')
 
   const activeFilterCount =
-    bdFilter.length + hospitalFilter.length + doctorFilter.length + outstandingFilter.length +
-    categoryFilter.length + circleFilter.length + paymentTypeFilter.length +
+    bdFilter.length + managerFilter.length + statusFilter.length + hospitalFilter.length + doctorFilter.length + outstandingFilter.length +
+    categoryFilter.length + circleFilter.length + paymentTypeFilter.length + implantPaidByFilter.length +
     hospPayoutFilter.length + docPayoutFilter.length + invoiceFilter.length +
     tableMonthFilter.length +
-    (treatmentFilter.trim() ? 1 : 0) + (patientFilter.trim() ? 1 : 0) +
-    (admissionDateFilter.length > 0 ? 1 : 0) + (surgeryDateFilter.length > 0 ? 1 : 0) +
-    (totalBillFilter ? 1 : 0) + (approvedAmountFilter ? 1 : 0) +
-    (hospitalShareAmtFilter ? 1 : 0) + (doctorChargesFilter ? 1 : 0) + (netProfitFilter ? 1 : 0) +
+    (treatmentFilter.trim() ? 1 : 0) + (patientFilter.trim() ? 1 : 0) + (leadRefFilter.trim() ? 1 : 0) +
+    (leadReceivedDateFilter.length > 0 ? 1 : 0) + (admissionDateFilter.length > 0 ? 1 : 0) + (surgeryDateFilter.length > 0 ? 1 : 0) +
+    (totalBillFilter ? 1 : 0) + (approvedAmountFilter ? 1 : 0) + (amountPaidFilter ? 1 : 0) +
+    (hospitalSharePctFilter ? 1 : 0) + (hospitalShareAmtFilter ? 1 : 0) + (doctorChargesFilter ? 1 : 0) + (implantFilter ? 1 : 0) + (netProfitFilter ? 1 : 0) +
     (selectedStage ? 1 : 0)
 
   const clearFilters = () => {
     setBdFilter([])
+    setManagerFilter([])
+    setStatusFilter([])
     setHospitalFilter([])
     setDoctorFilter([])
     setOutstandingFilter([])
     setCategoryFilter([])
     setCircleFilter([])
     setPaymentTypeFilter([])
+    setImplantPaidByFilter([])
     setHospPayoutFilter([])
     setDocPayoutFilter([])
     setInvoiceFilter([])
     setTableMonthFilter([])
     setTreatmentFilter('')
     setPatientFilter('')
+    setLeadRefFilter('')
+    setLeadReceivedDateFilter([])
     setAdmissionDateFilter([])
     setSurgeryDateFilter([])
     setTotalBillFilter(null)
     setApprovedAmountFilter(null)
+    setAmountPaidFilter(null)
+    setHospitalSharePctFilter(null)
     setHospitalShareAmtFilter(null)
     setDoctorChargesFilter(null)
+    setImplantFilter(null)
     setNetProfitFilter(null)
     setSelectedStage(null)
   }
@@ -535,9 +631,66 @@ export default function PLLedgerPage() {
           if (!tableMonthFilter.includes(rowMonthKey)) return false
         }
 
+        if (managerFilter.length > 0) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          if (!resolved.manager || !managerFilter.includes(resolved.manager)) return false
+        }
+        if (statusFilter.length > 0) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          if (!resolved.status || !statusFilter.includes(resolved.status)) return false
+        }
+        if (leadRefFilter.trim()) {
+          const ref = String(r.leadRef || '')
+          if (!ref.toLowerCase().includes(leadRefFilter.trim().toLowerCase())) return false
+        }
+        if (leadReceivedDateFilter.length === 2 && leadReceivedDateFilter[0]) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          const d = resolved.leadReceivedFromInsuranceAt
+          if (!d) return false
+          const from = new Date(leadReceivedDateFilter[0])
+          const to = new Date(leadReceivedDateFilter[1] || leadReceivedDateFilter[0])
+          to.setHours(23, 59, 59, 999)
+          if (d < from || d > to) return false
+        }
+        if (amountPaidFilter && (amountPaidFilter.min != null || amountPaidFilter.max != null)) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          const val = (resolved.approvedAmount ?? 0) + (resolved.deductionPaidByPatient ?? 0)
+          if (amountPaidFilter.min != null && val < amountPaidFilter.min) return false
+          if (amountPaidFilter.max != null && val > amountPaidFilter.max) return false
+        }
+        if (hospitalSharePctFilter && (hospitalSharePctFilter.min != null || hospitalSharePctFilter.max != null)) {
+          const raw = (r.plRecord as any)?.hospitalSharePct
+          if (raw == null) return false
+          const val = Number(raw)
+          if (isNaN(val)) return false
+          if (hospitalSharePctFilter.min != null && val < hospitalSharePctFilter.min) return false
+          if (hospitalSharePctFilter.max != null && val > hospitalSharePctFilter.max) return false
+        }
+        if (implantFilter && (implantFilter.min != null || implantFilter.max != null)) {
+          const raw = (r.plRecord as any)?.implantCost != null ? Number((r.plRecord as any).implantCost) : ((r as any).implantAmount ? Number((r as any).implantAmount) : 0)
+          if (implantFilter.min != null && raw < implantFilter.min) return false
+          if (implantFilter.max != null && raw > implantFilter.max) return false
+        }
+        if (implantPaidByFilter.length > 0) {
+          const val = (r.plRecord as any)?.implantPaidBy
+          if (!val || !implantPaidByFilter.includes(String(val))) return false
+        }
+
         return true
       }),
-    [records, selectedStage, tableMonthFilter]
+    [
+      records,
+      selectedStage,
+      tableMonthFilter,
+      managerFilter,
+      statusFilter,
+      leadRefFilter,
+      leadReceivedDateFilter,
+      amountPaidFilter,
+      hospitalSharePctFilter,
+      implantFilter,
+      implantPaidByFilter,
+    ]
   )
 
   const pendingPayoutRecords = useMemo(
@@ -699,7 +852,12 @@ export default function PLLedgerPage() {
     const cols: ColumnDef<any>[] = [
       {
         id: 'leadRef',
-        header: 'Lead ref',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Lead ref</span>
+            <ColumnFilter value={leadRefFilter} onChange={setLeadRefFilter} type="search" placeholder="Search lead ref..." />
+          </div>
+        ),
         accessorKey: 'leadRef',
         cell: ({ row }) => {
           const record = row.original
@@ -750,13 +908,28 @@ export default function PLLedgerPage() {
       },
       {
         id: 'leadReceived',
-        header: 'Lead Received (Insurance)',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Lead Received (Insurance)</span>
+            <ColumnFilter value={leadReceivedDateFilter} onChange={setLeadReceivedDateFilter} type="dateRange" />
+          </div>
+        ),
         accessorFn: (row) => resolvePlRow(row as any).leadReceivedFromInsuranceAt,
         cell: ({ getValue }) => formatPlDate(getValue() as any),
       },
       {
         id: 'manager',
-        header: 'Manager',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Manager</span>
+            <ColumnFilter
+              options={filterOptions.managers}
+              value={managerFilter}
+              onChange={setManagerFilter}
+              type="multiSelect"
+            />
+          </div>
+        ),
         accessorFn: (row) => resolvePlRow(row as any).manager,
         cell: ({ getValue }) => (getValue() as string) || '—',
       },
@@ -918,7 +1091,17 @@ export default function PLLedgerPage() {
       },
       {
         id: 'status',
-        header: 'Status',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Status</span>
+            <ColumnFilter
+              options={filterOptions.statuses}
+              value={statusFilter}
+              onChange={setStatusFilter}
+              type="multiSelect"
+            />
+          </div>
+        ),
         accessorFn: (row) => resolvePlRow(row as any).status,
         cell: ({ getValue }) => {
           const val = getValue() as string
@@ -975,7 +1158,12 @@ export default function PLLedgerPage() {
       },
       {
         id: 'amountPaid',
-        header: 'Amount paid',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Amount paid</span>
+            <ColumnFilter value={amountPaidFilter} onChange={setAmountPaidFilter} type="numberRange" min={filterOptions.amountPaidBounds.min} max={filterOptions.amountPaidBounds.max} />
+          </div>
+        ),
         accessorFn: (row) => {
           const res = resolvePlRow(row as any)
           return (res.approvedAmount ?? 0) + (res.deductionPaidByPatient ?? 0) || null
@@ -984,7 +1172,12 @@ export default function PLLedgerPage() {
       },
       {
         id: 'hospitalSharePct',
-        header: 'MediEND %',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>MediEND %</span>
+            <ColumnFilter value={hospitalSharePctFilter} onChange={setHospitalSharePctFilter} type="numberRange" min={filterOptions.hospitalSharePctBounds.min} max={filterOptions.hospitalSharePctBounds.max} />
+          </div>
+        ),
         accessorFn: (row) => row.plRecord?.hospitalSharePct,
         cell: ({ getValue }) => getValue() != null ? `${getValue()}%` : '—',
       },
@@ -1012,13 +1205,28 @@ export default function PLLedgerPage() {
       },
       {
         id: 'implant',
-        header: 'Implant',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Implant</span>
+            <ColumnFilter value={implantFilter} onChange={setImplantFilter} type="numberRange" min={filterOptions.implantBounds.min} max={filterOptions.implantBounds.max} />
+          </div>
+        ),
         accessorFn: (row) => row.plRecord?.implantCost != null ? Number(row.plRecord.implantCost) : ((row as any).implantAmount || null),
         cell: ({ getValue }) => rupee(getValue() as any),
       },
       {
         id: 'implantPaidBy',
-        header: 'Implant by',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Implant by</span>
+            <ColumnFilter
+              options={filterOptions.implantPaidBys}
+              value={implantPaidByFilter}
+              onChange={setImplantPaidByFilter}
+              type="multiSelect"
+            />
+          </div>
+        ),
         accessorFn: (row) => row.plRecord?.implantPaidBy,
         cell: ({ getValue }) => paidBy(getValue()),
       },
@@ -1213,6 +1421,10 @@ export default function PLLedgerPage() {
     })
   }, [
     filterOptions,
+    leadRefFilter,
+    leadReceivedDateFilter,
+    managerFilter,
+    statusFilter,
     bdFilter,
     patientFilter,
     categoryFilter,
@@ -1226,8 +1438,12 @@ export default function PLLedgerPage() {
     outstandingFilter,
     totalBillFilter,
     approvedAmountFilter,
+    amountPaidFilter,
+    hospitalSharePctFilter,
     hospitalShareAmtFilter,
     doctorChargesFilter,
+    implantFilter,
+    implantPaidByFilter,
     netProfitFilter,
     hospPayoutFilter,
     docPayoutFilter,
