@@ -27,6 +27,8 @@ export async function GET(request: NextRequest) {
     const [
       // BDM: always use User table with role=BD for complete, authoritative list
       bdUsers,
+      // Manager users
+      managerUsers,
       // Lead refs (for KYP case tracker column filter)
       leadRefs,
       plHospitals, dsHospitals, leadHospitals,
@@ -35,12 +37,18 @@ export async function GET(request: NextRequest) {
       plCategories, dsCategories, leadCategories,
       plCircles, dsCircles, leadCircles,
       plPaymentTypes, dsPaymentTypes,
+      plStatuses, dsStatuses, leadCaseStages,
+      plImplantPaidBys,
       billAmountBounds,
       totalAmountBounds,
       hospitalShareBounds,
+      hospitalSharePctBounds,
       netProfitBounds,
-      // doctor charges live on DischargeSheet, not PLRecord
+      // doctor charges live on DischargeSheet and PLRecord
       dsDocChargesBounds,
+      plDocChargesBounds,
+      // implant cost bounds
+      plImplantBounds,
       // Treatment
       plTreatments, dsTreatments, leadTreatments,
     ] = await Promise.all([
@@ -51,7 +59,23 @@ export async function GET(request: NextRequest) {
         orderBy: { name: 'asc' },
       }),
 
-      // Lead refs — distinct values from Lead table (used by KYP case tracker)
+      // Manager names — from User table
+      prisma.user.findMany({
+        where: {
+          role: {
+            in: [
+              UserRole.TEAM_LEAD,
+              UserRole.CATEGORY_MANAGER,
+              UserRole.ASSISTANT_CATEGORY_MANAGER,
+              UserRole.SALES_HEAD,
+            ],
+          },
+        },
+        select: { name: true },
+        orderBy: { name: 'asc' },
+      }),
+
+      // Lead refs — distinct values from Lead table
       prisma.lead.findMany({
         select: { leadRef: true },
         distinct: ['leadRef'],
@@ -85,13 +109,25 @@ export async function GET(request: NextRequest) {
       prisma.pLRecord.findMany({ where: { paymentType: { not: null } }, select: { paymentType: true }, distinct: ['paymentType'] }),
       prisma.dischargeSheet.findMany({ where: { paymentType: { not: null } }, select: { paymentType: true }, distinct: ['paymentType'] }),
 
-      // Numeric bounds — all on PLRecord (doctorCharges is only on DischargeSheet)
+      // Statuses
+      prisma.pLRecord.findMany({ where: { status: { not: null } }, select: { status: true }, distinct: ['status'] }),
+      prisma.dischargeSheet.findMany({ where: { status: { not: null } }, select: { status: true }, distinct: ['status'] }),
+      prisma.lead.findMany({ select: { caseStage: true }, distinct: ['caseStage'] }),
+
+      // Implant paid by
+      prisma.pLRecord.findMany({ where: { implantPaidBy: { not: null } }, select: { implantPaidBy: true }, distinct: ['implantPaidBy'] }),
+
+      // Numeric bounds
       prisma.pLRecord.aggregate({ _min: { billAmount: true }, _max: { billAmount: true }, where: { billAmount: { gt: 0 } } }),
       prisma.pLRecord.aggregate({ _min: { totalAmount: true }, _max: { totalAmount: true }, where: { totalAmount: { gt: 0 } } }),
       prisma.pLRecord.aggregate({ _min: { hospitalShareAmount: true }, _max: { hospitalShareAmount: true }, where: { hospitalShareAmount: { gt: 0 } } }),
+      prisma.pLRecord.aggregate({ _min: { hospitalSharePct: true }, _max: { hospitalSharePct: true }, where: { hospitalSharePct: { gt: 0 } } }),
       prisma.pLRecord.aggregate({ _min: { finalProfit: true }, _max: { finalProfit: true } }),
-      // doctorCharges lives on DischargeSheet
+      // doctorCharges
       prisma.dischargeSheet.aggregate({ _min: { doctorCharges: true }, _max: { doctorCharges: true }, where: { doctorCharges: { gt: 0 } } }),
+      prisma.pLRecord.aggregate({ _min: { doctorCharges: true }, _max: { doctorCharges: true }, where: { doctorCharges: { gt: 0 } } }),
+      // implantCost
+      prisma.pLRecord.aggregate({ _min: { implantCost: true }, _max: { implantCost: true }, where: { implantCost: { gt: 0 } } }),
 
       // Treatment names
       prisma.pLRecord.findMany({ where: { treatment: { not: null } }, select: { treatment: true }, distinct: ['treatment'] }),
@@ -101,7 +137,7 @@ export async function GET(request: NextRequest) {
 
     // ─── Merge sets ───────────────────────────────────────────────────────
     // BDM: use User.name from the user table (authoritative)
-    const bdmOptions = bdUsers.map(u => ({ label: u.name, value: u.name }))
+    const bdmOptions = bdmOptionsList(bdUsers)
 
     const hospitalOptions = toOptions([
       ...plHospitals.map(h => h.hospitalName),
@@ -113,6 +149,7 @@ export async function GET(request: NextRequest) {
       ...dsDoctors.map(d => d.doctorName),
     ])
     const managerOptions = toOptions([
+      ...managerUsers.map(m => m.name),
       ...plManagers.map(m => m.managerName),
       ...dsManagers.map(m => m.managerName),
     ])
@@ -133,8 +170,7 @@ export async function GET(request: NextRequest) {
       ...leadTreatments.map(t => t.treatment),
     ])
 
-    // Payment Type: merge hardcoded known values with any additional DB values
-    // so CASH / Cashless are always shown even if no data exists yet
+    // Payment Type
     const knownPaymentTypes = ['Cash', 'Cashless', 'CASH', 'INSURANCE', 'TPA']
     const dbPaymentTypes = [
       ...plPaymentTypes.map(p => p.paymentType),
@@ -142,8 +178,25 @@ export async function GET(request: NextRequest) {
     ]
     const paymentTypeOptions = toOptions([...knownPaymentTypes, ...dbPaymentTypes])
 
+    // Statuses
+    const knownStatuses = ['IPD_DONE', 'CASH_IPD_DONE', 'DISCHARGED', 'CASH_DISCHARGED', 'ADMITTED', 'SURGERY_SCHEDULED', 'CANCELLED', 'POSTPONED']
+    const dbStatuses = [
+      ...plStatuses.map(s => s.status),
+      ...dsStatuses.map(s => s.status),
+      ...leadCaseStages.map(s => s.caseStage),
+    ]
+    const statusOptions = toOptions([...knownStatuses, ...dbStatuses])
+
+    // Implant Paid By
+    const knownImplantPaidBys = ['HOSPITAL', 'MEDIEND', 'PATIENT']
+    const dbImplantPaidBys = plImplantPaidBys.map(p => p.implantPaidBy)
+    const implantPaidByOptions = toOptions([...knownImplantPaidBys, ...dbImplantPaidBys])
+
     // Lead ref options (string values of leadRef)
     const leadRefOptions = toOptions(leadRefs.map(r => r.leadRef != null ? String(r.leadRef) : null))
+
+    const docChargesMin = Math.min(dsDocChargesBounds._min.doctorCharges ?? Infinity, plDocChargesBounds._min.doctorCharges ?? Infinity)
+    const docChargesMax = Math.max(dsDocChargesBounds._max.doctorCharges ?? 0, plDocChargesBounds._max.doctorCharges ?? 0)
 
     return successResponse({
       filters: [
@@ -157,6 +210,8 @@ export async function GET(request: NextRequest) {
         { field: 'circle', label: 'Circle', filterType: 'multiSelect', filterable: true, options: circleOptions },
         { field: 'treatment', label: 'Treatment', filterType: 'multiSelect', filterable: true, options: treatmentOptions },
         { field: 'paymentType', label: 'Payment Type', filterType: 'multiSelect', filterable: true, options: paymentTypeOptions },
+        { field: 'status', label: 'Status', filterType: 'multiSelect', filterable: true, options: statusOptions },
+        { field: 'implantPaidBy', label: 'Implant By', filterType: 'multiSelect', filterable: true, options: implantPaidByOptions },
         {
           field: 'outstandingStatus', label: 'PL Status', filterType: 'multiSelect', filterable: true,
           options: [
@@ -191,11 +246,13 @@ export async function GET(request: NextRequest) {
         },
 
         // ── search ───────────────────────────────────────────────────────
+        { field: 'leadRef', label: 'Lead Ref', filterType: 'search', filterable: true },
         { field: 'treatment', label: 'Treatment', filterType: 'search', filterable: true },
         { field: 'patient', label: 'Patient Name', filterType: 'search', filterable: true },
 
         // ── dateRange ────────────────────────────────────────────────────
         { field: 'date', label: 'Lead Date', filterType: 'dateRange', filterable: true },
+        { field: 'leadReceived', label: 'Lead Received Date', filterType: 'dateRange', filterable: true },
         { field: 'admissionDate', label: 'Admission Date', filterType: 'dateRange', filterable: true },
         { field: 'surgeryDate', label: 'Surgery Date', filterType: 'dateRange', filterable: true },
 
@@ -211,14 +268,29 @@ export async function GET(request: NextRequest) {
           max: totalAmountBounds._max.totalAmount ?? 0,
         },
         {
+          field: 'amountPaid', label: 'Amount Paid', filterType: 'numberRange', filterable: true,
+          min: totalAmountBounds._min.totalAmount ?? 0,
+          max: totalAmountBounds._max.totalAmount ?? 0,
+        },
+        {
+          field: 'hospitalSharePct', label: 'MediEND %', filterType: 'numberRange', filterable: true,
+          min: hospitalSharePctBounds._min.hospitalSharePct ?? 0,
+          max: hospitalSharePctBounds._max.hospitalSharePct ?? 100,
+        },
+        {
           field: 'hospitalShareAmt', label: 'MediEND Share', filterType: 'numberRange', filterable: true,
           min: hospitalShareBounds._min.hospitalShareAmount ?? 0,
           max: hospitalShareBounds._max.hospitalShareAmount ?? 0,
         },
         {
           field: 'doctorCharges', label: 'Doctor Fee', filterType: 'numberRange', filterable: true,
-          min: dsDocChargesBounds._min.doctorCharges ?? 0,
-          max: dsDocChargesBounds._max.doctorCharges ?? 0,
+          min: docChargesMin === Infinity ? 0 : docChargesMin,
+          max: docChargesMax,
+        },
+        {
+          field: 'implant', label: 'Implant', filterType: 'numberRange', filterable: true,
+          min: plImplantBounds._min.implantCost ?? 0,
+          max: plImplantBounds._max.implantCost ?? 0,
         },
         {
           field: 'netProfit', label: 'Net Profit', filterType: 'numberRange', filterable: true,
@@ -231,4 +303,8 @@ export async function GET(request: NextRequest) {
     console.error('[filter-config] Error:', error)
     return errorResponse('Failed to fetch filter config', 500)
   }
+}
+
+function bdmOptionsList(bdUsers: Array<{ name: string }>) {
+  return bdUsers.map(u => ({ label: u.name, value: u.name }))
 }
