@@ -1372,7 +1372,7 @@ export default function PatientDetailsPage() {
                     {surgerySchedule.legacyTime
                       ? ` · ${surgerySchedule.legacyTime}`
                       : surgerySchedule.hasTime
-                        ? ` · ${format(surgerySchedule.date, 'hh:mm a')}`
+                        ? ` · ${format(surgerySchedule.date, 'HH:mm')}`
                         : ''}
                   </span>
                   {surgerySchedule.isPostponed && (
@@ -1519,7 +1519,7 @@ export default function PatientDetailsPage() {
             if (status === 'IPD_DONE') {
               const surgerySchedule = resolveSurgerySchedule(lead.surgeryDate, rec)
               const surgeryStr = surgerySchedule
-                ? `${format(surgerySchedule.date, 'dd MMM yyyy')}${surgerySchedule.legacyTime ? ` at ${surgerySchedule.legacyTime}` : surgerySchedule.hasTime ? ` at ${format(surgerySchedule.date, 'hh:mm a')}` : ''}`
+                ? `${format(surgerySchedule.date, 'dd MMM yyyy')}${surgerySchedule.legacyTime ? ` at ${surgerySchedule.legacyTime}` : surgerySchedule.hasTime ? ` at ${format(surgerySchedule.date, 'HH:mm')}` : ''}`
                 : '—'
               return (
                 <Card className="border-2 border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30">
@@ -2181,7 +2181,7 @@ export default function PatientDetailsPage() {
                     <div className="space-y-4">
                       {group.items.map((entry) => {
                         const scheduleLabel = entry.scheduleDate
-                          ? format(new Date(entry.scheduleDate), 'dd MMM yyyy · hh:mm a')
+                          ? format(new Date(entry.scheduleDate), 'dd MMM yyyy · HH:mm')
                           : null
                         const entryChargeValue =
                           entry.charges != null
@@ -2880,7 +2880,7 @@ export default function PatientDetailsPage() {
             <div className="space-y-4">
               <div className="rounded-lg border bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
                 {cancelTargetOpd?.scheduleDate ? (
-                  <>Scheduled for {format(new Date(cancelTargetOpd.scheduleDate), 'dd MMM yyyy · hh:mm a')}</>
+                  <>Scheduled for {format(new Date(cancelTargetOpd.scheduleDate), 'dd MMM yyyy · HH:mm')}</>
                 ) : (
                   'This OPD does not have a scheduled date saved.'
                 )}
