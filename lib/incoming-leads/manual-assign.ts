@@ -338,14 +338,6 @@ async function reassignExistingLead(
     },
   })
 
-  await createLeadAssignedNotification({
-    userId: bd.userId,
-    patientName: existingLead.patientName,
-    leadRef: existingLead.leadRef,
-    leadId: existingLead.id,
-    actorUserId: actor.id,
-  })
-
   return {
     incomingLeadId: incomingLead.id,
     status: incomingLead.status === 'DUPLICATE' ? 'duplicate' : 'already_processed',

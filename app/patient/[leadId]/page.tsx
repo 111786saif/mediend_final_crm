@@ -18,6 +18,7 @@ import { usePermissions } from '@/hooks/use-permissions'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import { hrefWithReturnTo, resolveReturnTo } from '@/lib/navigation/return-to'
 import { normalizeModeOfPaymentKey, normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
+import { resolveSurgerySchedule } from '@/lib/surgery-schedule'
 import { cn } from '@/lib/utils'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Activity, ArrowLeft, ArrowRight, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, Layers, MapPin, MessageCircle, Pencil, PhoneCall, Plus, Receipt, RefreshCw, RotateCcw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
@@ -1363,18 +1364,18 @@ export default function PatientDetailsPage() {
                 .join(' · ')
               const leadDate = lead.leadEntryDate || lead.createdDate
               const rec = lead.admissionRecord
-              const isPostponed = rec?.ipdStatus === 'POSTPONED'
-              const effectiveSurgeryDate =
-                isPostponed && rec?.newSurgeryDate
-                  ? rec.newSurgeryDate
-                  : rec?.surgeryDate || lead.surgeryDate
-              const surgeryDateNode = effectiveSurgeryDate ? (
+              const surgerySchedule = resolveSurgerySchedule(lead.surgeryDate, rec)
+              const surgeryDateNode = surgerySchedule ? (
                 <span className="inline-flex items-center gap-1.5">
                   <span>
-                    {format(new Date(effectiveSurgeryDate), 'dd MMM yyyy')}
-                    {rec?.surgeryTime && !isPostponed ? ` · ${rec.surgeryTime}` : ''}
+                    {format(surgerySchedule.date, 'dd MMM yyyy')}
+                    {surgerySchedule.legacyTime
+                      ? ` · ${surgerySchedule.legacyTime}`
+                      : surgerySchedule.hasTime
+                        ? ` · ${format(surgerySchedule.date, 'hh:mm a')}`
+                        : ''}
                   </span>
-                  {isPostponed && (
+                  {surgerySchedule.isPostponed && (
                     <span className="rounded-sm bg-amber-100 px-1 py-px font-mono text-[9px] uppercase tracking-wider text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
                       rescheduled
                     </span>
@@ -1516,8 +1517,9 @@ export default function PatientDetailsPage() {
             }
 
             if (status === 'IPD_DONE') {
-              const surgeryStr = rec.surgeryDate
-                ? `${format(new Date(rec.surgeryDate), 'dd MMM yyyy')}${rec.surgeryTime ? ` at ${rec.surgeryTime}` : ''}`
+              const surgerySchedule = resolveSurgerySchedule(lead.surgeryDate, rec)
+              const surgeryStr = surgerySchedule
+                ? `${format(surgerySchedule.date, 'dd MMM yyyy')}${surgerySchedule.legacyTime ? ` at ${surgerySchedule.legacyTime}` : surgerySchedule.hasTime ? ` at ${format(surgerySchedule.date, 'hh:mm a')}` : ''}`
                 : '—'
               return (
                 <Card className="border-2 border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30">

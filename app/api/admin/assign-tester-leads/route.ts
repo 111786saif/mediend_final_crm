@@ -4,7 +4,6 @@ import { successResponse, errorResponse } from '@/lib/api-utils'
 import { CaseStage } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { logCrmActivity } from '@/lib/crm-activity'
-import { createBulkLeadAssignedNotifications } from '@/lib/lead-notifications'
 
 export async function POST(request: NextRequest) {
   try {
@@ -69,15 +68,6 @@ export async function POST(request: NextRequest) {
           },
         })
       )
-    )
-
-    await createBulkLeadAssignedNotifications(
-      leadsToAssign.map((lead) => ({
-        userId: testerUser.id,
-        patientName: lead.patientName,
-        leadRef: lead.leadRef,
-        leadId: lead.id,
-      }))
     )
 
     await Promise.all(
