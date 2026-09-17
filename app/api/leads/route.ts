@@ -1001,6 +1001,7 @@ export async function POST(request: NextRequest) {
         patientName: lead.patientName,
         leadRef: lead.leadRef,
         leadId: lead.id,
+        actorUserId: user.id,
       })
     }
 

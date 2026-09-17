@@ -13,7 +13,7 @@ export interface LeadAssignedNotificationParams {
  * Creates a notification when a new lead is assigned to a BD / user.
  */
 export async function createLeadAssignedNotification(params: LeadAssignedNotificationParams) {
-  if (!params.userId) return
+  if (!params.userId || params.userId === params.actorUserId) return
   try {
     return await prisma.notification.create({
       data: {
