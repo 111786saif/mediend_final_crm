@@ -210,6 +210,8 @@ export async function GET(request: NextRequest) {
             } else if (field === 'leadRef') {
               if (Array.isArray(value) && value.length > 0) {
                 filterConditions.push({ leadRef: { in: value } })
+              } else if (typeof value === 'string' && value.trim()) {
+                filterConditions.push({ leadRef: { contains: value.trim(), mode: 'insensitive' } })
               }
             } else if (field === 'hospital') {
               if (Array.isArray(value) && value.length > 0) {
@@ -236,7 +238,24 @@ export async function GET(request: NextRequest) {
                   OR: [
                     { plRecord: { managerName: { in: value } } },
                     { dischargeSheet: { managerName: { in: value } } },
+                    { bd: { employee: { manager: { user: { name: { in: value } } } } } },
                   ],
+                })
+              }
+            } else if (field === 'status') {
+              if (Array.isArray(value) && value.length > 0) {
+                filterConditions.push({
+                  OR: [
+                    { caseStage: { in: value } },
+                    { plRecord: { status: { in: value } } },
+                    { dischargeSheet: { status: { in: value } } },
+                  ],
+                })
+              }
+            } else if (field === 'implantPaidBy') {
+              if (Array.isArray(value) && value.length > 0) {
+                filterConditions.push({
+                  plRecord: { implantPaidBy: { in: value } },
                 })
               }
             } else if (field === 'outstandingStatus') {
@@ -357,8 +376,19 @@ export async function GET(request: NextRequest) {
                   ],
                 })
               }
-
-            // ── dateRange / between ──────────────────────────────────────
+            } else if (field === 'leadReceived') {
+              if (Array.isArray(value) && value.length === 2 && value[0]) {
+                const from = new Date(value[0])
+                const to = new Date(value[1] || value[0])
+                to.setHours(23, 59, 59, 999)
+                filterConditions.push({
+                  OR: [
+                    { dischargeSheet: { markedAt: { gte: from, lte: to } } },
+                    { createdDate: { gte: from, lte: to } },
+                    { leadEntryDate: { gte: from, lte: to } },
+                  ],
+                })
+              }
             } else if (field === 'admissionDate') {
               // value is [fromIso, toIso] from ColumnFilter dateRange
               if (Array.isArray(value) && value.length === 2 && value[0]) {
@@ -404,6 +434,27 @@ export async function GET(request: NextRequest) {
               if (Object.keys(range).length > 0) {
                 filterConditions.push({ plRecord: { totalAmount: range } })
               }
+            } else if (field === 'amountPaid') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({
+                  OR: [
+                    { plRecord: { totalAmount: range } },
+                    { plRecord: { billAmount: range } },
+                  ],
+                })
+              }
+            } else if (field === 'hospitalSharePct') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({ plRecord: { hospitalSharePct: range } })
+              }
             } else if (field === 'hospitalShareAmt') {
               const { min, max } = value as { min: number | null; max: number | null }
               const range: Prisma.FloatFilter = {}
@@ -418,8 +469,25 @@ export async function GET(request: NextRequest) {
               if (min != null) range.gte = min
               if (max != null) range.lte = max
               if (Object.keys(range).length > 0) {
-                // doctorCharges lives on DischargeSheet (insurance) and DischargeSheet (cash)
-                filterConditions.push({ dischargeSheet: { doctorCharges: range } })
+                filterConditions.push({
+                  OR: [
+                    { plRecord: { doctorCharges: range } },
+                    { dischargeSheet: { doctorCharges: range } },
+                  ],
+                })
+              }
+            } else if (field === 'implant') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({
+                  OR: [
+                    { plRecord: { implantCost: range } },
+                    { implantAmount: range },
+                  ],
+                })
               }
             } else if (field === 'netProfit') {
               const { min, max } = value as { min: number | null; max: number | null }

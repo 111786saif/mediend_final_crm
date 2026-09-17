@@ -4,7 +4,12 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getManagerGroups } from '@/lib/hierarchy'
-import { canonicalSalesCompletedWhere, buildDateRange } from '@/lib/analytics/ipd-filters'
+import {
+  buildDateRange,
+  isLeadConverted,
+  normalizeCampaignName,
+  normalizeSourceName,
+} from '@/lib/analytics/ipd-filters'
 import {
   canAccessSalesDashboard,
   getSalesDashboardBdIdFilter,
@@ -63,7 +68,15 @@ export async function GET(request: NextRequest) {
 
     const leads = await prisma.lead.findMany({
       where: allLeadsWhere,
-      select: { id: true, bdId: true, surgeryDate: true, campaignName: true, source: true },
+      select: {
+        id: true,
+        bdId: true,
+        pipelineStage: true,
+        caseStage: true,
+        surgeryDate: true,
+        campaignName: true,
+        source: true,
+      },
     })
 
     const managerGroups = await getManagerGroups()
@@ -82,7 +95,7 @@ export async function GET(request: NextRequest) {
 
       for (const lead of leads) {
         const teamName = bdIdToTeamName.get(lead.bdId) ?? 'Independent'
-        const campaign = lead.campaignName || '—'
+        const campaign = normalizeCampaignName(lead.campaignName)
         const campaignKey = `${campaign}||${teamName}`
 
         if (!campaignTeamMap.has(campaignKey)) {
@@ -90,7 +103,7 @@ export async function GET(request: NextRequest) {
         }
         const cRec = campaignTeamMap.get(campaignKey)!
         cRec.leads++
-        if (lead.surgeryDate) cRec.converted++
+        if (isLeadConverted(lead)) cRec.converted++
       }
 
       const campaignTeamMapping = Array.from(campaignTeamMap.values()).map((c) => ({
@@ -108,7 +121,7 @@ export async function GET(request: NextRequest) {
 
       for (const lead of leads) {
         const teamName = bdIdToTeamName.get(lead.bdId) ?? 'Independent'
-        const src = lead.source || '—'
+        const src = normalizeSourceName(lead.source)
         const sourceKey = `${src}||${teamName}`
 
         if (!sourceTeamMap.has(sourceKey)) {
@@ -116,7 +129,7 @@ export async function GET(request: NextRequest) {
         }
         const sRec = sourceTeamMap.get(sourceKey)!
         sRec.leads++
-        if (lead.surgeryDate) sRec.converted++
+        if (isLeadConverted(lead)) sRec.converted++
       }
 
       const sourceTeamMapping = Array.from(sourceTeamMap.values()).map((s) => ({

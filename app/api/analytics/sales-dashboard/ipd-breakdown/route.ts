@@ -4,7 +4,14 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 
-import { canonicalSalesCompletedWhere, resolveIpdDate, buildDateRange } from '@/lib/analytics/ipd-filters'
+import {
+  canonicalSalesCompletedWhere,
+  resolveIpdDate,
+  buildDateRange,
+  normalizeCampaignName,
+  normalizeSourceName,
+  normalizeCircleName,
+} from '@/lib/analytics/ipd-filters'
 import {
   canAccessSalesDashboard,
   getSalesDashboardBdIdFilter,
@@ -37,12 +44,12 @@ export async function GET(request: NextRequest) {
     }
 
     const [
-      byCircle,
+      byCircleRaw,
       byTreatment,
       byCategory,
       byHospital,
-      bySource,
-      byCampaign,
+      bySourceRaw,
+      byCampaignRaw,
       byInsurance,
       byTpa,
       surgeonHospitalDisease,
@@ -74,13 +81,13 @@ export async function GET(request: NextRequest) {
       }),
       prisma.lead.groupBy({
         by: ['source'],
-        where: { ...completedWhere, source: { not: null } },
+        where: completedWhere,
         _count: { id: true },
         _sum: { billAmount: true, netProfit: true },
       }),
       prisma.lead.groupBy({
         by: ['campaignName'],
-        where: { ...completedWhere, campaignName: { not: null } },
+        where: completedWhere,
         _count: { id: true },
         _sum: { billAmount: true, netProfit: true },
       }),
@@ -112,12 +119,19 @@ export async function GET(request: NextRequest) {
       }),
     ])
 
-    const circleBreakdown = byCircle.map((c) => ({
-      circle: c.circle,
-      count: c._count.id,
-      revenue: c._sum.billAmount ?? 0,
-      profit: c._sum.netProfit ?? 0,
-    }))
+    // Normalized Circle Breakdown
+    const circleMap = new Map<string, { count: number; revenue: number; profit: number }>()
+    for (const c of byCircleRaw) {
+      const name = normalizeCircleName(c.circle)
+      const cur = circleMap.get(name) ?? { count: 0, revenue: 0, profit: 0 }
+      cur.count += c._count.id
+      cur.revenue += c._sum.billAmount ?? 0
+      cur.profit += c._sum.netProfit ?? 0
+      circleMap.set(name, cur)
+    }
+    const circleBreakdown = Array.from(circleMap.entries())
+      .map(([circle, data]) => ({ circle, ...data }))
+      .sort((a, b) => b.revenue - a.revenue)
 
     const diseaseBreakdown = byTreatment.map((t) => ({
       disease: t.treatment ?? 'Unknown',
@@ -141,19 +155,33 @@ export async function GET(request: NextRequest) {
       profit: h._sum.netProfit ?? 0,
     })).sort((a, b) => b.revenue - a.revenue)
 
-    const campaignBreakdown = byCampaign.map((c) => ({
-      campaign: c.campaignName ?? 'Unknown',
-      count: c._count.id,
-      revenue: c._sum.billAmount ?? 0,
-      profit: c._sum.netProfit ?? 0,
-    })).sort((a, b) => b.revenue - a.revenue)
+    // Normalized Campaign Breakdown
+    const campaignMap = new Map<string, { count: number; revenue: number; profit: number }>()
+    for (const c of byCampaignRaw) {
+      const name = normalizeCampaignName(c.campaignName)
+      const cur = campaignMap.get(name) ?? { count: 0, revenue: 0, profit: 0 }
+      cur.count += c._count.id
+      cur.revenue += c._sum.billAmount ?? 0
+      cur.profit += c._sum.netProfit ?? 0
+      campaignMap.set(name, cur)
+    }
+    const campaignBreakdown = Array.from(campaignMap.entries())
+      .map(([campaign, data]) => ({ campaign, ...data }))
+      .sort((a, b) => b.revenue - a.revenue)
 
-    const sourceBreakdown = bySource.map((s) => ({
-      source: s.source ?? 'Unknown',
-      count: s._count.id,
-      revenue: s._sum.billAmount ?? 0,
-      profit: s._sum.netProfit ?? 0,
-    })).sort((a, b) => b.revenue - a.revenue)
+    // Normalized Source Breakdown
+    const sourceMap = new Map<string, { count: number; revenue: number; profit: number }>()
+    for (const s of bySourceRaw) {
+      const name = normalizeSourceName(s.source)
+      const cur = sourceMap.get(name) ?? { count: 0, revenue: 0, profit: 0 }
+      cur.count += s._count.id
+      cur.revenue += s._sum.billAmount ?? 0
+      cur.profit += s._sum.netProfit ?? 0
+      sourceMap.set(name, cur)
+    }
+    const sourceBreakdown = Array.from(sourceMap.entries())
+      .map(([source, data]) => ({ source, ...data }))
+      .sort((a, b) => b.revenue - a.revenue)
 
     const insuranceBreakdown = byInsurance.map((i) => ({
       insurance: i.insuranceName ?? 'Unknown',

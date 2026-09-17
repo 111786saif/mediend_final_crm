@@ -3,12 +3,13 @@ import { prisma } from '@/lib/prisma'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 
-import { canonicalSalesCompletedWhere, resolveIpdDate, buildDateRange } from '@/lib/analytics/ipd-filters'
+import { canonicalSalesCompletedWhere, buildDateRange } from '@/lib/analytics/ipd-filters'
 import {
   canAccessSalesDashboard,
   getSalesDashboardBdIdFilter,
 } from '@/lib/analytics/sales-dashboard-access'
 import { isSubtreeScopedSalesRole } from '@/lib/sales-hierarchy-roles'
+import { CaseStage } from '@/generated/prisma/enums'
 
 export async function GET(request: NextRequest) {
   try {
@@ -59,7 +60,9 @@ export async function GET(request: NextRequest) {
           id: true,
           leadEntryDate: true,
           createdDate: true,
+          caseStage: true,
           pipelineStage: true,
+          status: true,
           netProfit: true,
           billAmount: true,
         },
@@ -67,7 +70,11 @@ export async function GET(request: NextRequest) {
       prisma.lead.findMany({
         where: {
           bdId,
-          ...canonicalSalesCompletedWhere({ gte: start, lte: end }),
+          caseStage: { in: [CaseStage.IPD_DONE, CaseStage.CASH_IPD_DONE, CaseStage.DISCHARGED, CaseStage.CASH_DISCHARGED] },
+          OR: [
+            { leadEntryDate: { gte: start, lte: end } },
+            { AND: [{ leadEntryDate: null }, { createdDate: { gte: start, lte: end } }] },
+          ],
         },
         select: {
           id: true,
@@ -79,12 +86,13 @@ export async function GET(request: NextRequest) {
           surgeryDate: true,
           leadEntryDate: true,
           createdDate: true,
+          caseStage: true,
           billAmount: true,
           netProfit: true,
           circle: true,
           status: true,
         },
-        orderBy: { conversionDate: 'desc' },
+        orderBy: { createdDate: 'desc' },
         take: 200,
       }),
     ])
@@ -100,8 +108,12 @@ export async function GET(request: NextRequest) {
     }
 
     const totalLeads = allLeads.length
-    // ipdDone, netProfit come from completedLeads (conversionDate-filtered)
-    // billAmount is computed as sum of all leads in selected period per user request
+    const opdLeads = allLeads.filter((l) => {
+      if (l.caseStage === CaseStage.OPD_DONE || l.caseStage === CaseStage.CASH_OPD_DONE) return true
+      const s = l.status?.trim().toLowerCase()
+      return s === 'opd done' || s === 'opd_done' || s === '11'
+    })
+    const opdDone = opdLeads.length
     const ipdDone = completedLeads.length
     const conversionRate = totalLeads > 0 ? (ipdDone / totalLeads) * 100 : 0
     const netProfit = completedLeads.reduce((s, l) => s + (l.netProfit ?? 0), 0)
@@ -125,12 +137,9 @@ export async function GET(request: NextRequest) {
           TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate"), 'YYYY-MM') AS month,
           COUNT(*)::int AS count
         FROM "Lead" l
-        LEFT JOIN "AdmissionRecord" ar ON ar."leadId" = l.id
         WHERE l."bdId" = ${bdId}
-          AND (l."caseStage" IN ('IPD_DONE','CASH_IPD_DONE','DISCHARGED','CASH_DISCHARGED')
-               OR (l."caseStage" IN ('PL_PENDING','OUTSTANDING') AND COALESCE(l."surgeryDate", ar."surgeryDate") IS NOT NULL))
-          AND COALESCE(l."surgeryDate", ar."surgeryDate") >= ${start}
-          AND COALESCE(l."surgeryDate", ar."surgeryDate") <= ${end}
+          AND l."caseStage" IN ('IPD_DONE','CASH_IPD_DONE','DISCHARGED','CASH_DISCHARGED')
+          AND COALESCE(l."leadEntryDate", l."createdDate") <= ${end}
         GROUP BY 1
         ORDER BY 1
       `,
@@ -144,18 +153,31 @@ export async function GET(request: NextRequest) {
       ipdCount: ipdMonthMap.get(month) ?? 0,
     }))
 
-    const getMonthKey = (date: Date, offsetMonths: number) => {
-      const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() - offsetMonths, 1))
+    const getMonthKey = (endParam: string | null | undefined, fallbackDate: Date | string | undefined, offsetMonths: number) => {
+      let year: number
+      let month: number
+
+      if (endParam && typeof endParam === 'string' && /^\d{4}-\d{2}/.test(endParam)) {
+        const parts = endParam.slice(0, 7).split('-')
+        year = parseInt(parts[0], 10)
+        month = parseInt(parts[1], 10)
+      } else {
+        const dObj = fallbackDate instanceof Date ? fallbackDate : (fallbackDate ? new Date(fallbackDate) : new Date())
+        const d = new Date(dObj.getTime() + (5.5 * 60 * 60 * 1000))
+        year = d.getUTCFullYear()
+        month = d.getUTCMonth() + 1
+      }
+
+      const d = new Date(Date.UTC(year, month - 1 - offsetMonths, 1))
       const y = d.getUTCFullYear()
       const m = String(d.getUTCMonth() + 1).padStart(2, '0')
       return `${y}-${m}`
     }
 
-    const endDateObj = new Date(end)
-    const currentMonthKey = getMonthKey(endDateObj, 0)
-    const prevMonthKey = getMonthKey(endDateObj, 1)
-    const prev2MonthKey = getMonthKey(endDateObj, 2)
-    const prev3MonthKey = getMonthKey(endDateObj, 3)
+    const currentMonthKey = getMonthKey(endDate, end, 0)
+    const prevMonthKey = getMonthKey(endDate, end, 1)
+    const prev2MonthKey = getMonthKey(endDate, end, 2)
+    const prev3MonthKey = getMonthKey(endDate, end, 3)
 
     let ipdCurrent = 0
     let ipdPrev = 0
@@ -200,6 +222,9 @@ export async function GET(request: NextRequest) {
       },
       kpis: {
         totalLeads,
+        totalOpd: opdDone,
+        opdDone,
+        totalIpd: ipdDone,
         ipdDone,
         conversionRate,
         netProfit,

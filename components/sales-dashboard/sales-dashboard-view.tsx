@@ -138,12 +138,13 @@ export interface TeamDetail {
     manager: { id: string; name: string; profilePicture: string | null } | null
     managerRole?: string
   }
-  kpis: { totalLeads: number; totalIpd: number; totalProfit: number; totalBill: number; conversionRate: number }
+  kpis: { totalLeads: number; totalOpd?: number; totalIpd: number; totalProfit: number; totalBill: number; conversionRate: number }
   members: Array<{
     id: string
     name: string
     profilePicture: string | null
     leads: number
+    opdDone?: number
     ipdDone: number
     conversionRate: number
     netProfit: number
@@ -164,7 +165,9 @@ export interface TeamDetail {
       bdId: string
       bdName: string
       leadCount: number
+      opdCount?: number
       ipdCount: number
+      billAmount?: number
     }>
   }
   monthWiseHeaders: { current: string; prev: string; prev2: string; prev3: string }
@@ -182,10 +185,10 @@ interface IpdBreakdown {
 }
 
 interface LeadsBreakdown {
-  byCircle: Array<{ circle: string; totalLeads: number; converted: number; conversionRate: number }>
-  byCategory?: Array<{ category: string; totalLeads: number; converted: number; conversionRate: number }>
-  bySource: Array<{ source: string; totalLeads: number; converted: number; conversionRate: number }>
-  byCampaign: Array<{ campaign: string; totalLeads: number; converted: number; conversionRate: number }>
+  byCircle: Array<{ circle: string; totalLeads: number; converted: number; conversionRate: number; revenue?: number; profit?: number }>
+  byCategory?: Array<{ category: string; totalLeads: number; converted: number; conversionRate: number; revenue?: number; profit?: number }>
+  bySource: Array<{ source: string; totalLeads: number; converted: number; conversionRate: number; revenue?: number; profit?: number }>
+  byCampaign: Array<{ campaign: string; totalLeads: number; converted: number; conversionRate: number; revenue?: number; profit?: number }>
   campaignTeamMapping?: Array<{ campaignName: string; team: string; leads: number; conversionPercentage: number; cpl: number | null; amountSpend: number | null }>
   sourceTeamMapping?: Array<{ sourceName: string; team: string; leads: number; conversionPercentage: number; cpl: number | null; amountSpend: number | null }>
 }
@@ -1317,54 +1320,42 @@ function BdPerformanceTab({
 
 function SourceCampaignTab({ dateParams, variant }: { dateParams: string; variant: DashboardVariant }) {
   const [view, setView] = useState<'source' | 'campaign'>('source')
-  const [timezone, setTimezone] = useState<'IST' | 'UTC'>('UTC')
-
-  const getQueryString = () => {
-    const params = new URLSearchParams()
-    if (dateParams) {
-      const dateSearchParams = new URLSearchParams(dateParams)
-      for (const [key, val] of dateSearchParams.entries()) {
-        params.set(key, val)
-      }
-    }
-    if (typeof window !== 'undefined') {
-      const windowParams = new URLSearchParams(window.location.search)
-      for (const [key, val] of windowParams.entries()) {
-        params.set(key, val)
-      }
-    }
-    params.set('tz', timezone)
-    return '?' + params.toString()
-  }
-
-  const qp = getQueryString()
-
-  const { data: ipdBreakdown } = useQuery<IpdBreakdown>({
-    queryKey: ['sales-dashboard', variant, 'ipd-breakdown', dateParams, timezone, qp],
-    queryFn: () => apiGet<IpdBreakdown>(`/api/analytics/sales-dashboard/ipd-breakdown${qp}`),
-  })
+  const qp = dateParams ? '?' + dateParams : ''
 
   const { data: leadsBreakdown } = useQuery<LeadsBreakdown>({
-    queryKey: ['sales-dashboard', variant, 'leads-breakdown', dateParams, timezone, qp],
+    queryKey: ['sales-dashboard', variant, 'leads-breakdown', dateParams, qp],
     queryFn: () => apiGet<LeadsBreakdown>(`/api/analytics/sales-dashboard/leads-breakdown${qp}`),
   })
 
-  const sourceData = (ipdBreakdown?.bySource ?? []).map((s) => {
-    const leadsRow = (leadsBreakdown?.bySource ?? []).find((l) => l.source === s.source)
-    return { name: s.source, ipd: s.count, leads: leadsRow?.totalLeads ?? 0, revenue: s.revenue, conv: leadsRow ? (s.count / leadsRow.totalLeads) * 100 : 0 }
-  }).sort((a, b) => b.ipd - a.ipd)
+  const sourceData = useMemo(() => {
+    return (leadsBreakdown?.bySource ?? []).map((s) => ({
+      name: s.source,
+      leads: s.totalLeads,
+      ipd: s.converted,
+      conv: s.conversionRate,
+      revenue: s.revenue ?? 0,
+    })).sort((a, b) => b.leads - a.leads)
+  }, [leadsBreakdown])
 
-  const campaignData = (ipdBreakdown?.byCampaign ?? []).map((c) => {
-    const leadsRow = (leadsBreakdown?.byCampaign ?? []).find((l) => l.campaign === c.campaign)
-    return { name: c.campaign, ipd: c.count, leads: leadsRow?.totalLeads ?? 0, revenue: c.revenue, conv: leadsRow ? (c.count / leadsRow.totalLeads) * 100 : 0 }
-  }).sort((a, b) => b.ipd - a.ipd)
+  const campaignData = useMemo(() => {
+    return (leadsBreakdown?.byCampaign ?? []).map((c) => ({
+      name: c.campaign,
+      leads: c.totalLeads,
+      ipd: c.converted,
+      conv: c.conversionRate,
+      revenue: c.revenue ?? 0,
+    })).sort((a, b) => b.leads - a.leads)
+  }, [leadsBreakdown])
 
   const rows = view === 'source' ? sourceData : campaignData
-  const pieData = rows.slice(0, 8).filter((r) => r.ipd > 0)
+  const pieData = useMemo(() => {
+    const active = rows.filter((r) => r.ipd > 0 || r.leads > 0)
+    return active.slice(0, 8)
+  }, [rows])
 
   const { data: teamMappingData } = useQuery<any[]>({
-    queryKey: ['sales-dashboard', variant, 'team-mappings', view, dateParams, timezone, qp],
-    queryFn: () => apiGet<any[]>(`/api/analytics/sales-dashboard/team-mappings${qp}&type=${view}`),
+    queryKey: ['sales-dashboard', variant, 'team-mappings', view, dateParams, qp],
+    queryFn: () => apiGet<any[]>(`/api/analytics/sales-dashboard/team-mappings${qp}${dateParams ? '&' : '?'}type=${view}`),
   })
 
   return (
@@ -1392,35 +1383,6 @@ function SourceCampaignTab({ dateParams, variant }: { dateParams: string; varian
             )}
           >
             Campaign
-          </button>
-        </div>
-
-        {/* Timezone Toggle (IST vs UTC) */}
-        <div className="flex items-center gap-2 bg-muted/60 p-1 rounded-xl border border-border">
-          <span className="text-[11px] font-semibold text-muted-foreground px-2">Timezone Filter:</span>
-          <button
-            type="button"
-            onClick={() => setTimezone('IST')}
-            className={cn(
-              "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200",
-              timezone === 'IST'
-                ? "bg-indigo-600 text-white shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            IST (UTC+5:30)
-          </button>
-          <button
-            type="button"
-            onClick={() => setTimezone('UTC')}
-            className={cn(
-              "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200",
-              timezone === 'UTC'
-                ? "bg-indigo-600 text-white shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            UTC
           </button>
         </div>
       </div>
@@ -1525,12 +1487,18 @@ function CircleTab({ dateParams, variant }: { dateParams: string; variant: Dashb
     queryFn: () => apiGet<LeadsBreakdown>(`/api/analytics/sales-dashboard/leads-breakdown${qp}`),
   })
 
-  const circleData = (ipdBreakdown?.byCircle ?? []).map((c) => {
-    const leadsRow = (leadsBreakdown?.byCircle ?? []).find((l) => l.circle === c.circle)
-    return { circle: c.circle, ipd: c.count, leads: leadsRow?.totalLeads ?? 0, revenue: c.revenue, profit: c.profit, conv: leadsRow && leadsRow.totalLeads > 0 ? (c.count / leadsRow.totalLeads) * 100 : 0 }
-  }).sort((a, b) => b.ipd - a.ipd)
+  const circleData = useMemo(() => {
+    return (leadsBreakdown?.byCircle ?? []).map((c) => ({
+      circle: c.circle,
+      leads: c.totalLeads,
+      ipd: c.converted,
+      conv: c.conversionRate,
+      revenue: c.revenue ?? 0,
+      profit: c.profit ?? 0,
+    })).sort((a, b) => b.leads - a.leads)
+  }, [leadsBreakdown])
 
-  const pieData = circleData.filter((c) => c.leads > 0)
+  const pieData = circleData.filter((c) => c.leads > 0 || c.ipd > 0)
 
   return (
     <div className="space-y-6">
