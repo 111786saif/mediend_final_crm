@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { apiPost, apiPatch } from '@/lib/api-client'
+import { localDateInputValue, localDateTimeToUtcIso } from '@/lib/local-date-time'
 import { toast } from 'sonner'
 import { User, MapPin, Stethoscope, Building2, Wallet, Calendar, Package, ChevronDown, ChevronUp, CheckCircle, AlertTriangle } from 'lucide-react'
 import { MasterCombobox } from '@/components/ui/master-combobox'
@@ -36,9 +37,7 @@ function normalizeGenderValue(value: string | null | undefined) {
 }
 
 function formatIsoDateForInput(value: unknown) {
-  if (!value) return ''
-  const parsed = new Date(value as string)
-  return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString().split('T')[0]
+  return localDateInputValue(typeof value === 'string' || value instanceof Date ? value : null)
 }
 
 export interface IPDCashFormProps {
@@ -310,9 +309,13 @@ export function IPDCashForm({
         admittingHospital: formData.hospitalName || null,
         hospitalAddress: formData.hospitalAddress || null,
         googleMapLocation: formData.googleMapLocation || null,
-        admissionDate: formData.admissionDate ? new Date(formData.admissionDate).toISOString() : null,
+        admissionDate: formData.admissionDate
+          ? localDateTimeToUtcIso(formData.admissionDate, formData.admissionTime)
+          : null,
         admissionTime: formData.admissionTime || null,
-        surgeryDate: formData.surgeryDate ? new Date(formData.surgeryDate).toISOString() : null,
+        surgeryDate: formData.surgeryDate
+          ? localDateTimeToUtcIso(formData.surgeryDate, formData.surgeryTime)
+          : null,
         surgeryTime: formData.surgeryTime || null,
         modeOfPayment: formData.modeOfPayment,
         approvedAmount: formData.approvedAmount ? parseFloat(formData.approvedAmount) : null,

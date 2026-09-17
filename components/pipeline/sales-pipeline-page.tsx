@@ -37,6 +37,7 @@ import type { Lead } from '@/hooks/use-leads'
 import { apiGet, apiPost } from '@/lib/api-client'
 import { CASE_STAGE_CONFIG, getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
 import { resolveLeadCity, resolveLeadHospitalDoctor, resolveLeadSourceDisplay } from '@/lib/lead-display'
+import { resolveSurgerySchedule } from '@/lib/surgery-schedule'
 import {
   BulkLeadReassignmentRunResponse,
   isActiveBulkLeadReassignStatus,
@@ -765,8 +766,33 @@ function getLeadTeamLeadText(lead: Lead) {
   )
 }
 
-function getLeadSurgeryDateValue(lead: Lead) {
-  return lead.admissionRecord?.surgeryDate ?? lead.surgeryDate ?? null
+function renderSurgeryDate(lead: Lead) {
+  const schedule = resolveSurgerySchedule(lead.surgeryDate, lead.admissionRecord)
+  if (!schedule) return <span className="text-muted-foreground text-xs">—</span>
+
+  const dateLabel = format(schedule.date, 'dd MMM yyyy')
+  const timeLabel = schedule.legacyTime
+    ? formatLegacySurgeryTime(schedule.legacyTime)
+    : schedule.hasTime
+      ? format(schedule.date, 'hh:mm a')
+      : null
+
+  return (
+    <div className="flex flex-col gap-0.5 text-xs text-left">
+      <span className="font-medium whitespace-nowrap text-[13px] text-foreground/90">{dateLabel}</span>
+      {timeLabel ? (
+        <span className="font-medium whitespace-nowrap text-[12px] text-muted-foreground/90">{timeLabel}</span>
+      ) : null}
+    </div>
+  )
+}
+
+function formatLegacySurgeryTime(value: string) {
+  const match = value.match(/^(\d{2}):(\d{2})$/)
+  if (!match) return value
+
+  const date = new Date(2000, 0, 1, Number.parseInt(match[1], 10), Number.parseInt(match[2], 10))
+  return format(date, 'hh:mm a')
 }
 
 // function getLeadBdmText(lead: Lead) {
@@ -830,7 +856,17 @@ function getPipelineColumnFilterValue(lead: Lead, columnId: PipelineColumnId): s
     case 'subStatus':
       return lead.subStatus != null ? String(lead.subStatus) : '—'
     case 'surgeryDate':
-      return formatTableDate(getLeadSurgeryDateValue(lead))
+      {
+        const schedule = resolveSurgerySchedule(lead.surgeryDate, lead.admissionRecord)
+        if (!schedule) return '—'
+        const dateLabel = format(schedule.date, 'dd MMM yyyy')
+        const timeLabel = schedule.legacyTime
+          ? formatLegacySurgeryTime(schedule.legacyTime)
+          : schedule.hasTime
+            ? format(schedule.date, 'hh:mm a')
+            : null
+        return timeLabel ? `${dateLabel} ${timeLabel}` : dateLabel
+      }
     case 'healthInsurance':
       return normalizedText(lead.insuranceName, '—')
     case 'preferredLocation':
@@ -1942,7 +1978,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     })
     addCol('surgeryDate', {
       header: () => <HeaderCell label="Surgery Date" {...getHeaderFilterProps('surgeryDate')} />,
-      cell: ({ row }) => renderTableDateTime(getLeadSurgeryDateValue(row.original)),
+      cell: ({ row }) => renderSurgeryDate(row.original),
       meta: { headerStyle: { minWidth: 120 } },
     })
     addCol('planningTreatment', {

@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { apiPost } from '@/lib/api-client'
+import { localDateInputValue, localDateTimeToUtcIso } from '@/lib/local-date-time'
 import { useFileUpload } from '@/hooks/use-file-upload'
 import { toast } from 'sonner'
 import { CheckCircle, Pause, XCircle, ArrowLeft, File } from 'lucide-react'
@@ -40,10 +41,7 @@ type IpdStatus = 'ADMITTED_DONE' | 'IPD_DONE' | 'POSTPONED' | 'CANCELLED'
 const PATIENT_DETAIL_STATUSES = new Set<IpdStatus>(['ADMITTED_DONE', 'IPD_DONE'])
 
 function formatDateInput(value: string | Date | null | undefined): string {
-  if (!value) return ''
-  const d = new Date(value)
-  if (Number.isNaN(d.getTime())) return ''
-  return d.toISOString().slice(0, 10)
+  return localDateInputValue(value)
 }
 
 function PatientDetailsFields({
@@ -242,8 +240,14 @@ export function IPDMarkComponent({
       await apiPost(`/api/leads/${leadId}/ipd-mark`, {
         status: selectedStatus,
         reason: formData.reason.trim() || undefined,
-        newSurgeryDate: selectedStatus === 'POSTPONED' ? formData.newSurgeryDate : undefined,
-        surgeryDate: selectedStatus === 'IPD_DONE' ? formData.surgeryDate : undefined,
+        newSurgeryDate:
+          selectedStatus === 'POSTPONED'
+            ? localDateTimeToUtcIso(formData.newSurgeryDate)
+            : undefined,
+        surgeryDate:
+          selectedStatus === 'IPD_DONE'
+            ? localDateTimeToUtcIso(formData.surgeryDate)
+            : undefined,
         notes: formData.notes.trim() || undefined,
         ...(requiresPatientDetails
           ? {

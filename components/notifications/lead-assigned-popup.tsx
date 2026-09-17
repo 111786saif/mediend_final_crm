@@ -32,9 +32,14 @@ export function LeadAssignedPopup() {
     )
     if (fresh.length === 0) return
 
-    fresh.forEach((notification) => handledIds.current.add(notification.id))
+    fresh.forEach((notification) => {
+      handledIds.current.add(notification.id)
+      // Seeing the modal is the acknowledgement. Persist it immediately so a page
+      // refresh does not show the same assigned lead again.
+      markRead.mutate(notification.id)
+    })
     setQueue((previous) => [...previous, ...fresh])
-  }, [notifications])
+  }, [markRead, notifications])
 
   const current = queue[0] ?? null
 
@@ -42,8 +47,10 @@ export function LeadAssignedPopup() {
 
   const { patientName, leadRef } = getLeadDetails(current)
   const close = () => {
-    markRead.mutate(current.id)
     setQueue((previous) => previous.slice(1))
+  }
+  const closeAll = () => {
+    setQueue([])
   }
 
   return (
@@ -71,14 +78,25 @@ export function LeadAssignedPopup() {
             <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Lead Reference</p>
             <p className="mt-1 font-mono text-base font-semibold text-foreground">{leadRef}</p>
           </div>
-          <Button type="button" onClick={close} className="w-full bg-emerald-600 text-white hover:bg-emerald-700">
-            Close
-          </Button>
           {queue.length > 1 ? (
-            <p className="text-[11px] text-muted-foreground">
-              {queue.length - 1} more assigned lead{queue.length === 2 ? '' : 's'} waiting
-            </p>
-          ) : null}
+            <>
+              <div className="grid grid-cols-2 gap-3">
+                <Button type="button" onClick={close} variant="outline">
+                  Close
+                </Button>
+                <Button type="button" onClick={closeAll} className="bg-emerald-600 text-white hover:bg-emerald-700">
+                  Close all
+                </Button>
+              </div>
+              <p className="text-[11px] text-muted-foreground">
+                {queue.length - 1} more assigned lead{queue.length === 2 ? '' : 's'} waiting
+              </p>
+            </>
+          ) : (
+            <Button type="button" onClick={close} className="w-full bg-emerald-600 text-white hover:bg-emerald-700">
+              Close
+            </Button>
+          )}
         </div>
       </div>
     </div>

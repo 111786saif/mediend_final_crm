@@ -110,6 +110,8 @@ export interface Lead {
     ipdStatusUpdatedAt?: string | Date | null
     initiatedAt?: string | Date
     surgeryDate?: string | Date | null
+    surgeryTime?: string | null
+    newSurgeryDate?: string | Date | null
   } | null
   dischargeSheet?: { updatedAt?: string | Date } | null
   caseStageHistory?: { changedAt?: string | Date }[]
