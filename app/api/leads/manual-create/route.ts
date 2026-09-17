@@ -13,6 +13,7 @@ import {
 } from '@/lib/lead-duplicates'
 import { isLeadDateAfterToday, LEAD_DATE_FUTURE_ERROR } from '@/lib/lead-date-validation'
 import { isLeadRefUniqueViolation, withGeneratedManualLeadRef } from '@/lib/manual-lead-ref'
+import { createLeadAssignedNotification } from '@/lib/lead-notifications'
 import { prisma } from '@/lib/prisma'
 import { hasPermission } from '@/lib/rbac'
 import { getSessionWithFreshUser } from '@/lib/session'
@@ -201,22 +202,13 @@ export async function POST(request: NextRequest) {
       })
     );
 
-    if (assignee.id) {
-      try {
-        await prisma.notification.create({
-          data: {
-            userId: assignee.id,
-            type: 'TASK_ASSIGNED',
-            title: 'New Lead Assigned',
-            message: `You have been assigned a new lead: ${parsed.data.patientName.trim()} (${lead.leadRef})`,
-            link: `/patient/${lead.id}`,
-            relatedId: lead.id,
-          },
-        })
-      } catch (err) {
-        console.error('Failed to create notification for assigned BD:', err)
-      }
-    }
+    await createLeadAssignedNotification({
+      userId: assignee.id,
+      patientName: parsed.data.patientName,
+      leadRef: lead.leadRef,
+      leadId: lead.id,
+      actorUserId: currentUser.id,
+    })
 
     return successResponse(
       lead,
