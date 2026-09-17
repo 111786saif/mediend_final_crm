@@ -1222,23 +1222,6 @@ export async function PATCH(
     }
 
     if (assigneeChanged || churnAutomationResult) {
-      if (updatedLead.bdId && updatedLead.bdId !== user.id) {
-        try {
-          await prisma.notification.create({
-            data: {
-              userId: updatedLead.bdId,
-              type: 'TASK_ASSIGNED',
-              title: 'New Lead Assigned',
-              message: `You have been assigned a new lead: ${updatedLead.patientName} (${updatedLead.leadRef})`,
-              link: `/patient/${updatedLead.id}`,
-              relatedId: updatedLead.id,
-            },
-          })
-        } catch (err) {
-          console.error('Failed to create lead assignment notification:', err)
-        }
-      }
-
       activityLogs.push(
         logCrmActivity({
           action: 'CRM_LEAD_REASSIGNED',
