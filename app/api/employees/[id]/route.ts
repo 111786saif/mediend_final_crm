@@ -460,17 +460,13 @@ export async function PATCH(
       },
     })
 
-    // Clear stale records when identifiers change. The frontend will then
-    // trigger /api/employees/sync to re-populate via SyncProgressModal.
-    const bdNumberChanged = data.bdNumber !== undefined && data.bdNumber !== currentEmployee.bdNumber
-    if (bdNumberChanged) {
-      try {
-        const result = await prisma.lead.deleteMany({ where: { bdId: currentEmployee.user.id } })
-        console.log(`Deleted ${result.count} leads for user ${currentEmployee.user.id} (old bdNumber: ${currentEmployee.bdNumber})`)
-      } catch (err) {
-        console.error('Failed to delete old leads:', err)
-      }
-    }
+    // Intentionally disabled: Employee.bdNumber is not stored on Lead, and
+    // deleting by bdId here would remove the employee's entire lead portfolio.
+    // The frontend may still trigger a MySQL sync after a CRM number change.
+    // const bdNumberChanged = data.bdNumber !== undefined && data.bdNumber !== currentEmployee.bdNumber
+    // if (bdNumberChanged) {
+    //   await prisma.lead.deleteMany({ where: { bdId: currentEmployee.user.id } })
+    // }
 
     const employeeCodeChanged = data.employeeCode !== undefined && data.employeeCode !== currentEmployee.employeeCode
     if (employeeCodeChanged) {

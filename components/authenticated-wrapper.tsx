@@ -29,6 +29,7 @@ import { WorkLogEnforcer } from '@/components/calendar/work-log-enforcer'
 import { MeetReminderPopup } from '@/components/meets/meet-reminder-popup'
 import { BMICalculator } from '@/components/bmi-calculator'
 import { KnowlarityCallListener } from '@/components/telephony/knowlarity-call-listener'
+import { LeadAssignedPopup } from '@/components/notifications/lead-assigned-popup'
 
 
 function NavbarThemeToggle() {
@@ -328,11 +329,12 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
     !isLoading && user && !isLoginPage && !isPayslipPage && !isDocumentViewPage && !isPrintPage && !isAcknowledgePage && !isDocumentationPage && !isOnboardingPage && !isLeadContactPage
 
   if (isLoginPage || isPayslipPage || isDocumentViewPage || isPrintPage || isAcknowledgePage || isDocumentationPage || isOnboardingPage || isLeadContactPage) {
-    return <>{children}</>
+    return <>{user ? <LeadAssignedPopup /> : null}{children}</>
   }
 
   return (
     <ProtectedRoute>
+      {user ? <LeadAssignedPopup /> : null}
       {user?.role === 'BD' ? <KnowlarityCallListener /> : null}
       <MeetReminderPopup />
       <WorkLogEnforcer />
