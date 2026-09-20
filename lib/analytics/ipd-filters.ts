@@ -95,7 +95,6 @@ export function canonicalSalesCompletedWhere(
     ? [
         { surgeryDate: dateFilter },
         { admissionRecord: { is: { surgeryDate: dateFilter } } },
-        { AND: [{ surgeryDate: null }, { OR: [{ leadEntryDate: dateFilter }, { createdDate: dateFilter }] }] },
       ]
     : []
 

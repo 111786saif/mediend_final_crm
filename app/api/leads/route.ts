@@ -489,7 +489,29 @@ export async function GET(request: NextRequest) {
                   ],
                 })
               }
-            } else if (field === 'netProfit') {
+            } else if (field === 'instrumentsPaidBy') {
+              if (Array.isArray(value) && value.length > 0) {
+                filterConditions.push({
+                  plRecord: { instrumentsPaidBy: { in: value } },
+                })
+              }
+            } else if (field === 'remarks') {
+              if (typeof value === 'string' && value.trim()) {
+                filterConditions.push({
+                  plRecord: { remarks: { contains: value.trim(), mode: 'insensitive' } },
+                })
+              }
+            } else if (field === 'deductionTotal') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({
+                  dischargeSheet: { deductionAmount: range },
+                })
+              }
+            } else if (field === 'deductionPatient') {
               const { min, max } = value as { min: number | null; max: number | null }
               const range: Prisma.FloatFilter = {}
               if (min != null) range.gte = min
@@ -497,10 +519,105 @@ export async function GET(request: NextRequest) {
               if (Object.keys(range).length > 0) {
                 filterConditions.push({
                   OR: [
-                    { plRecord: { finalProfit: range } },
-                    { plRecord: { mediendNetProfit: range } },
+                    { plRecord: { cashOrDedPaid: range } },
+                    { dischargeSheet: { cashOrDedPaid: range } },
                   ],
                 })
+              }
+            } else if (field === 'deductionWaived') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({
+                  dischargeSheet: { waivedOffAmount: range },
+                })
+              }
+            } else if (field === 'instruments') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({ plRecord: { instrumentsCost: range } })
+              }
+            } else if (field === 'actualImplantCost') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({ plRecord: { actualImplantCost: range } })
+              }
+            } else if (field === 'actualInstrumentCost') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({ plRecord: { actualInstrumentCost: range } })
+              }
+            } else if (field === 'hospitalRecoverAmount') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({ plRecord: { hospitalRecoverAmount: range } })
+              }
+            } else if (field === 'dc') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({ plRecord: { dcCharges: range } })
+              }
+            } else if (field === 'cab') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({ plRecord: { cabCharges: range } })
+              }
+            } else if (field === 'referral') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({ plRecord: { referralAmount: range } })
+              }
+            } else if (field === 'mediendSharePct') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({ plRecord: { mediendSharePct: range } })
+              }
+            } else if (field === 'mediendShareAmt') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({
+                  OR: [
+                    { plRecord: { mediendShareAmount: range } },
+                    { plRecord: { mediendProfit: range } },
+                  ],
+                })
+              }
+            } else if (field === 'mediendProfit') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({ plRecord: { mediendProfit: range } })
               }
             }
           }
