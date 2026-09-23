@@ -104,7 +104,15 @@ export function normalizeLeadStatus(status: string | null | undefined): string {
   return STATUS_NORMALIZE[normalized] || mapped
 }
 
-export function getLeadPipelineBucket(status: string | null | undefined): Exclude<PipelineStatusBucket, 'all'> {
+export function getLeadPipelineBucket(
+  status: string | null | undefined,
+  pipelineStage?: string | null | undefined
+): Exclude<PipelineStatusBucket, 'all'> {
+  // IPD Done if pipelineStage is COMPLETED
+  if (pipelineStage === 'COMPLETED') {
+    return 'ipd_done'
+  }
+
   const s = normalizeLeadStatus(status)
   const lower = s.toLowerCase()
 
@@ -275,7 +283,7 @@ export const PIPELINE_BUCKET_LABELS: Record<Exclude<PipelineStatusBucket, 'all'>
   closed: 'Closed / Won',
 }
 
-export function countBuckets(leads: { status?: string | null }[]) {
+export function countBuckets(leads: { status?: string | null; pipelineStage?: string | null }[]) {
   const counts: Record<Exclude<PipelineStatusBucket, 'all'>, number> = {
     new_hot: 0,
     nurture: 0,
@@ -296,7 +304,7 @@ export function countBuckets(leads: { status?: string | null }[]) {
     closed: 0,
   }
   for (const lead of leads) {
-    counts[getLeadPipelineBucket(lead.status)]++
+    counts[getLeadPipelineBucket(lead.status, lead.pipelineStage)]++
   }
   return counts
 }
