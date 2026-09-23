@@ -58,11 +58,11 @@ export async function GET(request: NextRequest) {
     const leadEntryDateFilter: Prisma.LeadWhereInput =
       Object.keys(dateFilter).length > 0
         ? {
-            OR: [
-              { leadEntryDate: dateFilter },
-              { AND: [{ leadEntryDate: { equals: null } }, { createdDate: dateFilter }] },
-            ],
-          }
+          OR: [
+            { leadEntryDate: dateFilter },
+            { AND: [{ leadEntryDate: { equals: null } }, { createdDate: dateFilter }] },
+          ],
+        }
         : {}
 
     const allLeadsWhere: Prisma.LeadWhereInput = { ...leadEntryDateFilter, ...teamScope }
@@ -127,13 +127,13 @@ export async function GET(request: NextRequest) {
     // Normalize and aggregate Circle
     const circleMap = new Map<string, { total: number; converted: number; revenue: number; profit: number }>()
     for (const c of byCircleAll) {
-      const name = normalizeCircleName(c.circle)
+      const name = normalizeCircleName(c.circle?.trim())
       const cur = circleMap.get(name) ?? { total: 0, converted: 0, revenue: 0, profit: 0 }
       cur.total += c._count.id
       circleMap.set(name, cur)
     }
     for (const c of byCircleCompleted) {
-      const name = normalizeCircleName(c.circle)
+      const name = normalizeCircleName(c.circle?.trim())
       const cur = circleMap.get(name) ?? { total: 0, converted: 0, revenue: 0, profit: 0 }
       cur.converted += c._count.id
       cur.revenue += c._sum?.billAmount ?? 0
@@ -141,7 +141,7 @@ export async function GET(request: NextRequest) {
       circleMap.set(name, cur)
     }
     const byCircle = Array.from(circleMap.entries())
-      .filter(([_, data]) => data.total > 0)
+      .filter(([_, data]) => data.total > 0 || data.converted > 0)
       .map(([circle, data]) => {
         const conv = Math.min(data.converted, data.total)
         return {
@@ -155,7 +155,7 @@ export async function GET(request: NextRequest) {
       }).sort((a, b) => b.totalLeads - a.totalLeads)
 
     // Disease / Treatment
-    const completedTreatmentMap = new Map(byTreatmentCompleted.map((t) => [t.treatment, { count: t._count.id, revenue: t._sum?.billAmount ?? 0, profit: t._sum?.netProfit ?? 0 }]))
+    const completedTreatmentMap = new Map<string | null, { count: number; revenue: number; profit: number }>(byTreatmentCompleted.map((t) => [t.treatment, { count: t._count.id, revenue: t._sum?.billAmount ?? 0, profit: t._sum?.netProfit ?? 0 }]))
     const byDisease = byTreatmentAll.map((t) => {
       const total = t._count.id
       const convertedData = completedTreatmentMap.get(t.treatment)
@@ -171,11 +171,11 @@ export async function GET(request: NextRequest) {
     }).sort((a, b) => b.totalLeads - a.totalLeads)
 
     // Category
-    const completedCategoryMap = new Map(byCategoryCompleted.map((c) => [c.category ?? 'Uncategorized', { count: c._count.id, revenue: c._sum?.billAmount ?? 0, profit: c._sum?.netProfit ?? 0 }]))
+    const completedCategoryMap = new Map<string, { count: number; revenue: number; profit: number }>(byCategoryCompleted.map((c) => [c.category?.trim() || 'Uncategorized', { count: c._count.id, revenue: c._sum?.billAmount ?? 0, profit: c._sum?.netProfit ?? 0 }]))
     const byCategory = byCategoryAll.map((c) => {
       const category = c.category?.trim() || 'Uncategorized'
       const total = c._count.id
-      const convertedData = completedCategoryMap.get(c.category ?? 'Uncategorized') ?? completedCategoryMap.get(category)
+      const convertedData = completedCategoryMap.get(category)
       const conv = Math.min(convertedData?.count ?? 0, total)
       return {
         category,

@@ -147,13 +147,25 @@ export async function GET(request: NextRequest) {
       profit: c._sum.netProfit ?? 0,
     })).sort((a, b) => b.count - a.count)
 
-    const hospitalBreakdown = byHospital.map((h) => ({
-      hospitalName: h.hospitalName,
-      circle: h.circle,
-      count: h._count.id,
-      revenue: h._sum.billAmount ?? 0,
-      profit: h._sum.netProfit ?? 0,
-    })).sort((a, b) => b.revenue - a.revenue)
+    const hospitalMap = new Map<string, { hospitalName: string; circle: string; count: number; revenue: number; profit: number }>()
+    for (const h of byHospital) {
+      const trimmedHospital = h.hospitalName?.trim() || 'Unknown'
+      const normCircle = normalizeCircleName(h.circle?.trim())
+      const key = `${trimmedHospital.toLowerCase()}||${normCircle.toLowerCase()}`
+      const cur = hospitalMap.get(key) ?? {
+        hospitalName: trimmedHospital,
+        circle: normCircle,
+        count: 0,
+        revenue: 0,
+        profit: 0,
+      }
+      cur.count += h._count.id
+      cur.revenue += h._sum.billAmount ?? 0
+      cur.profit += h._sum.netProfit ?? 0
+      hospitalMap.set(key, cur)
+    }
+    const hospitalBreakdown = Array.from(hospitalMap.values())
+      .sort((a, b) => b.revenue - a.revenue)
 
     // Normalized Campaign Breakdown
     const campaignMap = new Map<string, { count: number; revenue: number; profit: number }>()

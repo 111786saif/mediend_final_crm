@@ -4,7 +4,7 @@ import { Prisma, UserRole } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getManagementChain } from '@/lib/hierarchy'
-import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
+import { leadConvertedWhere, buildDateRange } from '@/lib/analytics/ipd-filters'
 import {
   canAccessSalesDashboard,
   getSalesDashboardBdIdFilter,
@@ -29,15 +29,16 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url)
-    const startDate = searchParams.get('startDate')
-    const endDate = searchParams.get('endDate')
+    const startDateParam = searchParams.get('startDate')
+    const endDateParam = searchParams.get('endDate')
 
-    const start = startDate
-      ? new Date(startDate + 'T00:00:00.000Z')
-      : new Date(new Date().getFullYear(), 0, 1)
-    const end = endDate
-      ? new Date(endDate + 'T23:59:59.999Z')
-      : new Date()
+    const currentYear = new Date().getFullYear()
+    const defaultStartStr = `${currentYear}-01-01`
+    const defaultEndStr = new Date().toISOString().slice(0, 10)
+
+    const dateFilter = buildDateRange(startDateParam || defaultStartStr, endDateParam || defaultEndStr)
+    const start = dateFilter.gte as Date
+    const end = dateFilter.lte as Date
 
     const bdIdFilter = await getSalesDashboardBdIdFilter(user)
 
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest) {
       // Leads by month by BD with manager info
       prisma.$queryRaw<LeadRow[]>`
         SELECT
-          TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate"), 'YYYY-MM')  AS month,
+          TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate") AT TIME ZONE 'Asia/Kolkata', 'YYYY-MM')  AS month,
           u.id                                                           AS "bdId",
           u.name                                                         AS "bdName",
           e.id                                                           AS "bdEmployeeId",
@@ -65,38 +66,42 @@ export async function GET(request: NextRequest) {
           AND COALESCE(l."leadEntryDate", l."createdDate") <= ${end}
           ${bdIdFilter ? Prisma.sql`AND u.id = ANY(${bdIdFilter})` : Prisma.sql``}
         GROUP BY u.id, u.name, e.id, me.id, mu.name,
-                 TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate"), 'YYYY-MM')
+                 TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate") AT TIME ZONE 'Asia/Kolkata', 'YYYY-MM')
         ORDER BY u.name,
-                 TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate"), 'YYYY-MM')
+                 TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate") AT TIME ZONE 'Asia/Kolkata', 'YYYY-MM')
       `,
 
-      // IPD leads by BD using canonical date filter (surgeryDate)
+      // Converted IPD leads from the cohort of leads entered in range
       prisma.lead.findMany({
         where: {
           ...(bdIdFilter ? { bdId: { in: bdIdFilter } } : {}),
-          ...canonicalSalesCompletedWhere({ gte: start, lte: end }),
+          ...leadConvertedWhere(),
+          OR: [
+            { leadEntryDate: { gte: start, lte: end } },
+            { AND: [{ leadEntryDate: null }, { createdDate: { gte: start, lte: end } }] },
+          ],
         },
         select: {
           id: true,
           bdId: true,
           billAmount: true,
           netProfit: true,
+          leadEntryDate: true,
+          createdDate: true,
           surgeryDate: true,
           admissionRecord: { select: { surgeryDate: true } },
         },
       }),
     ])
 
-    // Bucket completed leads by month using surgeryDate (with AdmissionRecord fallback)
+    // Bucket converted leads by cohort entry month (leadEntryDate / createdDate)
     const ipdByMonth: { month: string; bdId: string; ipdCount: number }[] = []
     const monthCounts = new Map<string, Map<string, number>>()
 
     for (const lead of completedLeads) {
-      const surgeryDate = (lead as { surgeryDate?: Date | null }).surgeryDate
-        ?? (lead as { admissionRecord?: { surgeryDate?: Date | null } | null }).admissionRecord?.surgeryDate
-      if (!surgeryDate) continue
-      const d = new Date(surgeryDate)
-      const month = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+      const entryDate = lead.leadEntryDate ?? lead.createdDate
+      if (!entryDate) continue
+      const month = entryDate.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' }).slice(0, 7)
       const bdId = lead.bdId ?? 'unknown'
 
       if (!monthCounts.has(month)) monthCounts.set(month, new Map())

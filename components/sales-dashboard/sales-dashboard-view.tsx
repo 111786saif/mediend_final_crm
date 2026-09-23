@@ -966,29 +966,14 @@ function TeamPerformanceTab({
     .sort((a, b) => b.totalIpd - a.totalIpd)
 
   const categoryRows = (leadsBreakdown?.byCategory ?? []).map((c) => {
-    const ipdRow = (ipdBreakdown?.byCategory ?? []).find(
-      (i) => i.category.toLowerCase() === c.category.toLowerCase()
-    )
     return {
       category: c.category,
       leads: c.totalLeads,
-      ipd: ipdRow?.count ?? c.converted,
+      ipd: c.converted,
       conv: c.conversionRate,
-      revenue: ipdRow?.revenue ?? 0,
+      revenue: c.revenue ?? 0,
     }
   }).sort((a, b) => b.ipd - a.ipd || b.leads - a.leads)
-
-  // Include IPD categories that had no lead-entry matches
-  for (const ipdRow of ipdBreakdown?.byCategory ?? []) {
-    if (categoryRows.some((r) => r.category.toLowerCase() === ipdRow.category.toLowerCase())) continue
-    categoryRows.push({
-      category: ipdRow.category,
-      leads: 0,
-      ipd: ipdRow.count,
-      conv: 0,
-      revenue: ipdRow.revenue,
-    })
-  }
 
   return (
     <div className="space-y-6">
