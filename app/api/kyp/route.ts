@@ -1,3 +1,4 @@
+import { optionalLeadId } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
@@ -16,7 +17,7 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status')
-    const leadId = searchParams.get('leadId')
+    const leadId = optionalLeadId(searchParams.get('leadId'))
 
     const where: Prisma.KYPSubmissionWhereInput = {}
 

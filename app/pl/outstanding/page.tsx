@@ -366,7 +366,7 @@ export default function PLOutstandingPage() {
     enabled: hydrated,
   })
 
-  const [sheetLeadId, setSheetLeadId] = useState<string | null>(null)
+  const [sheetLeadId, setSheetLeadId] = useState<number | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
 
   const filteredRecords = useMemo(() => records ?? [], [records])
@@ -1309,7 +1309,7 @@ export default function PLOutstandingPage() {
           <PlOutstandingSheet
             open={sheetOpen}
             onOpenChange={setSheetOpen}
-            leadId={sheetLeadId ?? ''}
+            leadId={sheetLeadId ?? 0}
           />
         </div>
       </div>

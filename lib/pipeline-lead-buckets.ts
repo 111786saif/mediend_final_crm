@@ -136,15 +136,12 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
   // 6. Follow-up: ONLY Follow-up
   if (
     [
-      'Follow-up (1-3)',
       'Follow-up 1',
       'Follow-up 2',
       'Follow-up 3',
-      'Follow-up 4',
-      'Follow-up 5',
       'Follow-up',
+      'Followup',
     ].includes(s) ||
-    lower.includes('follow') ||
     ['1', '2', '3', '35'].includes(s)
   ) {
     return 'follow_up'

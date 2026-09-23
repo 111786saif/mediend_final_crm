@@ -492,7 +492,7 @@ async function main() {
     // Fetch back Lead IDs for PLRecord creation
     if (plCandidates.length > 0) {
       const plLeadRefs = plCandidates.map((c) => c.leadRef)
-      const createdLeadMap = new Map<string, string>()
+      const createdLeadMap = new Map<string, number>()
 
       const fetchedLeads = await prisma.lead.findMany({
         where: { leadRef: { in: plLeadRefs } },

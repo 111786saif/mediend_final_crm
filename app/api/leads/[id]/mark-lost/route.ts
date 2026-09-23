@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
@@ -33,7 +34,10 @@ export async function POST(
       return errorResponse('Forbidden: Only BD / TL / EA or Admin can mark a case as lost', 403)
     }
 
-    const { id: leadId } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const leadId = parsedLeadId.data
     const body = await request.json()
     const data = markLostSchema.parse(body)
 

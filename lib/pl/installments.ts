@@ -15,7 +15,7 @@ function statusFor(expected: number, paid: number): StatusValue {
  * Expected amounts come from the latest PLRecord (hospital + doctor shares,
  * MediEND share / net profit). Pending = max(expected − paid, 0).
  */
-export async function recomputeOutstandingFromInstallments(leadId: string) {
+export async function recomputeOutstandingFromInstallments(leadId: number) {
   const pl = await prisma.pLRecord.findUnique({
     where: { leadId },
     select: {

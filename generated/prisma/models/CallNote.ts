@@ -20,13 +20,23 @@ export type CallNoteModel = runtime.Types.Result.DefaultSelection<Prisma.$CallNo
 
 export type AggregateCallNote = {
   _count: CallNoteCountAggregateOutputType | null
+  _avg: CallNoteAvgAggregateOutputType | null
+  _sum: CallNoteSumAggregateOutputType | null
   _min: CallNoteMinAggregateOutputType | null
   _max: CallNoteMaxAggregateOutputType | null
 }
 
+export type CallNoteAvgAggregateOutputType = {
+  leadId: number | null
+}
+
+export type CallNoteSumAggregateOutputType = {
+  leadId: number | null
+}
+
 export type CallNoteMinAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   content: string | null
   createdById: string | null
   createdAt: Date | null
@@ -34,7 +44,7 @@ export type CallNoteMinAggregateOutputType = {
 
 export type CallNoteMaxAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   content: string | null
   createdById: string | null
   createdAt: Date | null
@@ -49,6 +59,14 @@ export type CallNoteCountAggregateOutputType = {
   _all: number
 }
 
+
+export type CallNoteAvgAggregateInputType = {
+  leadId?: true
+}
+
+export type CallNoteSumAggregateInputType = {
+  leadId?: true
+}
 
 export type CallNoteMinAggregateInputType = {
   id?: true
@@ -113,6 +131,18 @@ export type CallNoteAggregateArgs<ExtArgs extends runtime.Types.Extensions.Inter
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: CallNoteAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: CallNoteSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: CallNoteMinAggregateInputType
@@ -143,17 +173,21 @@ export type CallNoteGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   _count?: CallNoteCountAggregateInputType | true
+  _avg?: CallNoteAvgAggregateInputType
+  _sum?: CallNoteSumAggregateInputType
   _min?: CallNoteMinAggregateInputType
   _max?: CallNoteMaxAggregateInputType
 }
 
 export type CallNoteGroupByOutputType = {
   id: string
-  leadId: string
+  leadId: number
   content: string
   createdById: string
   createdAt: Date
   _count: CallNoteCountAggregateOutputType | null
+  _avg: CallNoteAvgAggregateOutputType | null
+  _sum: CallNoteSumAggregateOutputType | null
   _min: CallNoteMinAggregateOutputType | null
   _max: CallNoteMaxAggregateOutputType | null
 }
@@ -178,7 +212,7 @@ export type CallNoteWhereInput = {
   OR?: Prisma.CallNoteWhereInput[]
   NOT?: Prisma.CallNoteWhereInput | Prisma.CallNoteWhereInput[]
   id?: Prisma.StringFilter<"CallNote"> | string
-  leadId?: Prisma.StringFilter<"CallNote"> | string
+  leadId?: Prisma.IntFilter<"CallNote"> | number
   content?: Prisma.StringFilter<"CallNote"> | string
   createdById?: Prisma.StringFilter<"CallNote"> | string
   createdAt?: Prisma.DateTimeFilter<"CallNote"> | Date | string
@@ -201,7 +235,7 @@ export type CallNoteWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.CallNoteWhereInput | Prisma.CallNoteWhereInput[]
   OR?: Prisma.CallNoteWhereInput[]
   NOT?: Prisma.CallNoteWhereInput | Prisma.CallNoteWhereInput[]
-  leadId?: Prisma.StringFilter<"CallNote"> | string
+  leadId?: Prisma.IntFilter<"CallNote"> | number
   content?: Prisma.StringFilter<"CallNote"> | string
   createdById?: Prisma.StringFilter<"CallNote"> | string
   createdAt?: Prisma.DateTimeFilter<"CallNote"> | Date | string
@@ -216,8 +250,10 @@ export type CallNoteOrderByWithAggregationInput = {
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.CallNoteCountOrderByAggregateInput
+  _avg?: Prisma.CallNoteAvgOrderByAggregateInput
   _max?: Prisma.CallNoteMaxOrderByAggregateInput
   _min?: Prisma.CallNoteMinOrderByAggregateInput
+  _sum?: Prisma.CallNoteSumOrderByAggregateInput
 }
 
 export type CallNoteScalarWhereWithAggregatesInput = {
@@ -225,7 +261,7 @@ export type CallNoteScalarWhereWithAggregatesInput = {
   OR?: Prisma.CallNoteScalarWhereWithAggregatesInput[]
   NOT?: Prisma.CallNoteScalarWhereWithAggregatesInput | Prisma.CallNoteScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"CallNote"> | string
-  leadId?: Prisma.StringWithAggregatesFilter<"CallNote"> | string
+  leadId?: Prisma.IntWithAggregatesFilter<"CallNote"> | number
   content?: Prisma.StringWithAggregatesFilter<"CallNote"> | string
   createdById?: Prisma.StringWithAggregatesFilter<"CallNote"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CallNote"> | Date | string
@@ -241,7 +277,7 @@ export type CallNoteCreateInput = {
 
 export type CallNoteUncheckedCreateInput = {
   id?: string
-  leadId: string
+  leadId: number
   content: string
   createdById: string
   createdAt?: Date | string
@@ -257,7 +293,7 @@ export type CallNoteUpdateInput = {
 
 export type CallNoteUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -265,7 +301,7 @@ export type CallNoteUncheckedUpdateInput = {
 
 export type CallNoteCreateManyInput = {
   id?: string
-  leadId: string
+  leadId: number
   content: string
   createdById: string
   createdAt?: Date | string
@@ -279,7 +315,7 @@ export type CallNoteUpdateManyMutationInput = {
 
 export type CallNoteUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -303,6 +339,10 @@ export type CallNoteCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
+export type CallNoteAvgOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
+}
+
 export type CallNoteMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
@@ -317,6 +357,10 @@ export type CallNoteMinOrderByAggregateInput = {
   content?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type CallNoteSumOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
 }
 
 export type CallNoteCreateNestedManyWithoutCreatedByInput = {
@@ -412,7 +456,7 @@ export type CallNoteCreateWithoutCreatedByInput = {
 
 export type CallNoteUncheckedCreateWithoutCreatedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   content: string
   createdAt?: Date | string
 }
@@ -448,7 +492,7 @@ export type CallNoteScalarWhereInput = {
   OR?: Prisma.CallNoteScalarWhereInput[]
   NOT?: Prisma.CallNoteScalarWhereInput | Prisma.CallNoteScalarWhereInput[]
   id?: Prisma.StringFilter<"CallNote"> | string
-  leadId?: Prisma.StringFilter<"CallNote"> | string
+  leadId?: Prisma.IntFilter<"CallNote"> | number
   content?: Prisma.StringFilter<"CallNote"> | string
   createdById?: Prisma.StringFilter<"CallNote"> | string
   createdAt?: Prisma.DateTimeFilter<"CallNote"> | Date | string
@@ -496,7 +540,7 @@ export type CallNoteUpdateManyWithWhereWithoutLeadInput = {
 
 export type CallNoteCreateManyCreatedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   content: string
   createdAt?: Date | string
 }
@@ -510,14 +554,14 @@ export type CallNoteUpdateWithoutCreatedByInput = {
 
 export type CallNoteUncheckedUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CallNoteUncheckedUpdateManyWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -612,7 +656,7 @@ export type $CallNotePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    leadId: string
+    leadId: number
     content: string
     createdById: string
     createdAt: Date
@@ -1042,7 +1086,7 @@ export interface Prisma__CallNoteClient<T, Null = never, ExtArgs extends runtime
  */
 export interface CallNoteFieldRefs {
   readonly id: Prisma.FieldRef<"CallNote", 'String'>
-  readonly leadId: Prisma.FieldRef<"CallNote", 'String'>
+  readonly leadId: Prisma.FieldRef<"CallNote", 'Int'>
   readonly content: Prisma.FieldRef<"CallNote", 'String'>
   readonly createdById: Prisma.FieldRef<"CallNote", 'String'>
   readonly createdAt: Prisma.FieldRef<"CallNote", 'DateTime'>

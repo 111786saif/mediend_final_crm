@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { logCrmActivity } from '@/lib/crm-activity'
@@ -5,7 +6,7 @@ import { canUserViewLeadOwner } from '@/lib/lead-ownership'
 import { prisma } from '@/lib/prisma'
 import { getSessionWithFreshUser } from '@/lib/session'
 
-async function authorizeLeadAccess(request: NextRequest, id: string) {
+async function authorizeLeadAccess(request: NextRequest, id: number) {
   const user = await getSessionWithFreshUser()
   if (!user) {
     return { user: null, lead: null, response: unauthorizedResponse() }
@@ -39,7 +40,10 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     const auth = await authorizeLeadAccess(request, id)
     if (auth.response || !auth.user || !auth.lead) {
       return auth.response!

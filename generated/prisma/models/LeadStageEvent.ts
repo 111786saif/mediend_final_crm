@@ -20,13 +20,23 @@ export type LeadStageEventModel = runtime.Types.Result.DefaultSelection<Prisma.$
 
 export type AggregateLeadStageEvent = {
   _count: LeadStageEventCountAggregateOutputType | null
+  _avg: LeadStageEventAvgAggregateOutputType | null
+  _sum: LeadStageEventSumAggregateOutputType | null
   _min: LeadStageEventMinAggregateOutputType | null
   _max: LeadStageEventMaxAggregateOutputType | null
 }
 
+export type LeadStageEventAvgAggregateOutputType = {
+  leadId: number | null
+}
+
+export type LeadStageEventSumAggregateOutputType = {
+  leadId: number | null
+}
+
 export type LeadStageEventMinAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   fromStage: $Enums.PipelineStage | null
   toStage: $Enums.PipelineStage | null
   changedById: string | null
@@ -36,7 +46,7 @@ export type LeadStageEventMinAggregateOutputType = {
 
 export type LeadStageEventMaxAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   fromStage: $Enums.PipelineStage | null
   toStage: $Enums.PipelineStage | null
   changedById: string | null
@@ -55,6 +65,14 @@ export type LeadStageEventCountAggregateOutputType = {
   _all: number
 }
 
+
+export type LeadStageEventAvgAggregateInputType = {
+  leadId?: true
+}
+
+export type LeadStageEventSumAggregateInputType = {
+  leadId?: true
+}
 
 export type LeadStageEventMinAggregateInputType = {
   id?: true
@@ -125,6 +143,18 @@ export type LeadStageEventAggregateArgs<ExtArgs extends runtime.Types.Extensions
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: LeadStageEventAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: LeadStageEventSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: LeadStageEventMinAggregateInputType
@@ -155,19 +185,23 @@ export type LeadStageEventGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   _count?: LeadStageEventCountAggregateInputType | true
+  _avg?: LeadStageEventAvgAggregateInputType
+  _sum?: LeadStageEventSumAggregateInputType
   _min?: LeadStageEventMinAggregateInputType
   _max?: LeadStageEventMaxAggregateInputType
 }
 
 export type LeadStageEventGroupByOutputType = {
   id: string
-  leadId: string
+  leadId: number
   fromStage: $Enums.PipelineStage
   toStage: $Enums.PipelineStage
   changedById: string
   changedAt: Date
   note: string | null
   _count: LeadStageEventCountAggregateOutputType | null
+  _avg: LeadStageEventAvgAggregateOutputType | null
+  _sum: LeadStageEventSumAggregateOutputType | null
   _min: LeadStageEventMinAggregateOutputType | null
   _max: LeadStageEventMaxAggregateOutputType | null
 }
@@ -192,7 +226,7 @@ export type LeadStageEventWhereInput = {
   OR?: Prisma.LeadStageEventWhereInput[]
   NOT?: Prisma.LeadStageEventWhereInput | Prisma.LeadStageEventWhereInput[]
   id?: Prisma.StringFilter<"LeadStageEvent"> | string
-  leadId?: Prisma.StringFilter<"LeadStageEvent"> | string
+  leadId?: Prisma.IntFilter<"LeadStageEvent"> | number
   fromStage?: Prisma.EnumPipelineStageFilter<"LeadStageEvent"> | $Enums.PipelineStage
   toStage?: Prisma.EnumPipelineStageFilter<"LeadStageEvent"> | $Enums.PipelineStage
   changedById?: Prisma.StringFilter<"LeadStageEvent"> | string
@@ -219,7 +253,7 @@ export type LeadStageEventWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.LeadStageEventWhereInput | Prisma.LeadStageEventWhereInput[]
   OR?: Prisma.LeadStageEventWhereInput[]
   NOT?: Prisma.LeadStageEventWhereInput | Prisma.LeadStageEventWhereInput[]
-  leadId?: Prisma.StringFilter<"LeadStageEvent"> | string
+  leadId?: Prisma.IntFilter<"LeadStageEvent"> | number
   fromStage?: Prisma.EnumPipelineStageFilter<"LeadStageEvent"> | $Enums.PipelineStage
   toStage?: Prisma.EnumPipelineStageFilter<"LeadStageEvent"> | $Enums.PipelineStage
   changedById?: Prisma.StringFilter<"LeadStageEvent"> | string
@@ -238,8 +272,10 @@ export type LeadStageEventOrderByWithAggregationInput = {
   changedAt?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.LeadStageEventCountOrderByAggregateInput
+  _avg?: Prisma.LeadStageEventAvgOrderByAggregateInput
   _max?: Prisma.LeadStageEventMaxOrderByAggregateInput
   _min?: Prisma.LeadStageEventMinOrderByAggregateInput
+  _sum?: Prisma.LeadStageEventSumOrderByAggregateInput
 }
 
 export type LeadStageEventScalarWhereWithAggregatesInput = {
@@ -247,7 +283,7 @@ export type LeadStageEventScalarWhereWithAggregatesInput = {
   OR?: Prisma.LeadStageEventScalarWhereWithAggregatesInput[]
   NOT?: Prisma.LeadStageEventScalarWhereWithAggregatesInput | Prisma.LeadStageEventScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"LeadStageEvent"> | string
-  leadId?: Prisma.StringWithAggregatesFilter<"LeadStageEvent"> | string
+  leadId?: Prisma.IntWithAggregatesFilter<"LeadStageEvent"> | number
   fromStage?: Prisma.EnumPipelineStageWithAggregatesFilter<"LeadStageEvent"> | $Enums.PipelineStage
   toStage?: Prisma.EnumPipelineStageWithAggregatesFilter<"LeadStageEvent"> | $Enums.PipelineStage
   changedById?: Prisma.StringWithAggregatesFilter<"LeadStageEvent"> | string
@@ -267,7 +303,7 @@ export type LeadStageEventCreateInput = {
 
 export type LeadStageEventUncheckedCreateInput = {
   id?: string
-  leadId: string
+  leadId: number
   fromStage: $Enums.PipelineStage
   toStage: $Enums.PipelineStage
   changedById: string
@@ -287,7 +323,7 @@ export type LeadStageEventUpdateInput = {
 
 export type LeadStageEventUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   fromStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   toStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   changedById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -297,7 +333,7 @@ export type LeadStageEventUncheckedUpdateInput = {
 
 export type LeadStageEventCreateManyInput = {
   id?: string
-  leadId: string
+  leadId: number
   fromStage: $Enums.PipelineStage
   toStage: $Enums.PipelineStage
   changedById: string
@@ -315,7 +351,7 @@ export type LeadStageEventUpdateManyMutationInput = {
 
 export type LeadStageEventUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   fromStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   toStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   changedById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -343,6 +379,10 @@ export type LeadStageEventCountOrderByAggregateInput = {
   note?: Prisma.SortOrder
 }
 
+export type LeadStageEventAvgOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
+}
+
 export type LeadStageEventMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
@@ -361,6 +401,10 @@ export type LeadStageEventMinOrderByAggregateInput = {
   changedById?: Prisma.SortOrder
   changedAt?: Prisma.SortOrder
   note?: Prisma.SortOrder
+}
+
+export type LeadStageEventSumOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
 }
 
 export type LeadStageEventCreateNestedManyWithoutChangedByInput = {
@@ -458,7 +502,7 @@ export type LeadStageEventCreateWithoutChangedByInput = {
 
 export type LeadStageEventUncheckedCreateWithoutChangedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   fromStage: $Enums.PipelineStage
   toStage: $Enums.PipelineStage
   changedAt?: Date | string
@@ -496,7 +540,7 @@ export type LeadStageEventScalarWhereInput = {
   OR?: Prisma.LeadStageEventScalarWhereInput[]
   NOT?: Prisma.LeadStageEventScalarWhereInput | Prisma.LeadStageEventScalarWhereInput[]
   id?: Prisma.StringFilter<"LeadStageEvent"> | string
-  leadId?: Prisma.StringFilter<"LeadStageEvent"> | string
+  leadId?: Prisma.IntFilter<"LeadStageEvent"> | number
   fromStage?: Prisma.EnumPipelineStageFilter<"LeadStageEvent"> | $Enums.PipelineStage
   toStage?: Prisma.EnumPipelineStageFilter<"LeadStageEvent"> | $Enums.PipelineStage
   changedById?: Prisma.StringFilter<"LeadStageEvent"> | string
@@ -550,7 +594,7 @@ export type LeadStageEventUpdateManyWithWhereWithoutLeadInput = {
 
 export type LeadStageEventCreateManyChangedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   fromStage: $Enums.PipelineStage
   toStage: $Enums.PipelineStage
   changedAt?: Date | string
@@ -568,7 +612,7 @@ export type LeadStageEventUpdateWithoutChangedByInput = {
 
 export type LeadStageEventUncheckedUpdateWithoutChangedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   fromStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   toStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -577,7 +621,7 @@ export type LeadStageEventUncheckedUpdateWithoutChangedByInput = {
 
 export type LeadStageEventUncheckedUpdateManyWithoutChangedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   fromStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   toStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -690,7 +734,7 @@ export type $LeadStageEventPayload<ExtArgs extends runtime.Types.Extensions.Inte
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    leadId: string
+    leadId: number
     fromStage: $Enums.PipelineStage
     toStage: $Enums.PipelineStage
     changedById: string
@@ -1122,7 +1166,7 @@ export interface Prisma__LeadStageEventClient<T, Null = never, ExtArgs extends r
  */
 export interface LeadStageEventFieldRefs {
   readonly id: Prisma.FieldRef<"LeadStageEvent", 'String'>
-  readonly leadId: Prisma.FieldRef<"LeadStageEvent", 'String'>
+  readonly leadId: Prisma.FieldRef<"LeadStageEvent", 'Int'>
   readonly fromStage: Prisma.FieldRef<"LeadStageEvent", 'PipelineStage'>
   readonly toStage: Prisma.FieldRef<"LeadStageEvent", 'PipelineStage'>
   readonly changedById: Prisma.FieldRef<"LeadStageEvent", 'String'>

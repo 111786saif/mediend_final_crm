@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
@@ -20,7 +21,10 @@ export async function DELETE(
       return errorResponse('Forbidden', 403)
     }
 
-    const { id, remarkId } = await params
+    const { id: rawLeadId, remarkId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     const [lead, remark] = await Promise.all([
       prisma.lead.findUnique({
         where: { id },
@@ -66,7 +70,7 @@ export async function DELETE(
     await logCrmActivity({
       action: 'CRM_LEAD_REMARK_REMOVED',
       entityType: 'CRM_LEAD_REMARK',
-      entityId: lead.id,
+      entityId: String(lead.id),
       entityLabel: `${lead.leadRef} · ${lead.patientName}`,
       actorUserId: user.id,
       actorRole: user.role,

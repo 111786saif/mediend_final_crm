@@ -25,11 +25,11 @@ async function fixLeadMappings() {
 
     let processed = 0
     let updated = 0
-    let cursor: string | undefined = undefined
+    let cursor: number | undefined = undefined
 
     while (true) {
       // Fetch batch using cursor pagination
-      const leads: Array<{ id: string; source: string | null; treatment: string | null }> =
+      const leads: Array<{ id: number; source: string | null; treatment: string | null }> =
         await prisma.lead.findMany({
           take: BATCH_SIZE,
           ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
@@ -44,7 +44,7 @@ async function fixLeadMappings() {
       if (leads.length === 0) break
 
       // Process each lead
-      const updates: Array<{ id: string; source: string | null; treatment: string | null }> = []
+      const updates: Array<{ id: number; source: string | null; treatment: string | null }> = []
 
       for (const lead of leads) {
         let needsUpdate = false

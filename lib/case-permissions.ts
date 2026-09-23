@@ -16,7 +16,7 @@ interface User {
 }
 
 interface Lead {
-  id: string
+  id: number
   caseStage: CaseStage
   pipelineStage: string
   flowType?: FlowType | null

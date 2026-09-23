@@ -40,7 +40,7 @@ function formatIsoDateForInput(value: unknown) {
 }
 
 export interface IPDDetailsFormProps {
-  leadId: string
+  leadId: number
   // Patient Information
   patientName?: string
   leadRef?: string

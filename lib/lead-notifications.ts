@@ -5,7 +5,7 @@ export interface LeadAssignedNotificationParams {
   userId: string
   patientName: string
   leadRef: string
-  leadId: string
+  leadId: number
   actorUserId?: string
 }
 
@@ -22,7 +22,7 @@ export async function createLeadAssignedNotification(params: LeadAssignedNotific
         title: 'New Lead Assigned',
         message: `You have been assigned a new lead: ${params.patientName?.trim() || 'Patient'} (${params.leadRef})`,
         link: `/patient/${params.leadId}`,
-        relatedId: params.leadId,
+        relatedId: String(params.leadId),
       },
     })
   } catch (err) {

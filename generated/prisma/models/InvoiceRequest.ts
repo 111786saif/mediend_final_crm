@@ -27,16 +27,18 @@ export type AggregateInvoiceRequest = {
 }
 
 export type InvoiceRequestAvgAggregateOutputType = {
+  leadId: number | null
   invoiceAmount: number | null
 }
 
 export type InvoiceRequestSumAggregateOutputType = {
+  leadId: number | null
   invoiceAmount: number | null
 }
 
 export type InvoiceRequestMinAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   status: $Enums.InvoiceRequestStatus | null
   requestRemarks: string | null
   invoiceNumber: string | null
@@ -54,7 +56,7 @@ export type InvoiceRequestMinAggregateOutputType = {
 
 export type InvoiceRequestMaxAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   status: $Enums.InvoiceRequestStatus | null
   requestRemarks: string | null
   invoiceNumber: string | null
@@ -91,10 +93,12 @@ export type InvoiceRequestCountAggregateOutputType = {
 
 
 export type InvoiceRequestAvgAggregateInputType = {
+  leadId?: true
   invoiceAmount?: true
 }
 
 export type InvoiceRequestSumAggregateInputType = {
+  leadId?: true
   invoiceAmount?: true
 }
 
@@ -241,7 +245,7 @@ export type InvoiceRequestGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
 
 export type InvoiceRequestGroupByOutputType = {
   id: string
-  leadId: string
+  leadId: number
   status: $Enums.InvoiceRequestStatus
   requestRemarks: string | null
   invoiceNumber: string | null
@@ -282,7 +286,7 @@ export type InvoiceRequestWhereInput = {
   OR?: Prisma.InvoiceRequestWhereInput[]
   NOT?: Prisma.InvoiceRequestWhereInput | Prisma.InvoiceRequestWhereInput[]
   id?: Prisma.StringFilter<"InvoiceRequest"> | string
-  leadId?: Prisma.StringFilter<"InvoiceRequest"> | string
+  leadId?: Prisma.IntFilter<"InvoiceRequest"> | number
   status?: Prisma.EnumInvoiceRequestStatusFilter<"InvoiceRequest"> | $Enums.InvoiceRequestStatus
   requestRemarks?: Prisma.StringNullableFilter<"InvoiceRequest"> | string | null
   invoiceNumber?: Prisma.StringNullableFilter<"InvoiceRequest"> | string | null
@@ -329,7 +333,7 @@ export type InvoiceRequestWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.InvoiceRequestWhereInput | Prisma.InvoiceRequestWhereInput[]
   OR?: Prisma.InvoiceRequestWhereInput[]
   NOT?: Prisma.InvoiceRequestWhereInput | Prisma.InvoiceRequestWhereInput[]
-  leadId?: Prisma.StringFilter<"InvoiceRequest"> | string
+  leadId?: Prisma.IntFilter<"InvoiceRequest"> | number
   status?: Prisma.EnumInvoiceRequestStatusFilter<"InvoiceRequest"> | $Enums.InvoiceRequestStatus
   requestRemarks?: Prisma.StringNullableFilter<"InvoiceRequest"> | string | null
   invoiceNumber?: Prisma.StringNullableFilter<"InvoiceRequest"> | string | null
@@ -377,7 +381,7 @@ export type InvoiceRequestScalarWhereWithAggregatesInput = {
   OR?: Prisma.InvoiceRequestScalarWhereWithAggregatesInput[]
   NOT?: Prisma.InvoiceRequestScalarWhereWithAggregatesInput | Prisma.InvoiceRequestScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"InvoiceRequest"> | string
-  leadId?: Prisma.StringWithAggregatesFilter<"InvoiceRequest"> | string
+  leadId?: Prisma.IntWithAggregatesFilter<"InvoiceRequest"> | number
   status?: Prisma.EnumInvoiceRequestStatusWithAggregatesFilter<"InvoiceRequest"> | $Enums.InvoiceRequestStatus
   requestRemarks?: Prisma.StringNullableWithAggregatesFilter<"InvoiceRequest"> | string | null
   invoiceNumber?: Prisma.StringNullableWithAggregatesFilter<"InvoiceRequest"> | string | null
@@ -414,7 +418,7 @@ export type InvoiceRequestCreateInput = {
 
 export type InvoiceRequestUncheckedCreateInput = {
   id?: string
-  leadId: string
+  leadId: number
   status?: $Enums.InvoiceRequestStatus
   requestRemarks?: string | null
   invoiceNumber?: string | null
@@ -452,7 +456,7 @@ export type InvoiceRequestUpdateInput = {
 
 export type InvoiceRequestUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumInvoiceRequestStatusFieldUpdateOperationsInput | $Enums.InvoiceRequestStatus
   requestRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -471,7 +475,7 @@ export type InvoiceRequestUncheckedUpdateInput = {
 
 export type InvoiceRequestCreateManyInput = {
   id?: string
-  leadId: string
+  leadId: number
   status?: $Enums.InvoiceRequestStatus
   requestRemarks?: string | null
   invoiceNumber?: string | null
@@ -504,7 +508,7 @@ export type InvoiceRequestUpdateManyMutationInput = {
 
 export type InvoiceRequestUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumInvoiceRequestStatusFieldUpdateOperationsInput | $Enums.InvoiceRequestStatus
   requestRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -549,6 +553,7 @@ export type InvoiceRequestCountOrderByAggregateInput = {
 }
 
 export type InvoiceRequestAvgOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   invoiceAmount?: Prisma.SortOrder
 }
 
@@ -589,6 +594,7 @@ export type InvoiceRequestMinOrderByAggregateInput = {
 }
 
 export type InvoiceRequestSumOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   invoiceAmount?: Prisma.SortOrder
 }
 
@@ -761,7 +767,7 @@ export type InvoiceRequestCreateWithoutRequestedByInput = {
 
 export type InvoiceRequestUncheckedCreateWithoutRequestedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   status?: $Enums.InvoiceRequestStatus
   requestRemarks?: string | null
   invoiceNumber?: string | null
@@ -807,7 +813,7 @@ export type InvoiceRequestCreateWithoutReviewedByInput = {
 
 export type InvoiceRequestUncheckedCreateWithoutReviewedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   status?: $Enums.InvoiceRequestStatus
   requestRemarks?: string | null
   invoiceNumber?: string | null
@@ -854,7 +860,7 @@ export type InvoiceRequestScalarWhereInput = {
   OR?: Prisma.InvoiceRequestScalarWhereInput[]
   NOT?: Prisma.InvoiceRequestScalarWhereInput | Prisma.InvoiceRequestScalarWhereInput[]
   id?: Prisma.StringFilter<"InvoiceRequest"> | string
-  leadId?: Prisma.StringFilter<"InvoiceRequest"> | string
+  leadId?: Prisma.IntFilter<"InvoiceRequest"> | number
   status?: Prisma.EnumInvoiceRequestStatusFilter<"InvoiceRequest"> | $Enums.InvoiceRequestStatus
   requestRemarks?: Prisma.StringNullableFilter<"InvoiceRequest"> | string | null
   invoiceNumber?: Prisma.StringNullableFilter<"InvoiceRequest"> | string | null
@@ -968,7 +974,7 @@ export type InvoiceRequestCreateWithoutActivityLogsInput = {
 
 export type InvoiceRequestUncheckedCreateWithoutActivityLogsInput = {
   id?: string
-  leadId: string
+  leadId: number
   status?: $Enums.InvoiceRequestStatus
   requestRemarks?: string | null
   invoiceNumber?: string | null
@@ -1020,7 +1026,7 @@ export type InvoiceRequestUpdateWithoutActivityLogsInput = {
 
 export type InvoiceRequestUncheckedUpdateWithoutActivityLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumInvoiceRequestStatusFieldUpdateOperationsInput | $Enums.InvoiceRequestStatus
   requestRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1038,7 +1044,7 @@ export type InvoiceRequestUncheckedUpdateWithoutActivityLogsInput = {
 
 export type InvoiceRequestCreateManyRequestedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   status?: $Enums.InvoiceRequestStatus
   requestRemarks?: string | null
   invoiceNumber?: string | null
@@ -1055,7 +1061,7 @@ export type InvoiceRequestCreateManyRequestedByInput = {
 
 export type InvoiceRequestCreateManyReviewedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   status?: $Enums.InvoiceRequestStatus
   requestRemarks?: string | null
   invoiceNumber?: string | null
@@ -1090,7 +1096,7 @@ export type InvoiceRequestUpdateWithoutRequestedByInput = {
 
 export type InvoiceRequestUncheckedUpdateWithoutRequestedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumInvoiceRequestStatusFieldUpdateOperationsInput | $Enums.InvoiceRequestStatus
   requestRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1108,7 +1114,7 @@ export type InvoiceRequestUncheckedUpdateWithoutRequestedByInput = {
 
 export type InvoiceRequestUncheckedUpdateManyWithoutRequestedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumInvoiceRequestStatusFieldUpdateOperationsInput | $Enums.InvoiceRequestStatus
   requestRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1143,7 +1149,7 @@ export type InvoiceRequestUpdateWithoutReviewedByInput = {
 
 export type InvoiceRequestUncheckedUpdateWithoutReviewedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumInvoiceRequestStatusFieldUpdateOperationsInput | $Enums.InvoiceRequestStatus
   requestRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1161,7 +1167,7 @@ export type InvoiceRequestUncheckedUpdateWithoutReviewedByInput = {
 
 export type InvoiceRequestUncheckedUpdateManyWithoutReviewedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumInvoiceRequestStatusFieldUpdateOperationsInput | $Enums.InvoiceRequestStatus
   requestRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1389,7 +1395,7 @@ export type $InvoiceRequestPayload<ExtArgs extends runtime.Types.Extensions.Inte
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    leadId: string
+    leadId: number
     status: $Enums.InvoiceRequestStatus
     requestRemarks: string | null
     invoiceNumber: string | null
@@ -1831,7 +1837,7 @@ export interface Prisma__InvoiceRequestClient<T, Null = never, ExtArgs extends r
  */
 export interface InvoiceRequestFieldRefs {
   readonly id: Prisma.FieldRef<"InvoiceRequest", 'String'>
-  readonly leadId: Prisma.FieldRef<"InvoiceRequest", 'String'>
+  readonly leadId: Prisma.FieldRef<"InvoiceRequest", 'Int'>
   readonly status: Prisma.FieldRef<"InvoiceRequest", 'InvoiceRequestStatus'>
   readonly requestRemarks: Prisma.FieldRef<"InvoiceRequest", 'String'>
   readonly invoiceNumber: Prisma.FieldRef<"InvoiceRequest", 'String'>

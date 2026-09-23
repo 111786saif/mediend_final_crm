@@ -8,7 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useAuth } from "@/hooks/use-auth"
 
 interface LeadQrPopoverProps {
-  leadId: string
+  leadId: number
   phoneNumber?: string | null
   alternateNumber?: string | null
   patientName?: string

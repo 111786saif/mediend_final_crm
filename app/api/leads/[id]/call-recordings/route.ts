@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
@@ -46,7 +47,10 @@ export async function GET(
       return errorResponse('Forbidden', 403)
     }
 
-    const { id } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     const lead = await prisma.lead.findUnique({
       where: { id },
       select: {
@@ -73,7 +77,7 @@ export async function GET(
       where: {
         action: 'KNOWLARITY_CALL_RECORDING',
         OR: [
-          { entityId: lead.id },
+          { entityId: String(lead.id) },
           leadPhoneDigits ? { entityId: leadPhoneDigits } : { id: '__none__' },
           altPhoneDigits ? { entityId: altPhoneDigits } : { id: '__none__' },
         ],
@@ -147,7 +151,7 @@ export async function GET(
         (typeof log.entityId === 'string' && extractLast10Digits(log.entityId)) ||
         ''
 
-      if (log.entityId !== lead.id) {
+      if (log.entityId !== String(lead.id)) {
         if (!logCustomerPhone) continue
         if (logCustomerPhone !== leadPhoneDigits && logCustomerPhone !== altPhoneDigits) {
           continue

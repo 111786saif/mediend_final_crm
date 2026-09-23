@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import {
@@ -107,12 +108,7 @@ export async function POST(request: NextRequest) {
     const followUpDate = parseOptionalText(body.followUpDate)
     const modeOfPayment = parseOptionalText(body.modeOfPayment)
     const payload: CreateBulkLeadReassignmentRunInput = {
-      leadIds: Array.isArray(body.leadIds)
-        ? body.leadIds.filter(
-            (value): value is string =>
-              typeof value === 'string' && value.trim().length > 0
-          )
-        : [],
+      leadIds: leadIdSchema.array().parse(body.leadIds ?? []),
       bdUserIds: Array.isArray(body.bdUserIds)
         ? body.bdUserIds.filter(
             (value): value is string =>

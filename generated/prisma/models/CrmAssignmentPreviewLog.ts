@@ -20,13 +20,23 @@ export type CrmAssignmentPreviewLogModel = runtime.Types.Result.DefaultSelection
 
 export type AggregateCrmAssignmentPreviewLog = {
   _count: CrmAssignmentPreviewLogCountAggregateOutputType | null
+  _avg: CrmAssignmentPreviewLogAvgAggregateOutputType | null
+  _sum: CrmAssignmentPreviewLogSumAggregateOutputType | null
   _min: CrmAssignmentPreviewLogMinAggregateOutputType | null
   _max: CrmAssignmentPreviewLogMaxAggregateOutputType | null
 }
 
+export type CrmAssignmentPreviewLogAvgAggregateOutputType = {
+  leadId: number | null
+}
+
+export type CrmAssignmentPreviewLogSumAggregateOutputType = {
+  leadId: number | null
+}
+
 export type CrmAssignmentPreviewLogMinAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   leadRef: string | null
   syncSource: string | null
   currentBdUserId: string | null
@@ -52,7 +62,7 @@ export type CrmAssignmentPreviewLogMinAggregateOutputType = {
 
 export type CrmAssignmentPreviewLogMaxAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   leadRef: string | null
   syncSource: string | null
   currentBdUserId: string | null
@@ -106,6 +116,14 @@ export type CrmAssignmentPreviewLogCountAggregateOutputType = {
   _all: number
 }
 
+
+export type CrmAssignmentPreviewLogAvgAggregateInputType = {
+  leadId?: true
+}
+
+export type CrmAssignmentPreviewLogSumAggregateInputType = {
+  leadId?: true
+}
 
 export type CrmAssignmentPreviewLogMinAggregateInputType = {
   id?: true
@@ -227,6 +245,18 @@ export type CrmAssignmentPreviewLogAggregateArgs<ExtArgs extends runtime.Types.E
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: CrmAssignmentPreviewLogAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: CrmAssignmentPreviewLogSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: CrmAssignmentPreviewLogMinAggregateInputType
@@ -257,13 +287,15 @@ export type CrmAssignmentPreviewLogGroupByArgs<ExtArgs extends runtime.Types.Ext
   take?: number
   skip?: number
   _count?: CrmAssignmentPreviewLogCountAggregateInputType | true
+  _avg?: CrmAssignmentPreviewLogAvgAggregateInputType
+  _sum?: CrmAssignmentPreviewLogSumAggregateInputType
   _min?: CrmAssignmentPreviewLogMinAggregateInputType
   _max?: CrmAssignmentPreviewLogMaxAggregateInputType
 }
 
 export type CrmAssignmentPreviewLogGroupByOutputType = {
   id: string
-  leadId: string
+  leadId: number
   leadRef: string
   syncSource: string
   currentBdUserId: string
@@ -289,6 +321,8 @@ export type CrmAssignmentPreviewLogGroupByOutputType = {
   candidateDiagnostics: runtime.JsonValue
   createdAt: Date
   _count: CrmAssignmentPreviewLogCountAggregateOutputType | null
+  _avg: CrmAssignmentPreviewLogAvgAggregateOutputType | null
+  _sum: CrmAssignmentPreviewLogSumAggregateOutputType | null
   _min: CrmAssignmentPreviewLogMinAggregateOutputType | null
   _max: CrmAssignmentPreviewLogMaxAggregateOutputType | null
 }
@@ -313,7 +347,7 @@ export type CrmAssignmentPreviewLogWhereInput = {
   OR?: Prisma.CrmAssignmentPreviewLogWhereInput[]
   NOT?: Prisma.CrmAssignmentPreviewLogWhereInput | Prisma.CrmAssignmentPreviewLogWhereInput[]
   id?: Prisma.StringFilter<"CrmAssignmentPreviewLog"> | string
-  leadId?: Prisma.StringFilter<"CrmAssignmentPreviewLog"> | string
+  leadId?: Prisma.IntFilter<"CrmAssignmentPreviewLog"> | number
   leadRef?: Prisma.StringFilter<"CrmAssignmentPreviewLog"> | string
   syncSource?: Prisma.StringFilter<"CrmAssignmentPreviewLog"> | string
   currentBdUserId?: Prisma.StringFilter<"CrmAssignmentPreviewLog"> | string
@@ -376,7 +410,7 @@ export type CrmAssignmentPreviewLogWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.CrmAssignmentPreviewLogWhereInput | Prisma.CrmAssignmentPreviewLogWhereInput[]
   OR?: Prisma.CrmAssignmentPreviewLogWhereInput[]
   NOT?: Prisma.CrmAssignmentPreviewLogWhereInput | Prisma.CrmAssignmentPreviewLogWhereInput[]
-  leadId?: Prisma.StringFilter<"CrmAssignmentPreviewLog"> | string
+  leadId?: Prisma.IntFilter<"CrmAssignmentPreviewLog"> | number
   leadRef?: Prisma.StringFilter<"CrmAssignmentPreviewLog"> | string
   syncSource?: Prisma.StringFilter<"CrmAssignmentPreviewLog"> | string
   currentBdUserId?: Prisma.StringFilter<"CrmAssignmentPreviewLog"> | string
@@ -432,8 +466,10 @@ export type CrmAssignmentPreviewLogOrderByWithAggregationInput = {
   candidateDiagnostics?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.CrmAssignmentPreviewLogCountOrderByAggregateInput
+  _avg?: Prisma.CrmAssignmentPreviewLogAvgOrderByAggregateInput
   _max?: Prisma.CrmAssignmentPreviewLogMaxOrderByAggregateInput
   _min?: Prisma.CrmAssignmentPreviewLogMinOrderByAggregateInput
+  _sum?: Prisma.CrmAssignmentPreviewLogSumOrderByAggregateInput
 }
 
 export type CrmAssignmentPreviewLogScalarWhereWithAggregatesInput = {
@@ -441,7 +477,7 @@ export type CrmAssignmentPreviewLogScalarWhereWithAggregatesInput = {
   OR?: Prisma.CrmAssignmentPreviewLogScalarWhereWithAggregatesInput[]
   NOT?: Prisma.CrmAssignmentPreviewLogScalarWhereWithAggregatesInput | Prisma.CrmAssignmentPreviewLogScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"CrmAssignmentPreviewLog"> | string
-  leadId?: Prisma.StringWithAggregatesFilter<"CrmAssignmentPreviewLog"> | string
+  leadId?: Prisma.IntWithAggregatesFilter<"CrmAssignmentPreviewLog"> | number
   leadRef?: Prisma.StringWithAggregatesFilter<"CrmAssignmentPreviewLog"> | string
   syncSource?: Prisma.StringWithAggregatesFilter<"CrmAssignmentPreviewLog"> | string
   currentBdUserId?: Prisma.StringWithAggregatesFilter<"CrmAssignmentPreviewLog"> | string
@@ -499,7 +535,7 @@ export type CrmAssignmentPreviewLogCreateInput = {
 
 export type CrmAssignmentPreviewLogUncheckedCreateInput = {
   id?: string
-  leadId: string
+  leadId: number
   leadRef: string
   syncSource: string
   currentBdUserId: string
@@ -557,7 +593,7 @@ export type CrmAssignmentPreviewLogUpdateInput = {
 
 export type CrmAssignmentPreviewLogUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   syncSource?: Prisma.StringFieldUpdateOperationsInput | string
   currentBdUserId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -586,7 +622,7 @@ export type CrmAssignmentPreviewLogUncheckedUpdateInput = {
 
 export type CrmAssignmentPreviewLogCreateManyInput = {
   id?: string
-  leadId: string
+  leadId: number
   leadRef: string
   syncSource: string
   currentBdUserId: string
@@ -643,7 +679,7 @@ export type CrmAssignmentPreviewLogUpdateManyMutationInput = {
 
 export type CrmAssignmentPreviewLogUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   syncSource?: Prisma.StringFieldUpdateOperationsInput | string
   currentBdUserId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -709,6 +745,10 @@ export type CrmAssignmentPreviewLogCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
+export type CrmAssignmentPreviewLogAvgOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
+}
+
 export type CrmAssignmentPreviewLogMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
@@ -759,6 +799,10 @@ export type CrmAssignmentPreviewLogMinOrderByAggregateInput = {
   assignmentDate?: Prisma.SortOrder
   explanation?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type CrmAssignmentPreviewLogSumOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
 }
 
 export type CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput = {
@@ -894,7 +938,7 @@ export type CrmAssignmentPreviewLogScalarWhereInput = {
   OR?: Prisma.CrmAssignmentPreviewLogScalarWhereInput[]
   NOT?: Prisma.CrmAssignmentPreviewLogScalarWhereInput | Prisma.CrmAssignmentPreviewLogScalarWhereInput[]
   id?: Prisma.StringFilter<"CrmAssignmentPreviewLog"> | string
-  leadId?: Prisma.StringFilter<"CrmAssignmentPreviewLog"> | string
+  leadId?: Prisma.IntFilter<"CrmAssignmentPreviewLog"> | number
   leadRef?: Prisma.StringFilter<"CrmAssignmentPreviewLog"> | string
   syncSource?: Prisma.StringFilter<"CrmAssignmentPreviewLog"> | string
   currentBdUserId?: Prisma.StringFilter<"CrmAssignmentPreviewLog"> | string
@@ -1172,7 +1216,7 @@ export type $CrmAssignmentPreviewLogPayload<ExtArgs extends runtime.Types.Extens
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    leadId: string
+    leadId: number
     leadRef: string
     syncSource: string
     currentBdUserId: string
@@ -1622,7 +1666,7 @@ export interface Prisma__CrmAssignmentPreviewLogClient<T, Null = never, ExtArgs 
  */
 export interface CrmAssignmentPreviewLogFieldRefs {
   readonly id: Prisma.FieldRef<"CrmAssignmentPreviewLog", 'String'>
-  readonly leadId: Prisma.FieldRef<"CrmAssignmentPreviewLog", 'String'>
+  readonly leadId: Prisma.FieldRef<"CrmAssignmentPreviewLog", 'Int'>
   readonly leadRef: Prisma.FieldRef<"CrmAssignmentPreviewLog", 'String'>
   readonly syncSource: Prisma.FieldRef<"CrmAssignmentPreviewLog", 'String'>
   readonly currentBdUserId: Prisma.FieldRef<"CrmAssignmentPreviewLog", 'String'>

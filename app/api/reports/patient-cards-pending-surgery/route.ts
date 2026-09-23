@@ -26,7 +26,7 @@ const HARD_CAP = 5000
 type DayBucketParam = 'all' | '30' | '60' | '90'
 
 type RowResponse = {
-  id: string
+  id: number
   leadRef: string
   patientName: string
   caseStage: string

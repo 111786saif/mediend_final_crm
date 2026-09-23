@@ -70,7 +70,7 @@ type DischargeSheet = {
 type LeadShape = any
 
 interface Props {
-  leadId: string
+  leadId: number
   /** Pre-loaded full lead (e.g. from the patient page query) to skip the panel's own fetch. */
   lead?: LeadShape | null
   /** Show the patient & case section (default true). */

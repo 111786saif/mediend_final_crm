@@ -17,7 +17,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Progress } from '@/components/ui/progress'
 import { TabNavigation } from '@/components/employee/tab-navigation'
-import { format } from 'date-fns'
+import { endOfMonth, endOfWeek, endOfYear, format, startOfMonth, startOfWeek, startOfYear, subDays, subMonths, subYears } from 'date-fns'
 import { getAvatarColor } from '@/lib/avatar-colors'
 import {
   PieChart,
@@ -113,7 +113,7 @@ interface BdMonthly {
 interface BdDetail {
   bd: { id: string; name: string; profilePicture: string | null; managerName: string | null }
   kpis: { totalLeads: number; ipdDone: number; conversionRate: number; netProfit: number; billAmount: number; avgTicketSize: number }
-  surgeries: Array<{ id: string; patientName: string; treatment: string; hospitalName: string; surgeonName: string | null; date: string | null; billAmount: number; netProfit: number; circle: string }>
+  surgeries: Array<{ id: number; patientName: string; treatment: string; hospitalName: string; surgeonName: string | null; date: string | null; billAmount: number; netProfit: number; circle: string }>
   ipdCurrent?: number
   ipdPrev?: number
   ipdPrev2?: number
@@ -122,7 +122,17 @@ interface BdDetail {
   monthWise: Array<{ month: string; leadCount: number; ipdCount: number }>
   monthWiseHeaders?: { current: string; prev: string; prev2: string; prev3: string }
   treatmentBreakdown: Array<{ treatment: string; count: number }>
+  cityWise: Array<{ label: string; totalLeads: number; ipd: number; conversionRate: number }>
+  sourceWise: Array<{ label: string; totalLeads: number; ipd: number; conversionRate: number }>
 }
+
+interface QualitySlaData {
+  totals: { totalLeads: number; opd: number; ipd: number; closed: number; conversionRate: number }
+  filters: { cities: Array<{ key: string; label: string }>; sources: Array<{ key: string; label: string }>; bds: Array<{ key: string; label: string }>; teams: Array<{ key: string; label: string }> }
+  cityWise: QualityRow[]; sourceWise: QualityRow[]; bdWise: QualityRow[]; teamWise: QualityRow[]
+  sla: { within5Minutes: number; within15Minutes: number; late: number; pending: number; called: number; within15Rate: number }
+}
+interface QualityRow { key: string; label: string; totalLeads: number; opd: number; ipd: number; closed: number; conversionRate: number }
 
 interface ManagerGroup {
   managerId: string
@@ -224,6 +234,7 @@ const TABS = [
   { value: 'bd', label: 'BD Performance' },
   { value: 'sources', label: 'Sources & Campaigns' },
   { value: 'circle', label: 'Circle' },
+  { value: 'quality', label: 'Lead Quality & SLA' },
   { value: 'insights', label: 'Marketing Insights' },
 ]
 
@@ -365,8 +376,32 @@ function DateRangePicker({
   onChange: (range: DateRange | undefined) => void
 }) {
   const [isOpen, setIsOpen] = useState(false)
+  const applyPreset = (preset: string) => {
+    const now = new Date()
+    const day = (date: Date) => ({ from: date, to: new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999) })
+    const ranges: Record<string, DateRange> = {
+      today: day(now), yesterday: day(subDays(now, 1)),
+      thisWeek: { from: startOfWeek(now, { weekStartsOn: 1 }), to: endOfWeek(now, { weekStartsOn: 1 }) },
+      lastWeek: { from: startOfWeek(subDays(startOfWeek(now, { weekStartsOn: 1 }), 1), { weekStartsOn: 1 }), to: endOfWeek(subDays(startOfWeek(now, { weekStartsOn: 1 }), 1), { weekStartsOn: 1 }) },
+      thisMonth: { from: startOfMonth(now), to: endOfMonth(now) },
+      lastMonth: { from: startOfMonth(subMonths(now, 1)), to: endOfMonth(subMonths(now, 1)) },
+      last3Months: { from: startOfMonth(subMonths(now, 2)), to: endOfMonth(now) },
+      last6Months: { from: startOfMonth(subMonths(now, 5)), to: endOfMonth(now) },
+      thisYear: { from: startOfYear(now), to: endOfYear(now) },
+      lastYear: { from: startOfYear(subYears(now, 1)), to: endOfYear(subYears(now, 1)) },
+    }
+    if (ranges[preset]) onChange(ranges[preset])
+  }
   return (
     <div className="flex flex-wrap items-center gap-2">
+      <select aria-label="Quick date range" defaultValue="" onChange={(event) => { applyPreset(event.target.value); event.currentTarget.value = '' }} className="h-9 rounded-md border border-input bg-background px-2 text-xs text-foreground">
+        <option value="" disabled>Quick period</option>
+        <option value="today">Today</option><option value="yesterday">Yesterday</option>
+        <option value="thisWeek">This Week</option><option value="lastWeek">Last Week</option>
+        <option value="thisMonth">Current Month</option><option value="lastMonth">Last Month</option>
+        <option value="last3Months">Last 3 Months</option><option value="last6Months">Last 6 Months</option>
+        <option value="thisYear">Current Year</option><option value="lastYear">Last Year</option>
+      </select>
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" size="sm" className="w-full justify-start sm:w-[240px]">
@@ -488,6 +523,20 @@ function BdDetailSheet({
                     </div>
                   </div>
                 )}
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {([['City-wise conversion', data.cityWise], ['Source-wise conversion', data.sourceWise]] as const).map(([title, rows]) => (
+                    <div key={title} className="rounded-lg border overflow-hidden">
+                      <p className="px-3 py-2 text-sm font-semibold bg-muted/40">{title}</p>
+                      <div className="max-h-52 overflow-auto">
+                        {(rows ?? []).map((row) => <div key={row.label} className="grid grid-cols-[1fr_auto_auto_auto] gap-2 px-3 py-2 text-xs border-t">
+                          <span className="truncate">{row.label}</span><span>{row.totalLeads} leads</span><span className="text-emerald-600 font-medium">{row.ipd} IPD</span><span className="text-violet-600 font-medium">{row.conversionRate.toFixed(1)}%</span>
+                        </div>)}
+                        {!rows?.length && <p className="p-3 text-xs text-muted-foreground">No data for this period</p>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
 
                 {/* Surgery list */}
                 <div>
@@ -1316,6 +1365,52 @@ function BdPerformanceTab({
   )
 }
 
+// ─── Lead Quality and first-call SLA ─────────────────────────────────────────
+
+function LeadQualitySlaTab({ dateParams, variant }: { dateParams: string; variant: DashboardVariant }) {
+  const [city, setCity] = useState('')
+  const [source, setSource] = useState('')
+  const [bdId, setBdId] = useState('')
+  const [teamId, setTeamId] = useState('')
+  const filterParams = new URLSearchParams(dateParams)
+  if (city) filterParams.set('city', city)
+  if (source) filterParams.set('source', source)
+  if (bdId) filterParams.set('bdId', bdId)
+  if (teamId) filterParams.set('teamId', teamId)
+  const query = filterParams.toString()
+  const { data } = useQuery<QualitySlaData>({
+    queryKey: ['sales-dashboard', variant, 'quality-sla', query],
+    queryFn: () => apiGet<QualitySlaData>(`/api/analytics/sales-dashboard/quality-sla?${query}`),
+  })
+  const filterOptions = data?.filters
+  const renderTable = (title: string, rows: QualityRow[]) => (
+    <Card className="overflow-hidden">
+      <CardHeader className="px-4 py-3"><CardTitle className="text-sm">{title}</CardTitle></CardHeader>
+      <CardContent className="p-0"><div className="max-h-80 overflow-auto"><Table>
+        <TableHeader><TableRow><TableHead>Name</TableHead><TableHead className="text-right">Leads</TableHead><TableHead className="text-right">OPD</TableHead><TableHead className="text-right">IPD</TableHead><TableHead className="text-right">Closed</TableHead><TableHead className="text-right">Conv.</TableHead></TableRow></TableHeader>
+        <TableBody>{rows.map((row) => <TableRow key={row.key}><TableCell className="font-medium">{row.label}</TableCell><TableCell className="text-right">{row.totalLeads}</TableCell><TableCell className="text-right">{row.opd}</TableCell><TableCell className="text-right text-emerald-600">{row.ipd}</TableCell><TableCell className="text-right">{row.closed}</TableCell><TableCell className="text-right text-violet-600">{row.conversionRate}%</TableCell></TableRow>)}
+          {!rows.length && <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground py-8">No data for this period</TableCell></TableRow>}</TableBody>
+      </Table></div></CardContent>
+    </Card>
+  )
+  return <div className="space-y-4">
+    <p className="text-sm text-muted-foreground">Quality is shown as lead volume and OPD, IPD, Closed, and IPD conversion. The SLA uses the first recorded call note after lead receipt.</p>
+    <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+      {([
+        ['City', city, setCity, filterOptions?.cities ?? []], ['Source', source, setSource, filterOptions?.sources ?? []],
+        ['BDM', bdId, setBdId, filterOptions?.bds ?? []], ['Team', teamId, setTeamId, filterOptions?.teams ?? []],
+      ] as const).map(([label, value, setValue, options]) => <label key={label} className="text-xs text-muted-foreground">{label}
+        <select value={value} onChange={(event) => setValue(event.target.value)} className="mt-1 h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground"><option value="">All {label}s</option>{options.map((option) => <option key={option.key} value={option.key}>{option.label}</option>)}</select>
+      </label>)}
+    </div>
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+      <StatCard label="Total Leads" value={data?.totals.totalLeads ?? 0} color="bg-blue-500/10" /><StatCard label="OPD" value={data?.totals.opd ?? 0} color="bg-cyan-500/10" /><StatCard label="IPD" value={data?.totals.ipd ?? 0} color="bg-emerald-500/10" /><StatCard label="Closed" value={data?.totals.closed ?? 0} color="bg-amber-500/10" /><StatCard label="Conversion" value={`${data?.totals.conversionRate ?? 0}%`} color="bg-violet-500/10" />
+    </div>
+    <Card><CardHeader className="px-4 py-3"><CardTitle className="text-sm">New Lead Calling SLA</CardTitle></CardHeader><CardContent className="grid grid-cols-2 gap-3 sm:grid-cols-5"><StatCard label="Within 5 min" value={data?.sla.within5Minutes ?? 0} color="bg-emerald-500/10" /><StatCard label="6–15 min" value={data?.sla.within15Minutes ?? 0} color="bg-teal-500/10" /><StatCard label="Over 15 min" value={data?.sla.late ?? 0} color="bg-rose-500/10" /><StatCard label="No call recorded" value={data?.sla.pending ?? 0} color="bg-slate-500/10" /><StatCard label="Within 15 min" value={`${data?.sla.within15Rate ?? 0}%`} color="bg-violet-500/10" /></CardContent></Card>
+    <div className="grid gap-4 xl:grid-cols-2">{renderTable('City-wise lead quality', data?.cityWise ?? [])}{renderTable('Source-wise lead quality', data?.sourceWise ?? [])}{renderTable('BD-wise performance', data?.bdWise ?? [])}{renderTable('Team-wise lead quality', data?.teamWise ?? [])}</div>
+  </div>
+}
+
 // ─── Sources & Campaigns Tab ──────────────────────────────────────────────────
 
 function SourceCampaignTab({ dateParams, variant }: { dateParams: string; variant: DashboardVariant }) {
@@ -1756,6 +1851,9 @@ export function SalesDashboardView({ variant = 'org' }: { variant?: DashboardVar
           )}
           {activeTab === 'bd' && (
             <BdPerformanceTab dateParams={dateParams} onSelectBd={(id) => setSelectedBdId(id)} variant={variant} dateRange={dateRange} />
+          )}
+          {activeTab === 'quality' && (
+            <LeadQualitySlaTab dateParams={dateParams} variant={variant} />
           )}
           {activeTab === 'sources' && (
             <SourceCampaignTab dateParams={dateParams} variant={variant} />

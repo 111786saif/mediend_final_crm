@@ -13,7 +13,7 @@ import { Send, Paperclip, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface CaseChatProps {
-  leadId: string
+  leadId: number
   className?: string
 }
 

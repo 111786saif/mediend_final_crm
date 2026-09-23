@@ -6,11 +6,11 @@
   "scripts": {
     "dev": "next dev --turbo",
     "dev:worker:bulk-reassign": "bun workers/lead-bulk-reassign-worker.ts",
-    "build": "bunx prisma generate && next build --webpack",
+    "build": "bun run db:generate && next build --webpack",
     "start": "next start",
     "worker:bulk-reassign": "bun workers/lead-bulk-reassign-worker.ts",
     "lint": "eslint",
-    "db:generate": "prisma generate",
+    "db:generate": "prisma generate && prisma generate --schema prisma/legacy-source.prisma",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
@@ -35,13 +35,15 @@
     "import:leads-followup-mop": "bun run scripts/import-leads-followup-mop-csv.ts",
     "fix:lead-mappings": "tsx scripts/fix-existing-lead-mappings.ts",
     "fix:lead-categories-circles": "bun run scripts/fix-lead-categories-circles.ts",
+    "prune:leads": "tsx scripts/prune-leads-to-latest-1000.ts",
     "seed:employees": "bun scripts/seed-employees-from-json.ts",
     "seed:employees:csv": "bun scripts/seed-employees-from-csv.ts",
     "seed:leads": "tsx prisma/seed-leads.ts",
     "db:seed:masters": "tsx prisma/seed-masters.ts",
     "db:seed:crm-opd-masters": "tsx prisma/seed-crm-opd-masters.ts",
     "db:seed:insurance-tpa": "tsx scripts/seed-insurance-tpa.ts",
-    "db:seed:document-templates": "bun prisma/seed-document-templates.ts"
+    "db:seed:document-templates": "bun prisma/seed-document-templates.ts",
+    "db:generate:legacy": "prisma generate --schema prisma/legacy-source.prisma"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

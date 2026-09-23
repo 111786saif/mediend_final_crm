@@ -22,8 +22,8 @@ export interface DoctorPayoffRequestRecord {
   id: string
   doctorName: string
   hospitalName: string | null
-  leadId: string | null
-  leadIds: string[]
+  leadId: number | null
+  leadIds: number[]
   requestAmount: number
   requestRemarks: string | null
   financeRemarks: string | null

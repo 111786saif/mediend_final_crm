@@ -77,7 +77,7 @@ type DoctorDetail = {
     mediendShare: number
   }
   cases: Array<{
-    leadId: string
+    leadId: number
     leadRef: string | null
     patientName: string | null
     hospitalName: string | null
@@ -105,7 +105,7 @@ export default function DoctorDetailPage() {
   const startDate = searchParams.get('startDate') || ''
   const endDate = searchParams.get('endDate') || ''
 
-  const [selectedLeads, setSelectedLeads] = useState<string[]>([])
+  const [selectedLeads, setSelectedLeads] = useState<number[]>([])
   const [requestDialogOpen, setRequestDialogOpen] = useState(false)
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -329,7 +329,7 @@ export default function DoctorDetailPage() {
   )
 
   const payoffByLeadId = useMemo(() => {
-    const map = new Map<string, DoctorPayoffRequestRecord>()
+    const map = new Map<number, DoctorPayoffRequestRecord>()
     for (const req of payoffData?.requests ?? []) {
       if (req.leadId) map.set(req.leadId, req)
     }

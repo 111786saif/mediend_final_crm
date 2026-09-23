@@ -35,6 +35,7 @@ import {
   PieChart,
   Plus,
   Route,
+  Settings,
   Shield,
   ShieldCheck,
   ShoppingCart,
@@ -43,6 +44,7 @@ import {
   Target,
   TrendingUp,
   Truck,
+  Upload,
   UserCheck,
   UserCircle,
   Users,
@@ -156,6 +158,13 @@ export const navItems: NavItem[] = [
     url: '/master-data',
     icon: Database,
     roles: ['EXECUTIVE_ASSISTANT', 'MD', 'ADMIN', 'TESTER', 'PL_HEAD'],
+  },
+  {
+    title: 'Facebook Settings',
+    url: '/admin/facebook-settings',
+    icon: Settings,
+    roles: ['MD', 'ADMIN', 'SUPER_ADMIN'],
+    permission: 'it:permissions',
   },
   {
     title: 'Doctor Admin',
@@ -420,6 +429,12 @@ export const navItems: NavItem[] = [
     url: '/pl/dashboard',
     icon: DollarSign,
     permission: 'pl:read',
+  },
+  {
+    title: 'P&L Excel Import',
+    url: '/pl/import',
+    icon: Upload,
+    permission: 'pl:write',
   },
   {
     title: 'P&L Surgery',
@@ -716,7 +731,7 @@ export const navItems: NavItem[] = [
     roles: ['FINANCE_HEAD', 'MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
-    title: 'IT Permissions',
+    title: 'Role & Module Access',
     url: '/it/permissions',
     icon: ShieldCheck,
     permission: 'it:permissions',

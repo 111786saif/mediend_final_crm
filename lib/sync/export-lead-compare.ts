@@ -2,7 +2,7 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { Prisma } from '@/generated/prisma/client'
 import * as XLSX from 'xlsx'
-import type { WorkspacePrisma } from '@/lib/sync/old-workspace-sync'
+import type { ReadonlyWorkspacePrisma } from '@/lib/sync/old-workspace-sync'
 
 export type LeadCompareRow = {
   leadRef: string
@@ -107,7 +107,7 @@ function rowToSheetObject(row: LeadCompareRow): Record<string, string | null> {
   }
 }
 
-async function getLeadColumns(db: WorkspacePrisma): Promise<Set<string>> {
+async function getLeadColumns(db: ReadonlyWorkspacePrisma): Promise<Set<string>> {
   const rows = await db.$queryRaw<Array<{ column_name: string }>>`
     SELECT column_name
     FROM information_schema.columns
@@ -118,7 +118,7 @@ async function getLeadColumns(db: WorkspacePrisma): Promise<Set<string>> {
 
 /** Fetch lead snapshot rows with BD/TL names for a set of leadRefs. */
 export async function fetchLeadCompareRows(
-  db: WorkspacePrisma,
+  db: ReadonlyWorkspacePrisma,
   leadRefs: string[]
 ): Promise<Map<string, LeadCompareRow>> {
   const result = new Map<string, LeadCompareRow>()

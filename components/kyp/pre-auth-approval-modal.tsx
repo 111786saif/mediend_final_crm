@@ -16,7 +16,7 @@ import { InsuranceInitiateForm } from '@/components/insurance/insurance-initiate
 interface PreAuthApprovalModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  leadId: string
+  leadId: number
   leadRef: string
   patientName: string
   kypSubmissionId: string

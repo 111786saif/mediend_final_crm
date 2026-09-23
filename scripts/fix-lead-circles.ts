@@ -53,7 +53,7 @@ async function run() {
 
   let processed = 0
   let updated = 0
-  let cursor: string | undefined
+  let cursor: number | undefined
 
   while (true) {
     const batch = await prisma.lead.findMany({
@@ -80,7 +80,7 @@ async function run() {
     )
     const mysqlCircleByRef = new Map(mysqlRows.map((r) => [String(r.id), r.Circle != null ? String(r.Circle).trim() : '']))
 
-    const updates: { id: string; circle: string }[] = []
+    const updates: { id: number; circle: string }[] = []
     for (const lead of batch) {
       const newCircle = mysqlCircleByRef.get(lead.leadRef) ?? ''
       if (lead.circle === newCircle) continue

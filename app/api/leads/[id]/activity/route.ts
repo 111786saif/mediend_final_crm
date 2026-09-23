@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
@@ -66,7 +67,10 @@ export async function GET(
       return errorResponse('Forbidden', 403)
     }
 
-    const { id } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     const lead = await prisma.lead.findUnique({
       where: { id },
       select: {
@@ -120,7 +124,7 @@ export async function GET(
     const [crmLogs, callNotes] = await Promise.all([
       prisma.crmActivityLog.findMany({
         where: {
-          entityId: lead.id,
+          entityId: String(lead.id),
           entityType: {
             in: [...LEAD_ACTIVITY_ENTITY_TYPES],
           },

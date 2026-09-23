@@ -12,7 +12,7 @@ import { KYPDetailsView } from '@/components/kyp/kyp-details-view'
 
 interface KYPSubmission {
   id: string
-  leadId: string
+  leadId: number
   aadhar: string | null
   pan: string | null
   insuranceCard: string | null
@@ -26,7 +26,7 @@ interface KYPSubmission {
   status: 'PENDING' | 'KYP_DETAILS_ADDED' | 'PRE_AUTH_COMPLETE' | 'FOLLOW_UP_COMPLETE' | 'COMPLETED'
   submittedAt: string
   lead: {
-    id: string
+    id: number
     leadRef: string
     patientName: string
     phoneNumber: string
@@ -43,7 +43,7 @@ export default function KYPDetailsPage() {
   const { user } = useAuth()
   const router = useRouter()
   const params = useParams()
-  const leadId = params.leadId as string
+  const leadId = Number(params.leadId)
 
   const { data: kypSubmission, isLoading } = useQuery<KYPSubmission | null>({
     queryKey: ['kyp-submission', leadId],

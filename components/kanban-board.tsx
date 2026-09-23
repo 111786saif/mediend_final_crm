@@ -159,7 +159,7 @@ export function KanbanBoard({ filters = {}, showBDColumn = false, onLeadClick }:
 
   const activeLead = useMemo(() => {
     if (!activeId) return null
-    return leads.find((l) => l.id === activeId) || null
+    return leads.find((l) => String(l.id) === activeId) || null
   }, [activeId, leads])
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -181,11 +181,11 @@ export function KanbanBoard({ filters = {}, showBDColumn = false, onLeadClick }:
     // Pick first status in target bucket as the default target status
     const newStatus = targetBucket.statuses[0]
 
-    const lead = leads.find((l) => l.id === leadId)
+    const lead = leads.find((l) => String(l.id) === leadId)
     if (!lead || lead.status === newStatus) return
 
     try {
-      await updateLead(leadId, { status: newStatus })
+      updateLead({ id: Number(leadId), data: { status: newStatus } })
     } catch {
       // Revert handle handled by react query
     }

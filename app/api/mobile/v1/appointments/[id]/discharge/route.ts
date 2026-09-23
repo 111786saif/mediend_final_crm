@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse, zodErrorResponse } from '@/lib/api-utils'
@@ -20,7 +21,10 @@ export async function PUT(
       return unauthorizedResponse()
     }
 
-    const { id } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     const body = await request.json()
     const input = dischargeSchema.parse(body)
     const result = await dischargeDoctorAppointment(session, id, input)

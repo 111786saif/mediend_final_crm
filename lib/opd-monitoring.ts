@@ -16,6 +16,8 @@ const opdMonitoringLeadSelect = {
   whatsapp: true,
   status: true,
   hospitalName: true,
+  circle: true,
+  source: true,
   surgeonName: true,
   followUpDate: true,
   surgeryDate: true,
@@ -69,6 +71,7 @@ const opdMonitoringLeadSelect = {
     select: {
       id: true,
       name: true,
+      employee: { select: { team: { select: { name: true, department: { select: { name: true } } } } } },
     },
   },
 } satisfies Prisma.LeadSelect
@@ -84,7 +87,7 @@ type DateRange = {
 
 type MonitoringAppointment = {
   id: string
-  leadId: string
+  leadId: number
   leadRef: string
   patientName: string
   phoneNumber: string | null
@@ -95,6 +98,10 @@ type MonitoringAppointment = {
   statusKey: 'scheduled' | 'done' | 'cancelled' | 'no_show'
   statusLabel: 'Scheduled' | 'Done' | 'Cancelled' | 'No Show'
   bdName: string | null
+  teamName: string | null
+  departmentName: string | null
+  city: string | null
+  source: string | null
 }
 
 export type SalesOpdMonitoringFilters =
@@ -106,6 +113,7 @@ export type SalesOpdMonitoringFilters =
   | {
       mode: 'daily'
       date?: string
+      status?: string
     }
   | {
       mode: 'doctor'
@@ -118,6 +126,12 @@ export type SalesOpdMonitoringFilters =
       mode: 'overdue'
       doctorName?: string
       daysOverdue?: number
+    }
+  | {
+      mode: 'analytics'
+      startDate?: string
+      endDate?: string
+      status?: string
     }
 
 export class SalesOpdMonitoringError extends Error {
@@ -242,6 +256,10 @@ function mapLeadToMonitoringAppointments(lead: OpdMonitoringLead): MonitoringApp
         statusKey,
         statusLabel: getMonitoringStatusLabel(statusKey),
         bdName: lead.bd?.name || null,
+        teamName: lead.bd?.employee?.team?.name || null,
+        departmentName: lead.bd?.employee?.team?.department?.name || null,
+        city: lead.circle || null,
+        source: lead.source || null,
       }
     })
 }
@@ -337,7 +355,10 @@ export async function getSalesOpdMonitoring(
       throw new SalesOpdMonitoringError('date is required for daily monitoring', 400)
     }
 
-    return appointments.filter((appointment) => isSameDay(appointment.appointmentDate, date))
+    const requestedStatus = normalizeText(filters.status)
+    return appointments
+      .filter((appointment) => isSameDay(appointment.appointmentDate, date))
+      .filter((appointment) => requestedStatus && requestedStatus !== 'all' ? appointment.statusKey === requestedStatus : true)
   }
 
   if (filters.mode === 'overdue') {
@@ -353,6 +374,14 @@ export async function getSalesOpdMonitoring(
         const date = appointment.appointmentDate
         return Boolean(date && new Date(date).getTime() <= cutoff.getTime())
       })
+  }
+
+  if (filters.mode === 'analytics') {
+    const range = buildRange(filters.startDate, filters.endDate)
+    const requestedStatus = normalizeText(filters.status)
+    return appointments
+      .filter((appointment) => isWithinRange(appointment.appointmentDate, range))
+      .filter((appointment) => requestedStatus && requestedStatus !== 'all' ? appointment.statusKey === requestedStatus : true)
   }
 
   const range = buildRange(filters.startDate, filters.endDate)

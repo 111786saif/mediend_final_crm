@@ -27,7 +27,7 @@ type AssignableUser = {
 }
 
 type SelectedIncomingLead = {
-  id: string
+  id: number
   patientName: string
   externalCampaignId: string
   source: string
@@ -48,12 +48,12 @@ export function IncomingLeadsManualAssignDialog({
   open: boolean
   onOpenChange: (open: boolean) => void
   leadOptions: SelectedIncomingLead[]
-  selectedLeadIds: string[]
-  onSelectedLeadIdsChange: (leadIds: string[]) => void
+  selectedLeadIds: number[]
+  onSelectedLeadIdsChange: (leadIds: number[]) => void
   selectedLeads: SelectedIncomingLead[]
   assignableUsers: AssignableUser[]
   isPending: boolean
-  onSubmit: (payload: { leadIds: string[]; assigneeUserIds: string[] }) => Promise<unknown> | void
+  onSubmit: (payload: { leadIds: number[]; assigneeUserIds: string[] }) => Promise<unknown> | void
 }) {
   const [selectedAssigneeUserIds, setSelectedAssigneeUserIds] = useState<string[]>([])
   const [leadPickerOpen, setLeadPickerOpen] = useState(false)
@@ -123,7 +123,7 @@ export function IncomingLeadsManualAssignDialog({
     setSelectedAssigneeUserIds((current) => current.filter((id) => id !== userId))
   }
 
-  function toggleLead(leadId: string, checked: boolean) {
+  function toggleLead(leadId: number, checked: boolean) {
     if (checked) {
       onSelectedLeadIdsChange(
         selectedLeadIds.includes(leadId) ? selectedLeadIds : [...selectedLeadIds, leadId]

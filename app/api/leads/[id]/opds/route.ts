@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { LeadOpdPhase } from '@/generated/prisma/client'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
@@ -28,7 +29,10 @@ export async function GET(
       return errorResponse('Forbidden', 403)
     }
 
-    const { id } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     const lead = await prisma.lead.findUnique({
       where: { id },
       select: {
@@ -102,7 +106,10 @@ export async function POST(
       return errorResponse('Forbidden', 403)
     }
 
-    const { id } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     const lead = await prisma.lead.findUnique({
       where: { id },
       select: { id: true, bdId: true },

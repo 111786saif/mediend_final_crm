@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
         })
       : []
 
-    const paidByLead = new Map<string, number>()
+    const paidByLead = new Map<number | null, number>()
     for (const i of installments) {
       paidByLead.set(i.leadId, (paidByLead.get(i.leadId) ?? 0) + i.amount)
     }

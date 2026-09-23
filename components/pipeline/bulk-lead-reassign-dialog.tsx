@@ -46,7 +46,7 @@ type AssignableUser = {
 }
 
 type SelectedLead = {
-  id: string
+  id: number
   leadRef?: string
   patientName?: string
 }
@@ -65,8 +65,8 @@ export function BulkLeadReassignDialog({
   open: boolean
   onOpenChange: (open: boolean) => void
   leadOptions: SelectedLead[]
-  selectedLeadIds: string[]
-  onSelectedLeadIdsChange: (leadIds: string[]) => void
+  selectedLeadIds: number[]
+  onSelectedLeadIdsChange: (leadIds: number[]) => void
   selectedLeads: SelectedLead[]
   assignableUsers: AssignableUser[]
   isPending: boolean
@@ -162,7 +162,7 @@ export function BulkLeadReassignDialog({
     }
   }
 
-  function toggleLead(leadId: string, checked: boolean) {
+  function toggleLead(leadId: number, checked: boolean) {
     if (checked) {
       onSelectedLeadIdsChange(
         selectedLeadIds.includes(leadId) ? selectedLeadIds : [...selectedLeadIds, leadId]

@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest, NextResponse } from 'next/server'
 import { errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { logCrmActivity } from '@/lib/crm-activity'
@@ -46,7 +47,7 @@ function logMakeCall(
   console.log('[make-call]', { attemptId, event, ...details })
 }
 
-async function authorizeLeadAccess(request: NextRequest, id: string) {
+async function authorizeLeadAccess(request: NextRequest, id: number) {
   const user = await getSessionWithFreshUser()
   if (!user) {
     return { user: null, lead: null, response: unauthorizedResponse() }
@@ -126,7 +127,10 @@ export async function POST(
   const attemptId = crypto.randomUUID()
 
   try {
-    const { id } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     const auth = await authorizeLeadAccess(request, id)
     if (auth.response || !auth.user || !auth.lead) {
       logMakeCall(attemptId, 'authorization_failed', { leadId: id })

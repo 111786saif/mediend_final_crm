@@ -11,7 +11,7 @@ import { toast } from 'sonner'
 import { ChevronDown, ChevronUp, File, X, RotateCcw } from 'lucide-react'
 
 interface DischargeSheetFormProps {
-  leadId: string
+  leadId: number
   patientName?: string
   surgeryDate?: string
   hospital?: string

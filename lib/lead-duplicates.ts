@@ -7,14 +7,14 @@ type IncomingLeadDuplicateStore = Pick<typeof prisma, 'incomingLead'>
 export const DUPLICATE_LEAD_STATUS = 'Duplicate lead'
 
 export class DuplicateLeadPhoneError extends Error {
-  leadId: string
+  leadId: number
   leadRef: string
   duplicateCount: number
   normalizedPhone: string
   treatment?: string | null
 
   constructor(input: {
-    leadId: string
+    leadId: number
     leadRef: string
     duplicateCount: number
     normalizedPhone: string
@@ -116,7 +116,7 @@ export async function findLatestPriorIncomingLeadByPrimaryPhone(
   normalizedPhone: string,
   options?: {
     beforeReceivedAt?: Date | null
-    excludeIncomingLeadId?: string | null
+    excludeIncomingLeadId?: number | null
     db?: IncomingLeadDuplicateStore
   }
 ) {

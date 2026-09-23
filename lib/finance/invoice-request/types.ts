@@ -7,7 +7,7 @@ export const INVOICE_REQUEST_STATUS_LABEL: Record<InvoiceRequestStatus, string> 
 }
 
 export interface InvoiceRequestLeadSummary {
-  id: string
+  id: number
   leadRef: string
   patientName: string
   hospitalName: string
@@ -23,7 +23,7 @@ export interface InvoiceRequestUserSummary {
 
 export interface InvoiceRequestRecord {
   id: string
-  leadId: string
+  leadId: number
   status: InvoiceRequestStatus
   requestRemarks: string | null
   invoiceNumber: string | null

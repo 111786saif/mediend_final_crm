@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
@@ -16,7 +17,7 @@ const suggestHospitalSchema = z.object({
 /** Minimal lead gate for GET (TPA list): role + mutate access only. */
 async function gateSuggestHospitalList(
   user: NonNullable<ReturnType<typeof getSessionFromRequest>>,
-  leadId: string
+  leadId: number
 ) {
   if (!isSalesLeadWorkerRole(user.role) && user.role !== 'ADMIN') {
     return errorResponse('Forbidden: Only BD or Team Lead can suggest new hospitals', 403)
@@ -46,7 +47,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       return unauthorizedResponse()
     }
 
-    const { id: leadId } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const leadId = parsedLeadId.data
     const gate = await gateSuggestHospitalList(user, leadId)
     if (gate) {
       return gate
@@ -84,7 +88,10 @@ export async function POST(
       return unauthorizedResponse()
     }
 
-    const { id: leadId } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const leadId = parsedLeadId.data
     const body = await request.json()
     const data = suggestHospitalSchema.parse(body)
 

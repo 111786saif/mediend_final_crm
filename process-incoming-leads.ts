@@ -44,7 +44,7 @@ async function main() {
       console.log('Results:')
       results.results.forEach((result, index) => {
         const status = result.success ? '✅' : '❌'
-        console.log(`   ${status} Lead ${index + 1} (${result.id.substring(0, 8)}...): ${result.success ? 'Success' : result.error}`)
+        console.log(`   ${status} Lead ${index + 1} (${String(result.id)}...): ${result.success ? 'Success' : result.error}`)
       })
     }
 

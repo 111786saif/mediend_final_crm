@@ -13,7 +13,7 @@ import { Send, Paperclip, Loader2, MessageSquare } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface ChatInterfaceProps {
-  leadId: string
+  leadId: number
 }
 
 export function ChatInterface({ leadId }: ChatInterfaceProps) {

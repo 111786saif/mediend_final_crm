@@ -135,7 +135,7 @@ function FieldError({ message }: { message?: string }) {
 }
 
 export interface OPDScheduleFormProps {
-  leadId: string
+  leadId: number
   opdAppointmentId?: string | null
   opdPhase?: LeadOpdPhase
   hideContactFields?: boolean

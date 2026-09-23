@@ -40,7 +40,7 @@ interface ResetOptions {
 }
 
 interface ResetStepperDialogProps {
-  leadId: string
+  leadId: number
   open: boolean
   onOpenChange: (open: boolean) => void
   onSuccess?: () => void

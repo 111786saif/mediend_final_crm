@@ -28,11 +28,11 @@ async function migrateLeadPipelineStages() {
     let processed = 0
     let updated = 0
     const summary = { toCompleted: 0, toLost: 0, toSales: 0, conversionDateSet: 0 }
-    let cursor: string | undefined = undefined
+    let cursor: number | undefined = undefined
 
     while (true) {
       const leads: Array<{
-        id: string
+        id: number
         status: string
         pipelineStage: PipelineStage
         conversionDate: Date | null
@@ -57,7 +57,7 @@ async function migrateLeadPipelineStages() {
       if (leads.length === 0) break
 
       const updates: Array<{
-        id: string
+        id: number
         pipelineStage: PipelineStage
         conversionDate: Date | null
       }> = []

@@ -192,7 +192,7 @@ async function importLeadFollowupMopCsv() {
 
     const leadByRef = new Map(existingLeads.map((lead) => [lead.leadRef, lead]))
     const updates: Array<{
-      id: string
+      id: number
       leadRef: string
       data: {
         followUpDate?: Date

@@ -14,7 +14,7 @@ import {
 import { PatientDischargeInfo } from '@/components/discharge/patient-discharge-info'
 
 interface Props {
-  leadId: string
+  leadId: number
   /** Pre-loaded discharge sheet from a parent query, to skip the panel's own fetch when present. */
   preloaded?: any | null
   /** Pass a custom trigger; defaults to a small outline button. */

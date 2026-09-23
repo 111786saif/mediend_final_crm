@@ -2,10 +2,7 @@ import { NextRequest } from 'next/server'
 import { CaseStage, PipelineStage } from '@/generated/prisma/client'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getManualLeadAssignableUsersForActor, getLeadTeamLeadIdForAssigneeManager } from '@/lib/lead-ownership'
-import {
-  CRM_LEAD_STATUS_OPTIONS,
-  CRM_MODE_OF_PAYMENT_OPTIONS,
-} from '@/lib/lead-status-options'
+import { CRM_MODE_OF_PAYMENT_OPTIONS } from '@/lib/lead-status-options'
 import {
   DUPLICATE_LEAD_STATUS,
   normalizeLeadPhoneToLast10,
@@ -124,11 +121,22 @@ export async function POST(request: NextRequest) {
     const explicitTreatment = normalizeOptionalLeadText(treatmentMaster?.name) ?? null
 
     const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone, explicitTreatment)
-    const normalizedStatus = normalizeOptionalLeadText(parsed.data.status) ?? 'New Lead'
-    if (!duplicateLead && !CRM_LEAD_STATUS_OPTIONS.includes(normalizedStatus as (typeof CRM_LEAD_STATUS_OPTIONS)[number])) {
+    const normalizedStatus = normalizeOptionalLeadText(parsed.data.status) ?? 'New Leads'
+    const selectedStatus = duplicateLead ? null : await prisma.leadStatus.findFirst({
+      where: { status: { equals: normalizedStatus, mode: 'insensitive' }, isActive: true },
+      select: { id: true, status: true },
+    })
+    if (!duplicateLead && !selectedStatus) {
       return errorResponse('Please select a valid lead status', 400)
     }
-    const effectiveStatus = duplicateLead ? DUPLICATE_LEAD_STATUS : normalizedStatus
+    const duplicateStatus = duplicateLead ? await prisma.leadStatus.findFirst({
+      where: { status: DUPLICATE_LEAD_STATUS, isActive: true },
+      select: { id: true, status: true },
+    }) : null
+    if (duplicateLead && !duplicateStatus) {
+      return errorResponse('Duplicate lead status is not configured', 500)
+    }
+    const effectiveStatus = duplicateStatus?.status ?? selectedStatus?.status
 
     const normalizedModeOfPayment = normalizeOptionalLeadText(parsed.data.modeOfPayment)
     if (
@@ -150,7 +158,8 @@ export async function POST(request: NextRequest) {
       alternateNumber: normalizeOptionalLeadText(parsed.data.alternateNumber),
       bdId: assignee.id,
       bdeName: assignee.name,
-      status: effectiveStatus,
+      status: effectiveStatus!,
+      statusId: duplicateStatus?.id ?? selectedStatus?.id,
       pipelineStage: PipelineStage.SALES,
       caseStage: CaseStage.NEW_LEAD,
       circle: normalizeOptionalLeadText(parsed.data.circle) ?? 'Unknown',

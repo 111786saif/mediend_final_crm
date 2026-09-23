@@ -24,7 +24,7 @@ interface AadharFile {
 }
 
 interface IPDMarkComponentProps {
-  leadId: string
+  leadId: number
   isCashFlow?: boolean
   currentStatus?: string
   statusHistory?: IPDStatusHistory[]

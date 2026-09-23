@@ -1,3 +1,4 @@
+import { optionalLeadId } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest) {
       return errorResponse('Forbidden', 403)
     }
 
-    const leadId = request.nextUrl.searchParams.get('leadId')
+    const leadId = optionalLeadId(request.nextUrl.searchParams.get('leadId'))
     if (!leadId) {
       return errorResponse('leadId is required', 400)
     }
@@ -55,7 +56,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const leadId = body?.leadId as string | undefined
+    const leadId = optionalLeadId(body?.leadId)
     const content = typeof body?.content === 'string' ? body.content.trim() : ''
     if (!leadId) {
       return errorResponse('leadId is required', 400)

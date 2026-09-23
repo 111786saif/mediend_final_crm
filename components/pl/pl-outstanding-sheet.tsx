@@ -28,7 +28,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 interface Lead {
-  id: string
+  id: number
   leadRef?: string
   patientName?: string
   phoneNumber?: string
@@ -58,7 +58,7 @@ interface Lead {
 interface PlOutstandingSheetProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  leadId: string
+  leadId: number
 }
 
 export function PlOutstandingSheet({ open, onOpenChange, leadId }: PlOutstandingSheetProps) {

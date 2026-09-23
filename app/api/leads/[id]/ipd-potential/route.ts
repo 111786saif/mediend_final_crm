@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
@@ -40,7 +41,10 @@ export async function POST(
       return errorResponse('Only authorized sales users can mark IPD possibility', 403)
     }
 
-    const { id: leadId } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const leadId = parsedLeadId.data
     const body = schema.parse(await request.json())
     const potentialDate = parsePotentialDate(body.potentialDate)
 
@@ -93,7 +97,7 @@ export async function POST(
     await logCrmActivity({
       action: 'CRM_LEAD_IPD_POTENTIAL_MARKED',
       entityType: 'CRM_LEAD',
-      entityId: lead.id,
+      entityId: String(lead.id),
       entityLabel: leadEntityLabel,
       actorUserId: user.id,
       actorRole: user.role,

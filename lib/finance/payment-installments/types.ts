@@ -10,7 +10,7 @@ export const INSTALLMENT_VERIFICATION_LABEL: Record<InstallmentVerificationStatu
 
 export interface FinancePaymentInstallmentRecord {
   id: string
-  leadId: string | null
+  leadId: number | null
   hospitalName: string | null
   recipient: InstallmentRecipient
   amount: number
@@ -23,7 +23,7 @@ export interface FinancePaymentInstallmentRecord {
   rejectionRemarks: string | null
   createdAt: string
   lead: {
-    id: string
+    id: number
     leadRef: string | null
     patientName: string | null
     hospitalName: string | null

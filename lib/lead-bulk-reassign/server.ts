@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import type { NextRequest } from 'next/server'
 import type { Prisma } from '@/generated/prisma/client'
 type JsonValue = Prisma.JsonValue
@@ -190,7 +191,7 @@ export async function createBulkLeadReassignmentRun(
   input: CreateBulkLeadReassignmentRunInput,
   request: NextRequest
 ) {
-  const leadIds = normalizeOrderedIds(input.leadIds)
+  const leadIds = [...new Set(leadIdSchema.array().parse(input.leadIds))]
   const bdUserIds = normalizeOrderedIds(input.bdUserIds)
   const pauseSeconds = Number(input.pauseSeconds)
   const subStatus = input.subStatus?.trim() || undefined
@@ -485,7 +486,7 @@ export async function processBulkLeadReassignCycle(
     return fetchRunForResponse(runId)
   }
 
-  const leadIds = parseStoredIdArray(run.leadIds, 'leadIds')
+  const leadIds = leadIdSchema.array().parse(run.leadIds)
   const bdUserIds = parseStoredIdArray(run.bdUserIds, 'bdUserIds')
   const workflowMetadata = parseRunMetadata(run.metadata)
   const workflowFollowUpDate = workflowMetadata.followUpDate
@@ -671,7 +672,7 @@ export async function processBulkLeadReassignCycle(
       await logCrmActivity({
         action: 'CRM_LEAD_REASSIGNED',
         entityType: 'CRM_LEAD',
-        entityId: lead.id,
+        entityId: String(lead.id),
         entityLabel,
         actorUserId: run.actorUser.id,
         actorRole: run.actorUser.role,
@@ -704,7 +705,7 @@ export async function processBulkLeadReassignCycle(
         await logCrmActivity({
           action: 'CRM_LEAD_REMARKS_HIDDEN_AFTER_REASSIGN',
           entityType: 'CRM_LEAD',
-          entityId: lead.id,
+          entityId: String(lead.id),
           entityLabel,
           actorUserId: run.actorUser.id,
           actorRole: run.actorUser.role,
@@ -726,7 +727,7 @@ export async function processBulkLeadReassignCycle(
         await logCrmActivity({
           action: 'CRM_LEAD_FOLLOW_UP_HIDDEN_AFTER_REASSIGN',
           entityType: 'CRM_LEAD',
-          entityId: lead.id,
+          entityId: String(lead.id),
           entityLabel,
           actorUserId: run.actorUser.id,
           actorRole: run.actorUser.role,

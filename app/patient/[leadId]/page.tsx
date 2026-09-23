@@ -124,7 +124,7 @@ function toDateTimeLocalInputValue(value: string | Date | null | undefined) {
 }
 
 interface Lead {
-  id: string
+  id: number
   leadRef: string
   patientName: string
   age?: number
@@ -200,7 +200,7 @@ interface Lead {
   }> | null
   effectiveOpdAppointments?: Array<{
     id: string
-    leadId: string
+    leadId: number
     source: 'legacy' | 'record'
     phase: LeadOpdPhase
     slot: 1 | 2
@@ -357,7 +357,7 @@ function extractLatestAmountFromRemarks(
 
 interface KYPSubmission {
   id: string
-  leadId: string
+  leadId: number
   aadhar: string | null
   pan: string | null
   insuranceCard: string | null
@@ -376,7 +376,7 @@ interface KYPSubmission {
   status: 'PENDING' | 'KYP_DETAILS_ADDED' | 'PRE_AUTH_COMPLETE' | 'FOLLOW_UP_COMPLETE' | 'COMPLETED'
   submittedAt: string
   lead: {
-    id: string
+    id: number
     leadRef: string
     patientName: string
     phoneNumber: string
@@ -556,7 +556,7 @@ export default function PatientDetailsPage() {
   const params = useParams()
   const searchParams = useSearchParams()
   const queryClient = useQueryClient()
-  const leadId = params.leadId as string
+  const leadId = Number(params.leadId)
   const listReturnTo = resolveReturnTo(searchParams)
   const withReturnTo = useMemo(
     () => (href: string) => hrefWithReturnTo(href, listReturnTo),

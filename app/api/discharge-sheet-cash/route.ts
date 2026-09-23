@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
@@ -11,7 +12,7 @@ import {
 } from '@/lib/pl/hydrate-pl-record'
 
 const dischargeCashSchema = z.object({
-  leadId: z.string(),
+  leadId: leadIdSchema,
   dischargeDate: z.string(),
   finalAmount: z.number(),
   remarks: z.string().optional(),
@@ -179,7 +180,7 @@ export async function POST(request: NextRequest) {
         type: NotificationType.DISCHARGE_SHEET_CREATED,
         title: 'Discharge Sheet Created',
         message: `Discharge sheet created for ${lead.patientName}. Case moved to PL.`,
-        relatedId: validatedData.leadId,
+        relatedId: String(validatedData.leadId),
         link: `/patient/${validatedData.leadId}/discharge-cash`,
       },
     })

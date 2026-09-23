@@ -42,7 +42,7 @@ async function backfillHospitalDoctor() {
   console.log(`Backfilling lead.hospitalName / ipdDrName (${DRY_RUN ? 'DRY RUN' : 'LIVE'})`)
   console.log('='.repeat(60))
 
-  let cursor: string | undefined
+  let cursor: number | undefined
   let scanned = 0
   let hospitalUpdated = 0
   let doctorUpdated = 0

@@ -18,7 +18,7 @@ export type EffectiveOpdMasterOption = {
 
 export type EffectiveOpdEntry = {
   id: string
-  leadId: string
+  leadId: number
   source: 'legacy' | 'record'
   phase: LeadOpdPhase
   slot: 1 | 2
@@ -47,7 +47,7 @@ export type EffectiveOpdEntry = {
 }
 
 type LegacyLeadOpdSource = {
-  id: string
+  id: number
   caseStage?: CaseStage | null
   flowType?: FlowType | null
   status?: string | null
@@ -75,7 +75,7 @@ type LegacyLeadOpdSource = {
 
 type RealLeadOpdSource = {
   id: string
-  leadId: string
+  leadId: number
   phase: LeadOpdPhase
   slot: number
   status: LeadOpdStatus
@@ -100,7 +100,7 @@ type RealLeadOpdSource = {
   updatedAt?: Date | string | null
 }
 
-export function makeLegacyLeadOpdId(leadId: string) {
+export function makeLegacyLeadOpdId(leadId: number) {
   return `${LEGACY_LEAD_OPD_ID_PREFIX}${leadId}`
 }
 

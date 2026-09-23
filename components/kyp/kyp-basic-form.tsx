@@ -112,7 +112,7 @@ export function parseJsonFileList(raw: unknown): { name: string; url: string }[]
 }
 
 interface KYPBasicFormProps {
-  leadId: string
+  leadId: number
   initialPatientName?: string
   initialPhone?: string
   initialDob?: string

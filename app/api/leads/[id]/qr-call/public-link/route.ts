@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { createLeadQrPublicLink, loadLeadForQrAudit } from '@/lib/lead-qr'
@@ -35,7 +36,10 @@ export async function POST(
       return unauthorizedResponse()
     }
 
-    const { id } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     const lead = await loadLeadForQrAudit(id)
     if (!lead) {
       return errorResponse('Lead not found', 404)

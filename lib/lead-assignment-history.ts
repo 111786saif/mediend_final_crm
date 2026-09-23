@@ -1,5 +1,5 @@
 type LeadAssignmentHistoryLead = {
-  id: string
+  id: number
   leadRef?: string | null
   patientName?: string | null
   createdDate?: Date | string | null

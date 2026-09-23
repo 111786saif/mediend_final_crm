@@ -1,3 +1,5 @@
+import { optionalLeadId } from '@/lib/lead-id'
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { InvoiceRequestStatus, Prisma } from '@/generated/prisma/client'
@@ -9,7 +11,7 @@ import { invoiceRequestInclude, mapInvoiceRequest } from '@/lib/finance/invoice-
 import { logInvoiceRequestActivity } from '@/lib/finance/invoice-request/activity'
 
 const createSchema = z.object({
-  leadId: z.string().min(1),
+  leadId: leadIdSchema,
   requestRemarks: z.string().max(5000).optional(),
   invoiceNumber: z.string().max(100).optional(),
   invoiceAmount: z.number().min(0).optional(),
@@ -83,7 +85,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const statusParam = searchParams.get('status')
     const search = searchParams.get('search')?.trim()
-    const leadId = searchParams.get('leadId')?.trim()
+    const leadId = optionalLeadId(searchParams.get('leadId'))
     const hospitalName = searchParams.get('hospitalName')?.trim()
     const latestPerLead = searchParams.get('latestPerLead') === 'true'
 
@@ -120,7 +122,7 @@ export async function GET(request: NextRequest) {
     let mapped = requests.map(mapInvoiceRequest)
 
     if (latestPerLead) {
-      const byLead = new Map<string, (typeof mapped)[number]>()
+      const byLead = new Map<number | null, (typeof mapped)[number]>()
       for (const req of mapped) {
         if (!byLead.has(req.leadId)) byLead.set(req.leadId, req)
       }

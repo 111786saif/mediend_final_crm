@@ -63,7 +63,7 @@ export async function PATCH(
             ? `Your request "${existing.title}" has been approved.`
             : `Your request "${existing.title}" has been rejected.`,
         link: '/md/md-approvals',
-        relatedId: id,
+        relatedId: String(id),
       },
     })
 
@@ -81,7 +81,7 @@ export async function PATCH(
             title: 'MD Approval - Finance Acknowledgment',
             message: `${existing.requestedBy.name}: ${existing.title} (₹${existing.amount}) - Awaiting your acknowledgment`,
             link: '/finance/team-approvals',
-            relatedId: id,
+            relatedId: String(id),
           })),
         })
       }

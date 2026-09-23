@@ -36,8 +36,8 @@ export function useDoctorPayoffRequests(filters: DoctorPayoffFilters, enabled = 
 export interface CreateDoctorPayoffInput {
   doctorName: string
   hospitalName?: string | null
-  leadId?: string | null
-  leadIds?: string[]
+  leadId?: number | null
+  leadIds?: number[]
   requestAmount: number
   requestRemarks?: string | null
   attachments?: DoctorPayoffAttachment[]

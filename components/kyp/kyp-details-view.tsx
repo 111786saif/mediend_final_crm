@@ -13,7 +13,7 @@ import { getPhoneDisplay } from '@/lib/phone-utils'
 
 interface KYPSubmission {
   id: string
-  leadId: string
+  leadId: number
   aadhar: string | null
   pan: string | null
   insuranceCard: string | null
@@ -27,7 +27,7 @@ interface KYPSubmission {
   status: 'PENDING' | 'KYP_DETAILS_ADDED' | 'PRE_AUTH_COMPLETE' | 'FOLLOW_UP_COMPLETE' | 'COMPLETED'
   submittedAt: string
   lead: {
-    id: string
+    id: number
     leadRef: string
     patientName: string
     phoneNumber: string

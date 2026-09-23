@@ -18,8 +18,8 @@ const MAY_END = new Date('2026-06-01T00:00:00.000Z')
 const DRY_RUN = process.argv.includes('--dry-run')
 const PROFILE = process.argv.includes('--profile')
 
-function leadRef(id: string) {
-  return id.slice(0, 8)
+function leadRef(id: number) {
+  return String(id)
 }
 
 async function main() {

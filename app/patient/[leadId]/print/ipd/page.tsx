@@ -12,7 +12,7 @@ import { PrinterIcon, ArrowLeft } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface Lead {
-  id: string
+  id: number
   patientName: string
   leadRef: string
   age?: number | null
@@ -279,7 +279,7 @@ export default function IPDPrintPage() {
   const { user, isLoading: isAuthLoading } = useAuth()
   const router = useRouter()
   const params = useParams()
-  const leadId = params.leadId as string
+  const leadId = Number(params.leadId)
 
   // Any authenticated user may view this print summary (BD, TL, Insurance,
   // Insurance Head, EA, Admin, etc.) — no role gate.

@@ -20,7 +20,7 @@ import { toast } from 'sonner'
 const CONFIRMATION_PHRASE = 'yes reset this lead'
 
 interface ResetPatientDialogProps {
-  leadId: string
+  leadId: number
   open: boolean
   onOpenChange: (open: boolean) => void
   onSuccess?: () => void

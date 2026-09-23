@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 export type PatientLookupResult = {
   found: boolean
   type?: 'lead'
-  leadId?: string | null
+  leadId?: number | null
   leadRef?: string | null
   patientName?: string | null
   treatment?: string | null
@@ -90,7 +90,7 @@ export async function lookupPatientByPhone(rawPhone: string): Promise<PatientLoo
       const likePattern = `%${last10}%`
       const rawLeads = await prisma.$queryRaw<
         Array<{
-          id: string
+          id: number
           leadRef: string
           patientName: string
           phoneNumber: string

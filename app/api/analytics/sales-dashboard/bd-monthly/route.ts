@@ -51,7 +51,11 @@ export async function GET(request: NextRequest) {
         SELECT
           TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate"), 'YYYY-MM')  AS month,
           u.id                                                           AS "bdId",
-          u.name                                                         AS "bdName",
+          COALESCE(
+            NULLIF(MAX(NULLIF(BTRIM(l."bdeName"), '')), ''),
+            NULLIF(u.name, ''),
+            'Archived BD'
+          )                                                            AS "bdName",
           e.id                                                           AS "bdEmployeeId",
           me.id                                                          AS "managerId",
           mu.name                                                        AS "managerName",
@@ -79,6 +83,8 @@ export async function GET(request: NextRequest) {
         select: {
           id: true,
           bdId: true,
+          bdeName: true,
+          bd: { select: { name: true } },
           billAmount: true,
           netProfit: true,
           surgeryDate: true,
@@ -120,6 +126,20 @@ export async function GET(request: NextRequest) {
         managerName: row.managerName,
       })
     }
+    // An IPD can fall within the selected period even when its lead was received
+    // outside it. Keep that BD visible with a human-readable name instead of
+    // falling back to the database identifier.
+    for (const lead of completedLeads) {
+      if (bdNameMap.has(lead.bdId)) continue
+      const userName = lead.bd?.name?.trim() || ''
+      const fallbackName = lead.bdeName?.trim() || 'Archived BD'
+      bdNameMap.set(lead.bdId, {
+        bdName: /^c[a-z0-9]{18,}$/i.test(userName) ? fallbackName : (userName || fallbackName),
+        bdEmployeeId: null,
+        managerId: null,
+        managerName: null,
+      })
+    }
 
     const allMonths = [
       ...new Set([...leadRows.map((r) => r.month), ...ipdByMonth.map((r) => r.month)]),
@@ -148,7 +168,7 @@ export async function GET(request: NextRequest) {
       entry.leads[row.month] = (entry.leads[row.month] ?? 0) + Number(row.leadCount)
     }
     for (const row of ipdByMonth) {
-      const names = bdNameMap.get(row.bdId) ?? { bdName: row.bdId, bdEmployeeId: null, managerId: null, managerName: null }
+      const names = bdNameMap.get(row.bdId) ?? { bdName: 'Archived BD', bdEmployeeId: null, managerId: null, managerName: null }
       const entry = getOrCreate(row.bdId, names.bdName || row.bdId, names.bdEmployeeId, names.managerId, names.managerName)
       entry.ipd[row.month] = (entry.ipd[row.month] ?? 0) + Number(row.ipdCount)
     }

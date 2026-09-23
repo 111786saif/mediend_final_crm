@@ -43,7 +43,7 @@ type KpiEvent = {
   phoneNumber: string
   createdAt: string
   lead: {
-    id: string
+    id: number
     leadRef: string | null
     patientName: string | null
     campaignId: string | null

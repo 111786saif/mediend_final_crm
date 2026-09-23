@@ -30,7 +30,7 @@ type CallState = 'receiving_call' | 'on_call' | 'call_finished' | 'update'
 type PatientLookup = {
   found: boolean
   type?: 'lead' | 'incoming_lead'
-  leadId?: string | null
+  leadId?: number | null
   leadRef?: string | null
   patientName?: string | null
   treatment?: string | null

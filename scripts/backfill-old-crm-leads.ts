@@ -55,7 +55,7 @@ async function main() {
   console.log(`Cutoff date: ${beforeDate.toISOString().slice(0, 10)} (exclusive)`)
   console.log('='.repeat(72))
 
-  let cursor: string | undefined
+  let cursor: number | undefined
   let scanned = 0
   let matched = 0
   let updated = 0

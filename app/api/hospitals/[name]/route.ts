@@ -164,7 +164,7 @@ export async function GET(
         })
       : []
 
-    const paidByLead = new Map<string, { DOCTOR: number; HOSPITAL: number; MEDIEND: number }>()
+    const paidByLead = new Map<number | null, { DOCTOR: number; HOSPITAL: number; MEDIEND: number }>()
     for (const i of installments) {
       const e = paidByLead.get(i.leadId) ?? { DOCTOR: 0, HOSPITAL: 0, MEDIEND: 0 }
       e[i.recipient] += i.amount

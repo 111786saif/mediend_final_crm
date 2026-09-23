@@ -153,10 +153,10 @@ function getPayloadPhone(payload: IncomingLeadPayload) {
  * @param autoCreateBD - If true, automatically create missing BD users
  */
 export async function processIncomingLead(
-  incomingLeadId: string,
+  incomingLeadId: number,
   payload: IncomingLeadPayload | IncomingLeadPayload[],
   autoCreateBD: boolean = false
-): Promise<{ success: boolean; leadId?: string; error?: string }> {
+): Promise<{ success: boolean; leadId?: number; error?: string }> {
   try {
     // Handle array payload (take first item)
     const leadData = Array.isArray(payload) ? payload[0] : payload
@@ -339,14 +339,14 @@ export async function processAllPendingLeads(
 ): Promise<{
   processed: number
   failed: number
-  results: Array<{ id: string; success: boolean; error?: string }>
+  results: Array<{ id: number; success: boolean; error?: string }>
 }> {
   const pendingLeads = await prisma.incomingLead.findMany({
     where: { status: 'PENDING' },
     orderBy: { receivedAt: 'asc' },
   })
 
-  const results: Array<{ id: string; success: boolean; error?: string }> = []
+  const results: Array<{ id: number; success: boolean; error?: string }> = []
   let processed = 0
   let failed = 0
 

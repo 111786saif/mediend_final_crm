@@ -51,7 +51,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 
 interface LeadWithStage {
-  id: string
+  id: number
   leadRef: string
   patientName: string
   phoneNumber: string
@@ -162,7 +162,7 @@ export default function InsuranceCashCasesPage() {
 
   // Review Modal State
   const [showReviewModal, setShowReviewModal] = useState(false)
-  const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null)
+  const [selectedLeadId, setSelectedLeadId] = useState<number | null>(null)
   const [reviewAction, setReviewAction] = useState<'APPROVE' | 'HOLD' | null>(null)
   const [reviewReason, setReviewReason] = useState('')
   const [submittingReview, setSubmittingReview] = useState(false)
@@ -246,7 +246,7 @@ export default function InsuranceCashCasesPage() {
   })
 
   const mergedCashLeads = useMemo(() => {
-    const byId = new Map<string, LeadWithStage>()
+    const byId = new Map<number, LeadWithStage>()
     for (const lead of leads ?? []) byId.set(lead.id, lead)
     for (const lead of pendingReviewLeads ?? []) byId.set(lead.id, lead)
     return Array.from(byId.values())

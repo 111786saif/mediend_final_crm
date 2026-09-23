@@ -62,3 +62,7 @@ data/leads_export.csv
 
 /generated
 /docs/
+# Generated read-only client for legacy-workspace imports
+/generated/legacy-source/
+/.task-checks/
+/.lead-pagination-baseline.log

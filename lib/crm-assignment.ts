@@ -11,7 +11,7 @@ import { prisma } from '@/lib/prisma'
 import { getManagementChain } from '@/lib/hierarchy'
 
 type AssignmentInput = {
-  leadId?: string
+  leadId?: number
   city?: string | null
   category?: string | null
   departmentId?: string | null
@@ -44,7 +44,7 @@ type CandidateReason = {
 
 export type CrmAssignmentDryRunResult = {
   input: {
-    leadId: string | null
+    leadId: number | null
     city: string | null
     category: string | null
     departmentId: string | null
@@ -265,7 +265,7 @@ async function resolveDepartmentFromCategory(category: string | null | undefined
   return ranked[0]?.department ?? null
 }
 
-async function loadLeadInput(leadId: string) {
+async function loadLeadInput(leadId: number) {
   return prisma.lead.findUnique({
     where: { id: leadId },
     select: {

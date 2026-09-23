@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
         logCrmActivity({
           action: 'CRM_LEAD_REASSIGNED',
           entityType: 'CRM_LEAD',
-          entityId: lead.id,
+          entityId: String(lead.id),
           entityLabel: `${lead.leadRef} · ${lead.patientName}`,
           actorUserId: currentUser?.id ?? null,
           actorRole: currentUser?.role ?? null,

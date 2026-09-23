@@ -20,13 +20,23 @@ export type LeadRemarkEntryModel = runtime.Types.Result.DefaultSelection<Prisma.
 
 export type AggregateLeadRemarkEntry = {
   _count: LeadRemarkEntryCountAggregateOutputType | null
+  _avg: LeadRemarkEntryAvgAggregateOutputType | null
+  _sum: LeadRemarkEntrySumAggregateOutputType | null
   _min: LeadRemarkEntryMinAggregateOutputType | null
   _max: LeadRemarkEntryMaxAggregateOutputType | null
 }
 
+export type LeadRemarkEntryAvgAggregateOutputType = {
+  leadId: number | null
+}
+
+export type LeadRemarkEntrySumAggregateOutputType = {
+  leadId: number | null
+}
+
 export type LeadRemarkEntryMinAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   content: string | null
   createdById: string | null
   createdAt: Date | null
@@ -34,7 +44,7 @@ export type LeadRemarkEntryMinAggregateOutputType = {
 
 export type LeadRemarkEntryMaxAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   content: string | null
   createdById: string | null
   createdAt: Date | null
@@ -49,6 +59,14 @@ export type LeadRemarkEntryCountAggregateOutputType = {
   _all: number
 }
 
+
+export type LeadRemarkEntryAvgAggregateInputType = {
+  leadId?: true
+}
+
+export type LeadRemarkEntrySumAggregateInputType = {
+  leadId?: true
+}
 
 export type LeadRemarkEntryMinAggregateInputType = {
   id?: true
@@ -113,6 +131,18 @@ export type LeadRemarkEntryAggregateArgs<ExtArgs extends runtime.Types.Extension
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: LeadRemarkEntryAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: LeadRemarkEntrySumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: LeadRemarkEntryMinAggregateInputType
@@ -143,17 +173,21 @@ export type LeadRemarkEntryGroupByArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   _count?: LeadRemarkEntryCountAggregateInputType | true
+  _avg?: LeadRemarkEntryAvgAggregateInputType
+  _sum?: LeadRemarkEntrySumAggregateInputType
   _min?: LeadRemarkEntryMinAggregateInputType
   _max?: LeadRemarkEntryMaxAggregateInputType
 }
 
 export type LeadRemarkEntryGroupByOutputType = {
   id: string
-  leadId: string
+  leadId: number
   content: string
   createdById: string
   createdAt: Date
   _count: LeadRemarkEntryCountAggregateOutputType | null
+  _avg: LeadRemarkEntryAvgAggregateOutputType | null
+  _sum: LeadRemarkEntrySumAggregateOutputType | null
   _min: LeadRemarkEntryMinAggregateOutputType | null
   _max: LeadRemarkEntryMaxAggregateOutputType | null
 }
@@ -178,7 +212,7 @@ export type LeadRemarkEntryWhereInput = {
   OR?: Prisma.LeadRemarkEntryWhereInput[]
   NOT?: Prisma.LeadRemarkEntryWhereInput | Prisma.LeadRemarkEntryWhereInput[]
   id?: Prisma.StringFilter<"LeadRemarkEntry"> | string
-  leadId?: Prisma.StringFilter<"LeadRemarkEntry"> | string
+  leadId?: Prisma.IntFilter<"LeadRemarkEntry"> | number
   content?: Prisma.StringFilter<"LeadRemarkEntry"> | string
   createdById?: Prisma.StringFilter<"LeadRemarkEntry"> | string
   createdAt?: Prisma.DateTimeFilter<"LeadRemarkEntry"> | Date | string
@@ -201,7 +235,7 @@ export type LeadRemarkEntryWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.LeadRemarkEntryWhereInput | Prisma.LeadRemarkEntryWhereInput[]
   OR?: Prisma.LeadRemarkEntryWhereInput[]
   NOT?: Prisma.LeadRemarkEntryWhereInput | Prisma.LeadRemarkEntryWhereInput[]
-  leadId?: Prisma.StringFilter<"LeadRemarkEntry"> | string
+  leadId?: Prisma.IntFilter<"LeadRemarkEntry"> | number
   content?: Prisma.StringFilter<"LeadRemarkEntry"> | string
   createdById?: Prisma.StringFilter<"LeadRemarkEntry"> | string
   createdAt?: Prisma.DateTimeFilter<"LeadRemarkEntry"> | Date | string
@@ -216,8 +250,10 @@ export type LeadRemarkEntryOrderByWithAggregationInput = {
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.LeadRemarkEntryCountOrderByAggregateInput
+  _avg?: Prisma.LeadRemarkEntryAvgOrderByAggregateInput
   _max?: Prisma.LeadRemarkEntryMaxOrderByAggregateInput
   _min?: Prisma.LeadRemarkEntryMinOrderByAggregateInput
+  _sum?: Prisma.LeadRemarkEntrySumOrderByAggregateInput
 }
 
 export type LeadRemarkEntryScalarWhereWithAggregatesInput = {
@@ -225,7 +261,7 @@ export type LeadRemarkEntryScalarWhereWithAggregatesInput = {
   OR?: Prisma.LeadRemarkEntryScalarWhereWithAggregatesInput[]
   NOT?: Prisma.LeadRemarkEntryScalarWhereWithAggregatesInput | Prisma.LeadRemarkEntryScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"LeadRemarkEntry"> | string
-  leadId?: Prisma.StringWithAggregatesFilter<"LeadRemarkEntry"> | string
+  leadId?: Prisma.IntWithAggregatesFilter<"LeadRemarkEntry"> | number
   content?: Prisma.StringWithAggregatesFilter<"LeadRemarkEntry"> | string
   createdById?: Prisma.StringWithAggregatesFilter<"LeadRemarkEntry"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"LeadRemarkEntry"> | Date | string
@@ -241,7 +277,7 @@ export type LeadRemarkEntryCreateInput = {
 
 export type LeadRemarkEntryUncheckedCreateInput = {
   id?: string
-  leadId: string
+  leadId: number
   content: string
   createdById: string
   createdAt?: Date | string
@@ -257,7 +293,7 @@ export type LeadRemarkEntryUpdateInput = {
 
 export type LeadRemarkEntryUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -265,7 +301,7 @@ export type LeadRemarkEntryUncheckedUpdateInput = {
 
 export type LeadRemarkEntryCreateManyInput = {
   id?: string
-  leadId: string
+  leadId: number
   content: string
   createdById: string
   createdAt?: Date | string
@@ -279,7 +315,7 @@ export type LeadRemarkEntryUpdateManyMutationInput = {
 
 export type LeadRemarkEntryUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -303,6 +339,10 @@ export type LeadRemarkEntryCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
+export type LeadRemarkEntryAvgOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
+}
+
 export type LeadRemarkEntryMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
@@ -317,6 +357,10 @@ export type LeadRemarkEntryMinOrderByAggregateInput = {
   content?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type LeadRemarkEntrySumOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
 }
 
 export type LeadRemarkEntryCreateNestedManyWithoutCreatedByInput = {
@@ -412,7 +456,7 @@ export type LeadRemarkEntryCreateWithoutCreatedByInput = {
 
 export type LeadRemarkEntryUncheckedCreateWithoutCreatedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   content: string
   createdAt?: Date | string
 }
@@ -448,7 +492,7 @@ export type LeadRemarkEntryScalarWhereInput = {
   OR?: Prisma.LeadRemarkEntryScalarWhereInput[]
   NOT?: Prisma.LeadRemarkEntryScalarWhereInput | Prisma.LeadRemarkEntryScalarWhereInput[]
   id?: Prisma.StringFilter<"LeadRemarkEntry"> | string
-  leadId?: Prisma.StringFilter<"LeadRemarkEntry"> | string
+  leadId?: Prisma.IntFilter<"LeadRemarkEntry"> | number
   content?: Prisma.StringFilter<"LeadRemarkEntry"> | string
   createdById?: Prisma.StringFilter<"LeadRemarkEntry"> | string
   createdAt?: Prisma.DateTimeFilter<"LeadRemarkEntry"> | Date | string
@@ -496,7 +540,7 @@ export type LeadRemarkEntryUpdateManyWithWhereWithoutLeadInput = {
 
 export type LeadRemarkEntryCreateManyCreatedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   content: string
   createdAt?: Date | string
 }
@@ -510,14 +554,14 @@ export type LeadRemarkEntryUpdateWithoutCreatedByInput = {
 
 export type LeadRemarkEntryUncheckedUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -612,7 +656,7 @@ export type $LeadRemarkEntryPayload<ExtArgs extends runtime.Types.Extensions.Int
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    leadId: string
+    leadId: number
     content: string
     createdById: string
     createdAt: Date
@@ -1042,7 +1086,7 @@ export interface Prisma__LeadRemarkEntryClient<T, Null = never, ExtArgs extends 
  */
 export interface LeadRemarkEntryFieldRefs {
   readonly id: Prisma.FieldRef<"LeadRemarkEntry", 'String'>
-  readonly leadId: Prisma.FieldRef<"LeadRemarkEntry", 'String'>
+  readonly leadId: Prisma.FieldRef<"LeadRemarkEntry", 'Int'>
   readonly content: Prisma.FieldRef<"LeadRemarkEntry", 'String'>
   readonly createdById: Prisma.FieldRef<"LeadRemarkEntry", 'String'>
   readonly createdAt: Prisma.FieldRef<"LeadRemarkEntry", 'DateTime'>

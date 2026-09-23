@@ -15,7 +15,7 @@ import { useMemo } from 'react'
 import { CaseStage, FlowType, LeadOpdPhase, LeadOpdStatus } from '@/generated/prisma/enums'
 
 interface Lead {
-  id: string
+  id: number
   leadRef: string
   patientName: string
   caseStage: CaseStage
@@ -64,7 +64,7 @@ export default function OPDSchedulePage() {
   const searchParams = useSearchParams()
   const queryClient = useQueryClient()
   const { user } = useAuth()
-  const leadId = params.leadId as string
+  const leadId = Number(params.leadId)
   const returnToParam = searchParams.get('returnTo')
   const opdIdParam = searchParams.get('opdId')
   const phaseParam = searchParams.get('phase')

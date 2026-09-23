@@ -19,10 +19,10 @@ import { PreAuthStatus } from '@/generated/prisma/enums'
 
 interface KYPSubmission {
   id: string
-  leadId: string
+  leadId: number
   status: string
   lead: {
-    id: string
+    id: number
     leadRef: string
     patientName: string
   }
@@ -75,7 +75,7 @@ export default function PreAuthPage() {
   const params = useParams()
   const searchParams = useSearchParams()
   const queryClient = useQueryClient()
-  const leadId = params.leadId as string
+  const leadId = Number(params.leadId)
   const [showResetDialog, setShowResetDialog] = useState(false)
   const returnHref = resolveReturnTo(searchParams) ?? `/patient/${leadId}`
 

@@ -1,3 +1,4 @@
+import { parseLeadId } from '@/lib/lead-id'
 import { CaseStage, IpdStatus, LeadOpdPhase, LeadOpdStatus, PipelineStage, Prisma } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 import { isCaseStageRegression } from '@/lib/case-stage-transition'
@@ -656,7 +657,7 @@ function isIpdLead(lead: DoctorAppointmentLead) {
 
 type DoctorFlatAppointment = {
   id: string
-  leadId: string
+  leadId: number
   appointmentType: 'opd' | 'ipd'
   lead: DoctorAppointmentLead
   opdEntry: EffectiveOpdEntry | null
@@ -721,7 +722,7 @@ function mapLeadToDoctorAppointments(lead: DoctorAppointmentLead, doctorName: st
 
   if (shouldIncludeIpdForDoctor(lead, doctorName)) {
     appointments.push({
-      id: lead.id,
+      id: String(lead.id),
       leadId: lead.id,
       appointmentType: 'ipd',
       lead,
@@ -1102,7 +1103,7 @@ function paginate<T>(items: T[], page: number, limit: number) {
   }
 }
 
-async function findDoctorScopedLead(user: DoctorAppSessionUser, leadId: string) {
+async function findDoctorScopedLead(user: DoctorAppSessionUser, leadId: number) {
   const account = await getDoctorAccount(user)
 
   const lead = await prisma.lead.findFirst({
@@ -1123,7 +1124,7 @@ async function findDoctorScopedLead(user: DoctorAppSessionUser, leadId: string) 
 async function findDoctorScopedAppointment(user: DoctorAppSessionUser, appointmentId: string) {
   const account = await getDoctorAccount(user)
 
-  const loadLead = async (leadId: string) =>
+  const loadLead = async (leadId: number) =>
     prisma.lead.findFirst({
       where: {
         id: leadId,
@@ -1139,9 +1140,10 @@ async function findDoctorScopedAppointment(user: DoctorAppSessionUser, appointme
     if (!leadId) {
       throw new DoctorAppApiError('Appointment not found', 404)
     }
-    lead = await loadLead(leadId)
+    lead = await loadLead(parseLeadId(leadId))
   } else {
-    lead = await loadLead(appointmentId)
+    // Real OPD appointment IDs remain strings; only an IPD lead ID is numeric.
+    lead = /^[1-9]\d*$/.test(appointmentId) ? await loadLead(parseLeadId(appointmentId)) : null
 
     if (!lead) {
       const opdAppointment = await prisma.leadOpdAppointment.findUnique({
@@ -1162,7 +1164,7 @@ async function findDoctorScopedAppointment(user: DoctorAppSessionUser, appointme
   const appointments = mapLeadToDoctorAppointments(lead, account.doctor.name)
   const appointment =
     appointments.find((item) => item.id === appointmentId) ||
-    appointments.find((item) => item.appointmentType === 'ipd' && item.id === lead.id) ||
+    appointments.find((item) => item.appointmentType === 'ipd' && item.id === String(lead.id)) ||
     appointments[0] ||
     null
 
@@ -1356,7 +1358,7 @@ export async function cancelDoctorOpdAppointment(
 
 export async function updateDoctorIpdAppointment(
   user: DoctorAppSessionUser,
-  leadId: string,
+  leadId: number,
   input: UpdateDoctorIpdInput
 ) {
   const { lead } = await findDoctorScopedLead(user, leadId)
@@ -1635,12 +1637,12 @@ export async function updateDoctorIpdAppointment(
 
   })
 
-  return getDoctorAppointmentById(user, leadId)
+  return getDoctorAppointmentById(user, String(leadId))
 }
 
 export async function dischargeDoctorAppointment(
   user: DoctorAppSessionUser,
-  leadId: string,
+  leadId: number,
   input: DischargeDoctorAppointmentInput
 ) {
   const { lead } = await findDoctorScopedLead(user, leadId)
@@ -1700,12 +1702,12 @@ export async function dischargeDoctorAppointment(
     },
   })
 
-  return getDoctorAppointmentById(user, leadId)
+  return getDoctorAppointmentById(user, String(leadId))
 }
 
 export async function uploadDoctorAppointmentPrescription(
   user: DoctorAppSessionUser,
-  leadId: string,
+  leadId: number,
   file: File
 ) {
   const { lead } = await findDoctorScopedLead(user, leadId)

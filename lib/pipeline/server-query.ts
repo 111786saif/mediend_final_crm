@@ -10,7 +10,6 @@ import {
   type LeadAgeFilter,
   type PipelineStatusBucket,
 } from '@/lib/pipeline-lead-buckets'
-import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
 import { parsePhoneSearchQuery } from '@/lib/phone-search'
 import { normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import {
@@ -135,8 +134,10 @@ export interface PipelineQueryParams {
 }
 
 export function parsePipelineQueryParams(searchParams: URLSearchParams): PipelineQueryParams {
-  const page = Math.max(1, Number(searchParams.get('page') || 1) || 1)
-  const pageSize = Math.min(500, Math.max(10, Number(searchParams.get('pageSize') || 50) || 50))
+  const rawPage = Number(searchParams.get('page') || 1)
+  const rawPageSize = Number(searchParams.get('pageSize') || 20)
+  const page = Number.isFinite(rawPage) ? Math.min(10000000, Math.max(1, Math.floor(rawPage))) : 1
+  const pageSize = Number.isFinite(rawPageSize) ? Math.min(500, Math.max(10, Math.floor(rawPageSize))) : 20
   const statusRaw = searchParams.get('status') || 'all'
   const allowedStatus: PipelineStatusBucket[] = [
     'all',
@@ -333,25 +334,14 @@ export function statusBucketWhere(
       }
     case 'follow_up':
       return {
-        AND: [
-          {
-            OR: [
-              contains('follow'),
-              { status: '1' },
-              { status: '2' },
-              { status: '3' },
-              { status: '35' },
-            ],
-          },
-          {
-            NOT: {
-              OR: [
-                contains('out of station'),
-                { status: '16' },
-                { status: '42' },
-              ],
-            },
-          },
+        OR: [
+          { status: { equals: 'Follow-up 1', mode: 'insensitive' } },
+          { status: { equals: 'Follow-up 2', mode: 'insensitive' } },
+          { status: { equals: 'Follow-up 3', mode: 'insensitive' } },
+          { status: { equals: 'Followup', mode: 'insensitive' } },
+          // Preserve legacy labels/codes while the migration mapping is rolled out.
+          { status: { equals: 'Follow-up', mode: 'insensitive' } },
+          { status: { in: ['1', '2', '3', '35'] } },
         ],
       }
     case 'callback':
@@ -381,7 +371,12 @@ export function statusBucketWhere(
         ],
       }
     case 'ipd_done':
-      return canonicalSalesCompletedWhere({})
+      return {
+        OR: [
+          { status: { equals: 'IPD Done', mode: 'insensitive' } },
+          { status: '13' },
+        ],
+      }
     case 'ipd_sch':
       return {
         OR: [

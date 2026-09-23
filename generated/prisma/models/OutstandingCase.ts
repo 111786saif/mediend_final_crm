@@ -27,6 +27,7 @@ export type AggregateOutstandingCase = {
 }
 
 export type OutstandingCaseAvgAggregateOutputType = {
+  leadId: number | null
   srNo: number | null
   billAmount: number | null
   settlementAmount: number | null
@@ -42,6 +43,7 @@ export type OutstandingCaseAvgAggregateOutputType = {
 }
 
 export type OutstandingCaseSumAggregateOutputType = {
+  leadId: number | null
   srNo: number | null
   billAmount: number | null
   settlementAmount: number | null
@@ -58,7 +60,7 @@ export type OutstandingCaseSumAggregateOutputType = {
 
 export type OutstandingCaseMinAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   srNo: number | null
   month: Date | null
   dos: Date | null
@@ -89,7 +91,7 @@ export type OutstandingCaseMinAggregateOutputType = {
 
 export type OutstandingCaseMaxAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   srNo: number | null
   month: Date | null
   dos: Date | null
@@ -152,6 +154,7 @@ export type OutstandingCaseCountAggregateOutputType = {
 
 
 export type OutstandingCaseAvgAggregateInputType = {
+  leadId?: true
   srNo?: true
   billAmount?: true
   settlementAmount?: true
@@ -167,6 +170,7 @@ export type OutstandingCaseAvgAggregateInputType = {
 }
 
 export type OutstandingCaseSumAggregateInputType = {
+  leadId?: true
   srNo?: true
   billAmount?: true
   settlementAmount?: true
@@ -363,7 +367,7 @@ export type OutstandingCaseGroupByArgs<ExtArgs extends runtime.Types.Extensions.
 
 export type OutstandingCaseGroupByOutputType = {
   id: string
-  leadId: string
+  leadId: number
   srNo: number | null
   month: Date | null
   dos: Date | null
@@ -417,7 +421,7 @@ export type OutstandingCaseWhereInput = {
   OR?: Prisma.OutstandingCaseWhereInput[]
   NOT?: Prisma.OutstandingCaseWhereInput | Prisma.OutstandingCaseWhereInput[]
   id?: Prisma.StringFilter<"OutstandingCase"> | string
-  leadId?: Prisma.StringFilter<"OutstandingCase"> | string
+  leadId?: Prisma.IntFilter<"OutstandingCase"> | number
   srNo?: Prisma.IntNullableFilter<"OutstandingCase"> | number | null
   month?: Prisma.DateTimeNullableFilter<"OutstandingCase"> | Date | string | null
   dos?: Prisma.DateTimeNullableFilter<"OutstandingCase"> | Date | string | null
@@ -483,7 +487,7 @@ export type OutstandingCaseOrderByWithRelationInput = {
 
 export type OutstandingCaseWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  leadId?: string
+  leadId?: number
   AND?: Prisma.OutstandingCaseWhereInput | Prisma.OutstandingCaseWhereInput[]
   OR?: Prisma.OutstandingCaseWhereInput[]
   NOT?: Prisma.OutstandingCaseWhereInput | Prisma.OutstandingCaseWhereInput[]
@@ -558,7 +562,7 @@ export type OutstandingCaseScalarWhereWithAggregatesInput = {
   OR?: Prisma.OutstandingCaseScalarWhereWithAggregatesInput[]
   NOT?: Prisma.OutstandingCaseScalarWhereWithAggregatesInput | Prisma.OutstandingCaseScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"OutstandingCase"> | string
-  leadId?: Prisma.StringWithAggregatesFilter<"OutstandingCase"> | string
+  leadId?: Prisma.IntWithAggregatesFilter<"OutstandingCase"> | number
   srNo?: Prisma.IntNullableWithAggregatesFilter<"OutstandingCase"> | number | null
   month?: Prisma.DateTimeNullableWithAggregatesFilter<"OutstandingCase"> | Date | string | null
   dos?: Prisma.DateTimeNullableWithAggregatesFilter<"OutstandingCase"> | Date | string | null
@@ -620,7 +624,7 @@ export type OutstandingCaseCreateInput = {
 
 export type OutstandingCaseUncheckedCreateInput = {
   id?: string
-  leadId: string
+  leadId: number
   srNo?: number | null
   month?: Date | string | null
   dos?: Date | string | null
@@ -682,7 +686,7 @@ export type OutstandingCaseUpdateInput = {
 
 export type OutstandingCaseUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   srNo?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dos?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -713,7 +717,7 @@ export type OutstandingCaseUncheckedUpdateInput = {
 
 export type OutstandingCaseCreateManyInput = {
   id?: string
-  leadId: string
+  leadId: number
   srNo?: number | null
   month?: Date | string | null
   dos?: Date | string | null
@@ -773,7 +777,7 @@ export type OutstandingCaseUpdateManyMutationInput = {
 
 export type OutstandingCaseUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   srNo?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dos?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -849,6 +853,7 @@ export type OutstandingCaseCountOrderByAggregateInput = {
 }
 
 export type OutstandingCaseAvgOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   srNo?: Prisma.SortOrder
   billAmount?: Prisma.SortOrder
   settlementAmount?: Prisma.SortOrder
@@ -926,6 +931,7 @@ export type OutstandingCaseMinOrderByAggregateInput = {
 }
 
 export type OutstandingCaseSumOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   srNo?: Prisma.SortOrder
   billAmount?: Prisma.SortOrder
   settlementAmount?: Prisma.SortOrder
@@ -1046,7 +1052,7 @@ export type OutstandingCaseCreateWithoutHandledByInput = {
 
 export type OutstandingCaseUncheckedCreateWithoutHandledByInput = {
   id?: string
-  leadId: string
+  leadId: number
   srNo?: number | null
   month?: Date | string | null
   dos?: Date | string | null
@@ -1105,7 +1111,7 @@ export type OutstandingCaseScalarWhereInput = {
   OR?: Prisma.OutstandingCaseScalarWhereInput[]
   NOT?: Prisma.OutstandingCaseScalarWhereInput | Prisma.OutstandingCaseScalarWhereInput[]
   id?: Prisma.StringFilter<"OutstandingCase"> | string
-  leadId?: Prisma.StringFilter<"OutstandingCase"> | string
+  leadId?: Prisma.IntFilter<"OutstandingCase"> | number
   srNo?: Prisma.IntNullableFilter<"OutstandingCase"> | number | null
   month?: Prisma.DateTimeNullableFilter<"OutstandingCase"> | Date | string | null
   dos?: Prisma.DateTimeNullableFilter<"OutstandingCase"> | Date | string | null
@@ -1272,7 +1278,7 @@ export type OutstandingCaseUncheckedUpdateWithoutLeadInput = {
 
 export type OutstandingCaseCreateManyHandledByInput = {
   id?: string
-  leadId: string
+  leadId: number
   srNo?: number | null
   month?: Date | string | null
   dos?: Date | string | null
@@ -1332,7 +1338,7 @@ export type OutstandingCaseUpdateWithoutHandledByInput = {
 
 export type OutstandingCaseUncheckedUpdateWithoutHandledByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   srNo?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dos?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1362,7 +1368,7 @@ export type OutstandingCaseUncheckedUpdateWithoutHandledByInput = {
 
 export type OutstandingCaseUncheckedUpdateManyWithoutHandledByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   srNo?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dos?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1544,7 +1550,7 @@ export type $OutstandingCasePayload<ExtArgs extends runtime.Types.Extensions.Int
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    leadId: string
+    leadId: number
     srNo: number | null
     month: Date | null
     dos: Date | null
@@ -1997,7 +2003,7 @@ export interface Prisma__OutstandingCaseClient<T, Null = never, ExtArgs extends 
  */
 export interface OutstandingCaseFieldRefs {
   readonly id: Prisma.FieldRef<"OutstandingCase", 'String'>
-  readonly leadId: Prisma.FieldRef<"OutstandingCase", 'String'>
+  readonly leadId: Prisma.FieldRef<"OutstandingCase", 'Int'>
   readonly srNo: Prisma.FieldRef<"OutstandingCase", 'Int'>
   readonly month: Prisma.FieldRef<"OutstandingCase", 'DateTime'>
   readonly dos: Prisma.FieldRef<"OutstandingCase", 'DateTime'>

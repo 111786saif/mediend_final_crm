@@ -20,13 +20,23 @@ export type AdmissionRecordModel = runtime.Types.Result.DefaultSelection<Prisma.
 
 export type AggregateAdmissionRecord = {
   _count: AdmissionRecordCountAggregateOutputType | null
+  _avg: AdmissionRecordAvgAggregateOutputType | null
+  _sum: AdmissionRecordSumAggregateOutputType | null
   _min: AdmissionRecordMinAggregateOutputType | null
   _max: AdmissionRecordMaxAggregateOutputType | null
 }
 
+export type AdmissionRecordAvgAggregateOutputType = {
+  leadId: number | null
+}
+
+export type AdmissionRecordSumAggregateOutputType = {
+  leadId: number | null
+}
+
 export type AdmissionRecordMinAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   admissionDate: Date | null
   admissionTime: string | null
   admittingHospital: string | null
@@ -62,7 +72,7 @@ export type AdmissionRecordMinAggregateOutputType = {
 
 export type AdmissionRecordMaxAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   admissionDate: Date | null
   admissionTime: string | null
   admittingHospital: string | null
@@ -133,6 +143,14 @@ export type AdmissionRecordCountAggregateOutputType = {
   _all: number
 }
 
+
+export type AdmissionRecordAvgAggregateInputType = {
+  leadId?: true
+}
+
+export type AdmissionRecordSumAggregateInputType = {
+  leadId?: true
+}
 
 export type AdmissionRecordMinAggregateInputType = {
   id?: true
@@ -281,6 +299,18 @@ export type AdmissionRecordAggregateArgs<ExtArgs extends runtime.Types.Extension
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: AdmissionRecordAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: AdmissionRecordSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: AdmissionRecordMinAggregateInputType
@@ -311,13 +341,15 @@ export type AdmissionRecordGroupByArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   _count?: AdmissionRecordCountAggregateInputType | true
+  _avg?: AdmissionRecordAvgAggregateInputType
+  _sum?: AdmissionRecordSumAggregateInputType
   _min?: AdmissionRecordMinAggregateInputType
   _max?: AdmissionRecordMaxAggregateInputType
 }
 
 export type AdmissionRecordGroupByOutputType = {
   id: string
-  leadId: string
+  leadId: number
   admissionDate: Date
   admissionTime: string
   admittingHospital: string
@@ -350,6 +382,8 @@ export type AdmissionRecordGroupByOutputType = {
   initiatedById: string
   initiatedAt: Date
   _count: AdmissionRecordCountAggregateOutputType | null
+  _avg: AdmissionRecordAvgAggregateOutputType | null
+  _sum: AdmissionRecordSumAggregateOutputType | null
   _min: AdmissionRecordMinAggregateOutputType | null
   _max: AdmissionRecordMaxAggregateOutputType | null
 }
@@ -374,7 +408,7 @@ export type AdmissionRecordWhereInput = {
   OR?: Prisma.AdmissionRecordWhereInput[]
   NOT?: Prisma.AdmissionRecordWhereInput | Prisma.AdmissionRecordWhereInput[]
   id?: Prisma.StringFilter<"AdmissionRecord"> | string
-  leadId?: Prisma.StringFilter<"AdmissionRecord"> | string
+  leadId?: Prisma.IntFilter<"AdmissionRecord"> | number
   admissionDate?: Prisma.DateTimeFilter<"AdmissionRecord"> | Date | string
   admissionTime?: Prisma.StringFilter<"AdmissionRecord"> | string
   admittingHospital?: Prisma.StringFilter<"AdmissionRecord"> | string
@@ -454,7 +488,7 @@ export type AdmissionRecordOrderByWithRelationInput = {
 
 export type AdmissionRecordWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  leadId?: string
+  leadId?: number
   AND?: Prisma.AdmissionRecordWhereInput | Prisma.AdmissionRecordWhereInput[]
   OR?: Prisma.AdmissionRecordWhereInput[]
   NOT?: Prisma.AdmissionRecordWhereInput | Prisma.AdmissionRecordWhereInput[]
@@ -530,8 +564,10 @@ export type AdmissionRecordOrderByWithAggregationInput = {
   initiatedById?: Prisma.SortOrder
   initiatedAt?: Prisma.SortOrder
   _count?: Prisma.AdmissionRecordCountOrderByAggregateInput
+  _avg?: Prisma.AdmissionRecordAvgOrderByAggregateInput
   _max?: Prisma.AdmissionRecordMaxOrderByAggregateInput
   _min?: Prisma.AdmissionRecordMinOrderByAggregateInput
+  _sum?: Prisma.AdmissionRecordSumOrderByAggregateInput
 }
 
 export type AdmissionRecordScalarWhereWithAggregatesInput = {
@@ -539,7 +575,7 @@ export type AdmissionRecordScalarWhereWithAggregatesInput = {
   OR?: Prisma.AdmissionRecordScalarWhereWithAggregatesInput[]
   NOT?: Prisma.AdmissionRecordScalarWhereWithAggregatesInput | Prisma.AdmissionRecordScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"AdmissionRecord"> | string
-  leadId?: Prisma.StringWithAggregatesFilter<"AdmissionRecord"> | string
+  leadId?: Prisma.IntWithAggregatesFilter<"AdmissionRecord"> | number
   admissionDate?: Prisma.DateTimeWithAggregatesFilter<"AdmissionRecord"> | Date | string
   admissionTime?: Prisma.StringWithAggregatesFilter<"AdmissionRecord"> | string
   admittingHospital?: Prisma.StringWithAggregatesFilter<"AdmissionRecord"> | string
@@ -613,7 +649,7 @@ export type AdmissionRecordCreateInput = {
 
 export type AdmissionRecordUncheckedCreateInput = {
   id?: string
-  leadId: string
+  leadId: number
   admissionDate: Date | string
   admissionTime: string
   admittingHospital: string
@@ -689,7 +725,7 @@ export type AdmissionRecordUpdateInput = {
 
 export type AdmissionRecordUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   admissionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   admissionTime?: Prisma.StringFieldUpdateOperationsInput | string
   admittingHospital?: Prisma.StringFieldUpdateOperationsInput | string
@@ -727,7 +763,7 @@ export type AdmissionRecordUncheckedUpdateInput = {
 
 export type AdmissionRecordCreateManyInput = {
   id?: string
-  leadId: string
+  leadId: number
   admissionDate: Date | string
   admissionTime: string
   admittingHospital: string
@@ -797,7 +833,7 @@ export type AdmissionRecordUpdateManyMutationInput = {
 
 export type AdmissionRecordUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   admissionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   admissionTime?: Prisma.StringFieldUpdateOperationsInput | string
   admittingHospital?: Prisma.StringFieldUpdateOperationsInput | string
@@ -882,6 +918,10 @@ export type AdmissionRecordCountOrderByAggregateInput = {
   initiatedAt?: Prisma.SortOrder
 }
 
+export type AdmissionRecordAvgOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
+}
+
 export type AdmissionRecordMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
@@ -952,6 +992,10 @@ export type AdmissionRecordMinOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   initiatedById?: Prisma.SortOrder
   initiatedAt?: Prisma.SortOrder
+}
+
+export type AdmissionRecordSumOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
 }
 
 export type AdmissionRecordScalarRelationFilter = {
@@ -1104,7 +1148,7 @@ export type AdmissionRecordCreateWithoutInitiatedByInput = {
 
 export type AdmissionRecordUncheckedCreateWithoutInitiatedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   admissionDate: Date | string
   admissionTime: string
   admittingHospital: string
@@ -1170,7 +1214,7 @@ export type AdmissionRecordScalarWhereInput = {
   OR?: Prisma.AdmissionRecordScalarWhereInput[]
   NOT?: Prisma.AdmissionRecordScalarWhereInput | Prisma.AdmissionRecordScalarWhereInput[]
   id?: Prisma.StringFilter<"AdmissionRecord"> | string
-  leadId?: Prisma.StringFilter<"AdmissionRecord"> | string
+  leadId?: Prisma.IntFilter<"AdmissionRecord"> | number
   admissionDate?: Prisma.DateTimeFilter<"AdmissionRecord"> | Date | string
   admissionTime?: Prisma.StringFilter<"AdmissionRecord"> | string
   admittingHospital?: Prisma.StringFilter<"AdmissionRecord"> | string
@@ -1407,7 +1451,7 @@ export type AdmissionRecordCreateWithoutImplantUsagesInput = {
 
 export type AdmissionRecordUncheckedCreateWithoutImplantUsagesInput = {
   id?: string
-  leadId: string
+  leadId: number
   admissionDate: Date | string
   admissionTime: string
   admittingHospital: string
@@ -1497,7 +1541,7 @@ export type AdmissionRecordUpdateWithoutImplantUsagesInput = {
 
 export type AdmissionRecordUncheckedUpdateWithoutImplantUsagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   admissionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   admissionTime?: Prisma.StringFieldUpdateOperationsInput | string
   admittingHospital?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1571,7 +1615,7 @@ export type AdmissionRecordCreateWithoutPrescriptionImagesInput = {
 
 export type AdmissionRecordUncheckedCreateWithoutPrescriptionImagesInput = {
   id?: string
-  leadId: string
+  leadId: number
   admissionDate: Date | string
   admissionTime: string
   admittingHospital: string
@@ -1661,7 +1705,7 @@ export type AdmissionRecordUpdateWithoutPrescriptionImagesInput = {
 
 export type AdmissionRecordUncheckedUpdateWithoutPrescriptionImagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   admissionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   admissionTime?: Prisma.StringFieldUpdateOperationsInput | string
   admittingHospital?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1698,7 +1742,7 @@ export type AdmissionRecordUncheckedUpdateWithoutPrescriptionImagesInput = {
 
 export type AdmissionRecordCreateManyInitiatedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   admissionDate: Date | string
   admissionTime: string
   admittingHospital: string
@@ -1770,7 +1814,7 @@ export type AdmissionRecordUpdateWithoutInitiatedByInput = {
 
 export type AdmissionRecordUncheckedUpdateWithoutInitiatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   admissionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   admissionTime?: Prisma.StringFieldUpdateOperationsInput | string
   admittingHospital?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1807,7 +1851,7 @@ export type AdmissionRecordUncheckedUpdateWithoutInitiatedByInput = {
 
 export type AdmissionRecordUncheckedUpdateManyWithoutInitiatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   admissionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   admissionTime?: Prisma.StringFieldUpdateOperationsInput | string
   admittingHospital?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2060,7 +2104,7 @@ export type $AdmissionRecordPayload<ExtArgs extends runtime.Types.Extensions.Int
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    leadId: string
+    leadId: number
     admissionDate: Date
     admissionTime: string
     admittingHospital: string
@@ -2520,7 +2564,7 @@ export interface Prisma__AdmissionRecordClient<T, Null = never, ExtArgs extends 
  */
 export interface AdmissionRecordFieldRefs {
   readonly id: Prisma.FieldRef<"AdmissionRecord", 'String'>
-  readonly leadId: Prisma.FieldRef<"AdmissionRecord", 'String'>
+  readonly leadId: Prisma.FieldRef<"AdmissionRecord", 'Int'>
   readonly admissionDate: Prisma.FieldRef<"AdmissionRecord", 'DateTime'>
   readonly admissionTime: Prisma.FieldRef<"AdmissionRecord", 'String'>
   readonly admittingHospital: Prisma.FieldRef<"AdmissionRecord", 'String'>

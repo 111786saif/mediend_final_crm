@@ -12,7 +12,7 @@ import { Loader2, File, X } from 'lucide-react'
 import { useFileUpload } from '@/hooks/use-file-upload'
 
 interface InsuranceInitiateFormProps {
-  leadId: string
+  leadId: number
   onSuccess?: () => void
   initialData?: any
   embedded?: boolean

@@ -1,3 +1,4 @@
+import { optionalLeadId } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
@@ -16,7 +17,7 @@ export async function GET(request: NextRequest) {
     if (!(await hasEffectivePlOrFinanceRead(user))) return errorResponse('Forbidden', 403)
 
     const url = new URL(request.url)
-    const leadId = url.searchParams.get('leadId')
+    const leadId = optionalLeadId(url.searchParams.get('leadId'))
     if (!leadId) return errorResponse('leadId is required', 400)
 
     const rows = await prisma.paymentInstallment.findMany({
@@ -38,7 +39,7 @@ export async function POST(request: NextRequest) {
     if (!(await hasEffectivePlOrFinanceWrite(user))) return errorResponse('Forbidden', 403)
 
     const body = await request.json()
-    const leadId = body.leadId ? String(body.leadId).trim() : ''
+    const leadId = optionalLeadId(body.leadId)
     const hospitalName = body.hospitalName ? String(body.hospitalName).trim() : ''
 
     // Case-linked OR hospital-level (no case) MediEND receipt

@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { PreAuthStatus, Prisma } from '@/generated/prisma/client'
@@ -33,7 +34,10 @@ export async function GET(
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
 
-    const { id: leadId } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const leadId = parsedLeadId.data
     const lead = await prisma.lead.findUnique({
       where: { id: leadId },
       select: {
@@ -91,7 +95,10 @@ export async function POST(
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
 
-    const { id: leadId } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const leadId = parsedLeadId.data
     let body: unknown
     try {
       body = await request.json()
@@ -449,7 +456,7 @@ export async function POST(
 
 async function clearDischargeDownstream(
   tx: Prisma.TransactionClient,
-  leadId: string,
+  leadId: number,
 ) {
   await tx.outstandingCase.deleteMany({ where: { leadId } })
   await tx.complianceCall.deleteMany({ where: { leadId } })
@@ -469,7 +476,7 @@ async function clearDischargeDownstream(
 }
 
 async function notifyResetRecipients(args: {
-  leadId: string
+  leadId: number
   bdId: string | null
   previousBdId?: string | null
   patientName: string
@@ -506,7 +513,7 @@ async function notifyResetRecipients(args: {
       title: 'Case workflow reset',
       message: `${args.actorName} reset ${args.patientName} (${args.leadRef}) to step "${args.targetStep.label}". Reason: ${args.reason}.${reassignNote}`,
       link,
-      relatedId: args.leadId,
+      relatedId: String(args.leadId),
     })),
   })
 }

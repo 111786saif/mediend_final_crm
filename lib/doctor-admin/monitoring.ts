@@ -586,7 +586,7 @@ export async function getDoctorAdminIpdMonitoring() {
   }
 }
 
-export async function markDoctorAdminIpdAdmitted(leadId: string, actorUserId: string) {
+export async function markDoctorAdminIpdAdmitted(leadId: number, actorUserId: string) {
   const lead = await prisma.lead.findUnique({
     where: { id: leadId },
     select: {
@@ -652,7 +652,7 @@ export async function markDoctorAdminIpdAdmitted(leadId: string, actorUserId: st
 }
 
 export async function transferDoctorAdminIpdCase(
-  leadId: string,
+  leadId: number,
   actorUserId: string,
   input: {
     hospitalName: string
@@ -705,7 +705,7 @@ export async function transferDoctorAdminIpdCase(
 }
 
 export async function cancelDoctorAdminIpdCase(
-  leadId: string,
+  leadId: number,
   actorUserId: string,
   input: {
     reason?: string | null

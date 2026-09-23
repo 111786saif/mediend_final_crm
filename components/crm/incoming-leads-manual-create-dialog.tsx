@@ -46,8 +46,8 @@ type ManualCreateResult = {
   skippedCount: number
   results: Array<{
     rowNumber: number
-    incomingLeadId?: string
-    leadId?: string
+    incomingLeadId?: number
+    leadId?: number
     leadRef?: string
     assignedBdName?: string | null
     status: 'processed' | 'already_processed' | 'duplicate' | 'failed' | 'skipped'

@@ -53,7 +53,7 @@ interface HospitalSuggestionItem {
 
 interface KYPSubmission {
   id: string
-  leadId: string
+  leadId: number
   // KYP fields for auto-fills
   disease: string | null
   aadhar: string | null
@@ -68,7 +68,7 @@ interface KYPSubmission {
   insuranceType: string | null
   // Lead data
   lead: {
-    id: string
+    id: number
     leadRef: string
     patientName: string
     age?: number | null
@@ -109,7 +109,7 @@ export default function RaisePreAuthPage() {
   const router = useRouter()
   const params = useParams()
   const queryClient = useQueryClient()
-  const leadId = params.leadId as string
+  const leadId = Number(params.leadId)
   const [isSuggestDialogOpen, setIsSuggestDialogOpen] = useState(false)
   const [suggestedHospitalName, setSuggestedHospitalName] = useState('')
   const [suggestedTpa, setSuggestedTpa] = useState('')

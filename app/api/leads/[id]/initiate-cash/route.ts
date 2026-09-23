@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
@@ -105,7 +106,7 @@ function appendLeadRemark(previous: string | null | undefined, remark: string) {
   return `${previous ? `${previous.trim()}\n` : ''}${remark}`
 }
 
-async function notifyInsuranceHeads(leadId: string, patientName: string, leadRef: string) {
+async function notifyInsuranceHeads(leadId: number, patientName: string, leadRef: string) {
   try {
     const insuranceHeads = await prisma.user.findMany({
       where: { role: 'INSURANCE_HEAD' },
@@ -119,7 +120,7 @@ async function notifyInsuranceHeads(leadId: string, patientName: string, leadRef
           type: NotificationType.INITIATED,
           title: 'Cash Case Submitted',
           message: `New Cash IPD form submitted for ${patientName} (${leadRef})`,
-          relatedId: leadId,
+          relatedId: String(leadId),
           link: '/insurance/cash-cases',
         },
       })
@@ -141,7 +142,10 @@ export async function POST(
       return errorResponse('Forbidden', 403)
     }
 
-    const { id } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     const body = await request.json()
     const validatedData = initiateCashSchema.parse(body)
 
@@ -322,7 +326,10 @@ export async function PATCH(
       return errorResponse('Forbidden', 403)
     }
 
-    const { id } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     const body = await request.json()
     const validatedData = initiateCashSchema.parse(body)
 

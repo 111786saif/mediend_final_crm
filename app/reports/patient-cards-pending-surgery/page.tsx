@@ -29,7 +29,7 @@ import { cn } from '@/lib/utils'
 import { PatientQuickViewDrawer } from '@/components/reports/patient-quick-view-drawer'
 
 type Row = {
-  id: string
+  id: number
   leadRef: string
   patientName: string
   caseStage: string
@@ -179,7 +179,7 @@ export default function PatientCardsPendingSurgeryPage() {
   const [groupByTeam, setGroupByTeam] = useState(true)
   const [dayBucket, setDayBucket] = useState<DayBucket>('all')
   const [stageFilter, setStageFilter] = useState<string>('all')
-  const [quickViewLeadId, setQuickViewLeadId] = useState<string | null>(null)
+  const [quickViewLeadId, setQuickViewLeadId] = useState<number | null>(null)
   const [quickViewTeamLead, setQuickViewTeamLead] = useState<string | null>(null)
   const [quickViewDays, setQuickViewDays] = useState<number | null>(null)
   const [quickViewUploadDate, setQuickViewUploadDate] = useState<string | null>(null)

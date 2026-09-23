@@ -27,10 +27,12 @@ export type AggregateDoctorPayoffRequest = {
 }
 
 export type DoctorPayoffRequestAvgAggregateOutputType = {
+  leadId: number | null
   requestAmount: number | null
 }
 
 export type DoctorPayoffRequestSumAggregateOutputType = {
+  leadId: number | null
   requestAmount: number | null
 }
 
@@ -38,7 +40,7 @@ export type DoctorPayoffRequestMinAggregateOutputType = {
   id: string | null
   doctorName: string | null
   hospitalName: string | null
-  leadId: string | null
+  leadId: number | null
   requestAmount: number | null
   requestRemarks: string | null
   financeRemarks: string | null
@@ -57,7 +59,7 @@ export type DoctorPayoffRequestMaxAggregateOutputType = {
   id: string | null
   doctorName: string | null
   hospitalName: string | null
-  leadId: string | null
+  leadId: number | null
   requestAmount: number | null
   requestRemarks: string | null
   financeRemarks: string | null
@@ -96,10 +98,12 @@ export type DoctorPayoffRequestCountAggregateOutputType = {
 
 
 export type DoctorPayoffRequestAvgAggregateInputType = {
+  leadId?: true
   requestAmount?: true
 }
 
 export type DoctorPayoffRequestSumAggregateInputType = {
+  leadId?: true
   requestAmount?: true
 }
 
@@ -253,7 +257,7 @@ export type DoctorPayoffRequestGroupByOutputType = {
   id: string
   doctorName: string
   hospitalName: string | null
-  leadId: string | null
+  leadId: number | null
   leadIds: runtime.JsonValue | null
   requestAmount: number
   requestRemarks: string | null
@@ -297,7 +301,7 @@ export type DoctorPayoffRequestWhereInput = {
   id?: Prisma.StringFilter<"DoctorPayoffRequest"> | string
   doctorName?: Prisma.StringFilter<"DoctorPayoffRequest"> | string
   hospitalName?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
-  leadId?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
+  leadId?: Prisma.IntNullableFilter<"DoctorPayoffRequest"> | number | null
   leadIds?: Prisma.JsonNullableFilter<"DoctorPayoffRequest">
   requestAmount?: Prisma.FloatFilter<"DoctorPayoffRequest"> | number
   requestRemarks?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
@@ -350,7 +354,7 @@ export type DoctorPayoffRequestWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.DoctorPayoffRequestWhereInput | Prisma.DoctorPayoffRequestWhereInput[]
   doctorName?: Prisma.StringFilter<"DoctorPayoffRequest"> | string
   hospitalName?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
-  leadId?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
+  leadId?: Prisma.IntNullableFilter<"DoctorPayoffRequest"> | number | null
   leadIds?: Prisma.JsonNullableFilter<"DoctorPayoffRequest">
   requestAmount?: Prisma.FloatFilter<"DoctorPayoffRequest"> | number
   requestRemarks?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
@@ -404,7 +408,7 @@ export type DoctorPayoffRequestScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"DoctorPayoffRequest"> | string
   doctorName?: Prisma.StringWithAggregatesFilter<"DoctorPayoffRequest"> | string
   hospitalName?: Prisma.StringNullableWithAggregatesFilter<"DoctorPayoffRequest"> | string | null
-  leadId?: Prisma.StringNullableWithAggregatesFilter<"DoctorPayoffRequest"> | string | null
+  leadId?: Prisma.IntNullableWithAggregatesFilter<"DoctorPayoffRequest"> | number | null
   leadIds?: Prisma.JsonNullableWithAggregatesFilter<"DoctorPayoffRequest">
   requestAmount?: Prisma.FloatWithAggregatesFilter<"DoctorPayoffRequest"> | number
   requestRemarks?: Prisma.StringNullableWithAggregatesFilter<"DoctorPayoffRequest"> | string | null
@@ -447,7 +451,7 @@ export type DoctorPayoffRequestUncheckedCreateInput = {
   id?: string
   doctorName: string
   hospitalName?: string | null
-  leadId?: string | null
+  leadId?: number | null
   leadIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   requestAmount: number
   requestRemarks?: string | null
@@ -491,7 +495,7 @@ export type DoctorPayoffRequestUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   doctorName?: Prisma.StringFieldUpdateOperationsInput | string
   hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   leadIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   requestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   requestRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -513,7 +517,7 @@ export type DoctorPayoffRequestCreateManyInput = {
   id?: string
   doctorName: string
   hospitalName?: string | null
-  leadId?: string | null
+  leadId?: number | null
   leadIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   requestAmount: number
   requestRemarks?: string | null
@@ -552,7 +556,7 @@ export type DoctorPayoffRequestUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   doctorName?: Prisma.StringFieldUpdateOperationsInput | string
   hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   leadIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   requestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   requestRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -601,6 +605,7 @@ export type DoctorPayoffRequestCountOrderByAggregateInput = {
 }
 
 export type DoctorPayoffRequestAvgOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   requestAmount?: Prisma.SortOrder
 }
 
@@ -643,6 +648,7 @@ export type DoctorPayoffRequestMinOrderByAggregateInput = {
 }
 
 export type DoctorPayoffRequestSumOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   requestAmount?: Prisma.SortOrder
 }
 
@@ -820,7 +826,7 @@ export type DoctorPayoffRequestUncheckedCreateWithoutRequestedByInput = {
   id?: string
   doctorName: string
   hospitalName?: string | null
-  leadId?: string | null
+  leadId?: number | null
   leadIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   requestAmount: number
   requestRemarks?: string | null
@@ -872,7 +878,7 @@ export type DoctorPayoffRequestUncheckedCreateWithoutReviewedByInput = {
   id?: string
   doctorName: string
   hospitalName?: string | null
-  leadId?: string | null
+  leadId?: number | null
   leadIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   requestAmount: number
   requestRemarks?: string | null
@@ -922,7 +928,7 @@ export type DoctorPayoffRequestScalarWhereInput = {
   id?: Prisma.StringFilter<"DoctorPayoffRequest"> | string
   doctorName?: Prisma.StringFilter<"DoctorPayoffRequest"> | string
   hospitalName?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
-  leadId?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
+  leadId?: Prisma.IntNullableFilter<"DoctorPayoffRequest"> | number | null
   leadIds?: Prisma.JsonNullableFilter<"DoctorPayoffRequest">
   requestAmount?: Prisma.FloatFilter<"DoctorPayoffRequest"> | number
   requestRemarks?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
@@ -1048,7 +1054,7 @@ export type DoctorPayoffRequestUncheckedCreateWithoutActivityLogsInput = {
   id?: string
   doctorName: string
   hospitalName?: string | null
-  leadId?: string | null
+  leadId?: number | null
   leadIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   requestAmount: number
   requestRemarks?: string | null
@@ -1106,7 +1112,7 @@ export type DoctorPayoffRequestUncheckedUpdateWithoutActivityLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   doctorName?: Prisma.StringFieldUpdateOperationsInput | string
   hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   leadIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   requestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   requestRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1127,7 +1133,7 @@ export type DoctorPayoffRequestCreateManyRequestedByInput = {
   id?: string
   doctorName: string
   hospitalName?: string | null
-  leadId?: string | null
+  leadId?: number | null
   leadIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   requestAmount: number
   requestRemarks?: string | null
@@ -1147,7 +1153,7 @@ export type DoctorPayoffRequestCreateManyReviewedByInput = {
   id?: string
   doctorName: string
   hospitalName?: string | null
-  leadId?: string | null
+  leadId?: number | null
   leadIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   requestAmount: number
   requestRemarks?: string | null
@@ -1188,7 +1194,7 @@ export type DoctorPayoffRequestUncheckedUpdateWithoutRequestedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   doctorName?: Prisma.StringFieldUpdateOperationsInput | string
   hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   leadIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   requestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   requestRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1209,7 +1215,7 @@ export type DoctorPayoffRequestUncheckedUpdateManyWithoutRequestedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   doctorName?: Prisma.StringFieldUpdateOperationsInput | string
   hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   leadIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   requestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   requestRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1250,7 +1256,7 @@ export type DoctorPayoffRequestUncheckedUpdateWithoutReviewedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   doctorName?: Prisma.StringFieldUpdateOperationsInput | string
   hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   leadIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   requestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   requestRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1271,7 +1277,7 @@ export type DoctorPayoffRequestUncheckedUpdateManyWithoutReviewedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   doctorName?: Prisma.StringFieldUpdateOperationsInput | string
   hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   leadIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   requestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   requestRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1526,7 +1532,7 @@ export type $DoctorPayoffRequestPayload<ExtArgs extends runtime.Types.Extensions
     id: string
     doctorName: string
     hospitalName: string | null
-    leadId: string | null
+    leadId: number | null
     /**
      * string[] of related lead IDs (batch requests)
      */
@@ -1980,7 +1986,7 @@ export interface DoctorPayoffRequestFieldRefs {
   readonly id: Prisma.FieldRef<"DoctorPayoffRequest", 'String'>
   readonly doctorName: Prisma.FieldRef<"DoctorPayoffRequest", 'String'>
   readonly hospitalName: Prisma.FieldRef<"DoctorPayoffRequest", 'String'>
-  readonly leadId: Prisma.FieldRef<"DoctorPayoffRequest", 'String'>
+  readonly leadId: Prisma.FieldRef<"DoctorPayoffRequest", 'Int'>
   readonly leadIds: Prisma.FieldRef<"DoctorPayoffRequest", 'Json'>
   readonly requestAmount: Prisma.FieldRef<"DoctorPayoffRequest", 'Float'>
   readonly requestRemarks: Prisma.FieldRef<"DoctorPayoffRequest", 'String'>

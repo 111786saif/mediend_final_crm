@@ -23,7 +23,7 @@ import { parsePhoneSearchQuery } from '@/lib/phone-search'
 import { canViewPhoneNumber } from '@/lib/case-permissions'
 import { CaseStage } from '@/generated/prisma/enums'
 import { useQuery } from '@tanstack/react-query'
-import { format } from 'date-fns'
+import { endOfMonth, endOfWeek, endOfYear, format, startOfMonth, startOfWeek, startOfYear, subDays, subMonths, subWeeks, subYears } from 'date-fns'
 import { Search } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
@@ -43,6 +43,8 @@ type Bucket =
   | 'CANCELLED'
 
 type BucketFilter = Bucket | 'all'
+type DatePreset = 'all' | 'today' | 'yesterday' | 'thisWeek' | 'lastWeek' | 'currentMonth' | 'lastMonth' | 'last3Months' | 'last6Months' | 'currentYear' | 'lastYear' | 'custom'
+type TrackerDateField = 'ipdCreated' | 'lastModified' | 'surgery' | 'leadCreated'
 
 interface DecoratedLead {
   lead: Lead
@@ -72,13 +74,27 @@ function uniqueSorted(values: (string | null | undefined)[]): string[] {
   return Array.from(set).sort((a, b) => a.localeCompare(b))
 }
 
-// Used only by the month filter — buckets a lead into a "YYYY-MM" key so we
-// can group by the surgery/activity month independently of server filtering.
-function monthKeyOf(value: unknown): string | null {
-  if (!value) return null
-  const d = new Date(value as string)
-  if (Number.isNaN(d.getTime())) return null
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+function dateInputValue(value: Date) {
+  return format(value, 'yyyy-MM-dd')
+}
+
+function resolveDateRange(preset: DatePreset, customStart: string, customEnd: string) {
+  const now = new Date()
+  const range = (start: Date, end: Date) => ({ startDate: dateInputValue(start), endDate: dateInputValue(end) })
+  switch (preset) {
+    case 'today': return range(now, now)
+    case 'yesterday': { const d = subDays(now, 1); return range(d, d) }
+    case 'thisWeek': return range(startOfWeek(now, { weekStartsOn: 1 }), endOfWeek(now, { weekStartsOn: 1 }))
+    case 'lastWeek': { const d = subWeeks(now, 1); return range(startOfWeek(d, { weekStartsOn: 1 }), endOfWeek(d, { weekStartsOn: 1 })) }
+    case 'currentMonth': return range(startOfMonth(now), endOfMonth(now))
+    case 'lastMonth': { const d = subMonths(now, 1); return range(startOfMonth(d), endOfMonth(d)) }
+    case 'last3Months': return range(startOfMonth(subMonths(now, 2)), now)
+    case 'last6Months': return range(startOfMonth(subMonths(now, 5)), now)
+    case 'currentYear': return range(startOfYear(now), endOfYear(now))
+    case 'lastYear': { const d = subYears(now, 1); return range(startOfYear(d), endOfYear(d)) }
+    case 'custom': return { startDate: customStart || undefined, endDate: customEnd || undefined }
+    default: return {}
+  }
 }
 
 /* ─── Stage / bucket definitions ─────────────────────────────────────────── */
@@ -140,11 +156,6 @@ export default function CaseTrackerPage() {
   const { hasAccess, permissions } = usePermissions()
   const canViewPhone = canViewPhoneNumber(user)
 
-  const currentMonthKey = useMemo(() => {
-    const now = new Date()
-    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
-  }, [])
-
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebouncedValue(search, 250)
   const phoneParsed = useMemo(() => parsePhoneSearchQuery(debouncedSearch), [debouncedSearch])
@@ -152,13 +163,20 @@ export default function CaseTrackerPage() {
   // Row selected for the side-drawer overview (replaces navigating straight to /patient/[id])
   const [overviewRow, setOverviewRow] = useState<DecoratedLead | null>(null)
 
-  const [monthFilter, setMonthFilter] = useState(currentMonthKey)
+  const [datePreset, setDatePreset] = useState<DatePreset>('all')
+  const [dateField, setDateField] = useState<TrackerDateField>('ipdCreated')
+  const [customStartDate, setCustomStartDate] = useState('')
+  const [customEndDate, setCustomEndDate] = useState('')
   const [stageFilter, setStageFilter] = useState<BucketFilter>('all')
   const [cmFilter, setCmFilter] = useState('all')
   const [teamFilter, setTeamFilter] = useState('all')
   const [bdFilter, setBdFilter] = useState<string[]>([])
   const [bdFilterSearch, setBdFilterSearch] = useState('')
   const [bdFilterOpen, setBdFilterOpen] = useState(false)
+  const [mopFilter, setMopFilter] = useState('all')
+  const [sourceFilter, setSourceFilter] = useState('all')
+  const [cityFilter, setCityFilter] = useState('all')
+  const [departmentFilter, setDepartmentFilter] = useState('all')
 
   // Multi-select header column states consolidated in a single object
   const [columnFilters, setColumnFilters] = useState<Record<string, string[]>>({})
@@ -168,11 +186,30 @@ export default function CaseTrackerPage() {
   }
 
   const activeFilterCount = useMemo(() => {
-    return Object.values(columnFilters).filter((v) => v && v.length > 0).length
-  }, [columnFilters])
+    return Object.values(columnFilters).filter((v) => v && v.length > 0).length +
+      Number(datePreset !== 'all') +
+      Number(mopFilter !== 'all') +
+      Number(sourceFilter !== 'all') +
+      Number(cityFilter !== 'all') +
+      Number(departmentFilter !== 'all') +
+      Number(teamFilter !== 'all') +
+      Number(cmFilter !== 'all') +
+      Number(bdFilter.length > 0)
+  }, [columnFilters, datePreset, mopFilter, sourceFilter, cityFilter, departmentFilter, teamFilter, cmFilter, bdFilter])
 
   const clearAllFilters = () => {
     setColumnFilters({})
+    setDatePreset('all')
+    setCustomStartDate('')
+    setCustomEndDate('')
+    setMopFilter('all')
+    setSourceFilter('all')
+    setCityFilter('all')
+    setDepartmentFilter('all')
+    setTeamFilter('all')
+    setCmFilter('all')
+    setBdFilter([])
+    setStageFilter('all')
   }
 
   /* ── Filter config from backend (for column filter options) ── */
@@ -207,6 +244,8 @@ export default function CaseTrackerPage() {
     const filters: any = {
       view: 'pipeline' as const,
       ...(phoneParsed ? { phoneSearch: phoneParsed.last10 } : {}),
+      ...resolveDateRange(datePreset, customStartDate, customEndDate),
+      ...(datePreset !== 'all' ? { dateField } : {}),
     }
 
     if (user?.role === 'PL_HEAD') {
@@ -252,7 +291,7 @@ export default function CaseTrackerPage() {
     }
 
     return filters
-  }, [user, phoneParsed, columnFilters])
+  }, [user, phoneParsed, columnFilters, datePreset, customStartDate, customEndDate, dateField])
 
   const { leads, isLoading } = useLeads(leadFilters)
 
@@ -333,71 +372,32 @@ export default function CaseTrackerPage() {
     return out
   }, [leads])
 
-  // Month filter — client-side bucketing by surgery/activity month, layered
-  // in front of the server-side column filters below.
-  const monthFiltered = useMemo<DecoratedLead[]>(() => {
-    if (monthFilter === 'all') return decorated
-
-    return decorated.filter((d) => {
-      if (d.bucket === 'IPD_POSSIBLE') {
-        const pd = d.lead.ipdPotentialDate
-        if (pd) {
-          const t = new Date(pd as string).getTime()
-          if (Number.isFinite(t) && t > 0) {
-            return monthKeyOf(new Date(t).toISOString()) === monthFilter
-          }
-        }
-      }
-      const isIpdDone = d.bucket === 'IPD_DONE'
-      if (isIpdDone) {
-        const adSurg = (d.lead as { admissionRecord?: { surgeryDate?: string | Date } }).admissionRecord?.surgeryDate
-        const sd = d.lead.surgeryDate ?? adSurg
-        if (sd) {
-          const t = new Date(sd as string).getTime()
-          if (Number.isFinite(t) && t > 0) {
-            return monthKeyOf(new Date(t).toISOString()) === monthFilter
-          }
-        }
-        return false
-      }
-      const surgeryTs = (() => {
-        const v = d.lead.surgeryDate
-        if (!v) return Infinity
-        const t = new Date(v as string).getTime()
-        return Number.isFinite(t) ? t : Infinity
-      })()
-      const activityTs = getLatestActivityTime(d.lead)
-      const effectiveTs = Math.min(surgeryTs, activityTs) || activityTs
-      return monthKeyOf(new Date(effectiveTs).toISOString()) === monthFilter
-    })
-  }, [decorated, monthFilter])
-
-  const monthOptions = useMemo(() => {
-    const months: string[] = []
-    const now = new Date()
-    let y = now.getFullYear()
-    let m = now.getMonth()
-    while (y > 2022 || (y === 2022 && m >= 0)) {
-      months.push(`${y}-${String(m + 1).padStart(2, '0')}`)
-      m--
-      if (m < 0) { m = 11; y-- }
-    }
-    return months
-  }, [])
+  // Date filtering is applied by the API using the selected tracker date field.
+  // Keep this list as the single client-side base for cards, views, and the table.
+  const dateFiltered = decorated
 
   // Mapping dynamic distinct unique lists safely from active (month-filtered) data
-  const leadRefOptions = useMemo(() => uniqueSorted(monthFiltered.map((d) => String(d.lead.leadRef ?? ''))), [monthFiltered])
-  const patientOptions = useMemo(() => uniqueSorted(monthFiltered.map((d) => d.lead.patientName)), [monthFiltered])
-  const ageSexOptions = useMemo(() => uniqueSorted(monthFiltered.map((d) => formatLeadAgeSex(d.lead))), [monthFiltered])
-  const stageOptions = useMemo(() => uniqueSorted(monthFiltered.map((d) => BUCKET_BADGE[d.bucket]?.label ?? '')), [monthFiltered])
+  const leadRefOptions = useMemo(() => uniqueSorted(dateFiltered.map((d) => String(d.lead.leadRef ?? ''))), [dateFiltered])
+  const patientOptions = useMemo(() => uniqueSorted(dateFiltered.map((d) => d.lead.patientName)), [dateFiltered])
+  const ageSexOptions = useMemo(() => uniqueSorted(dateFiltered.map((d) => formatLeadAgeSex(d.lead))), [dateFiltered])
+  const stageOptions = useMemo(() => uniqueSorted(dateFiltered.map((d) => BUCKET_BADGE[d.bucket]?.label ?? '')), [dateFiltered])
+  const sourceOptions = useMemo(() => uniqueSorted(dateFiltered.map((d) => d.lead.source)), [dateFiltered])
+  const mopOptions = useMemo(() => uniqueSorted(dateFiltered.map((d) => d.lead.modeOfPayment)), [dateFiltered])
+  const cityOptions = useMemo(() => uniqueSorted(dateFiltered.map((d) => d.lead.city || d.lead.circle)), [dateFiltered])
+  const departmentOptions = useMemo(() => uniqueSorted(dateFiltered.map((d) => {
+    const employee = d.lead.bd?.employee
+    return employee?.department?.name || employee?.team?.department?.name
+  })), [dateFiltered])
 
+  const canViewAllCaseDimensions = user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN'
   const showBdFilter =
+    canViewAllCaseDimensions ||
     user?.role === 'TEAM_LEAD' ||
     user?.role === 'ASSISTANT_CATEGORY_MANAGER' ||
     user?.role === 'CATEGORY_MANAGER' ||
     user?.role === 'SALES_HEAD' ||
     user?.role === 'EXECUTIVE_ASSISTANT'
-  const showTeamFilter = user?.role === 'SALES_HEAD' || user?.role === 'EXECUTIVE_ASSISTANT' || user?.role === 'CATEGORY_MANAGER'
+  const showTeamFilter = canViewAllCaseDimensions || user?.role === 'SALES_HEAD' || user?.role === 'EXECUTIVE_ASSISTANT' || user?.role === 'CATEGORY_MANAGER'
   const showCmFilter = user?.role === 'SALES_HEAD' || user?.role === 'EXECUTIVE_ASSISTANT'
 
   interface TeamData {
@@ -461,7 +461,7 @@ export default function CaseTrackerPage() {
       if (team) {
         // Prefer recursive scope when available (includes nested BDs)
         if (team.scopeUserIds?.length) {
-          for (const { lead } of monthFiltered) {
+          for (const { lead } of dateFiltered) {
             const bd = lead.bd as { id?: string; name?: string } | undefined
             if (bd?.id && bd.name && team.scopeUserIds.includes(bd.id)) {
               map.set(bd.id, bd.name)
@@ -474,7 +474,7 @@ export default function CaseTrackerPage() {
       } else if (cmFilter !== 'all') {
         const cm = categoryManagers.find((c) => c.id === cmFilter)
         if (cm?.scopeUserIds?.length) {
-          for (const { lead } of monthFiltered) {
+          for (const { lead } of dateFiltered) {
             const bd = lead.bd as { id?: string; name?: string } | undefined
             if (bd?.id && bd.name && cm.scopeUserIds.includes(bd.id)) {
               map.set(bd.id, bd.name)
@@ -494,7 +494,7 @@ export default function CaseTrackerPage() {
         }
       }
     } else {
-      for (const { lead } of monthFiltered) {
+      for (const { lead } of dateFiltered) {
         const bd = lead.bd as { id?: string; name?: string } | undefined
         if (bd?.id && bd.name) map.set(bd.id, bd.name)
       }
@@ -502,7 +502,7 @@ export default function CaseTrackerPage() {
     return Array.from(map.entries())
       .sort((a, b) => a[1].localeCompare(b[1]))
       .map(([value, label]) => ({ value, label }))
-  }, [monthFiltered, showBdFilter, showTeamFilter, showCmFilter, teamsInCmScope, teamFilter, cmFilter, categoryManagers])
+  }, [dateFiltered, showBdFilter, showTeamFilter, showCmFilter, teamsInCmScope, teamFilter, cmFilter, categoryManagers])
 
   const counts = useMemo(() => {
     const base: Record<Bucket, number> = {
@@ -516,12 +516,12 @@ export default function CaseTrackerPage() {
       POSTPONED: 0,
       CANCELLED: 0,
     }
-    for (const { bucket } of monthFiltered) base[bucket]++
+    for (const { bucket } of dateFiltered) base[bucket]++
     return base
-  }, [monthFiltered])
+  }, [dateFiltered])
 
   const filteredRows = useMemo(() => {
-    let rows = monthFiltered
+    let rows = dateFiltered
     if (stageFilter !== 'all') rows = rows.filter((d) => d.bucket === stageFilter)
     if (cmFilter !== 'all') {
       const cm = categoryManagers.find((c) => c.id === cmFilter)
@@ -541,6 +541,15 @@ export default function CaseTrackerPage() {
       const bdSet = new Set(bdFilter)
       rows = rows.filter((d) => bdSet.has((d.lead.bd as { id?: string } | undefined)?.id ?? ''))
     }
+    if (departmentFilter !== 'all') {
+      rows = rows.filter((d) => {
+        const employee = d.lead.bd?.employee
+        return (employee?.department?.name || employee?.team?.department?.name) === departmentFilter
+      })
+    }
+    if (mopFilter !== 'all') rows = rows.filter((d) => d.lead.modeOfPayment === mopFilter)
+    if (sourceFilter !== 'all') rows = rows.filter((d) => d.lead.source === sourceFilter)
+    if (cityFilter !== 'all') rows = rows.filter((d) => (d.lead.city || d.lead.circle) === cityFilter)
     if (columnFilters.stage?.length) rows = rows.filter((d) => columnFilters.stage.includes(BUCKET_BADGE[d.bucket]?.label ?? ''))
     if (debouncedSearch.trim() && !phoneParsed) {
       const q = debouncedSearch.toLowerCase()
@@ -564,7 +573,7 @@ export default function CaseTrackerPage() {
       })
     }
     return [...rows].sort((a, b) => getLatestActivityTime(b.lead) - getLatestActivityTime(a.lead))
-  }, [monthFiltered, stageFilter, cmFilter, teamFilter, bdFilter, columnFilters, debouncedSearch, phoneParsed, canViewPhone, teamsData, teamsForActor, categoryManagers])
+  }, [dateFiltered, stageFilter, cmFilter, teamFilter, bdFilter, departmentFilter, mopFilter, sourceFilter, cityFilter, columnFilters, debouncedSearch, phoneParsed, canViewPhone, teamsData, teamsForActor, categoryManagers])
 
   const columns = useMemo<ColumnDef<DecoratedLead>[]>(() => {
     const cols: ColumnDef<DecoratedLead>[] = [
@@ -607,6 +616,31 @@ export default function CaseTrackerPage() {
         cell: ({ row }) => {
           const sd = row.original.lead.surgeryDate ?? (row.original.lead as { admissionRecord?: { surgeryDate?: string } }).admissionRecord?.surgeryDate
           return <div className="whitespace-nowrap text-sm text-muted-foreground">{sd ? new Date(sd as string).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}</div>
+        }
+      },
+      {
+        id: 'preAuthRaised',
+        header: () => <span className="whitespace-nowrap min-w-[170px]">Pre-auth raised</span>,
+        cell: ({ row }) => {
+          const preAuth = row.original.lead.kypSubmission?.preAuthData
+          const raisedAt = preAuth?.preAuthRaisedAt
+          const raisedBy = preAuth?.preAuthRaisedBy?.name
+          return (
+            <div className="min-w-[170px] text-sm">
+              <div className="whitespace-nowrap text-muted-foreground">
+                {raisedAt ? format(new Date(raisedAt), 'dd MMM yyyy, hh:mm a') : '—'}
+              </div>
+              {raisedBy && <div className="truncate text-xs text-muted-foreground">By {raisedBy}</div>}
+            </div>
+          )
+        }
+      },
+      {
+        id: 'lastModified',
+        header: () => <span className="whitespace-nowrap min-w-[170px]">Last modified</span>,
+        cell: ({ row }) => {
+          const timestamp = getLatestActivityTime(row.original.lead)
+          return <div className="whitespace-nowrap text-sm text-muted-foreground">{timestamp ? format(new Date(timestamp), 'dd MMM yyyy, hh:mm a') : '—'}</div>
         }
       },
       {
@@ -766,7 +800,7 @@ export default function CaseTrackerPage() {
                 className={`rounded-xl border bg-card p-3.5 text-left shadow-sm transition-all hover:shadow-md ${stageFilter === 'all' ? 'ring-2 ring-primary' : ''}`}
               >
                 <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">All active</p>
-                <p className="mt-1 text-2xl font-bold tabular-nums">{monthFiltered.length}</p>
+                <p className="mt-1 text-2xl font-bold tabular-nums">{dateFiltered.length}</p>
               </button>
             )}
             {BUCKET_DEFS.filter(({ key }) => user?.role !== 'PL_HEAD' || key === 'IPD_DONE').map(({ key, label, tone }) => (
@@ -802,28 +836,65 @@ export default function CaseTrackerPage() {
                     )}
                   </CardTitle>
                   <CardDescription>
-                    {filteredRows.length} shown · {monthFiltered.length} active
+                    {filteredRows.length} shown · {dateFiltered.length} active
                   </CardDescription>
                 </div>
 
-                {/* Month / Team / BD dropdowns */}
+                {/* Date, organization and IPD case filters */}
                 <div className="flex flex-wrap items-center gap-2">
-                  <Select value={monthFilter} onValueChange={setMonthFilter}>
-                    <SelectTrigger className="w-[140px]">
-                      <SelectValue placeholder="Month" />
+                  <Select value={dateField} onValueChange={(value) => setDateField(value as TrackerDateField)}>
+                    <SelectTrigger className="w-[155px]">
+                      <SelectValue placeholder="Date field" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">All months</SelectItem>
-                      {monthOptions.map((m) => {
-                        const [y, mo] = m.split('-')
-                        return (
-                          <SelectItem key={m} value={m}>
-                            {format(new Date(Number(y), Number(mo) - 1, 1), 'MMM yyyy')}
-                          </SelectItem>
-                        )
-                      })}
+                      <SelectItem value="ipdCreated">IPD created date</SelectItem>
+                      <SelectItem value="lastModified">Last modified date</SelectItem>
+                      <SelectItem value="surgery">Surgery date</SelectItem>
+                      <SelectItem value="leadCreated">Lead created date</SelectItem>
                     </SelectContent>
                   </Select>
+
+                  <Select value={datePreset} onValueChange={(value) => setDatePreset(value as DatePreset)}>
+                    <SelectTrigger className="w-[155px]">
+                      <SelectValue placeholder="Date range" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All dates</SelectItem>
+                      <SelectItem value="today">Today</SelectItem>
+                      <SelectItem value="yesterday">Yesterday</SelectItem>
+                      <SelectItem value="thisWeek">This week</SelectItem>
+                      <SelectItem value="lastWeek">Last week</SelectItem>
+                      <SelectItem value="currentMonth">Current month</SelectItem>
+                      <SelectItem value="lastMonth">Last month</SelectItem>
+                      <SelectItem value="last3Months">Last 3 months</SelectItem>
+                      <SelectItem value="last6Months">Last 6 months</SelectItem>
+                      <SelectItem value="currentYear">Current year</SelectItem>
+                      <SelectItem value="lastYear">Last year</SelectItem>
+                      <SelectItem value="custom">Custom range</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  {datePreset === 'custom' && <>
+                    <Input aria-label="Start date" type="date" value={customStartDate} onChange={(e) => setCustomStartDate(e.target.value)} className="h-9 w-[145px]" />
+                    <Input aria-label="End date" type="date" value={customEndDate} onChange={(e) => setCustomEndDate(e.target.value)} className="h-9 w-[145px]" />
+                  </>}
+
+                  <Select value={mopFilter} onValueChange={setMopFilter}>
+                    <SelectTrigger className="w-[130px]"><SelectValue placeholder="MOP" /></SelectTrigger>
+                    <SelectContent><SelectItem value="all">All MOP</SelectItem>{mopOptions.map((option) => <SelectItem key={option} value={option}>{option}</SelectItem>)}</SelectContent>
+                  </Select>
+                  <Select value={sourceFilter} onValueChange={setSourceFilter}>
+                    <SelectTrigger className="w-[135px]"><SelectValue placeholder="Source" /></SelectTrigger>
+                    <SelectContent><SelectItem value="all">All sources</SelectItem>{sourceOptions.map((option) => <SelectItem key={option} value={option}>{option}</SelectItem>)}</SelectContent>
+                  </Select>
+                  <Select value={cityFilter} onValueChange={setCityFilter}>
+                    <SelectTrigger className="w-[125px]"><SelectValue placeholder="City" /></SelectTrigger>
+                    <SelectContent><SelectItem value="all">All cities</SelectItem>{cityOptions.map((option) => <SelectItem key={option} value={option}>{option}</SelectItem>)}</SelectContent>
+                  </Select>
+                  {(canViewAllCaseDimensions || showTeamFilter) && <Select value={departmentFilter} onValueChange={setDepartmentFilter}>
+                    <SelectTrigger className="w-[145px]"><SelectValue placeholder="Department" /></SelectTrigger>
+                    <SelectContent><SelectItem value="all">All departments</SelectItem>{departmentOptions.map((option) => <SelectItem key={option} value={option}>{option}</SelectItem>)}</SelectContent>
+                  </Select>}
 
                   {showCmFilter && (
                     <select

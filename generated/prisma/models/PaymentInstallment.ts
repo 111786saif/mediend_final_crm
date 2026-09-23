@@ -27,16 +27,18 @@ export type AggregatePaymentInstallment = {
 }
 
 export type PaymentInstallmentAvgAggregateOutputType = {
+  leadId: number | null
   amount: number | null
 }
 
 export type PaymentInstallmentSumAggregateOutputType = {
+  leadId: number | null
   amount: number | null
 }
 
 export type PaymentInstallmentMinAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   hospitalName: string | null
   recipient: $Enums.InstallmentRecipient | null
   amount: number | null
@@ -55,7 +57,7 @@ export type PaymentInstallmentMinAggregateOutputType = {
 
 export type PaymentInstallmentMaxAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   hospitalName: string | null
   recipient: $Enums.InstallmentRecipient | null
   amount: number | null
@@ -94,10 +96,12 @@ export type PaymentInstallmentCountAggregateOutputType = {
 
 
 export type PaymentInstallmentAvgAggregateInputType = {
+  leadId?: true
   amount?: true
 }
 
 export type PaymentInstallmentSumAggregateInputType = {
+  leadId?: true
   amount?: true
 }
 
@@ -247,7 +251,7 @@ export type PaymentInstallmentGroupByArgs<ExtArgs extends runtime.Types.Extensio
 
 export type PaymentInstallmentGroupByOutputType = {
   id: string
-  leadId: string | null
+  leadId: number | null
   hospitalName: string | null
   recipient: $Enums.InstallmentRecipient
   amount: number
@@ -289,7 +293,7 @@ export type PaymentInstallmentWhereInput = {
   OR?: Prisma.PaymentInstallmentWhereInput[]
   NOT?: Prisma.PaymentInstallmentWhereInput | Prisma.PaymentInstallmentWhereInput[]
   id?: Prisma.StringFilter<"PaymentInstallment"> | string
-  leadId?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
+  leadId?: Prisma.IntNullableFilter<"PaymentInstallment"> | number | null
   hospitalName?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   recipient?: Prisma.EnumInstallmentRecipientFilter<"PaymentInstallment"> | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFilter<"PaymentInstallment"> | number
@@ -336,7 +340,7 @@ export type PaymentInstallmentWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.PaymentInstallmentWhereInput | Prisma.PaymentInstallmentWhereInput[]
   OR?: Prisma.PaymentInstallmentWhereInput[]
   NOT?: Prisma.PaymentInstallmentWhereInput | Prisma.PaymentInstallmentWhereInput[]
-  leadId?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
+  leadId?: Prisma.IntNullableFilter<"PaymentInstallment"> | number | null
   hospitalName?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   recipient?: Prisma.EnumInstallmentRecipientFilter<"PaymentInstallment"> | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFilter<"PaymentInstallment"> | number
@@ -385,7 +389,7 @@ export type PaymentInstallmentScalarWhereWithAggregatesInput = {
   OR?: Prisma.PaymentInstallmentScalarWhereWithAggregatesInput[]
   NOT?: Prisma.PaymentInstallmentScalarWhereWithAggregatesInput | Prisma.PaymentInstallmentScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"PaymentInstallment"> | string
-  leadId?: Prisma.StringNullableWithAggregatesFilter<"PaymentInstallment"> | string | null
+  leadId?: Prisma.IntNullableWithAggregatesFilter<"PaymentInstallment"> | number | null
   hospitalName?: Prisma.StringNullableWithAggregatesFilter<"PaymentInstallment"> | string | null
   recipient?: Prisma.EnumInstallmentRecipientWithAggregatesFilter<"PaymentInstallment"> | $Enums.InstallmentRecipient
   amount?: Prisma.FloatWithAggregatesFilter<"PaymentInstallment"> | number
@@ -423,7 +427,7 @@ export type PaymentInstallmentCreateInput = {
 
 export type PaymentInstallmentUncheckedCreateInput = {
   id?: string
-  leadId?: string | null
+  leadId?: number | null
   hospitalName?: string | null
   recipient: $Enums.InstallmentRecipient
   amount: number
@@ -461,7 +465,7 @@ export type PaymentInstallmentUpdateInput = {
 
 export type PaymentInstallmentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -480,7 +484,7 @@ export type PaymentInstallmentUncheckedUpdateInput = {
 
 export type PaymentInstallmentCreateManyInput = {
   id?: string
-  leadId?: string | null
+  leadId?: number | null
   hospitalName?: string | null
   recipient: $Enums.InstallmentRecipient
   amount: number
@@ -515,7 +519,7 @@ export type PaymentInstallmentUpdateManyMutationInput = {
 
 export type PaymentInstallmentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -562,6 +566,7 @@ export type PaymentInstallmentCountOrderByAggregateInput = {
 }
 
 export type PaymentInstallmentAvgOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
 }
 
@@ -604,6 +609,7 @@ export type PaymentInstallmentMinOrderByAggregateInput = {
 }
 
 export type PaymentInstallmentSumOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
 }
 
@@ -765,7 +771,7 @@ export type PaymentInstallmentCreateWithoutRecordedByInput = {
 
 export type PaymentInstallmentUncheckedCreateWithoutRecordedByInput = {
   id?: string
-  leadId?: string | null
+  leadId?: number | null
   hospitalName?: string | null
   recipient: $Enums.InstallmentRecipient
   amount: number
@@ -811,7 +817,7 @@ export type PaymentInstallmentCreateWithoutVerifiedByInput = {
 
 export type PaymentInstallmentUncheckedCreateWithoutVerifiedByInput = {
   id?: string
-  leadId?: string | null
+  leadId?: number | null
   hospitalName?: string | null
   recipient: $Enums.InstallmentRecipient
   amount: number
@@ -858,7 +864,7 @@ export type PaymentInstallmentScalarWhereInput = {
   OR?: Prisma.PaymentInstallmentScalarWhereInput[]
   NOT?: Prisma.PaymentInstallmentScalarWhereInput | Prisma.PaymentInstallmentScalarWhereInput[]
   id?: Prisma.StringFilter<"PaymentInstallment"> | string
-  leadId?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
+  leadId?: Prisma.IntNullableFilter<"PaymentInstallment"> | number | null
   hospitalName?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   recipient?: Prisma.EnumInstallmentRecipientFilter<"PaymentInstallment"> | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFilter<"PaymentInstallment"> | number
@@ -955,7 +961,7 @@ export type PaymentInstallmentUpdateManyWithWhereWithoutLeadInput = {
 
 export type PaymentInstallmentCreateManyRecordedByInput = {
   id?: string
-  leadId?: string | null
+  leadId?: number | null
   hospitalName?: string | null
   recipient: $Enums.InstallmentRecipient
   amount: number
@@ -973,7 +979,7 @@ export type PaymentInstallmentCreateManyRecordedByInput = {
 
 export type PaymentInstallmentCreateManyVerifiedByInput = {
   id?: string
-  leadId?: string | null
+  leadId?: number | null
   hospitalName?: string | null
   recipient: $Enums.InstallmentRecipient
   amount: number
@@ -1009,7 +1015,7 @@ export type PaymentInstallmentUpdateWithoutRecordedByInput = {
 
 export type PaymentInstallmentUncheckedUpdateWithoutRecordedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1027,7 +1033,7 @@ export type PaymentInstallmentUncheckedUpdateWithoutRecordedByInput = {
 
 export type PaymentInstallmentUncheckedUpdateManyWithoutRecordedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1063,7 +1069,7 @@ export type PaymentInstallmentUpdateWithoutVerifiedByInput = {
 
 export type PaymentInstallmentUncheckedUpdateWithoutVerifiedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1081,7 +1087,7 @@ export type PaymentInstallmentUncheckedUpdateWithoutVerifiedByInput = {
 
 export type PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1285,7 +1291,7 @@ export type $PaymentInstallmentPayload<ExtArgs extends runtime.Types.Extensions.
     /**
      * Optional — hospital-level MediEND receipts may have no case attached
      */
-    leadId: string | null
+    leadId: number | null
     /**
      * Set when payment is recorded against a hospital without selecting cases
      */
@@ -1733,7 +1739,7 @@ export interface Prisma__PaymentInstallmentClient<T, Null = never, ExtArgs exten
  */
 export interface PaymentInstallmentFieldRefs {
   readonly id: Prisma.FieldRef<"PaymentInstallment", 'String'>
-  readonly leadId: Prisma.FieldRef<"PaymentInstallment", 'String'>
+  readonly leadId: Prisma.FieldRef<"PaymentInstallment", 'Int'>
   readonly hospitalName: Prisma.FieldRef<"PaymentInstallment", 'String'>
   readonly recipient: Prisma.FieldRef<"PaymentInstallment", 'InstallmentRecipient'>
   readonly amount: Prisma.FieldRef<"PaymentInstallment", 'Float'>

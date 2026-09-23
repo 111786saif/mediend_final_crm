@@ -92,7 +92,7 @@ type StoredPrescriptionImage = {
 }
 
 export type MutateLeadOpdInput = {
-  leadId: string
+  leadId: number
   actorUserId?: string | null
   actorName: string
   actorRole?: UserRole | null
@@ -258,7 +258,7 @@ export async function mutateLeadOpd(input: MutateLeadOpdInput) {
 
       if (isLegacyLeadOpdId(targetId)) {
         const legacyLeadId = getLeadIdFromLegacyLeadOpdId(targetId)
-        if (legacyLeadId !== input.leadId) {
+        if (Number(legacyLeadId) !== input.leadId) {
           throw new LeadOpdMutationError('Legacy OPD does not belong to this lead', 400)
         }
         targetMode = 'legacy'

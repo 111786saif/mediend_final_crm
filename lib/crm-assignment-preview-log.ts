@@ -16,7 +16,7 @@ type CrmAssignmentPreviewSource =
   (typeof CRM_ASSIGNMENT_PREVIEW_SOURCES)[keyof typeof CRM_ASSIGNMENT_PREVIEW_SOURCES]
 
 type LeadPreviewSeed = {
-  id: string
+  id: number
   leadRef: string
   bdId: string
   bdeName: string | null

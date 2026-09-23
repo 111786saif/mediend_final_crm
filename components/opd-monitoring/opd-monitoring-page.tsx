@@ -6,7 +6,7 @@ import { CalendarClock, ShieldAlert } from 'lucide-react'
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import { ProtectedRoute } from '@/components/protected-route'
 import { formatDate, StatusBadge } from '@/components/doctor-admin/shared'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -30,7 +30,7 @@ import { apiGet } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
 import { canAccessSalesOpdMonitoring } from '@/lib/opd-monitoring-access'
 
-type AppointmentTab = 'daily' | 'doctor' | 'overdue'
+type AppointmentTab = 'daily' | 'doctor' | 'overdue' | 'analytics'
 
 type OpdDoctorOption = {
   id: string
@@ -47,6 +47,10 @@ type OpdMonitoringItem = {
   statusKey: string
   statusLabel: string
   bdName?: string | null
+  teamName?: string | null
+  departmentName?: string | null
+  city?: string | null
+  source?: string | null
 }
 
 function todayDateValue() {
@@ -56,10 +60,12 @@ function todayDateValue() {
 export function OpdMonitoringPage() {
   const { user, isLoading } = useAuth()
   const [tab, setTab] = useState<AppointmentTab>('daily')
-  const [summaryRange, setSummaryRange] = useState<'all' | 'day'>('all')
+  const [summaryRange, setSummaryRange] = useState<'all' | 'day'>('day')
   const [summaryDate, setSummaryDate] = useState(todayDateValue())
   const [dailyDate, setDailyDate] = useState(todayDateValue())
   const [activeDailyDate, setActiveDailyDate] = useState(todayDateValue())
+  const [dailyStatus, setDailyStatus] = useState('all')
+  const [analyticsDimension, setAnalyticsDimension] = useState<'day' | 'doctor' | 'team' | 'department' | 'city' | 'source'>('day')
   const [doctorName, setDoctorName] = useState('all')
   const [startDate, setStartDate] = useState(todayDateValue())
   const [endDate, setEndDate] = useState(todayDateValue())
@@ -93,10 +99,10 @@ export function OpdMonitoringPage() {
   })
 
   const dailyQuery = useQuery({
-    queryKey: ['sales-opd-monitoring', 'daily', activeDailyDate],
+    queryKey: ['sales-opd-monitoring', 'daily', activeDailyDate, dailyStatus],
     queryFn: () =>
       apiGet<{ items: OpdMonitoringItem[] }>(
-        `/api/opd-monitoring?mode=daily&date=${encodeURIComponent(activeDailyDate)}`
+        `/api/opd-monitoring?mode=daily&date=${encodeURIComponent(activeDailyDate)}&status=${encodeURIComponent(dailyStatus)}`
       ),
     enabled: !!user && canAccessSalesOpdMonitoring(user.role) && tab === 'daily',
   })
@@ -127,10 +133,34 @@ export function OpdMonitoringPage() {
     enabled: !!user && canAccessSalesOpdMonitoring(user.role) && tab === 'overdue',
   })
 
+  const analyticsQuery = useQuery({
+    queryKey: ['sales-opd-monitoring', 'analytics', startDate, endDate],
+    queryFn: () => apiGet<{ items: OpdMonitoringItem[] }>(`/api/opd-monitoring?mode=analytics&startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`),
+    enabled: !!user && canAccessSalesOpdMonitoring(user.role) && tab === 'analytics',
+  })
+
   const activeQuery =
-    tab === 'doctor' ? doctorViewQuery : tab === 'overdue' ? overdueQuery : dailyQuery
+    tab === 'doctor' ? doctorViewQuery : tab === 'overdue' ? overdueQuery : tab === 'analytics' ? analyticsQuery : dailyQuery
   const items = useMemo(() => activeQuery.data?.items ?? [], [activeQuery.data?.items])
   const doctors = doctorQuery.data?.items ?? []
+  const analyticsRows = useMemo(() => {
+    const source = analyticsQuery.data?.items ?? []
+    const groups = new Map<string, { label: string; scheduled: number; done: number; noShow: number; cancelled: number }>()
+    for (const item of source) {
+      const date = item.appointmentDate ? new Date(item.appointmentDate) : null
+      const label = analyticsDimension === 'day' ? (date ? date.toLocaleDateString('en-IN') : 'Unscheduled')
+        : analyticsDimension === 'doctor' ? item.doctorName : analyticsDimension === 'team' ? item.teamName || 'Unassigned'
+        : analyticsDimension === 'department' ? item.departmentName || 'Unassigned' : analyticsDimension === 'city' ? item.city || 'Unknown' : item.source || 'Not specified'
+      const row = groups.get(label) ?? { label, scheduled: 0, done: 0, noShow: 0, cancelled: 0 }
+      if (item.statusKey === 'scheduled') row.scheduled += 1
+      if (item.statusKey === 'done') row.done += 1
+      if (item.statusKey === 'no_show') row.noShow += 1
+      if (item.statusKey === 'cancelled') row.cancelled += 1
+      groups.set(label, row)
+    }
+    return Array.from(groups.values()).sort((a, b) => (b.scheduled + b.done + b.noShow + b.cancelled) - (a.scheduled + a.done + a.noShow + a.cancelled))
+  }, [analyticsQuery.data?.items, analyticsDimension])
+  const openCounter = (statusKey: string) => { setSummaryRange('day'); setDailyDate(summaryDate); setActiveDailyDate(summaryDate); setDailyStatus(statusKey); setTab('daily') }
 
   if (isLoading) {
     return (
@@ -185,6 +215,23 @@ export function OpdMonitoringPage() {
             <CardContent className='space-y-4 p-4'>
               <div className='flex flex-wrap items-end gap-3'>
                 <div className='space-y-2'>
+                  <Label>Quick Date Filter</Label>
+                  <Select onValueChange={(value) => {
+                    const now = new Date(); const to = (d: Date) => d.toISOString().slice(0, 10)
+                    const end = to(now); let start = end
+                    if (value === 'yesterday') start = to(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1))
+                    if (value === 'thisWeek') start = to(new Date(now.getFullYear(), now.getMonth(), now.getDate() - ((now.getDay() + 6) % 7)))
+                    if (value === 'lastWeek') { const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - ((now.getDay() + 6) % 7) - 7); start = to(monday); const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6); setEndDate(to(sunday)) }
+                    if (value === 'thisMonth') start = to(new Date(now.getFullYear(), now.getMonth(), 1))
+                    if (value === 'lastMonth') { start = to(new Date(now.getFullYear(), now.getMonth() - 1, 1)); setEndDate(to(new Date(now.getFullYear(), now.getMonth(), 0))) }
+                    if (value === 'last3') start = to(new Date(now.getFullYear(), now.getMonth() - 2, 1))
+                    if (value === 'last6') start = to(new Date(now.getFullYear(), now.getMonth() - 5, 1))
+                    if (value === 'thisYear') start = to(new Date(now.getFullYear(), 0, 1))
+                    if (value === 'lastYear') { start = to(new Date(now.getFullYear() - 1, 0, 1)); setEndDate(to(new Date(now.getFullYear() - 1, 11, 31))) }
+                    setStartDate(start); if (!['lastWeek','lastMonth','lastYear'].includes(value)) setEndDate(end); setSummaryRange('day'); setSummaryDate(value === 'today' ? end : start); setDailyDate(value === 'today' ? end : start)
+                  }}><SelectTrigger className='w-48'><SelectValue placeholder='Today / period' /></SelectTrigger><SelectContent><SelectItem value='today'>Today</SelectItem><SelectItem value='yesterday'>Yesterday</SelectItem><SelectItem value='thisWeek'>This Week</SelectItem><SelectItem value='lastWeek'>Last Week</SelectItem><SelectItem value='thisMonth'>Current Month</SelectItem><SelectItem value='lastMonth'>Last Month</SelectItem><SelectItem value='last3'>Last 3 Months</SelectItem><SelectItem value='last6'>Last 6 Months</SelectItem><SelectItem value='thisYear'>Current Year</SelectItem><SelectItem value='lastYear'>Last Year</SelectItem></SelectContent></Select>
+                </div>
+                <div className='space-y-2'>
                   <Label>Status Range</Label>
                   <Select
                     value={summaryRange}
@@ -212,44 +259,45 @@ export function OpdMonitoringPage() {
               </div>
 
               <div className='grid gap-3 md:grid-cols-2 xl:grid-cols-4'>
-                <Card className='border-blue-200 bg-blue-50'>
+                <button type='button' onClick={() => openCounter('scheduled')} className='text-left'> <Card className='border-blue-200 bg-blue-50 hover:ring-2 hover:ring-blue-300'>
                   <CardContent className='p-4'>
                     <div className='text-sm uppercase tracking-wide text-blue-700'>Scheduled</div>
                     <div className='mt-2 text-3xl font-semibold text-blue-700'>
                       {summaryQuery.isLoading ? '...' : summaryQuery.data?.scheduled ?? 0}
                     </div>
                   </CardContent>
-                </Card>
-                <Card className='border-emerald-200 bg-emerald-50'>
+                </Card></button>
+                <button type='button' onClick={() => openCounter('done')} className='text-left'><Card className='border-emerald-200 bg-emerald-50 hover:ring-2 hover:ring-emerald-300'>
                   <CardContent className='p-4'>
                     <div className='text-sm uppercase tracking-wide text-emerald-700'>Done</div>
                     <div className='mt-2 text-3xl font-semibold text-emerald-700'>
                       {summaryQuery.isLoading ? '...' : summaryQuery.data?.done ?? 0}
                     </div>
                   </CardContent>
-                </Card>
-                <Card className='border-amber-200 bg-amber-50'>
+                </Card></button>
+                <button type='button' onClick={() => openCounter('no_show')} className='text-left'><Card className='border-amber-200 bg-amber-50 hover:ring-2 hover:ring-amber-300'>
                   <CardContent className='p-4'>
                     <div className='text-sm uppercase tracking-wide text-amber-700'>No Show</div>
                     <div className='mt-2 text-3xl font-semibold text-amber-700'>
                       {summaryQuery.isLoading ? '...' : summaryQuery.data?.noShow ?? 0}
                     </div>
                   </CardContent>
-                </Card>
-                <Card className='border-rose-200 bg-rose-50'>
+                </Card></button>
+                <button type='button' onClick={() => openCounter('cancelled')} className='text-left'><Card className='border-rose-200 bg-rose-50 hover:ring-2 hover:ring-rose-300'>
                   <CardContent className='p-4'>
                     <div className='text-sm uppercase tracking-wide text-rose-700'>Cancelled</div>
                     <div className='mt-2 text-3xl font-semibold text-rose-700'>
                       {summaryQuery.isLoading ? '...' : summaryQuery.data?.cancelled ?? 0}
                     </div>
                   </CardContent>
-                </Card>
+                </Card></button>
               </div>
 
               <Tabs value={tab} onValueChange={(value) => setTab(value as AppointmentTab)}>
                 <TabsList>
                   <TabsTrigger value='daily'>Daily View</TabsTrigger>
                   <TabsTrigger value='doctor'>Doctor-wise View</TabsTrigger>
+                  <TabsTrigger value='analytics'>Team / Department / City / Source</TabsTrigger>
                   <TabsTrigger value='overdue'>Pending / Overdue</TabsTrigger>
                 </TabsList>
               </Tabs>
@@ -372,6 +420,16 @@ export function OpdMonitoringPage() {
                       Load Overdue Queue
                     </Button>
                   </div>
+                </div>
+              ) : null}
+
+              {tab === 'analytics' ? (
+                <div className='space-y-3'>
+                  <div className='flex flex-wrap gap-2'>
+                    {(['day', 'doctor', 'team', 'department', 'city', 'source'] as const).map((dimension) => <Button key={dimension} size='sm' variant={analyticsDimension === dimension ? 'default' : 'outline'} onClick={() => setAnalyticsDimension(dimension)}>{dimension === 'day' ? 'Day-wise' : dimension === 'doctor' ? 'Doctor-wise' : dimension === 'team' ? 'Team-wise' : dimension === 'department' ? 'Department-wise' : dimension === 'city' ? 'City-wise' : 'Source-wise'}</Button>)}
+                  </div>
+                  <p className='text-sm text-muted-foreground'>Uses the Start Date and End Date set in Doctor-wise View. Change them there to use a custom period.</p>
+                  <div className='overflow-x-auto rounded-md border'><Table><TableHeader><TableRow><TableHead>Group</TableHead><TableHead>Scheduled</TableHead><TableHead>Done</TableHead><TableHead>No Show</TableHead><TableHead>Cancelled</TableHead></TableRow></TableHeader><TableBody>{analyticsRows.map((row) => <TableRow key={row.label}><TableCell className='font-medium'>{row.label}</TableCell><TableCell>{row.scheduled}</TableCell><TableCell>{row.done}</TableCell><TableCell>{row.noShow}</TableCell><TableCell>{row.cancelled}</TableCell></TableRow>)}{!analyticsRows.length && <TableRow><TableCell colSpan={5} className='py-8 text-center text-muted-foreground'>No OPD data for the selected period</TableCell></TableRow>}</TableBody></Table></div>
                 </div>
               ) : null}
 

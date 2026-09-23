@@ -22,7 +22,7 @@ import { usePermissions, PermissionLevel } from '@/hooks/use-permissions'
 import { hasPermission } from '@/lib/rbac'
 
 interface Lead {
-  id: string
+  id: number
   leadRef?: string
   patientName?: string
   phoneNumber?: string
@@ -56,7 +56,7 @@ export default function PLOutstandingEditPage() {
   const { user } = useAuth()
   const { hasAccess } = usePermissions()
   const canWrite = user ? (hasAccess('insurance_pl.pl_ledger', PermissionLevel.READ_WRITE) || hasPermission(user, 'pl:write')) : false
-  const leadId = params.leadId as string
+  const leadId = Number(params.leadId)
 
   const {
     data: record,

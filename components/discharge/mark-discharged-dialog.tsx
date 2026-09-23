@@ -18,7 +18,7 @@ import { CalendarCheck, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface MarkDischargedDialogProps {
-  leadId: string
+  leadId: number
   open: boolean
   onOpenChange: (open: boolean) => void
   /** YYYY-MM-DD prefill, e.g. from BD's IPD-mark discharge entry */

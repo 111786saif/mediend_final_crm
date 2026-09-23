@@ -35,7 +35,7 @@ export function KnowlarityCallRecordingsCard({
   leadId,
   className,
 }: {
-  leadId: string
+  leadId: number
   className?: string
 }) {
   const { data, isLoading, error } = useQuery<CallRecordingsResponse, Error>({

@@ -21,7 +21,7 @@ export type BdRow = {
   netProfit: number
   leadCount?: number
   marketingCost?: number
-  patients: { leadId: string; leadRef: string; patientName: string; netProfit: number }[]
+  patients: { leadId: number; leadRef: string; patientName: string; netProfit: number }[]
 }
 
 export function SurgeryBdTable({

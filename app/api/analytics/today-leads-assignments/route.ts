@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
         managerName: string | null
         leadCount: number
         leads: Array<{
-          id: string
+          id: number
           leadRef: string
           patientName: string
           assignedDate: Date | null

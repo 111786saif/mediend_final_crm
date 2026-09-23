@@ -27,16 +27,18 @@ export type AggregateInsuranceCase = {
 }
 
 export type InsuranceCaseAvgAggregateOutputType = {
+  leadId: number | null
   approvalAmount: number | null
 }
 
 export type InsuranceCaseSumAggregateOutputType = {
+  leadId: number | null
   approvalAmount: number | null
 }
 
 export type InsuranceCaseMinAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   caseStatus: $Enums.InsuranceCaseStatus | null
   approvalAmount: number | null
   tpaRemarks: string | null
@@ -49,7 +51,7 @@ export type InsuranceCaseMinAggregateOutputType = {
 
 export type InsuranceCaseMaxAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   caseStatus: $Enums.InsuranceCaseStatus | null
   approvalAmount: number | null
   tpaRemarks: string | null
@@ -76,10 +78,12 @@ export type InsuranceCaseCountAggregateOutputType = {
 
 
 export type InsuranceCaseAvgAggregateInputType = {
+  leadId?: true
   approvalAmount?: true
 }
 
 export type InsuranceCaseSumAggregateInputType = {
+  leadId?: true
   approvalAmount?: true
 }
 
@@ -211,7 +215,7 @@ export type InsuranceCaseGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
 
 export type InsuranceCaseGroupByOutputType = {
   id: string
-  leadId: string
+  leadId: number
   caseStatus: $Enums.InsuranceCaseStatus
   approvalAmount: number | null
   tpaRemarks: string | null
@@ -247,7 +251,7 @@ export type InsuranceCaseWhereInput = {
   OR?: Prisma.InsuranceCaseWhereInput[]
   NOT?: Prisma.InsuranceCaseWhereInput | Prisma.InsuranceCaseWhereInput[]
   id?: Prisma.StringFilter<"InsuranceCase"> | string
-  leadId?: Prisma.StringFilter<"InsuranceCase"> | string
+  leadId?: Prisma.IntFilter<"InsuranceCase"> | number
   caseStatus?: Prisma.EnumInsuranceCaseStatusFilter<"InsuranceCase"> | $Enums.InsuranceCaseStatus
   approvalAmount?: Prisma.FloatNullableFilter<"InsuranceCase"> | number | null
   tpaRemarks?: Prisma.StringNullableFilter<"InsuranceCase"> | string | null
@@ -277,7 +281,7 @@ export type InsuranceCaseOrderByWithRelationInput = {
 
 export type InsuranceCaseWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  leadId?: string
+  leadId?: number
   AND?: Prisma.InsuranceCaseWhereInput | Prisma.InsuranceCaseWhereInput[]
   OR?: Prisma.InsuranceCaseWhereInput[]
   NOT?: Prisma.InsuranceCaseWhereInput | Prisma.InsuranceCaseWhereInput[]
@@ -316,7 +320,7 @@ export type InsuranceCaseScalarWhereWithAggregatesInput = {
   OR?: Prisma.InsuranceCaseScalarWhereWithAggregatesInput[]
   NOT?: Prisma.InsuranceCaseScalarWhereWithAggregatesInput | Prisma.InsuranceCaseScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"InsuranceCase"> | string
-  leadId?: Prisma.StringWithAggregatesFilter<"InsuranceCase"> | string
+  leadId?: Prisma.IntWithAggregatesFilter<"InsuranceCase"> | number
   caseStatus?: Prisma.EnumInsuranceCaseStatusWithAggregatesFilter<"InsuranceCase"> | $Enums.InsuranceCaseStatus
   approvalAmount?: Prisma.FloatNullableWithAggregatesFilter<"InsuranceCase"> | number | null
   tpaRemarks?: Prisma.StringNullableWithAggregatesFilter<"InsuranceCase"> | string | null
@@ -342,7 +346,7 @@ export type InsuranceCaseCreateInput = {
 
 export type InsuranceCaseUncheckedCreateInput = {
   id?: string
-  leadId: string
+  leadId: number
   caseStatus?: $Enums.InsuranceCaseStatus
   approvalAmount?: number | null
   tpaRemarks?: string | null
@@ -368,7 +372,7 @@ export type InsuranceCaseUpdateInput = {
 
 export type InsuranceCaseUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   caseStatus?: Prisma.EnumInsuranceCaseStatusFieldUpdateOperationsInput | $Enums.InsuranceCaseStatus
   approvalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tpaRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -381,7 +385,7 @@ export type InsuranceCaseUncheckedUpdateInput = {
 
 export type InsuranceCaseCreateManyInput = {
   id?: string
-  leadId: string
+  leadId: number
   caseStatus?: $Enums.InsuranceCaseStatus
   approvalAmount?: number | null
   tpaRemarks?: string | null
@@ -405,7 +409,7 @@ export type InsuranceCaseUpdateManyMutationInput = {
 
 export type InsuranceCaseUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   caseStatus?: Prisma.EnumInsuranceCaseStatusFieldUpdateOperationsInput | $Enums.InsuranceCaseStatus
   approvalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tpaRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -445,6 +449,7 @@ export type InsuranceCaseCountOrderByAggregateInput = {
 }
 
 export type InsuranceCaseAvgOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   approvalAmount?: Prisma.SortOrder
 }
 
@@ -475,6 +480,7 @@ export type InsuranceCaseMinOrderByAggregateInput = {
 }
 
 export type InsuranceCaseSumOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   approvalAmount?: Prisma.SortOrder
 }
 
@@ -570,7 +576,7 @@ export type InsuranceCaseCreateWithoutHandledByInput = {
 
 export type InsuranceCaseUncheckedCreateWithoutHandledByInput = {
   id?: string
-  leadId: string
+  leadId: number
   caseStatus?: $Enums.InsuranceCaseStatus
   approvalAmount?: number | null
   tpaRemarks?: string | null
@@ -611,7 +617,7 @@ export type InsuranceCaseScalarWhereInput = {
   OR?: Prisma.InsuranceCaseScalarWhereInput[]
   NOT?: Prisma.InsuranceCaseScalarWhereInput | Prisma.InsuranceCaseScalarWhereInput[]
   id?: Prisma.StringFilter<"InsuranceCase"> | string
-  leadId?: Prisma.StringFilter<"InsuranceCase"> | string
+  leadId?: Prisma.IntFilter<"InsuranceCase"> | number
   caseStatus?: Prisma.EnumInsuranceCaseStatusFilter<"InsuranceCase"> | $Enums.InsuranceCaseStatus
   approvalAmount?: Prisma.FloatNullableFilter<"InsuranceCase"> | number | null
   tpaRemarks?: Prisma.StringNullableFilter<"InsuranceCase"> | string | null
@@ -688,7 +694,7 @@ export type InsuranceCaseUncheckedUpdateWithoutLeadInput = {
 
 export type InsuranceCaseCreateManyHandledByInput = {
   id?: string
-  leadId: string
+  leadId: number
   caseStatus?: $Enums.InsuranceCaseStatus
   approvalAmount?: number | null
   tpaRemarks?: string | null
@@ -712,7 +718,7 @@ export type InsuranceCaseUpdateWithoutHandledByInput = {
 
 export type InsuranceCaseUncheckedUpdateWithoutHandledByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   caseStatus?: Prisma.EnumInsuranceCaseStatusFieldUpdateOperationsInput | $Enums.InsuranceCaseStatus
   approvalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tpaRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -724,7 +730,7 @@ export type InsuranceCaseUncheckedUpdateWithoutHandledByInput = {
 
 export type InsuranceCaseUncheckedUpdateManyWithoutHandledByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   caseStatus?: Prisma.EnumInsuranceCaseStatusFieldUpdateOperationsInput | $Enums.InsuranceCaseStatus
   approvalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tpaRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -816,7 +822,7 @@ export type $InsuranceCasePayload<ExtArgs extends runtime.Types.Extensions.Inter
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    leadId: string
+    leadId: number
     caseStatus: $Enums.InsuranceCaseStatus
     approvalAmount: number | null
     tpaRemarks: string | null
@@ -1251,7 +1257,7 @@ export interface Prisma__InsuranceCaseClient<T, Null = never, ExtArgs extends ru
  */
 export interface InsuranceCaseFieldRefs {
   readonly id: Prisma.FieldRef<"InsuranceCase", 'String'>
-  readonly leadId: Prisma.FieldRef<"InsuranceCase", 'String'>
+  readonly leadId: Prisma.FieldRef<"InsuranceCase", 'Int'>
   readonly caseStatus: Prisma.FieldRef<"InsuranceCase", 'InsuranceCaseStatus'>
   readonly approvalAmount: Prisma.FieldRef<"InsuranceCase", 'Float'>
   readonly tpaRemarks: Prisma.FieldRef<"InsuranceCase", 'String'>

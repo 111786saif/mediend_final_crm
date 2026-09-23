@@ -462,7 +462,7 @@ export function getResetTargetConfig(
   }
 }
 
-export function notificationLinkForStep(leadId: string, step: WorkflowResetStepDef): string {
+export function notificationLinkForStep(leadId: number, step: WorkflowResetStepDef): string {
   switch (step.shortLabel) {
     case 'OPD Schedule':
       return `/patient/${leadId}/opd-schedule`

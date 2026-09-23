@@ -55,7 +55,7 @@ export async function PATCH(
           title: 'Finance Acknowledged',
           message: `Finance has acknowledged: ${existing.title}`,
           link: '/md/md-approvals',
-          relatedId: id,
+          relatedId: String(id),
         })),
       })
     }

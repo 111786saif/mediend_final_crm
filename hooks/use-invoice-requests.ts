@@ -28,7 +28,7 @@ export function useInvoiceRequests(filters: InvoiceRequestFilters) {
 
 export interface PlInvoiceRequestFilters {
   status?: InvoiceRequestStatus | 'ALL'
-  leadId?: string | null
+  leadId?: number | null
   hospitalName?: string | null
   search?: string | null
   latestPerLead?: boolean
@@ -37,7 +37,7 @@ export interface PlInvoiceRequestFilters {
 function buildPlQuery(filters: PlInvoiceRequestFilters): string {
   const params = new URLSearchParams()
   if (filters.status) params.set('status', filters.status)
-  if (filters.leadId) params.set('leadId', filters.leadId)
+  if (filters.leadId) params.set('leadId', String(filters.leadId))
   if (filters.hospitalName) params.set('hospitalName', filters.hospitalName)
   if (filters.search) params.set('search', filters.search)
   if (filters.latestPerLead) params.set('latestPerLead', 'true')
@@ -54,7 +54,7 @@ export function usePlInvoiceRequests(filters: PlInvoiceRequestFilters, enabled =
 }
 
 export interface CreatePlInvoiceRequestInput {
-  leadId: string
+  leadId: number
   requestRemarks?: string
   invoiceNumber?: string
   invoiceAmount?: number

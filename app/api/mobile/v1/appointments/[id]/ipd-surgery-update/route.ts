@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { IpdStatus } from '@/generated/prisma/client'
@@ -297,7 +298,10 @@ export async function PUT(
       return unauthorizedResponse()
     }
 
-    const { id } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     const contentType = request.headers.get('content-type') || ''
     let input
     if (contentType.includes('multipart/form-data')) {

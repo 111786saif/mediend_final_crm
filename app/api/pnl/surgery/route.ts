@@ -202,7 +202,7 @@ export async function GET(request: NextRequest) {
         surgeries: number
         revenue: number
         expenses: number
-        patients: { leadId: string; leadRef: string; patientName: string; netProfit: number }[]
+        patients: { leadId: number; leadRef: string; patientName: string; netProfit: number }[]
       }
     >()
 

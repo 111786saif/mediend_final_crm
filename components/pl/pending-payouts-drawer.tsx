@@ -15,7 +15,7 @@ import { resolvePlRow, formatPlDate, formatPlRupee } from '@/lib/pl/resolve-pl-r
 import { useRouter } from 'next/navigation'
 
 interface PayoutRecord {
-  id: string
+  id: number
   leadRef?: string
   patientName?: string
   hospitalName?: string

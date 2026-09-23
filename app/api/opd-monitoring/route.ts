@@ -26,6 +26,7 @@ const summarySchema = z.object({
 const dailySchema = z.object({
   mode: z.literal('daily'),
   date: z.string().trim().min(1),
+  status: z.string().trim().optional(),
 })
 
 const doctorSchema = z.object({
@@ -41,6 +42,7 @@ const overdueSchema = z.object({
   doctorName: z.string().trim().optional(),
   daysOverdue: z.coerce.number().int().min(0).optional().default(1),
 })
+const analyticsSchema = z.object({ mode: z.literal('analytics'), startDate: z.string().trim().optional(), endDate: z.string().trim().optional(), status: z.string().trim().optional() })
 
 export async function GET(request: NextRequest) {
   try {
@@ -80,6 +82,11 @@ export async function GET(request: NextRequest) {
       const input = overdueSchema.parse({ mode, ...query })
       const items = await getSalesOpdMonitoring(user, input)
       return successResponse({ items }, 'Overdue OPD monitoring fetched')
+    }
+    if (mode === 'analytics') {
+      const input = analyticsSchema.parse({ mode, ...query })
+      const items = await getSalesOpdMonitoring(user, input)
+      return successResponse({ items }, 'OPD analytics fetched')
     }
 
     return errorResponse('Unknown OPD monitoring mode', 400)

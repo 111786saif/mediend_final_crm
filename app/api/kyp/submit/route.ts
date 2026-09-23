@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
@@ -22,7 +23,7 @@ const ALLOWED_CARD_DETAIL_EDIT_STAGES: CaseStage[] = [
 ]
 
 const submitKYPSchema = z.object({
-  leadId: z.string(),
+  leadId: leadIdSchema,
   patientName: z.string().optional(),
   phone: z.string().optional(),
   age: z.number().optional(),

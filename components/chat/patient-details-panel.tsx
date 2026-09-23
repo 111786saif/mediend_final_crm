@@ -13,7 +13,7 @@ import { getPhoneDisplay } from '@/lib/phone-utils'
 
 interface PatientDetailsPanelProps {
   lead: {
-    id: string
+    id: number
     leadRef: string
     patientName: string
     phoneNumber: string

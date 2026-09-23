@@ -22,8 +22,8 @@ type ManualLeadInputRecord = Record<string, unknown>
 
 export type ManualMySQLLeadIngestionItem = {
   rowNumber: number
-  incomingLeadId?: string
-  leadId?: string
+  incomingLeadId?: number
+  leadId?: number
   leadRef?: string
   assignedBdName?: string | null
   status: 'processed' | 'already_processed' | 'duplicate' | 'bucketed' | 'failed' | 'skipped'

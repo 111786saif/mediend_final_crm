@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
@@ -24,7 +25,10 @@ export async function POST(
       return unauthorizedResponse()
     }
 
-    const { id: leadId } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const leadId = parsedLeadId.data
     const body = await request.json()
     const data = resetPatientSchema.parse(body)
 
@@ -154,7 +158,7 @@ export async function POST(
           title: 'Patient reset',
           message: `${user.name} reset ${lead.patientName} (${lead.leadRef}) back to Hospitals Suggested. Reason: ${reason}`,
           link: `/patient/${leadId}/pre-auth`,
-          relatedId: leadId,
+          relatedId: String(leadId),
         })),
       })
     }

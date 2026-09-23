@@ -342,6 +342,7 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'leads:write',
     'leads:assign',
     'analytics:read',
+    'it:permissions',
   ],
   CRM_ADMIN: [],
   ADMIN: [
@@ -468,10 +469,12 @@ export function hasPermission(user: SessionUser | null, permission: Permission):
 
 /** Outstanding / doctor / hospital list: shared by P&L and Finance modules */
 export function hasPlOrFinanceRead(user: SessionUser | null): boolean {
+  if (user?.role === 'SUPER_ADMIN' || user?.role === 'ADMIN') return true
   return hasPermission(user, 'pl:read') || hasPermission(user, 'finance:read')
 }
 
 export function hasPlOrFinanceWrite(user: SessionUser | null): boolean {
+  if (user?.role === 'SUPER_ADMIN' || user?.role === 'ADMIN') return true
   return hasPermission(user, 'pl:write') || hasPermission(user, 'finance:write')
 }
 

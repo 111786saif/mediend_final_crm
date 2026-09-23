@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
@@ -39,7 +40,10 @@ export async function GET(
       return errorResponse('Forbidden', 403)
     }
 
-    const { id } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     const lead = await prisma.lead.findUnique({
       where: { id },
       select: {
@@ -245,7 +249,10 @@ export async function POST(
       return errorResponse('Forbidden', 403)
     }
 
-    const { id } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     const lead = await prisma.lead.findUnique({
       where: { id },
       select: {
@@ -294,7 +301,7 @@ export async function POST(
     await logCrmActivity({
       action: 'CRM_LEAD_REMARK_ADDED',
       entityType: 'CRM_LEAD_REMARK',
-      entityId: lead.id,
+      entityId: String(lead.id),
       entityLabel: `${lead.leadRef} · ${lead.patientName}`,
       actorUserId: user.id,
       actorRole: user.role,

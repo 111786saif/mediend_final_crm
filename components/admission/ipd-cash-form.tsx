@@ -41,7 +41,7 @@ function formatIsoDateForInput(value: unknown) {
 }
 
 export interface IPDCashFormProps {
-  leadId: string
+  leadId: number
   // Patient Information
   patientName?: string
   leadRef?: string

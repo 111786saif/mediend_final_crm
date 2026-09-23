@@ -99,7 +99,7 @@ function extractSaveMyLeadsFields(payload: unknown) {
 
 export async function POST(request: Request) {
   const receivedAt = new Date()
-  let incomingLeadId: string | null = null
+  let incomingLeadId: number | null = null
 
   try {
     const contentType = request.headers.get('content-type') ?? 'unknown'

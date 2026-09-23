@@ -27,6 +27,7 @@ export type AggregateDischargeSheet = {
 }
 
 export type DischargeSheetAvgAggregateOutputType = {
+  leadId: number | null
   tentativeAmount: number | null
   copayPct: number | null
   codesCount: number | null
@@ -72,6 +73,7 @@ export type DischargeSheetAvgAggregateOutputType = {
 }
 
 export type DischargeSheetSumAggregateOutputType = {
+  leadId: number | null
   tentativeAmount: number | null
   copayPct: number | null
   codesCount: number | null
@@ -118,7 +120,7 @@ export type DischargeSheetSumAggregateOutputType = {
 
 export type DischargeSheetMinAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   kypSubmissionId: string | null
   month: Date | null
   dischargeDate: Date | null
@@ -210,7 +212,7 @@ export type DischargeSheetMinAggregateOutputType = {
 
 export type DischargeSheetMaxAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   kypSubmissionId: string | null
   month: Date | null
   dischargeDate: Date | null
@@ -395,6 +397,7 @@ export type DischargeSheetCountAggregateOutputType = {
 
 
 export type DischargeSheetAvgAggregateInputType = {
+  leadId?: true
   tentativeAmount?: true
   copayPct?: true
   codesCount?: true
@@ -440,6 +443,7 @@ export type DischargeSheetAvgAggregateInputType = {
 }
 
 export type DischargeSheetSumAggregateInputType = {
+  leadId?: true
   tentativeAmount?: true
   copayPct?: true
   codesCount?: true
@@ -849,7 +853,7 @@ export type DischargeSheetGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
 
 export type DischargeSheetGroupByOutputType = {
   id: string
-  leadId: string
+  leadId: number
   kypSubmissionId: string | null
   month: Date | null
   dischargeDate: Date | null
@@ -964,7 +968,7 @@ export type DischargeSheetWhereInput = {
   OR?: Prisma.DischargeSheetWhereInput[]
   NOT?: Prisma.DischargeSheetWhereInput | Prisma.DischargeSheetWhereInput[]
   id?: Prisma.StringFilter<"DischargeSheet"> | string
-  leadId?: Prisma.StringFilter<"DischargeSheet"> | string
+  leadId?: Prisma.IntFilter<"DischargeSheet"> | number
   kypSubmissionId?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   month?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   dischargeDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
@@ -1160,7 +1164,7 @@ export type DischargeSheetOrderByWithRelationInput = {
 
 export type DischargeSheetWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  leadId?: string
+  leadId?: number
   kypSubmissionId?: string
   plRecordId?: string
   AND?: Prisma.DischargeSheetWhereInput | Prisma.DischargeSheetWhereInput[]
@@ -1361,7 +1365,7 @@ export type DischargeSheetScalarWhereWithAggregatesInput = {
   OR?: Prisma.DischargeSheetScalarWhereWithAggregatesInput[]
   NOT?: Prisma.DischargeSheetScalarWhereWithAggregatesInput | Prisma.DischargeSheetScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"DischargeSheet"> | string
-  leadId?: Prisma.StringWithAggregatesFilter<"DischargeSheet"> | string
+  leadId?: Prisma.IntWithAggregatesFilter<"DischargeSheet"> | number
   kypSubmissionId?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
   month?: Prisma.DateTimeNullableWithAggregatesFilter<"DischargeSheet"> | Date | string | null
   dischargeDate?: Prisma.DateTimeNullableWithAggregatesFilter<"DischargeSheet"> | Date | string | null
@@ -1545,7 +1549,7 @@ export type DischargeSheetCreateInput = {
 
 export type DischargeSheetUncheckedCreateInput = {
   id?: string
-  leadId: string
+  leadId: number
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
@@ -1729,7 +1733,7 @@ export type DischargeSheetUpdateInput = {
 
 export type DischargeSheetUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1821,7 +1825,7 @@ export type DischargeSheetUncheckedUpdateInput = {
 
 export type DischargeSheetCreateManyInput = {
   id?: string
-  leadId: string
+  leadId: number
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
@@ -1999,7 +2003,7 @@ export type DischargeSheetUpdateManyMutationInput = {
 
 export type DischargeSheetUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2197,6 +2201,7 @@ export type DischargeSheetCountOrderByAggregateInput = {
 }
 
 export type DischargeSheetAvgOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   tentativeAmount?: Prisma.SortOrder
   copayPct?: Prisma.SortOrder
   codesCount?: Prisma.SortOrder
@@ -2426,6 +2431,7 @@ export type DischargeSheetMinOrderByAggregateInput = {
 }
 
 export type DischargeSheetSumOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   tentativeAmount?: Prisma.SortOrder
   copayPct?: Prisma.SortOrder
   codesCount?: Prisma.SortOrder
@@ -2785,7 +2791,7 @@ export type DischargeSheetCreateWithoutCreatedByInput = {
 
 export type DischargeSheetUncheckedCreateWithoutCreatedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
@@ -2977,7 +2983,7 @@ export type DischargeSheetCreateWithoutMarkedByInput = {
 
 export type DischargeSheetUncheckedCreateWithoutMarkedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
@@ -3169,7 +3175,7 @@ export type DischargeSheetCreateWithoutFinalizedByInput = {
 
 export type DischargeSheetUncheckedCreateWithoutFinalizedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
@@ -3289,7 +3295,7 @@ export type DischargeSheetScalarWhereInput = {
   OR?: Prisma.DischargeSheetScalarWhereInput[]
   NOT?: Prisma.DischargeSheetScalarWhereInput | Prisma.DischargeSheetScalarWhereInput[]
   id?: Prisma.StringFilter<"DischargeSheet"> | string
-  leadId?: Prisma.StringFilter<"DischargeSheet"> | string
+  leadId?: Prisma.IntFilter<"DischargeSheet"> | number
   kypSubmissionId?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   month?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   dischargeDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
@@ -3884,7 +3890,7 @@ export type DischargeSheetCreateWithoutPlRecordInput = {
 
 export type DischargeSheetUncheckedCreateWithoutPlRecordInput = {
   id?: string
-  leadId: string
+  leadId: number
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
@@ -4082,7 +4088,7 @@ export type DischargeSheetUpdateWithoutPlRecordInput = {
 
 export type DischargeSheetUncheckedUpdateWithoutPlRecordInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4264,7 +4270,7 @@ export type DischargeSheetCreateWithoutKypSubmissionInput = {
 
 export type DischargeSheetUncheckedCreateWithoutKypSubmissionInput = {
   id?: string
-  leadId: string
+  leadId: number
   month?: Date | string | null
   dischargeDate?: Date | string | null
   admissionDate?: Date | string | null
@@ -4462,7 +4468,7 @@ export type DischargeSheetUpdateWithoutKypSubmissionInput = {
 
 export type DischargeSheetUncheckedUpdateWithoutKypSubmissionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4553,7 +4559,7 @@ export type DischargeSheetUncheckedUpdateWithoutKypSubmissionInput = {
 
 export type DischargeSheetCreateManyCreatedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
@@ -4644,7 +4650,7 @@ export type DischargeSheetCreateManyCreatedByInput = {
 
 export type DischargeSheetCreateManyMarkedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
@@ -4735,7 +4741,7 @@ export type DischargeSheetCreateManyMarkedByInput = {
 
 export type DischargeSheetCreateManyFinalizedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
@@ -4917,7 +4923,7 @@ export type DischargeSheetUpdateWithoutCreatedByInput = {
 
 export type DischargeSheetUncheckedUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5008,7 +5014,7 @@ export type DischargeSheetUncheckedUpdateWithoutCreatedByInput = {
 
 export type DischargeSheetUncheckedUpdateManyWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5190,7 +5196,7 @@ export type DischargeSheetUpdateWithoutMarkedByInput = {
 
 export type DischargeSheetUncheckedUpdateWithoutMarkedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5281,7 +5287,7 @@ export type DischargeSheetUncheckedUpdateWithoutMarkedByInput = {
 
 export type DischargeSheetUncheckedUpdateManyWithoutMarkedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5463,7 +5469,7 @@ export type DischargeSheetUpdateWithoutFinalizedByInput = {
 
 export type DischargeSheetUncheckedUpdateWithoutFinalizedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5554,7 +5560,7 @@ export type DischargeSheetUncheckedUpdateWithoutFinalizedByInput = {
 
 export type DischargeSheetUncheckedUpdateManyWithoutFinalizedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6069,7 +6075,7 @@ export type $DischargeSheetPayload<ExtArgs extends runtime.Types.Extensions.Inte
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    leadId: string
+    leadId: number
     kypSubmissionId: string | null
     month: Date | null
     dischargeDate: Date | null
@@ -6587,7 +6593,7 @@ export interface Prisma__DischargeSheetClient<T, Null = never, ExtArgs extends r
  */
 export interface DischargeSheetFieldRefs {
   readonly id: Prisma.FieldRef<"DischargeSheet", 'String'>
-  readonly leadId: Prisma.FieldRef<"DischargeSheet", 'String'>
+  readonly leadId: Prisma.FieldRef<"DischargeSheet", 'Int'>
   readonly kypSubmissionId: Prisma.FieldRef<"DischargeSheet", 'String'>
   readonly month: Prisma.FieldRef<"DischargeSheet", 'DateTime'>
   readonly dischargeDate: Prisma.FieldRef<"DischargeSheet", 'DateTime'>

@@ -35,7 +35,7 @@ export interface CumulativeReportFilters {
 }
 
 export interface CumulativeReportRow {
-  id: string
+  id: number
   date: string
   patientName: string
   patientContact: string

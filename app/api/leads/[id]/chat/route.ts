@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
@@ -26,7 +27,10 @@ export async function GET(
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
 
-    const { id: leadId } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const leadId = parsedLeadId.data
     const lead = await prisma.lead.findUnique({
       where: { id: leadId },
       select: { id: true, bdId: true },
@@ -71,7 +75,10 @@ export async function POST(
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
 
-    const { id: leadId } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const leadId = parsedLeadId.data
     const lead = await prisma.lead.findUnique({
       where: { id: leadId },
       select: { id: true, bdId: true },
@@ -135,7 +142,7 @@ export async function POST(
             title: 'New Chat Message',
             message: `${user.name} sent a message in ${leadWithBD.patientName} (${leadWithBD.leadRef})`,
             link: `/chat/${leadId}`,
-            relatedId: leadId,
+            relatedId: String(leadId),
           })),
         })
       }

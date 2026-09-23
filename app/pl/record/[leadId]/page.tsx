@@ -19,7 +19,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
 
 interface Lead {
-  id: string
+  id: number
   leadRef?: string
   patientName?: string
   phoneNumber?: string
@@ -88,7 +88,7 @@ export default function PLRecordEditPage() {
   const params = useParams()
   const router = useRouter()
   const queryClient = useQueryClient()
-  const leadId = params.leadId as string
+  const leadId = Number(params.leadId)
 
   const { data: record, isLoading: loadingLead } = useQuery<Lead>({
     queryKey: ['lead', leadId],

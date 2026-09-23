@@ -267,7 +267,7 @@ function mapTimeline(lead: PatientHistoryLead) {
   return items.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 }
 
-export async function getDoctorPatientHistory(user: DoctorAppSessionUser, leadId: string) {
+export async function getDoctorPatientHistory(user: DoctorAppSessionUser, leadId: number) {
   const context = await getDoctorAppContext(user)
 
   const lead = await prisma.lead.findFirst({

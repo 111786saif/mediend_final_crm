@@ -1,7 +1,10 @@
-import { PrismaClient, type Prisma, UserRole } from '@/generated/prisma/client'
+import { PrismaClient as LegacyPrismaClient } from '@/generated/legacy-source/client'
+import { PrismaClient, Prisma, UserRole } from '@/generated/prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 
 export type WorkspacePrisma = PrismaClient
+export type LegacyWorkspacePrisma = LegacyPrismaClient
+export type ReadonlyWorkspacePrisma = Pick<PrismaClient, '$queryRaw' | '$queryRawUnsafe'>
 
 function createPgAdapter(url: string, poolMax: number): PrismaPg {
   return new PrismaPg({
@@ -14,13 +17,13 @@ function createPgAdapter(url: string, poolMax: number): PrismaPg {
   })
 }
 
-export function createSourcePrisma(): WorkspacePrisma {
+export function createSourcePrisma(): LegacyWorkspacePrisma {
   const url = process.env.SOURCE_DATABASE_URL
   if (!url) {
     throw new Error('SOURCE_DATABASE_URL is required (old workspace Postgres connection string)')
   }
   const poolMax = Number(process.env.SOURCE_DB_POOL_MAX ?? 12)
-  return new PrismaClient({
+  return new LegacyPrismaClient({
     adapter: createPgAdapter(url, Number.isFinite(poolMax) && poolMax > 0 ? poolMax : 12),
   })
 }
@@ -99,7 +102,7 @@ export class SourceSchemaGuard {
     ['crmAssignmentPreviewLog', 'CrmAssignmentPreviewLog'],
   ]
 
-  static async load(source: WorkspacePrisma): Promise<SourceSchemaGuard> {
+  static async load(source: LegacyWorkspacePrisma): Promise<SourceSchemaGuard> {
     const rows = await source.$queryRaw<Array<{ table_name: string }>>`
       SELECT table_name
       FROM information_schema.tables
@@ -154,7 +157,7 @@ export class SourceSchemaGuard {
   }
 
   private async probe(
-    source: WorkspacePrisma,
+    source: LegacyWorkspacePrisma,
     probes: Array<[string, string, () => Promise<unknown>]>
   ): Promise<void> {
     for (const [key, table, fn] of probes) {
@@ -219,7 +222,7 @@ export function parseLeadRefFilter(argv: string[]): string[] | null {
 
 /** Map source User.id → target User.id by email; fallback to first admin-like user. */
 export async function buildUserIdMap(
-  source: WorkspacePrisma,
+  source: LegacyWorkspacePrisma,
   target: WorkspacePrisma
 ): Promise<{ map: Map<string, string>; fallbackUserId: string }> {
   const fallbackRoles: UserRole[] = [
@@ -292,9 +295,9 @@ async function sourceOptional<T>(
   return schema.optional(key, table, fn, fallback)
 }
 
-const leadColumnCache = new WeakMap<WorkspacePrisma, Set<string>>()
+const leadColumnCache = new WeakMap<ReadonlyWorkspacePrisma, Set<string>>()
 
-async function getLeadColumns(db: WorkspacePrisma): Promise<Set<string>> {
+async function getLeadColumns(db: ReadonlyWorkspacePrisma): Promise<Set<string>> {
   const cached = leadColumnCache.get(db)
   if (cached) return cached
 
@@ -310,7 +313,7 @@ async function getLeadColumns(db: WorkspacePrisma): Promise<Set<string>> {
 
 /** Fetch lead row from old DB via raw SQL (avoids Prisma selecting columns missing on old schema). */
 async function fetchSourceLeadRow(
-  source: WorkspacePrisma,
+  source: LegacyWorkspacePrisma,
   leadRef: string
 ): Promise<{ row: Record<string, unknown>; id: string } | null> {
   const rows = await source.$queryRaw<Array<Record<string, unknown>>>`
@@ -322,7 +325,7 @@ async function fetchSourceLeadRow(
 }
 
 async function buildLeadFieldsFromSourceRow(
-  source: WorkspacePrisma,
+  source: LegacyWorkspacePrisma,
   target: WorkspacePrisma,
   row: Record<string, unknown>,
   userMap: Map<string, string>,
@@ -382,7 +385,7 @@ async function buildLeadFieldsFromSourceRow(
 }
 
 async function buildLeadUpdateFromSourceRow(
-  source: WorkspacePrisma,
+  source: LegacyWorkspacePrisma,
   target: WorkspacePrisma,
   row: Record<string, unknown>,
   userMap: Map<string, string>,
@@ -400,7 +403,7 @@ async function buildLeadUpdateFromSourceRow(
 }
 
 async function buildLeadCreateFromSourceRow(
-  source: WorkspacePrisma,
+  source: LegacyWorkspacePrisma,
   target: WorkspacePrisma,
   row: Record<string, unknown>,
   leadRef: string,
@@ -418,7 +421,7 @@ async function buildLeadCreateFromSourceRow(
     treatmentMasterIds
   )
   return {
-    id: leadId,
+    legacyId: leadId,
     leadRef,
     ...data,
   } as Prisma.LeadCreateInput
@@ -428,7 +431,7 @@ async function buildLeadCreateFromSourceRow(
  *  Primary signal: Lead.updatedDate (last time the lead row changed).
  *  Also checks child tables that exist on the old schema (LeadRemark, stage history, KYP, compliance). */
 export async function findLeadRefsInRange(
-  source: WorkspacePrisma,
+  source: LegacyWorkspacePrisma,
   from: Date,
   toExclusive: Date,
   leadRefFilter: string[] | null,
@@ -541,7 +544,7 @@ export async function filterLeadRefsMissingOnTarget(
 }
 
 /** Remove all lead-scoped rows on target before overwrite. */
-export async function deleteTargetLeadBundle(tx: Prisma.TransactionClient, targetLeadId: string) {
+export async function deleteTargetLeadBundle(tx: Prisma.TransactionClient, targetLeadId: number) {
   const kyp = await tx.kYPSubmission.findUnique({
     where: { leadId: targetLeadId },
     select: { id: true, preAuthData: { select: { id: true } } },
@@ -629,7 +632,7 @@ export async function loadTreatmentMasterIds(target: WorkspacePrisma): Promise<S
 
 /** Read all source-side child rows in parallel (outside target transaction). */
 async function fetchSourceLeadBundle(
-  source: WorkspacePrisma,
+  source: LegacyWorkspacePrisma,
   schema: SourceSchemaGuard,
   leadRef: string,
   sourceLeadId: string
@@ -865,7 +868,7 @@ async function fetchSourceLeadBundle(
 }
 
 export async function copyLeadBundle(
-  source: WorkspacePrisma,
+  source: LegacyWorkspacePrisma,
   target: WorkspacePrisma,
   leadRef: string,
   userMap: Map<string, string>,
@@ -881,7 +884,7 @@ export async function copyLeadBundle(
   if (isCreate && !options.createMissing) return 'skipped'
 
   const sourceLeadId = sourceLeadData.id
-  const targetLeadId = isCreate ? sourceLeadData.id : targetLead!.id
+  let targetLeadId = targetLead?.id ?? 0
   const tmIds = options.treatmentMasterIds
 
   const [bundle, leadCreate, leadUpdate] = await Promise.all([
@@ -906,7 +909,7 @@ export async function copyLeadBundle(
   await target.$transaction(
     async (tx) => {
       if (isCreate) {
-        await tx.lead.create({ data: leadCreate! })
+        targetLeadId = (await tx.lead.create({ data: leadCreate! })).id
       } else {
         if (!options.leadOnly) await deleteTargetLeadBundle(tx, targetLeadId)
         await tx.lead.update({
@@ -1034,6 +1037,12 @@ export async function copyLeadBundle(
         await tx.kYPSubmission.create({
           data: {
             ...kypRest,
+            aadharFiles: kypRest.aadharFiles ?? Prisma.DbNull,
+            panFiles: kypRest.panFiles ?? Prisma.DbNull,
+            diseasePhotos: kypRest.diseasePhotos ?? Prisma.DbNull,
+            otherFiles: kypRest.otherFiles ?? Prisma.DbNull,
+            documentEditCounts: kypRest.documentEditCounts ?? Prisma.DbNull,
+            documentEditHistory: kypRest.documentEditHistory ?? Prisma.DbNull,
             leadId: targetLeadId,
             submittedById: remapUserId(submittedById, userMap, fallbackUserId)!,
           },
@@ -1054,6 +1063,11 @@ export async function copyLeadBundle(
           await tx.preAuthorization.create({
             data: {
               ...preAuthRest,
+              hospitalSuggestions: preAuthRest.hospitalSuggestions ?? Prisma.DbNull,
+              roomTypes: preAuthRest.roomTypes ?? Prisma.DbNull,
+              diseaseImages: preAuthRest.diseaseImages ?? Prisma.DbNull,
+              investigationFileUrls: preAuthRest.investigationFileUrls ?? Prisma.DbNull,
+              prescriptionFiles: preAuthRest.prescriptionFiles ?? Prisma.DbNull,
               kypSubmissionId: kyp.id,
               preAuthRaisedById: remapUserId(preAuthRaisedById, userMap, fallbackUserId),
               handledById: remapUserId(handledById, userMap, fallbackUserId),
@@ -1096,6 +1110,7 @@ export async function copyLeadBundle(
                 preAuthorizationId: preAuthData.id,
                 createdById: remapUserId(createdById, userMap, fallbackUserId)!,
                 ...p,
+                recipients: p.recipients ?? Prisma.DbNull,
               })),
             })
           }
@@ -1229,9 +1244,24 @@ export async function copyLeadBundle(
 
       for (const p of payoffs) {
         const { activityLogs, leadId: _l, requestedById, reviewedById, ...rest } = p
+        const sourceIds = Array.isArray(rest.leadIds) ? rest.leadIds.filter((value): value is string => typeof value === 'string') : []
+        const referencedLeads = sourceIds.length ? await source.$queryRaw<Array<{ id: string; leadRef: string }>>`
+          SELECT id, "leadRef" FROM "Lead" WHERE id = ANY(${sourceIds}::text[])
+        ` : []
+        const targetReferences = referencedLeads.length ? await tx.lead.findMany({
+          where: { leadRef: { in: referencedLeads.map(lead => lead.leadRef) } }, select: { id: true, leadRef: true },
+        }) : []
+        const targetByRef = new Map(targetReferences.map(lead => [lead.leadRef, lead.id]))
+        const sourceById = new Map(referencedLeads.map(lead => [lead.id, lead.leadRef]))
+        const mappedLeadIds = sourceIds.map(id => targetByRef.get(sourceById.get(id) ?? ''))
+        if (mappedLeadIds.some(id => id == null)) {
+          throw new Error('Import the referenced leads with --lead-only before copying this multi-lead payoff request')
+        }
         await tx.doctorPayoffRequest.create({
           data: {
             ...rest,
+            leadIds: mappedLeadIds.length ? mappedLeadIds as number[] : Prisma.DbNull,
+            attachments: rest.attachments ?? Prisma.DbNull,
             leadId: targetLeadId,
             requestedById: remapUserId(requestedById, userMap, fallbackUserId)!,
             reviewedById: remapUserId(reviewedById, userMap, fallbackUserId),
@@ -1256,6 +1286,7 @@ export async function copyLeadBundle(
             leadId: targetLeadId,
             userId: remapUserId(userId, userMap, fallbackUserId)!,
             ...r,
+            metadata: r.metadata ?? Prisma.DbNull,
           })),
         })
       }
@@ -1273,7 +1304,7 @@ export async function copyLeadBundle(
 
       if (previewLogs.length) {
         await tx.crmAssignmentPreviewLog.createMany({
-          data: previewLogs.map(({ id, leadId: _l, ...r }) => ({ id, leadId: targetLeadId, ...r })),
+          data: previewLogs.map(({ id, leadId: _l, ...r }) => ({ id, leadId: targetLeadId, ...r, inputSnapshot: r.inputSnapshot ?? Prisma.JsonNull, assignmentSnapshot: r.assignmentSnapshot ?? Prisma.DbNull, candidateDiagnostics: r.candidateDiagnostics ?? Prisma.JsonNull })),
         })
       }
     },

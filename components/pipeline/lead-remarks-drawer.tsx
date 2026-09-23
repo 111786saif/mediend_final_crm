@@ -24,7 +24,7 @@ type LeadRemarkHistoryItem = {
 
 type LeadRemarksResponse = {
   lead: {
-    id: string
+    id: number
     leadRef: string
     patientName: string
   }
@@ -39,7 +39,7 @@ export function LeadRemarksDrawer({
   open,
   onOpenChange,
 }: {
-  leadId: string | null
+  leadId: number | null
   open: boolean
   onOpenChange: (open: boolean) => void
 }) {

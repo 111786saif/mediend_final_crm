@@ -18,6 +18,7 @@ export interface LeadFilters {
   startDate?: string
   endDate?: string
   dateField?: string
+  modeOfPayment?: string
   caseStage?: string
   view?: string
   phoneSearch?: string
@@ -26,7 +27,8 @@ export interface LeadFilters {
 import { CaseStage } from '@/generated/prisma/enums'
 
 export interface Lead {
-  id: string
+  id: number
+  legacyId?: string | null
   patientName?: string
   age?: number
   sex?: string | null
@@ -80,6 +82,8 @@ export interface Lead {
     email: string
     role?: string
     employee?: {
+      department?: { id?: string; name?: string | null } | null
+      team?: { id?: string; name?: string | null; department?: { id?: string; name?: string | null } | null } | null
       manager?: {
         user?: {
           name?: string | null
@@ -97,11 +101,14 @@ export interface Lead {
     status?: string
     updatedAt?: string | Date
     preAuthData?: {
+      preAuthRaisedAt?: string | Date | null
+      preAuthRaisedBy?: { id: string; name: string | null } | null
       updatedAt?: string | Date
       queries?: { updatedAt?: string | Date }[]
     } | null
   } | null
   ipdPotentialDate?: string | Date | null
+  ipdAdmissionDate?: string | Date | null
   ipdPotentialMarkedAt?: string | Date | null
   insuranceInitiateForm?: { updatedAt?: string | Date } | null
   admissionRecord?: {
@@ -149,7 +156,7 @@ export function useLeads(filters: LeadFilters = {}, options: { enabled?: boolean
   const queryClient = useQueryClient()
   const [cachedData, setCachedData] = useState<Lead[] | null>(null)
 
-  const cacheKey = `leads_${JSON.stringify(filters)}`
+  const cacheKey = `leads_integer_ids_v1_${JSON.stringify(filters)}`
 
   useEffect(() => {
     getCachedLeads<Lead[]>(cacheKey).then((data) => {
@@ -184,7 +191,7 @@ const query = useQuery({
   })
 
   const updateLeadMutation = useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: Partial<Lead> }) => {
+    mutationFn: async ({ id, data }: { id: number; data: Partial<Lead> }) => {
       return apiPatch<Lead>(`/api/leads/${id}`, data)
     },
     onMutate: async ({ id, data }) => {
@@ -220,13 +227,13 @@ const query = useQuery({
   }
 }
 
-export function useLead(id: string | null) {
+export function useLead(id: string | number | null) {
   const queryClient = useQueryClient()
 
   const query = useQuery<Lead>({
     queryKey: ['lead', id],
     queryFn: () => apiGet<Lead>(`/api/leads/${id}`),
-    enabled: !!id && !!id.length,
+    enabled: id !== null && String(id).length > 0,
   })
 
   const updateMutation = useMutation({

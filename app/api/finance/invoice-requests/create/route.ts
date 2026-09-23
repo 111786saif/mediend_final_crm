@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { InvoiceRequestStatus } from '@/generated/prisma/client'
@@ -9,7 +10,7 @@ import { invoiceRequestInclude, mapInvoiceRequest } from '@/lib/finance/invoice-
 import { logInvoiceRequestActivity } from '@/lib/finance/invoice-request/activity'
 
 const createSchema = z.object({
-  leadId: z.string().min(1),
+  leadId: leadIdSchema,
   requestRemarks: z.string().max(5000).optional(),
 })
 

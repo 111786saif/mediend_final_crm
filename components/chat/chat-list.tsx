@@ -14,7 +14,7 @@ import { getCaseStageLabel } from '@/lib/case-stage-labels'
 import { useMemo, useState } from 'react'
 
 interface Conversation {
-  leadId: string
+  leadId: number
   leadRef: string
   patientName: string
   phoneNumber: string
@@ -39,7 +39,7 @@ interface Conversation {
 }
 
 interface ChatListProps {
-  selectedLeadId?: string
+  selectedLeadId?: number
 }
 
 export function ChatList({ selectedLeadId }: ChatListProps) {

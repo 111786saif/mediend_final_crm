@@ -20,13 +20,23 @@ export type KYPSubmissionModel = runtime.Types.Result.DefaultSelection<Prisma.$K
 
 export type AggregateKYPSubmission = {
   _count: KYPSubmissionCountAggregateOutputType | null
+  _avg: KYPSubmissionAvgAggregateOutputType | null
+  _sum: KYPSubmissionSumAggregateOutputType | null
   _min: KYPSubmissionMinAggregateOutputType | null
   _max: KYPSubmissionMaxAggregateOutputType | null
 }
 
+export type KYPSubmissionAvgAggregateOutputType = {
+  leadId: number | null
+}
+
+export type KYPSubmissionSumAggregateOutputType = {
+  leadId: number | null
+}
+
 export type KYPSubmissionMinAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   aadhar: string | null
   pan: string | null
   insuranceCard: string | null
@@ -49,7 +59,7 @@ export type KYPSubmissionMinAggregateOutputType = {
 
 export type KYPSubmissionMaxAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   aadhar: string | null
   pan: string | null
   insuranceCard: string | null
@@ -100,6 +110,14 @@ export type KYPSubmissionCountAggregateOutputType = {
   _all: number
 }
 
+
+export type KYPSubmissionAvgAggregateInputType = {
+  leadId?: true
+}
+
+export type KYPSubmissionSumAggregateInputType = {
+  leadId?: true
+}
 
 export type KYPSubmissionMinAggregateInputType = {
   id?: true
@@ -215,6 +233,18 @@ export type KYPSubmissionAggregateArgs<ExtArgs extends runtime.Types.Extensions.
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: KYPSubmissionAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: KYPSubmissionSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: KYPSubmissionMinAggregateInputType
@@ -245,13 +275,15 @@ export type KYPSubmissionGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   _count?: KYPSubmissionCountAggregateInputType | true
+  _avg?: KYPSubmissionAvgAggregateInputType
+  _sum?: KYPSubmissionSumAggregateInputType
   _min?: KYPSubmissionMinAggregateInputType
   _max?: KYPSubmissionMaxAggregateInputType
 }
 
 export type KYPSubmissionGroupByOutputType = {
   id: string
-  leadId: string
+  leadId: number
   aadhar: string | null
   pan: string | null
   insuranceCard: string | null
@@ -277,6 +309,8 @@ export type KYPSubmissionGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   _count: KYPSubmissionCountAggregateOutputType | null
+  _avg: KYPSubmissionAvgAggregateOutputType | null
+  _sum: KYPSubmissionSumAggregateOutputType | null
   _min: KYPSubmissionMinAggregateOutputType | null
   _max: KYPSubmissionMaxAggregateOutputType | null
 }
@@ -301,7 +335,7 @@ export type KYPSubmissionWhereInput = {
   OR?: Prisma.KYPSubmissionWhereInput[]
   NOT?: Prisma.KYPSubmissionWhereInput | Prisma.KYPSubmissionWhereInput[]
   id?: Prisma.StringFilter<"KYPSubmission"> | string
-  leadId?: Prisma.StringFilter<"KYPSubmission"> | string
+  leadId?: Prisma.IntFilter<"KYPSubmission"> | number
   aadhar?: Prisma.StringNullableFilter<"KYPSubmission"> | string | null
   pan?: Prisma.StringNullableFilter<"KYPSubmission"> | string | null
   insuranceCard?: Prisma.StringNullableFilter<"KYPSubmission"> | string | null
@@ -367,7 +401,7 @@ export type KYPSubmissionOrderByWithRelationInput = {
 
 export type KYPSubmissionWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  leadId?: string
+  leadId?: number
   AND?: Prisma.KYPSubmissionWhereInput | Prisma.KYPSubmissionWhereInput[]
   OR?: Prisma.KYPSubmissionWhereInput[]
   NOT?: Prisma.KYPSubmissionWhereInput | Prisma.KYPSubmissionWhereInput[]
@@ -429,8 +463,10 @@ export type KYPSubmissionOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.KYPSubmissionCountOrderByAggregateInput
+  _avg?: Prisma.KYPSubmissionAvgOrderByAggregateInput
   _max?: Prisma.KYPSubmissionMaxOrderByAggregateInput
   _min?: Prisma.KYPSubmissionMinOrderByAggregateInput
+  _sum?: Prisma.KYPSubmissionSumOrderByAggregateInput
 }
 
 export type KYPSubmissionScalarWhereWithAggregatesInput = {
@@ -438,7 +474,7 @@ export type KYPSubmissionScalarWhereWithAggregatesInput = {
   OR?: Prisma.KYPSubmissionScalarWhereWithAggregatesInput[]
   NOT?: Prisma.KYPSubmissionScalarWhereWithAggregatesInput | Prisma.KYPSubmissionScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"KYPSubmission"> | string
-  leadId?: Prisma.StringWithAggregatesFilter<"KYPSubmission"> | string
+  leadId?: Prisma.IntWithAggregatesFilter<"KYPSubmission"> | number
   aadhar?: Prisma.StringNullableWithAggregatesFilter<"KYPSubmission"> | string | null
   pan?: Prisma.StringNullableWithAggregatesFilter<"KYPSubmission"> | string | null
   insuranceCard?: Prisma.StringNullableWithAggregatesFilter<"KYPSubmission"> | string | null
@@ -498,7 +534,7 @@ export type KYPSubmissionCreateInput = {
 
 export type KYPSubmissionUncheckedCreateInput = {
   id?: string
-  leadId: string
+  leadId: number
   aadhar?: string | null
   pan?: string | null
   insuranceCard?: string | null
@@ -560,7 +596,7 @@ export type KYPSubmissionUpdateInput = {
 
 export type KYPSubmissionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   aadhar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   insuranceCard?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -591,7 +627,7 @@ export type KYPSubmissionUncheckedUpdateInput = {
 
 export type KYPSubmissionCreateManyInput = {
   id?: string
-  leadId: string
+  leadId: number
   aadhar?: string | null
   pan?: string | null
   insuranceCard?: string | null
@@ -647,7 +683,7 @@ export type KYPSubmissionUpdateManyMutationInput = {
 
 export type KYPSubmissionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   aadhar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   insuranceCard?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -718,6 +754,10 @@ export type KYPSubmissionCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
+export type KYPSubmissionAvgOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
+}
+
 export type KYPSubmissionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
@@ -762,6 +802,10 @@ export type KYPSubmissionMinOrderByAggregateInput = {
   submittedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type KYPSubmissionSumOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
 }
 
 export type KYPSubmissionScalarRelationFilter = {
@@ -913,7 +957,7 @@ export type KYPSubmissionCreateWithoutSubmittedByInput = {
 
 export type KYPSubmissionUncheckedCreateWithoutSubmittedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   aadhar?: string | null
   pan?: string | null
   insuranceCard?: string | null
@@ -972,7 +1016,7 @@ export type KYPSubmissionScalarWhereInput = {
   OR?: Prisma.KYPSubmissionScalarWhereInput[]
   NOT?: Prisma.KYPSubmissionScalarWhereInput | Prisma.KYPSubmissionScalarWhereInput[]
   id?: Prisma.StringFilter<"KYPSubmission"> | string
-  leadId?: Prisma.StringFilter<"KYPSubmission"> | string
+  leadId?: Prisma.IntFilter<"KYPSubmission"> | number
   aadhar?: Prisma.StringNullableFilter<"KYPSubmission"> | string | null
   pan?: Prisma.StringNullableFilter<"KYPSubmission"> | string | null
   insuranceCard?: Prisma.StringNullableFilter<"KYPSubmission"> | string | null
@@ -1167,7 +1211,7 @@ export type KYPSubmissionCreateWithoutPreAuthDataInput = {
 
 export type KYPSubmissionUncheckedCreateWithoutPreAuthDataInput = {
   id?: string
-  leadId: string
+  leadId: number
   aadhar?: string | null
   pan?: string | null
   insuranceCard?: string | null
@@ -1243,7 +1287,7 @@ export type KYPSubmissionUpdateWithoutPreAuthDataInput = {
 
 export type KYPSubmissionUncheckedUpdateWithoutPreAuthDataInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   aadhar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   insuranceCard?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1303,7 +1347,7 @@ export type KYPSubmissionCreateWithoutDischargeSheetInput = {
 
 export type KYPSubmissionUncheckedCreateWithoutDischargeSheetInput = {
   id?: string
-  leadId: string
+  leadId: number
   aadhar?: string | null
   pan?: string | null
   insuranceCard?: string | null
@@ -1379,7 +1423,7 @@ export type KYPSubmissionUpdateWithoutDischargeSheetInput = {
 
 export type KYPSubmissionUncheckedUpdateWithoutDischargeSheetInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   aadhar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   insuranceCard?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1409,7 +1453,7 @@ export type KYPSubmissionUncheckedUpdateWithoutDischargeSheetInput = {
 
 export type KYPSubmissionCreateManySubmittedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   aadhar?: string | null
   pan?: string | null
   insuranceCard?: string | null
@@ -1467,7 +1511,7 @@ export type KYPSubmissionUpdateWithoutSubmittedByInput = {
 
 export type KYPSubmissionUncheckedUpdateWithoutSubmittedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   aadhar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   insuranceCard?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1497,7 +1541,7 @@ export type KYPSubmissionUncheckedUpdateWithoutSubmittedByInput = {
 
 export type KYPSubmissionUncheckedUpdateManyWithoutSubmittedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   aadhar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   insuranceCard?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1675,7 +1719,7 @@ export type $KYPSubmissionPayload<ExtArgs extends runtime.Types.Extensions.Inter
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    leadId: string
+    leadId: number
     aadhar: string | null
     pan: string | null
     insuranceCard: string | null
@@ -2134,7 +2178,7 @@ export interface Prisma__KYPSubmissionClient<T, Null = never, ExtArgs extends ru
  */
 export interface KYPSubmissionFieldRefs {
   readonly id: Prisma.FieldRef<"KYPSubmission", 'String'>
-  readonly leadId: Prisma.FieldRef<"KYPSubmission", 'String'>
+  readonly leadId: Prisma.FieldRef<"KYPSubmission", 'Int'>
   readonly aadhar: Prisma.FieldRef<"KYPSubmission", 'String'>
   readonly pan: Prisma.FieldRef<"KYPSubmission", 'String'>
   readonly insuranceCard: Prisma.FieldRef<"KYPSubmission", 'String'>

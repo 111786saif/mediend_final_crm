@@ -45,7 +45,7 @@ async function run() {
 
   let processed = 0
   let updated = 0
-  let cursor: string | undefined
+  let cursor: number | undefined
 
   while (true) {
     const batch = await prisma.lead.findMany({
@@ -57,7 +57,7 @@ async function run() {
 
     if (batch.length === 0) break
 
-    const updates: { id: string; circle?: string; category?: string | null }[] = []
+    const updates: { id: number; circle?: string; category?: string | null }[] = []
 
     for (const lead of batch) {
       const circleIsNumeric = /^\d+$/.test(String(lead.circle ?? '').trim())

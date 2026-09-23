@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import {
@@ -15,9 +16,9 @@ type RetryIncomingLeadsBody = {
 }
 
 type RetryIncomingLeadResultItem = {
-  incomingLeadId: string
+  incomingLeadId: number
   status: 'processed' | 'already_processed' | 'duplicate' | 'failed' | 'bucketed' | 'skipped'
-  leadId?: string
+  leadId?: number
   leadRef?: string
   assignedBdName?: string | null
   error?: string
@@ -92,11 +93,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = (await request.json()) as RetryIncomingLeadsBody
-    const incomingLeadIds = Array.isArray(body.incomingLeadIds)
-      ? body.incomingLeadIds.filter(
-          (value): value is string => typeof value === 'string' && value.trim().length > 0
-        )
-      : []
+    const incomingLeadIds = leadIdSchema.array().parse(body.incomingLeadIds ?? [])
 
     if (incomingLeadIds.length === 0) {
       return errorResponse('Select at least one failed incoming lead to retry', 400)

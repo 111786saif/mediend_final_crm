@@ -7,7 +7,7 @@ export type CaseEventStatus = 'DONE' | 'SCHEDULED' | 'POSTPONED' | 'CANCELLED' |
 
 export type CaseEvent = {
   id: string
-  leadId: string
+  leadId: number
   patientName: string
   bdId: string
   bdName: string

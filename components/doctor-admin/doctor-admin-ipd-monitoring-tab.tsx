@@ -70,7 +70,7 @@ export function DoctorAdminIpdMonitoringTab() {
   }, [lists, tab])
 
   const markAdmittedMutation = useMutation({
-    mutationFn: (leadId: string) => apiPut(`/api/doctor-admin/ipd-monitoring/${leadId}/mark-admitted`, {}),
+    mutationFn: (leadId: number) => apiPut(`/api/doctor-admin/ipd-monitoring/${leadId}/mark-admitted`, {}),
     onSuccess: () => {
       toast.success('IPD case marked admitted')
       queryClient.invalidateQueries({ queryKey: ['doctor-admin', 'ipd-monitoring'] })

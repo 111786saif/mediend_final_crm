@@ -29,20 +29,20 @@ type AssignableUserContext = {
 }
 
 type IncomingLeadForManualAssign = {
-  id: string
+  id: number
   source: string | null
   status: string
   payload: Prisma.JsonValue
-  processedLeadId: string | null
+  processedLeadId: number | null
   externalCampaignId: string | null
   normalizedPhone: string | null
   receivedAt: Date
 }
 
 type ManualAssignResultItem = {
-  incomingLeadId: string
+  incomingLeadId: number
   status: 'processed' | 'duplicate' | 'failed' | 'already_processed'
-  leadId?: string
+  leadId?: number
   leadRef?: string
   bdName?: string
   error?: string
@@ -316,7 +316,7 @@ async function reassignExistingLead(
   await logCrmActivity({
     action: 'CRM_LEAD_REASSIGNED',
     entityType: 'CRM_LEAD',
-    entityId: existingLead.id,
+    entityId: String(existingLead.id),
     entityLabel: `${existingLead.leadRef} · ${existingLead.patientName}`,
     actorUserId: actor.id,
     actorRole: actor.role,
@@ -462,7 +462,7 @@ async function processManualAssignedMySQLLead(
   await logCrmActivity({
     action: 'CRM_LEAD_CREATED',
     entityType: 'CRM_LEAD',
-    entityId: createdLead.id,
+    entityId: String(createdLead.id),
     entityLabel: `${createdLead.leadRef} · ${leadData.patientName || 'Unknown'}`,
     actorUserId: actor.id,
     actorRole: actor.role,
@@ -644,7 +644,7 @@ async function processManualAssignedSaveMyLeadsLead(
   await logCrmActivity({
     action: 'CRM_LEAD_CREATED',
     entityType: 'CRM_LEAD',
-    entityId: lead.id,
+    entityId: String(lead.id),
     entityLabel: `${lead.leadRef} · ${extracted.patientName || 'Unknown'}`,
     actorUserId: actor.id,
     actorRole: actor.role,
@@ -696,7 +696,7 @@ async function processManualAssignedSaveMyLeadsLead(
 }
 
 export async function manuallyAssignIncomingLeads(
-  incomingLeadIds: string[],
+  incomingLeadIds: number[],
   assigneeUserIds: string[],
   actor: ManualAssignActor
 ): Promise<ManualAssignIncomingLeadsResult> {

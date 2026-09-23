@@ -19,7 +19,7 @@ import Link from 'next/link'
 import { useMemo, useState, useEffect } from 'react'
 
 interface Lead {
-  id: string
+  id: number
   leadRef?: string
   patientName?: string
   hospitalName?: string

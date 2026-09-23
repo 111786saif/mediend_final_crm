@@ -20,13 +20,23 @@ export type LeadQrCallAuditLogModel = runtime.Types.Result.DefaultSelection<Pris
 
 export type AggregateLeadQrCallAuditLog = {
   _count: LeadQrCallAuditLogCountAggregateOutputType | null
+  _avg: LeadQrCallAuditLogAvgAggregateOutputType | null
+  _sum: LeadQrCallAuditLogSumAggregateOutputType | null
   _min: LeadQrCallAuditLogMinAggregateOutputType | null
   _max: LeadQrCallAuditLogMaxAggregateOutputType | null
 }
 
+export type LeadQrCallAuditLogAvgAggregateOutputType = {
+  leadId: number | null
+}
+
+export type LeadQrCallAuditLogSumAggregateOutputType = {
+  leadId: number | null
+}
+
 export type LeadQrCallAuditLogMinAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   userId: string | null
   action: string | null
   phoneNumber: string | null
@@ -38,7 +48,7 @@ export type LeadQrCallAuditLogMinAggregateOutputType = {
 
 export type LeadQrCallAuditLogMaxAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   userId: string | null
   action: string | null
   phoneNumber: string | null
@@ -62,6 +72,14 @@ export type LeadQrCallAuditLogCountAggregateOutputType = {
   _all: number
 }
 
+
+export type LeadQrCallAuditLogAvgAggregateInputType = {
+  leadId?: true
+}
+
+export type LeadQrCallAuditLogSumAggregateInputType = {
+  leadId?: true
+}
 
 export type LeadQrCallAuditLogMinAggregateInputType = {
   id?: true
@@ -139,6 +157,18 @@ export type LeadQrCallAuditLogAggregateArgs<ExtArgs extends runtime.Types.Extens
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: LeadQrCallAuditLogAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: LeadQrCallAuditLogSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: LeadQrCallAuditLogMinAggregateInputType
@@ -169,13 +199,15 @@ export type LeadQrCallAuditLogGroupByArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   _count?: LeadQrCallAuditLogCountAggregateInputType | true
+  _avg?: LeadQrCallAuditLogAvgAggregateInputType
+  _sum?: LeadQrCallAuditLogSumAggregateInputType
   _min?: LeadQrCallAuditLogMinAggregateInputType
   _max?: LeadQrCallAuditLogMaxAggregateInputType
 }
 
 export type LeadQrCallAuditLogGroupByOutputType = {
   id: string
-  leadId: string
+  leadId: number
   userId: string
   action: string
   phoneNumber: string
@@ -185,6 +217,8 @@ export type LeadQrCallAuditLogGroupByOutputType = {
   metadata: runtime.JsonValue | null
   createdAt: Date
   _count: LeadQrCallAuditLogCountAggregateOutputType | null
+  _avg: LeadQrCallAuditLogAvgAggregateOutputType | null
+  _sum: LeadQrCallAuditLogSumAggregateOutputType | null
   _min: LeadQrCallAuditLogMinAggregateOutputType | null
   _max: LeadQrCallAuditLogMaxAggregateOutputType | null
 }
@@ -209,7 +243,7 @@ export type LeadQrCallAuditLogWhereInput = {
   OR?: Prisma.LeadQrCallAuditLogWhereInput[]
   NOT?: Prisma.LeadQrCallAuditLogWhereInput | Prisma.LeadQrCallAuditLogWhereInput[]
   id?: Prisma.StringFilter<"LeadQrCallAuditLog"> | string
-  leadId?: Prisma.StringFilter<"LeadQrCallAuditLog"> | string
+  leadId?: Prisma.IntFilter<"LeadQrCallAuditLog"> | number
   userId?: Prisma.StringFilter<"LeadQrCallAuditLog"> | string
   action?: Prisma.StringFilter<"LeadQrCallAuditLog"> | string
   phoneNumber?: Prisma.StringFilter<"LeadQrCallAuditLog"> | string
@@ -242,7 +276,7 @@ export type LeadQrCallAuditLogWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.LeadQrCallAuditLogWhereInput | Prisma.LeadQrCallAuditLogWhereInput[]
   OR?: Prisma.LeadQrCallAuditLogWhereInput[]
   NOT?: Prisma.LeadQrCallAuditLogWhereInput | Prisma.LeadQrCallAuditLogWhereInput[]
-  leadId?: Prisma.StringFilter<"LeadQrCallAuditLog"> | string
+  leadId?: Prisma.IntFilter<"LeadQrCallAuditLog"> | number
   userId?: Prisma.StringFilter<"LeadQrCallAuditLog"> | string
   action?: Prisma.StringFilter<"LeadQrCallAuditLog"> | string
   phoneNumber?: Prisma.StringFilter<"LeadQrCallAuditLog"> | string
@@ -267,8 +301,10 @@ export type LeadQrCallAuditLogOrderByWithAggregationInput = {
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.LeadQrCallAuditLogCountOrderByAggregateInput
+  _avg?: Prisma.LeadQrCallAuditLogAvgOrderByAggregateInput
   _max?: Prisma.LeadQrCallAuditLogMaxOrderByAggregateInput
   _min?: Prisma.LeadQrCallAuditLogMinOrderByAggregateInput
+  _sum?: Prisma.LeadQrCallAuditLogSumOrderByAggregateInput
 }
 
 export type LeadQrCallAuditLogScalarWhereWithAggregatesInput = {
@@ -276,7 +312,7 @@ export type LeadQrCallAuditLogScalarWhereWithAggregatesInput = {
   OR?: Prisma.LeadQrCallAuditLogScalarWhereWithAggregatesInput[]
   NOT?: Prisma.LeadQrCallAuditLogScalarWhereWithAggregatesInput | Prisma.LeadQrCallAuditLogScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"LeadQrCallAuditLog"> | string
-  leadId?: Prisma.StringWithAggregatesFilter<"LeadQrCallAuditLog"> | string
+  leadId?: Prisma.IntWithAggregatesFilter<"LeadQrCallAuditLog"> | number
   userId?: Prisma.StringWithAggregatesFilter<"LeadQrCallAuditLog"> | string
   action?: Prisma.StringWithAggregatesFilter<"LeadQrCallAuditLog"> | string
   phoneNumber?: Prisma.StringWithAggregatesFilter<"LeadQrCallAuditLog"> | string
@@ -302,7 +338,7 @@ export type LeadQrCallAuditLogCreateInput = {
 
 export type LeadQrCallAuditLogUncheckedCreateInput = {
   id?: string
-  leadId: string
+  leadId: number
   userId: string
   action: string
   phoneNumber: string
@@ -328,7 +364,7 @@ export type LeadQrCallAuditLogUpdateInput = {
 
 export type LeadQrCallAuditLogUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
@@ -341,7 +377,7 @@ export type LeadQrCallAuditLogUncheckedUpdateInput = {
 
 export type LeadQrCallAuditLogCreateManyInput = {
   id?: string
-  leadId: string
+  leadId: number
   userId: string
   action: string
   phoneNumber: string
@@ -365,7 +401,7 @@ export type LeadQrCallAuditLogUpdateManyMutationInput = {
 
 export type LeadQrCallAuditLogUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
@@ -399,6 +435,10 @@ export type LeadQrCallAuditLogCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
+export type LeadQrCallAuditLogAvgOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
+}
+
 export type LeadQrCallAuditLogMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
@@ -421,6 +461,10 @@ export type LeadQrCallAuditLogMinOrderByAggregateInput = {
   ipAddress?: Prisma.SortOrder
   userAgent?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type LeadQrCallAuditLogSumOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
 }
 
 export type LeadQrCallAuditLogCreateNestedManyWithoutUserInput = {
@@ -521,7 +565,7 @@ export type LeadQrCallAuditLogCreateWithoutUserInput = {
 
 export type LeadQrCallAuditLogUncheckedCreateWithoutUserInput = {
   id?: string
-  leadId: string
+  leadId: number
   action: string
   phoneNumber: string
   source?: string | null
@@ -562,7 +606,7 @@ export type LeadQrCallAuditLogScalarWhereInput = {
   OR?: Prisma.LeadQrCallAuditLogScalarWhereInput[]
   NOT?: Prisma.LeadQrCallAuditLogScalarWhereInput | Prisma.LeadQrCallAuditLogScalarWhereInput[]
   id?: Prisma.StringFilter<"LeadQrCallAuditLog"> | string
-  leadId?: Prisma.StringFilter<"LeadQrCallAuditLog"> | string
+  leadId?: Prisma.IntFilter<"LeadQrCallAuditLog"> | number
   userId?: Prisma.StringFilter<"LeadQrCallAuditLog"> | string
   action?: Prisma.StringFilter<"LeadQrCallAuditLog"> | string
   phoneNumber?: Prisma.StringFilter<"LeadQrCallAuditLog"> | string
@@ -625,7 +669,7 @@ export type LeadQrCallAuditLogUpdateManyWithWhereWithoutLeadInput = {
 
 export type LeadQrCallAuditLogCreateManyUserInput = {
   id?: string
-  leadId: string
+  leadId: number
   action: string
   phoneNumber: string
   source?: string | null
@@ -649,7 +693,7 @@ export type LeadQrCallAuditLogUpdateWithoutUserInput = {
 
 export type LeadQrCallAuditLogUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -661,7 +705,7 @@ export type LeadQrCallAuditLogUncheckedUpdateWithoutUserInput = {
 
 export type LeadQrCallAuditLogUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -801,7 +845,7 @@ export type $LeadQrCallAuditLogPayload<ExtArgs extends runtime.Types.Extensions.
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    leadId: string
+    leadId: number
     userId: string
     action: string
     phoneNumber: string
@@ -1236,7 +1280,7 @@ export interface Prisma__LeadQrCallAuditLogClient<T, Null = never, ExtArgs exten
  */
 export interface LeadQrCallAuditLogFieldRefs {
   readonly id: Prisma.FieldRef<"LeadQrCallAuditLog", 'String'>
-  readonly leadId: Prisma.FieldRef<"LeadQrCallAuditLog", 'String'>
+  readonly leadId: Prisma.FieldRef<"LeadQrCallAuditLog", 'Int'>
   readonly userId: Prisma.FieldRef<"LeadQrCallAuditLog", 'String'>
   readonly action: Prisma.FieldRef<"LeadQrCallAuditLog", 'String'>
   readonly phoneNumber: Prisma.FieldRef<"LeadQrCallAuditLog", 'String'>

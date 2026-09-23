@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    let leadId: string | null = null
+    let leadId: number | null = null
     let leadLabel: string = customerPhone ? `Call (${customerPhone})` : 'Call Recording'
 
     if (customerPhone) {
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
       data: {
         action: 'KNOWLARITY_CALL_RECORDING',
         entityType: 'CRM_LEAD',
-        entityId: leadId || customerPhone || 'unknown',
+        entityId: String(leadId || customerPhone || 'unknown'),
         entityLabel: leadLabel,
         actorUserId: agentUserId,
         summary: `Call recording received for ${leadLabel}`,

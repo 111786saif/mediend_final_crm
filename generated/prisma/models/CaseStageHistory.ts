@@ -20,13 +20,23 @@ export type CaseStageHistoryModel = runtime.Types.Result.DefaultSelection<Prisma
 
 export type AggregateCaseStageHistory = {
   _count: CaseStageHistoryCountAggregateOutputType | null
+  _avg: CaseStageHistoryAvgAggregateOutputType | null
+  _sum: CaseStageHistorySumAggregateOutputType | null
   _min: CaseStageHistoryMinAggregateOutputType | null
   _max: CaseStageHistoryMaxAggregateOutputType | null
 }
 
+export type CaseStageHistoryAvgAggregateOutputType = {
+  leadId: number | null
+}
+
+export type CaseStageHistorySumAggregateOutputType = {
+  leadId: number | null
+}
+
 export type CaseStageHistoryMinAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   fromStage: $Enums.CaseStage | null
   toStage: $Enums.CaseStage | null
   changedById: string | null
@@ -36,7 +46,7 @@ export type CaseStageHistoryMinAggregateOutputType = {
 
 export type CaseStageHistoryMaxAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   fromStage: $Enums.CaseStage | null
   toStage: $Enums.CaseStage | null
   changedById: string | null
@@ -55,6 +65,14 @@ export type CaseStageHistoryCountAggregateOutputType = {
   _all: number
 }
 
+
+export type CaseStageHistoryAvgAggregateInputType = {
+  leadId?: true
+}
+
+export type CaseStageHistorySumAggregateInputType = {
+  leadId?: true
+}
 
 export type CaseStageHistoryMinAggregateInputType = {
   id?: true
@@ -125,6 +143,18 @@ export type CaseStageHistoryAggregateArgs<ExtArgs extends runtime.Types.Extensio
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: CaseStageHistoryAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: CaseStageHistorySumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: CaseStageHistoryMinAggregateInputType
@@ -155,19 +185,23 @@ export type CaseStageHistoryGroupByArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   _count?: CaseStageHistoryCountAggregateInputType | true
+  _avg?: CaseStageHistoryAvgAggregateInputType
+  _sum?: CaseStageHistorySumAggregateInputType
   _min?: CaseStageHistoryMinAggregateInputType
   _max?: CaseStageHistoryMaxAggregateInputType
 }
 
 export type CaseStageHistoryGroupByOutputType = {
   id: string
-  leadId: string
+  leadId: number
   fromStage: $Enums.CaseStage | null
   toStage: $Enums.CaseStage
   changedById: string
   changedAt: Date
   note: string | null
   _count: CaseStageHistoryCountAggregateOutputType | null
+  _avg: CaseStageHistoryAvgAggregateOutputType | null
+  _sum: CaseStageHistorySumAggregateOutputType | null
   _min: CaseStageHistoryMinAggregateOutputType | null
   _max: CaseStageHistoryMaxAggregateOutputType | null
 }
@@ -192,7 +226,7 @@ export type CaseStageHistoryWhereInput = {
   OR?: Prisma.CaseStageHistoryWhereInput[]
   NOT?: Prisma.CaseStageHistoryWhereInput | Prisma.CaseStageHistoryWhereInput[]
   id?: Prisma.StringFilter<"CaseStageHistory"> | string
-  leadId?: Prisma.StringFilter<"CaseStageHistory"> | string
+  leadId?: Prisma.IntFilter<"CaseStageHistory"> | number
   fromStage?: Prisma.EnumCaseStageNullableFilter<"CaseStageHistory"> | $Enums.CaseStage | null
   toStage?: Prisma.EnumCaseStageFilter<"CaseStageHistory"> | $Enums.CaseStage
   changedById?: Prisma.StringFilter<"CaseStageHistory"> | string
@@ -219,7 +253,7 @@ export type CaseStageHistoryWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.CaseStageHistoryWhereInput | Prisma.CaseStageHistoryWhereInput[]
   OR?: Prisma.CaseStageHistoryWhereInput[]
   NOT?: Prisma.CaseStageHistoryWhereInput | Prisma.CaseStageHistoryWhereInput[]
-  leadId?: Prisma.StringFilter<"CaseStageHistory"> | string
+  leadId?: Prisma.IntFilter<"CaseStageHistory"> | number
   fromStage?: Prisma.EnumCaseStageNullableFilter<"CaseStageHistory"> | $Enums.CaseStage | null
   toStage?: Prisma.EnumCaseStageFilter<"CaseStageHistory"> | $Enums.CaseStage
   changedById?: Prisma.StringFilter<"CaseStageHistory"> | string
@@ -238,8 +272,10 @@ export type CaseStageHistoryOrderByWithAggregationInput = {
   changedAt?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.CaseStageHistoryCountOrderByAggregateInput
+  _avg?: Prisma.CaseStageHistoryAvgOrderByAggregateInput
   _max?: Prisma.CaseStageHistoryMaxOrderByAggregateInput
   _min?: Prisma.CaseStageHistoryMinOrderByAggregateInput
+  _sum?: Prisma.CaseStageHistorySumOrderByAggregateInput
 }
 
 export type CaseStageHistoryScalarWhereWithAggregatesInput = {
@@ -247,7 +283,7 @@ export type CaseStageHistoryScalarWhereWithAggregatesInput = {
   OR?: Prisma.CaseStageHistoryScalarWhereWithAggregatesInput[]
   NOT?: Prisma.CaseStageHistoryScalarWhereWithAggregatesInput | Prisma.CaseStageHistoryScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"CaseStageHistory"> | string
-  leadId?: Prisma.StringWithAggregatesFilter<"CaseStageHistory"> | string
+  leadId?: Prisma.IntWithAggregatesFilter<"CaseStageHistory"> | number
   fromStage?: Prisma.EnumCaseStageNullableWithAggregatesFilter<"CaseStageHistory"> | $Enums.CaseStage | null
   toStage?: Prisma.EnumCaseStageWithAggregatesFilter<"CaseStageHistory"> | $Enums.CaseStage
   changedById?: Prisma.StringWithAggregatesFilter<"CaseStageHistory"> | string
@@ -267,7 +303,7 @@ export type CaseStageHistoryCreateInput = {
 
 export type CaseStageHistoryUncheckedCreateInput = {
   id?: string
-  leadId: string
+  leadId: number
   fromStage?: $Enums.CaseStage | null
   toStage: $Enums.CaseStage
   changedById: string
@@ -287,7 +323,7 @@ export type CaseStageHistoryUpdateInput = {
 
 export type CaseStageHistoryUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   fromStage?: Prisma.NullableEnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage | null
   toStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   changedById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -297,7 +333,7 @@ export type CaseStageHistoryUncheckedUpdateInput = {
 
 export type CaseStageHistoryCreateManyInput = {
   id?: string
-  leadId: string
+  leadId: number
   fromStage?: $Enums.CaseStage | null
   toStage: $Enums.CaseStage
   changedById: string
@@ -315,7 +351,7 @@ export type CaseStageHistoryUpdateManyMutationInput = {
 
 export type CaseStageHistoryUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   fromStage?: Prisma.NullableEnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage | null
   toStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   changedById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -343,6 +379,10 @@ export type CaseStageHistoryCountOrderByAggregateInput = {
   note?: Prisma.SortOrder
 }
 
+export type CaseStageHistoryAvgOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
+}
+
 export type CaseStageHistoryMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
@@ -361,6 +401,10 @@ export type CaseStageHistoryMinOrderByAggregateInput = {
   changedById?: Prisma.SortOrder
   changedAt?: Prisma.SortOrder
   note?: Prisma.SortOrder
+}
+
+export type CaseStageHistorySumOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
 }
 
 export type CaseStageHistoryCreateNestedManyWithoutChangedByInput = {
@@ -462,7 +506,7 @@ export type CaseStageHistoryCreateWithoutChangedByInput = {
 
 export type CaseStageHistoryUncheckedCreateWithoutChangedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   fromStage?: $Enums.CaseStage | null
   toStage: $Enums.CaseStage
   changedAt?: Date | string
@@ -500,7 +544,7 @@ export type CaseStageHistoryScalarWhereInput = {
   OR?: Prisma.CaseStageHistoryScalarWhereInput[]
   NOT?: Prisma.CaseStageHistoryScalarWhereInput | Prisma.CaseStageHistoryScalarWhereInput[]
   id?: Prisma.StringFilter<"CaseStageHistory"> | string
-  leadId?: Prisma.StringFilter<"CaseStageHistory"> | string
+  leadId?: Prisma.IntFilter<"CaseStageHistory"> | number
   fromStage?: Prisma.EnumCaseStageNullableFilter<"CaseStageHistory"> | $Enums.CaseStage | null
   toStage?: Prisma.EnumCaseStageFilter<"CaseStageHistory"> | $Enums.CaseStage
   changedById?: Prisma.StringFilter<"CaseStageHistory"> | string
@@ -554,7 +598,7 @@ export type CaseStageHistoryUpdateManyWithWhereWithoutLeadInput = {
 
 export type CaseStageHistoryCreateManyChangedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   fromStage?: $Enums.CaseStage | null
   toStage: $Enums.CaseStage
   changedAt?: Date | string
@@ -572,7 +616,7 @@ export type CaseStageHistoryUpdateWithoutChangedByInput = {
 
 export type CaseStageHistoryUncheckedUpdateWithoutChangedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   fromStage?: Prisma.NullableEnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage | null
   toStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -581,7 +625,7 @@ export type CaseStageHistoryUncheckedUpdateWithoutChangedByInput = {
 
 export type CaseStageHistoryUncheckedUpdateManyWithoutChangedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   fromStage?: Prisma.NullableEnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage | null
   toStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -694,7 +738,7 @@ export type $CaseStageHistoryPayload<ExtArgs extends runtime.Types.Extensions.In
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    leadId: string
+    leadId: number
     fromStage: $Enums.CaseStage | null
     toStage: $Enums.CaseStage
     changedById: string
@@ -1126,7 +1170,7 @@ export interface Prisma__CaseStageHistoryClient<T, Null = never, ExtArgs extends
  */
 export interface CaseStageHistoryFieldRefs {
   readonly id: Prisma.FieldRef<"CaseStageHistory", 'String'>
-  readonly leadId: Prisma.FieldRef<"CaseStageHistory", 'String'>
+  readonly leadId: Prisma.FieldRef<"CaseStageHistory", 'Int'>
   readonly fromStage: Prisma.FieldRef<"CaseStageHistory", 'CaseStage'>
   readonly toStage: Prisma.FieldRef<"CaseStageHistory", 'CaseStage'>
   readonly changedById: Prisma.FieldRef<"CaseStageHistory", 'String'>

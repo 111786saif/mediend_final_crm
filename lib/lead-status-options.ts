@@ -1,45 +1,6 @@
-export const LEAD_STATUS_OPTIONS = [
-  'New Lead',
-  'Hot Lead',
-  'Follow-up 1',
-  'Follow-up 2',
-  'Follow-up 3',
-  'OPD Done',
-  'OPD Schedule',
-  'IPD Schedule',
-  'IPD Done',
-  'IPD Lost',
-  'Fund Issues',
-  'DNP-1',
-  'DNP-2',
-  'DNP-3',
-  'DNP-4',
-  'DNP-5',
-  'DNP Exhausted',
-  'Call Back (SD)',
-  'Call Back (T)',
-  'Closed',
-  'Out of Station',
-  'Out of Station follow-up',
-  'Supply Gap',
-  'SX Not Suggested',
-  'Language Barrier',
-  'Junk',
-  'Duplicate lead',
-  'Not Interested',
-  'Nurture',
-  'Nuture 1',
-  'Nuture 2',
-  'Nuture 3',
-  'Nuture 4',
-  'Nuture 5',
-  'Interested',
-  'Follow-up',
-  'Call Back Next Week',
-  'Call Back Next Month',
-  'Invalid Number',
-  'Order Booked',
-] as const
+import { LEAD_STATUS_OPTIONS as STATUS_OPTIONS } from '@/lib/lead-status-hierarchy'
+
+export const LEAD_STATUS_OPTIONS = STATUS_OPTIONS
 
 export const CRM_LEAD_STATUS_OPTIONS = Array.from(
   new Set([...LEAD_STATUS_OPTIONS])

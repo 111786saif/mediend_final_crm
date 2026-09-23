@@ -19,7 +19,7 @@ export default function DischargeCashPage() {
   const params = useParams()
   const searchParams = useSearchParams()
   const queryClient = useQueryClient()
-  const leadId = params.leadId as string
+  const leadId = Number(params.leadId)
   const returnHref = resolveReturnTo(searchParams) ?? `/patient/${leadId}`
 
   const { data: lead, isLoading } = useQuery<any>({

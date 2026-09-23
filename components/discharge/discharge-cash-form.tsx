@@ -13,7 +13,7 @@ import { toast } from 'sonner'
 import { FileText, X, ChevronDown, ChevronUp, User, Building2, Calendar, Receipt, Banknote } from 'lucide-react'
 
 interface DischargeCashFormProps {
-  leadId: string
+  leadId: number
   patientName: string
   hospitalName: string
   approvedAmount?: number

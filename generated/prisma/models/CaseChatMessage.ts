@@ -20,13 +20,23 @@ export type CaseChatMessageModel = runtime.Types.Result.DefaultSelection<Prisma.
 
 export type AggregateCaseChatMessage = {
   _count: CaseChatMessageCountAggregateOutputType | null
+  _avg: CaseChatMessageAvgAggregateOutputType | null
+  _sum: CaseChatMessageSumAggregateOutputType | null
   _min: CaseChatMessageMinAggregateOutputType | null
   _max: CaseChatMessageMaxAggregateOutputType | null
 }
 
+export type CaseChatMessageAvgAggregateOutputType = {
+  leadId: number | null
+}
+
+export type CaseChatMessageSumAggregateOutputType = {
+  leadId: number | null
+}
+
 export type CaseChatMessageMinAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   senderId: string | null
   type: $Enums.ChatMessageType | null
   content: string | null
@@ -37,7 +47,7 @@ export type CaseChatMessageMinAggregateOutputType = {
 
 export type CaseChatMessageMaxAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   senderId: string | null
   type: $Enums.ChatMessageType | null
   content: string | null
@@ -58,6 +68,14 @@ export type CaseChatMessageCountAggregateOutputType = {
   _all: number
 }
 
+
+export type CaseChatMessageAvgAggregateInputType = {
+  leadId?: true
+}
+
+export type CaseChatMessageSumAggregateInputType = {
+  leadId?: true
+}
 
 export type CaseChatMessageMinAggregateInputType = {
   id?: true
@@ -131,6 +149,18 @@ export type CaseChatMessageAggregateArgs<ExtArgs extends runtime.Types.Extension
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: CaseChatMessageAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: CaseChatMessageSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: CaseChatMessageMinAggregateInputType
@@ -161,13 +191,15 @@ export type CaseChatMessageGroupByArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   _count?: CaseChatMessageCountAggregateInputType | true
+  _avg?: CaseChatMessageAvgAggregateInputType
+  _sum?: CaseChatMessageSumAggregateInputType
   _min?: CaseChatMessageMinAggregateInputType
   _max?: CaseChatMessageMaxAggregateInputType
 }
 
 export type CaseChatMessageGroupByOutputType = {
   id: string
-  leadId: string
+  leadId: number
   senderId: string | null
   type: $Enums.ChatMessageType
   content: string
@@ -175,6 +207,8 @@ export type CaseChatMessageGroupByOutputType = {
   fileName: string | null
   createdAt: Date
   _count: CaseChatMessageCountAggregateOutputType | null
+  _avg: CaseChatMessageAvgAggregateOutputType | null
+  _sum: CaseChatMessageSumAggregateOutputType | null
   _min: CaseChatMessageMinAggregateOutputType | null
   _max: CaseChatMessageMaxAggregateOutputType | null
 }
@@ -199,7 +233,7 @@ export type CaseChatMessageWhereInput = {
   OR?: Prisma.CaseChatMessageWhereInput[]
   NOT?: Prisma.CaseChatMessageWhereInput | Prisma.CaseChatMessageWhereInput[]
   id?: Prisma.StringFilter<"CaseChatMessage"> | string
-  leadId?: Prisma.StringFilter<"CaseChatMessage"> | string
+  leadId?: Prisma.IntFilter<"CaseChatMessage"> | number
   senderId?: Prisma.StringNullableFilter<"CaseChatMessage"> | string | null
   type?: Prisma.EnumChatMessageTypeFilter<"CaseChatMessage"> | $Enums.ChatMessageType
   content?: Prisma.StringFilter<"CaseChatMessage"> | string
@@ -228,7 +262,7 @@ export type CaseChatMessageWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.CaseChatMessageWhereInput | Prisma.CaseChatMessageWhereInput[]
   OR?: Prisma.CaseChatMessageWhereInput[]
   NOT?: Prisma.CaseChatMessageWhereInput | Prisma.CaseChatMessageWhereInput[]
-  leadId?: Prisma.StringFilter<"CaseChatMessage"> | string
+  leadId?: Prisma.IntFilter<"CaseChatMessage"> | number
   senderId?: Prisma.StringNullableFilter<"CaseChatMessage"> | string | null
   type?: Prisma.EnumChatMessageTypeFilter<"CaseChatMessage"> | $Enums.ChatMessageType
   content?: Prisma.StringFilter<"CaseChatMessage"> | string
@@ -249,8 +283,10 @@ export type CaseChatMessageOrderByWithAggregationInput = {
   fileName?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.CaseChatMessageCountOrderByAggregateInput
+  _avg?: Prisma.CaseChatMessageAvgOrderByAggregateInput
   _max?: Prisma.CaseChatMessageMaxOrderByAggregateInput
   _min?: Prisma.CaseChatMessageMinOrderByAggregateInput
+  _sum?: Prisma.CaseChatMessageSumOrderByAggregateInput
 }
 
 export type CaseChatMessageScalarWhereWithAggregatesInput = {
@@ -258,7 +294,7 @@ export type CaseChatMessageScalarWhereWithAggregatesInput = {
   OR?: Prisma.CaseChatMessageScalarWhereWithAggregatesInput[]
   NOT?: Prisma.CaseChatMessageScalarWhereWithAggregatesInput | Prisma.CaseChatMessageScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"CaseChatMessage"> | string
-  leadId?: Prisma.StringWithAggregatesFilter<"CaseChatMessage"> | string
+  leadId?: Prisma.IntWithAggregatesFilter<"CaseChatMessage"> | number
   senderId?: Prisma.StringNullableWithAggregatesFilter<"CaseChatMessage"> | string | null
   type?: Prisma.EnumChatMessageTypeWithAggregatesFilter<"CaseChatMessage"> | $Enums.ChatMessageType
   content?: Prisma.StringWithAggregatesFilter<"CaseChatMessage"> | string
@@ -280,7 +316,7 @@ export type CaseChatMessageCreateInput = {
 
 export type CaseChatMessageUncheckedCreateInput = {
   id?: string
-  leadId: string
+  leadId: number
   senderId?: string | null
   type: $Enums.ChatMessageType
   content: string
@@ -302,7 +338,7 @@ export type CaseChatMessageUpdateInput = {
 
 export type CaseChatMessageUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   senderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumChatMessageTypeFieldUpdateOperationsInput | $Enums.ChatMessageType
   content?: Prisma.StringFieldUpdateOperationsInput | string
@@ -313,7 +349,7 @@ export type CaseChatMessageUncheckedUpdateInput = {
 
 export type CaseChatMessageCreateManyInput = {
   id?: string
-  leadId: string
+  leadId: number
   senderId?: string | null
   type: $Enums.ChatMessageType
   content: string
@@ -333,7 +369,7 @@ export type CaseChatMessageUpdateManyMutationInput = {
 
 export type CaseChatMessageUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   senderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumChatMessageTypeFieldUpdateOperationsInput | $Enums.ChatMessageType
   content?: Prisma.StringFieldUpdateOperationsInput | string
@@ -363,6 +399,10 @@ export type CaseChatMessageCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
+export type CaseChatMessageAvgOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
+}
+
 export type CaseChatMessageMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
@@ -383,6 +423,10 @@ export type CaseChatMessageMinOrderByAggregateInput = {
   fileUrl?: Prisma.SortOrder
   fileName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type CaseChatMessageSumOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
 }
 
 export type CaseChatMessageCreateNestedManyWithoutSenderInput = {
@@ -485,7 +529,7 @@ export type CaseChatMessageCreateWithoutSenderInput = {
 
 export type CaseChatMessageUncheckedCreateWithoutSenderInput = {
   id?: string
-  leadId: string
+  leadId: number
   type: $Enums.ChatMessageType
   content: string
   fileUrl?: string | null
@@ -524,7 +568,7 @@ export type CaseChatMessageScalarWhereInput = {
   OR?: Prisma.CaseChatMessageScalarWhereInput[]
   NOT?: Prisma.CaseChatMessageScalarWhereInput | Prisma.CaseChatMessageScalarWhereInput[]
   id?: Prisma.StringFilter<"CaseChatMessage"> | string
-  leadId?: Prisma.StringFilter<"CaseChatMessage"> | string
+  leadId?: Prisma.IntFilter<"CaseChatMessage"> | number
   senderId?: Prisma.StringNullableFilter<"CaseChatMessage"> | string | null
   type?: Prisma.EnumChatMessageTypeFilter<"CaseChatMessage"> | $Enums.ChatMessageType
   content?: Prisma.StringFilter<"CaseChatMessage"> | string
@@ -581,7 +625,7 @@ export type CaseChatMessageUpdateManyWithWhereWithoutLeadInput = {
 
 export type CaseChatMessageCreateManySenderInput = {
   id?: string
-  leadId: string
+  leadId: number
   type: $Enums.ChatMessageType
   content: string
   fileUrl?: string | null
@@ -601,7 +645,7 @@ export type CaseChatMessageUpdateWithoutSenderInput = {
 
 export type CaseChatMessageUncheckedUpdateWithoutSenderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumChatMessageTypeFieldUpdateOperationsInput | $Enums.ChatMessageType
   content?: Prisma.StringFieldUpdateOperationsInput | string
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -611,7 +655,7 @@ export type CaseChatMessageUncheckedUpdateWithoutSenderInput = {
 
 export type CaseChatMessageUncheckedUpdateManyWithoutSenderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumChatMessageTypeFieldUpdateOperationsInput | $Enums.ChatMessageType
   content?: Prisma.StringFieldUpdateOperationsInput | string
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -733,7 +777,7 @@ export type $CaseChatMessagePayload<ExtArgs extends runtime.Types.Extensions.Int
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    leadId: string
+    leadId: number
     senderId: string | null
     type: $Enums.ChatMessageType
     content: string
@@ -1166,7 +1210,7 @@ export interface Prisma__CaseChatMessageClient<T, Null = never, ExtArgs extends 
  */
 export interface CaseChatMessageFieldRefs {
   readonly id: Prisma.FieldRef<"CaseChatMessage", 'String'>
-  readonly leadId: Prisma.FieldRef<"CaseChatMessage", 'String'>
+  readonly leadId: Prisma.FieldRef<"CaseChatMessage", 'Int'>
   readonly senderId: Prisma.FieldRef<"CaseChatMessage", 'String'>
   readonly type: Prisma.FieldRef<"CaseChatMessage", 'ChatMessageType'>
   readonly content: Prisma.FieldRef<"CaseChatMessage", 'String'>

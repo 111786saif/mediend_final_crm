@@ -1,3 +1,5 @@
+import { optionalLeadId } from '@/lib/lead-id'
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
@@ -13,7 +15,7 @@ import {
 } from '@/lib/pl/hydrate-pl-record'
 
 const createDischargeSheetSchema = z.object({
-  leadId: z.string(),
+  leadId: leadIdSchema,
   kypSubmissionId: z.string().optional(),
   // Core Identification
   month: z.string().optional(),
@@ -106,7 +108,7 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url)
-    const leadId = searchParams.get('leadId')
+    const leadId = optionalLeadId(searchParams.get('leadId'))
     const month = searchParams.get('month')
 
     const where: any = {}

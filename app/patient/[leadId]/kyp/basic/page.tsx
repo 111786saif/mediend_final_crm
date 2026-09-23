@@ -19,7 +19,7 @@ import {
 import { CaseStage, FlowType } from '@/generated/prisma/enums'
 
 interface Lead {
-  id: string
+  id: number
   leadRef: string
   patientName: string
   phoneNumber: string
@@ -61,7 +61,7 @@ export default function KYPBasicSubmitPage() {
   const params = useParams()
   const searchParams = useSearchParams()
   const queryClient = useQueryClient()
-  const leadId = params.leadId as string
+  const leadId = Number(params.leadId)
   const returnToParam = searchParams.get('returnTo')
   const returnHref = useMemo(
     () =>

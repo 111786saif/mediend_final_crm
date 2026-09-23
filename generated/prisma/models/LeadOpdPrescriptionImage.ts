@@ -27,16 +27,18 @@ export type AggregateLeadOpdPrescriptionImage = {
 }
 
 export type LeadOpdPrescriptionImageAvgAggregateOutputType = {
+  leadId: number | null
   sortOrder: number | null
 }
 
 export type LeadOpdPrescriptionImageSumAggregateOutputType = {
+  leadId: number | null
   sortOrder: number | null
 }
 
 export type LeadOpdPrescriptionImageMinAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   fileName: string | null
   fileUrl: string | null
   storageKey: string | null
@@ -47,7 +49,7 @@ export type LeadOpdPrescriptionImageMinAggregateOutputType = {
 
 export type LeadOpdPrescriptionImageMaxAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   fileName: string | null
   fileUrl: string | null
   storageKey: string | null
@@ -70,10 +72,12 @@ export type LeadOpdPrescriptionImageCountAggregateOutputType = {
 
 
 export type LeadOpdPrescriptionImageAvgAggregateInputType = {
+  leadId?: true
   sortOrder?: true
 }
 
 export type LeadOpdPrescriptionImageSumAggregateInputType = {
+  leadId?: true
   sortOrder?: true
 }
 
@@ -199,7 +203,7 @@ export type LeadOpdPrescriptionImageGroupByArgs<ExtArgs extends runtime.Types.Ex
 
 export type LeadOpdPrescriptionImageGroupByOutputType = {
   id: string
-  leadId: string
+  leadId: number
   fileName: string
   fileUrl: string
   storageKey: string | null
@@ -233,7 +237,7 @@ export type LeadOpdPrescriptionImageWhereInput = {
   OR?: Prisma.LeadOpdPrescriptionImageWhereInput[]
   NOT?: Prisma.LeadOpdPrescriptionImageWhereInput | Prisma.LeadOpdPrescriptionImageWhereInput[]
   id?: Prisma.StringFilter<"LeadOpdPrescriptionImage"> | string
-  leadId?: Prisma.StringFilter<"LeadOpdPrescriptionImage"> | string
+  leadId?: Prisma.IntFilter<"LeadOpdPrescriptionImage"> | number
   fileName?: Prisma.StringFilter<"LeadOpdPrescriptionImage"> | string
   fileUrl?: Prisma.StringFilter<"LeadOpdPrescriptionImage"> | string
   storageKey?: Prisma.StringNullableFilter<"LeadOpdPrescriptionImage"> | string | null
@@ -260,7 +264,7 @@ export type LeadOpdPrescriptionImageWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.LeadOpdPrescriptionImageWhereInput | Prisma.LeadOpdPrescriptionImageWhereInput[]
   OR?: Prisma.LeadOpdPrescriptionImageWhereInput[]
   NOT?: Prisma.LeadOpdPrescriptionImageWhereInput | Prisma.LeadOpdPrescriptionImageWhereInput[]
-  leadId?: Prisma.StringFilter<"LeadOpdPrescriptionImage"> | string
+  leadId?: Prisma.IntFilter<"LeadOpdPrescriptionImage"> | number
   fileName?: Prisma.StringFilter<"LeadOpdPrescriptionImage"> | string
   fileUrl?: Prisma.StringFilter<"LeadOpdPrescriptionImage"> | string
   storageKey?: Prisma.StringNullableFilter<"LeadOpdPrescriptionImage"> | string | null
@@ -291,7 +295,7 @@ export type LeadOpdPrescriptionImageScalarWhereWithAggregatesInput = {
   OR?: Prisma.LeadOpdPrescriptionImageScalarWhereWithAggregatesInput[]
   NOT?: Prisma.LeadOpdPrescriptionImageScalarWhereWithAggregatesInput | Prisma.LeadOpdPrescriptionImageScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"LeadOpdPrescriptionImage"> | string
-  leadId?: Prisma.StringWithAggregatesFilter<"LeadOpdPrescriptionImage"> | string
+  leadId?: Prisma.IntWithAggregatesFilter<"LeadOpdPrescriptionImage"> | number
   fileName?: Prisma.StringWithAggregatesFilter<"LeadOpdPrescriptionImage"> | string
   fileUrl?: Prisma.StringWithAggregatesFilter<"LeadOpdPrescriptionImage"> | string
   storageKey?: Prisma.StringNullableWithAggregatesFilter<"LeadOpdPrescriptionImage"> | string | null
@@ -313,7 +317,7 @@ export type LeadOpdPrescriptionImageCreateInput = {
 
 export type LeadOpdPrescriptionImageUncheckedCreateInput = {
   id?: string
-  leadId: string
+  leadId: number
   fileName: string
   fileUrl: string
   storageKey?: string | null
@@ -335,7 +339,7 @@ export type LeadOpdPrescriptionImageUpdateInput = {
 
 export type LeadOpdPrescriptionImageUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   storageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -346,7 +350,7 @@ export type LeadOpdPrescriptionImageUncheckedUpdateInput = {
 
 export type LeadOpdPrescriptionImageCreateManyInput = {
   id?: string
-  leadId: string
+  leadId: number
   fileName: string
   fileUrl: string
   storageKey?: string | null
@@ -367,7 +371,7 @@ export type LeadOpdPrescriptionImageUpdateManyMutationInput = {
 
 export type LeadOpdPrescriptionImageUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   storageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -398,6 +402,7 @@ export type LeadOpdPrescriptionImageCountOrderByAggregateInput = {
 }
 
 export type LeadOpdPrescriptionImageAvgOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
 }
 
@@ -424,6 +429,7 @@ export type LeadOpdPrescriptionImageMinOrderByAggregateInput = {
 }
 
 export type LeadOpdPrescriptionImageSumOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
 }
 
@@ -520,7 +526,7 @@ export type LeadOpdPrescriptionImageScalarWhereInput = {
   OR?: Prisma.LeadOpdPrescriptionImageScalarWhereInput[]
   NOT?: Prisma.LeadOpdPrescriptionImageScalarWhereInput | Prisma.LeadOpdPrescriptionImageScalarWhereInput[]
   id?: Prisma.StringFilter<"LeadOpdPrescriptionImage"> | string
-  leadId?: Prisma.StringFilter<"LeadOpdPrescriptionImage"> | string
+  leadId?: Prisma.IntFilter<"LeadOpdPrescriptionImage"> | number
   fileName?: Prisma.StringFilter<"LeadOpdPrescriptionImage"> | string
   fileUrl?: Prisma.StringFilter<"LeadOpdPrescriptionImage"> | string
   storageKey?: Prisma.StringNullableFilter<"LeadOpdPrescriptionImage"> | string | null
@@ -636,7 +642,7 @@ export type $LeadOpdPrescriptionImagePayload<ExtArgs extends runtime.Types.Exten
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    leadId: string
+    leadId: number
     fileName: string
     fileUrl: string
     storageKey: string | null
@@ -1068,7 +1074,7 @@ export interface Prisma__LeadOpdPrescriptionImageClient<T, Null = never, ExtArgs
  */
 export interface LeadOpdPrescriptionImageFieldRefs {
   readonly id: Prisma.FieldRef<"LeadOpdPrescriptionImage", 'String'>
-  readonly leadId: Prisma.FieldRef<"LeadOpdPrescriptionImage", 'String'>
+  readonly leadId: Prisma.FieldRef<"LeadOpdPrescriptionImage", 'Int'>
   readonly fileName: Prisma.FieldRef<"LeadOpdPrescriptionImage", 'String'>
   readonly fileUrl: Prisma.FieldRef<"LeadOpdPrescriptionImage", 'String'>
   readonly storageKey: Prisma.FieldRef<"LeadOpdPrescriptionImage", 'String'>

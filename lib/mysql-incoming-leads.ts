@@ -175,7 +175,7 @@ export async function queueMySQLIncomingLead(
 }
 
 export async function processMySQLIncomingLead(
-  incomingLeadId: string,
+  incomingLeadId: number,
   deps: QueueDeps
 ) {
   const incomingLead = await prisma.incomingLead.findUnique({

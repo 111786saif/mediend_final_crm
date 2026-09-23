@@ -12,7 +12,7 @@ import { Eye } from 'lucide-react'
 
 interface OutstandingCase {
   id: string
-  leadId: string
+  leadId: number
   srNo: number | null
   month: string | null
   dos: string | null
@@ -37,7 +37,7 @@ interface OutstandingCase {
   remarks: string | null
   remark2: string | null
   lead: {
-    id: string
+    id: number
     leadRef: string
     patientName: string
   }

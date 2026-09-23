@@ -10,7 +10,7 @@ function createOpaqueQrToken() {
 }
 
 export type LeadQrAuditLead = {
-  id: string
+  id: number
   bdId: string
   leadRef: string | null
   phoneNumber: string | null
@@ -30,7 +30,7 @@ export type LeadQrDeviceInfo = {
   label: string
 }
 
-export async function loadLeadForQrAudit(id: string): Promise<LeadQrAuditLead | null> {
+export async function loadLeadForQrAudit(id: number): Promise<LeadQrAuditLead | null> {
   return prisma.lead.findUnique({
     where: { id },
     select: {
@@ -136,7 +136,7 @@ export function parseLeadQrDeviceInfo(userAgent: string | null | undefined): Lea
 }
 
 export async function createLeadQrPublicLink(params: {
-  leadId: string
+  leadId: number
   actorUserId: string
 }) {
   const expiresAt = new Date(Date.now() + QR_CONTACT_SESSION_DURATION_MS)
@@ -156,7 +156,7 @@ export async function createLeadQrPublicLink(params: {
 }
 
 export async function createLeadQrScanLink(params: {
-  leadId: string
+  leadId: number
   actorUserId: string
 }) {
   return prisma.leadQrScanLink.create({

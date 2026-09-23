@@ -39,7 +39,7 @@ import { resolvePlRow } from '@/lib/pl/resolve-pl-row'
 const INSURANCE_LIST_RETURN = '/insurance/dashboard'
 
 interface LeadWithStage {
-  id: string
+  id: number
   leadRef: string
   patientName: string
   phoneNumber: string

@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { logCrmActivity } from '@/lib/crm-activity'
+import { optionalLeadId } from '@/lib/lead-id'
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,7 +13,12 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { leadId, phone, content } = body as { leadId?: string; phone?: string; content?: string }
+    const { leadId: rawLeadId, phone, content } = body as { leadId?: unknown; phone?: string; content?: string }
+    const leadId = optionalLeadId(rawLeadId)
+
+    if (rawLeadId != null && !leadId) {
+      return errorResponse('Invalid lead ID', 400)
+    }
 
     const trimmedContent = typeof content === 'string' ? content.trim() : ''
     if (!trimmedContent) {
@@ -37,7 +43,7 @@ export async function POST(request: NextRequest) {
         await logCrmActivity({
           action: 'CRM_LEAD_REMARK_ADDED',
           entityType: 'CRM_LEAD_REMARK',
-          entityId: lead.id,
+          entityId: String(lead.id),
           entityLabel: `${lead.leadRef} · ${lead.patientName}`,
           actorUserId: user.id,
           actorRole: user.role,

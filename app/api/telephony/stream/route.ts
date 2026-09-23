@@ -564,7 +564,7 @@ export async function GET(request: NextRequest) {
                   data: {
                     action: 'KNOWLARITY_CALL_RECORDING',
                     entityType: 'CRM_LEAD',
-                    entityId: leadId || 'call_recording',
+                    entityId: String(leadId || 'call_recording'),
                     entityLabel: leadRef && patientName ? `${leadRef} · ${patientName}` : 'Call Recording',
                     actorUserId: agentUserId,
                     actorRole: currentUser.role,

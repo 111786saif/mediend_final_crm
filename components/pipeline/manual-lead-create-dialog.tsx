@@ -102,7 +102,7 @@ type ManualLeadCreatePayload = {
 }
 
 type ManualLeadCreateResult = {
-  id: string
+  id: number
   leadRef: string
 }
 
@@ -129,7 +129,7 @@ function createInitialFormValues() {
     insuranceName: '',
     source: '',
     leadSource: '',
-    status: 'New Lead',
+    status: 'New Leads',
     modeOfPayment: '',
     remarks: '',
   }

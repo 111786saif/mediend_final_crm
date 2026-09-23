@@ -63,6 +63,8 @@ export async function GET(request: NextRequest) {
           caseStage: true,
           pipelineStage: true,
           status: true,
+          circle: true,
+          source: true,
           netProfit: true,
           billAmount: true,
         },
@@ -119,6 +121,21 @@ export async function GET(request: NextRequest) {
     const netProfit = completedLeads.reduce((s, l) => s + (l.netProfit ?? 0), 0)
     const billAmount = allLeads.reduce((s, l) => s + (l.billAmount ?? 0), 0)
     const avgTicketSize = ipdDone > 0 ? billAmount / ipdDone : 0
+
+    const convertedIds = new Set(completedLeads.map((lead) => lead.id))
+    const createBreakdown = (field: 'circle' | 'source') => {
+      const rows = new Map<string, { label: string; totalLeads: number; ipd: number }>()
+      for (const lead of allLeads) {
+        const label = lead[field]?.trim() || (field === 'circle' ? 'Unknown' : 'Not Specified')
+        const row = rows.get(label) ?? { label, totalLeads: 0, ipd: 0 }
+        row.totalLeads += 1
+        if (convertedIds.has(lead.id)) row.ipd += 1
+        rows.set(label, row)
+      }
+      return Array.from(rows.values())
+        .map((row) => ({ ...row, conversionRate: row.totalLeads ? (row.ipd / row.totalLeads) * 100 : 0 }))
+        .sort((a, b) => b.totalLeads - a.totalLeads || a.label.localeCompare(b.label))
+    }
 
     // Month-wise breakdown (all leads for this BD, all time, no date filter)
     // Leads bucketed by leadEntryDate, IPDs bucketed by conversionDate (when done, not when received)
@@ -247,6 +264,8 @@ export async function GET(request: NextRequest) {
       treatmentBreakdown: Object.entries(treatmentBreakdown)
         .map(([treatment, count]) => ({ treatment, count }))
         .sort((a, b) => b.count - a.count),
+      cityWise: createBreakdown('circle'),
+      sourceWise: createBreakdown('source'),
     })
   } catch (error) {
     console.error('BD detail error:', error)

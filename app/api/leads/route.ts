@@ -62,6 +62,7 @@ export async function GET(request: NextRequest) {
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
     const dateField = searchParams.get('dateField')
+    const modeOfPayment = searchParams.get('modeOfPayment')
     const caseStage = searchParams.get('caseStage')
     const limit = searchParams.get('limit')
 
@@ -115,6 +116,7 @@ export async function GET(request: NextRequest) {
     if (hospitalName) where.hospitalName = { contains: hospitalName, mode: 'insensitive' }
     if (treatment) where.treatment = { contains: treatment, mode: 'insensitive' }
     if (source) where.source = source
+    if (modeOfPayment) where.modeOfPayment = modeOfPayment
     if (campaignName) where.campaignName = campaignName
 
     // Activity-month filter (Insurance dashboard default view):
@@ -157,6 +159,21 @@ export async function GET(request: NextRequest) {
         } else {
           where.OR = surgeryOr
         }
+      } else if (dateField === 'ipdCreated') {
+        const ipdCreatedOr: Prisma.LeadWhereInput[] = [
+          { ipdAdmissionDate: range },
+          { admissionRecord: { is: { admissionDate: range } } },
+          { admissionRecord: { is: { initiatedAt: range } } },
+        ]
+        if (where.OR) {
+          const scopedOr = where.OR
+          delete where.OR
+          where.AND = [{ OR: scopedOr }, { OR: ipdCreatedOr }]
+        } else {
+          where.OR = ipdCreatedOr
+        }
+      } else if (dateField === 'lastModified') {
+        where.updatedDate = range
       } else {
         where.createdDate = range
       }
@@ -518,6 +535,7 @@ export async function GET(request: NextRequest) {
 
     const pipelineSelect = {
       id: true,
+      legacyId: true,
       leadRef: true,
       patientName: true,
       age: true,
@@ -571,7 +589,12 @@ export async function GET(request: NextRequest) {
         select: {
           id: true,
           name: true,
-          employee: { select: { team: { select: { id: true } } } },
+          employee: {
+            select: {
+              department: { select: { id: true, name: true } },
+              team: { select: { id: true, name: true, department: { select: { id: true, name: true } } } },
+            },
+          },
         },
       },
       phoneNumber: true,
@@ -593,12 +616,15 @@ export async function GET(request: NextRequest) {
               hospitalSuggestions: true,
               insurance: true,
               tpa: true,
+              preAuthRaisedAt: true,
+              preAuthRaisedBy: { select: { id: true, name: true } },
             },
           },
         },
       },
       ipdPotentialDate: true,
       ipdPotentialMarkedAt: true,
+      ipdAdmissionDate: true,
       insuranceInitiateForm: { select: { updatedAt: true } },
       admissionRecord: { select: { ipdStatus: true, ipdStatusReason: true, ipdStatusUpdatedAt: true, initiatedAt: true, surgeryDate: true, surgeryTime: true, newSurgeryDate: true } },
       dischargeSheet: { select: { updatedAt: true } },

@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import type { Prisma } from '@/generated/prisma/client'
 import type {
   DoctorPayoffAttachment,
@@ -15,9 +16,9 @@ type DoctorPayoffWithRelations = Prisma.DoctorPayoffRequestGetPayload<{
   include: typeof doctorPayoffInclude
 }>
 
-function parseLeadIds(value: unknown): string[] {
-  if (!Array.isArray(value)) return []
-  return value.filter((v): v is string => typeof v === 'string' && v.length > 0)
+function parseLeadIds(value: unknown): number[] {
+  if (value == null) return []
+  return leadIdSchema.array().parse(value)
 }
 
 function parseAttachments(value: unknown): DoctorPayoffAttachment[] {

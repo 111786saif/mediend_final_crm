@@ -1,3 +1,4 @@
+import { parseLeadId } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
@@ -21,6 +22,7 @@ export async function GET(request: NextRequest) {
       .map((s) => s.trim())
       .filter(Boolean)
       .slice(0, MAX_IDS)
+      .map(parseLeadId)
 
     if (leadIds.length === 0) {
       return successResponse({} as Record<string, number>)

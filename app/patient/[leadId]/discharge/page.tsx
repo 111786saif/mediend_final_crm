@@ -17,14 +17,14 @@ import { resolveReturnTo } from '@/lib/navigation/return-to'
 
 interface DischargeSheet {
   id: string
-  leadId: string
+  leadId: number
   isFinalized: boolean
   dischargeDate: string | null
   markedAt: string | null
   finalizedAt: string | null
   // remaining fields are used by view/form via index signature
   lead: {
-    id: string
+    id: number
     leadRef: string
     patientName: string
   }
@@ -32,7 +32,7 @@ interface DischargeSheet {
 }
 
 interface LeadShape {
-  id: string
+  id: number
   caseStage: string
   patientName?: string | null
   surgeryDate?: string | null
@@ -50,7 +50,7 @@ export default function DischargeSheetPage() {
   const params = useParams()
   const searchParams = useSearchParams()
   const queryClient = useQueryClient()
-  const leadId = params.leadId as string
+  const leadId = Number(params.leadId)
   const [markDialogOpen, setMarkDialogOpen] = useState(false)
   const returnHref = resolveReturnTo(searchParams) ?? `/patient/${leadId}`
 

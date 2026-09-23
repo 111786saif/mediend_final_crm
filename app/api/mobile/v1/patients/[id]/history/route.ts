@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getDoctorAppSessionFromRequest } from '@/lib/doctor-app/auth'
@@ -14,7 +15,10 @@ export async function GET(
       return unauthorizedResponse()
     }
 
-    const { id } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     const result = await getDoctorPatientHistory(session, id)
 
     return successResponse(result, 'Patient history fetched')

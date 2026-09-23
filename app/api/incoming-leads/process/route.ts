@@ -1,9 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { processAllPendingLeads, processIncomingLead } from '@/lib/process-incoming-leads'
 import { prisma } from '@/lib/prisma'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { optionalLeadId } from '@/lib/lead-id'
 
 /**
  * POST /api/incoming-leads/process
@@ -35,7 +36,11 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json().catch(() => ({}))
-    const { incomingLeadId, autoCreateBD } = body
+    const { incomingLeadId: rawIncomingLeadId, autoCreateBD } = body
+    const incomingLeadId = optionalLeadId(rawIncomingLeadId)
+    if (rawIncomingLeadId != null && !incomingLeadId) {
+      return errorResponse('Invalid incoming lead ID', 400)
+    }
 
     // Process specific lead if ID provided
     if (incomingLeadId) {

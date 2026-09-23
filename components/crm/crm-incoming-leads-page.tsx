@@ -17,10 +17,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
@@ -65,7 +63,6 @@ import {
   CRM_LEAD_STATUS_OPTIONS,
   CRM_MODE_OF_PAYMENT_OPTIONS,
 } from '@/lib/lead-status-options'
-import { parsePhoneSearchQuery } from '@/lib/phone-search'
 import {
   MANUAL_MYSQL_LEAD_FIELDS,
   MANUAL_MYSQL_LEAD_SECTION_ORDER,
@@ -150,7 +147,7 @@ type CampaignRecord = {
 }
 
 type IncomingLeadRecord = {
-  id: string
+  id: number
   source: string | null
   status: string
   payload: unknown
@@ -178,7 +175,7 @@ type IncomingLeadRecord = {
     externalCampaignId: string
   } | null
   processedLead: {
-    id: string
+    id: number
     leadRef: string
     patientName: string
     phoneNumber: string
@@ -204,6 +201,11 @@ type IncomingLeadRecord = {
 }
 
 type IncomingLeadPageData = {
+  summary: { total: number; processed: number; duplicates: number; failed: number; bucket: number }
+  total: number
+  page: number
+  pageSize: number
+  totalPages: number
   month: number | null
   year: number | null
   masters: CampaignMasters
@@ -238,9 +240,9 @@ type IncomingLeadManualAssignResult = {
   duplicateCount: number
   failedCount: number
   results: Array<{
-    incomingLeadId: string
+    incomingLeadId: number
     status: 'processed' | 'duplicate' | 'failed' | 'already_processed'
-    leadId?: string
+    leadId?: number
     leadRef?: string
     bdName?: string
     error?: string
@@ -254,9 +256,9 @@ type IncomingLeadRetryResult = {
   bucketCount: number
   skippedCount: number
   results: Array<{
-    incomingLeadId: string
+    incomingLeadId: number
     status: 'processed' | 'already_processed' | 'duplicate' | 'failed' | 'bucketed' | 'skipped'
-    leadId?: string
+    leadId?: number
     leadRef?: string
     assignedBdName?: string | null
     error?: string
@@ -266,7 +268,7 @@ type IncomingLeadRetryResult = {
 type IncomingLeadEditDraft = IncomingLeadEditValues
 
 type IncomingLeadTableRow = {
-  id: string
+  id: number
   receivedAt: string
   processedAt: string
   status: string
@@ -325,20 +327,6 @@ const INCOMING_LEAD_VIEW_ROLES = new Set([
 ])
 const ALL_FILTER_VALUE = '__all__'
 const ALL_MONTHS_VALUE = '__all_months__'
-const INCOMING_LEAD_HEADER_FILTER_COLUMN_IDS = [
-  'receivedAt',
-  'processedAt',
-  'status',
-  'source',
-  'campaignName',
-  'campaignSource',
-  'leadSource',
-  'category',
-  'treatment',
-  'circle',
-  'city',
-] as const satisfies ReadonlyArray<IncomingLeadColumn['id']>
-
 const MONTH_OPTIONS = [
   { value: 1, label: 'January' },
   { value: 2, label: 'February' },
@@ -475,16 +463,6 @@ function readIncomingLeadColumnOrder(): IncomingLeadColumn['id'][] {
   return defaultIds
 }
 
-function getUniqueRowValues(rows: IncomingLeadTableRow[], columnId: IncomingLeadColumn['id']) {
-  if (columnId === 'actions') return []
-  return Array.from(
-    new Set(
-      rows
-        .map((row) => String(row[columnId as IncomingLeadDataColumnId] ?? '').trim())
-        .filter((value) => value.length > 0 && value !== '—')
-    )
-  ).sort((left, right) => left.localeCompare(right, undefined, { sensitivity: 'base' }))
-}
 
 function isSelectableIncomingLead(record: IncomingLeadRecord) {
   return Boolean(record.id)
@@ -514,12 +492,6 @@ function convertDateTimeLocalToMysql(value: string) {
   return normalized.length === 16 ? `${normalized}:00` : normalized
 }
 
-function getDateOnlyValue(value: string | null) {
-  if (!value) return ''
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return ''
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-}
 
 function parseDateOnlyValue(value: string) {
   if (!value) return undefined
@@ -568,22 +540,6 @@ function createIncomingLeadEditDraft(record: IncomingLeadRecord, canViewPhone: b
   }
 }
 
-function compareValues(left: string, right: string, type: ColumnType) {
-  if (type === 'date') {
-    const leftValue = left ? new Date(`${left}T00:00:00`).getTime() : 0
-    const rightValue = right ? new Date(`${right}T00:00:00`).getTime() : 0
-    return leftValue - rightValue
-  }
-  return left.localeCompare(right, undefined, { numeric: true, sensitivity: 'base' })
-}
-
-function isWithinDateRange(value: string, from: string, to: string) {
-  const dateOnlyValue = getDateOnlyValue(value)
-  if (!dateOnlyValue) return false
-  if (from && dateOnlyValue < from) return false
-  if (to && dateOnlyValue > to) return false
-  return true
-}
 
 function DateRangeFilter({
   label,
@@ -690,6 +646,7 @@ export function CrmIncomingLeadsPage() {
   const [year, setYear] = useState(String(initialMonthYear.year))
   const [searchColumn, setSearchColumn] = useState<IncomingLeadColumn['id']>('patientName')
   const [searchValue, setSearchValue] = useState('')
+  const [appliedSearchValue, setAppliedSearchValue] = useState('')
   const [sortColumn, setSortColumn] = useState<IncomingLeadColumn['id']>('receivedAt')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
   const [visibleColumns, setVisibleColumns] = useState(createInitialVisibleColumns)
@@ -734,15 +691,6 @@ export function CrmIncomingLeadsPage() {
       const target = { id, position }
       dropTargetColRef.current = target
       setDropIndicator(target)
-    }
-  }
-
-  const handleColDragLeave = (e: React.DragEvent, id: string) => {
-    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-      if (dropTargetColRef.current?.id === id) {
-        dropTargetColRef.current = null
-        setDropIndicator(null)
-      }
     }
   }
 
@@ -791,11 +739,11 @@ export function CrmIncomingLeadsPage() {
   const [incomingLeadEditDraft, setIncomingLeadEditDraft] = useState<IncomingLeadEditDraft>(
     EMPTY_INCOMING_LEAD_EDIT_DRAFT
   )
-  const [selectedManualAssignLeadIds, setSelectedManualAssignLeadIds] = useState<string[]>([])
+  const [selectedManualAssignLeadIds, setSelectedManualAssignLeadIds] = useState<number[]>([])
   const [manualAssignDialogOpen, setManualAssignDialogOpen] = useState(false)
   const [manualCreateDialogOpen, setManualCreateDialogOpen] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState('50')
+  const [pageSize, setPageSize] = useState('20')
   const [assignDateFrom, setAssignDateFrom] = useState('')
   const [assignDateTo, setAssignDateTo] = useState('')
   const [leadDateFrom, setLeadDateFrom] = useState('')
@@ -859,30 +807,12 @@ export function CrmIncomingLeadsPage() {
 
   const availableIncomingLeadColumns = useMemo(() => INCOMING_LEAD_COLUMNS, [])
 
-  const availableIncomingLeadHeaderFilters = useMemo(
-    () =>
-      INCOMING_LEAD_HEADER_FILTER_COLUMN_IDS.flatMap((columnId) => {
-        const column = availableIncomingLeadColumns.find((entry) => entry.id === columnId)
-        return column ? [column.label] : []
-      }),
-    [availableIncomingLeadColumns]
-  )
-
   const effectiveSearchColumn = useMemo<IncomingLeadDataColumnId>(
     () =>
       availableIncomingLeadColumns.some((column) => column.id === searchColumn && column.id !== 'actions')
         ? (searchColumn as IncomingLeadDataColumnId)
         : 'patientName',
     [availableIncomingLeadColumns, searchColumn]
-  )
-  const serverPhoneSearch = useMemo(
-    () =>
-      effectiveSearchColumn === 'normalizedPhone' ||
-      effectiveSearchColumn === 'alternatePhone' ||
-      effectiveSearchColumn === 'whatsapp'
-        ? parsePhoneSearchQuery(searchValue)
-        : null,
-    [effectiveSearchColumn, searchValue]
   )
 
   const effectiveSortColumn = useMemo<IncomingLeadDataColumnId>(
@@ -893,21 +823,31 @@ export function CrmIncomingLeadsPage() {
     [availableIncomingLeadColumns, sortColumn]
   )
 
+  const serverFilters = Object.entries(columnFilters).flatMap(([field, value]) => {
+    const type = filterConfigByField.get(field)?.filterType ?? 'multiSelect'
+    return ['multiSelect', 'search', 'dateRange'].includes(type) && value != null
+      ? [{ field, type, value }] : []
+  })
+  for (const [field, value] of Object.entries({ status: statusFilter, source: sourceFilter,
+    campaignSource: campaignSourceFilter, leadSource: leadSourceFilter, category: categoryFilter,
+    treatment: treatmentFilter, circle: circleFilter, city: cityFilter, teamLeadName: teamLeadFilter, bdName: bdFilter })) {
+    if (value !== ALL_FILTER_VALUE) serverFilters.push({ field, type: 'multiSelect', value: [value] })
+  }
+  for (const [field, value] of Object.entries({ assignedDate: [assignDateFrom, assignDateTo],
+    leadDate: [leadDateFrom, leadDateTo], followUpDate: [followUpDateFrom, followUpDateTo], surgeryDate: [surgeryDateFrom, surgeryDateTo] })) {
+    if (value.some(Boolean)) serverFilters.push({ field, type: 'dateRange', value })
+  }
+  const listParams = new URLSearchParams({ page: String(currentPage), pageSize,
+    sortBy: effectiveSortColumn, sortDir: sortDirection, searchColumn: effectiveSearchColumn,
+    searchValue: appliedSearchValue.trim(), filters: JSON.stringify(serverFilters) })
+  if (selectedMonth !== null) {
+    listParams.set('month', String(selectedMonth))
+    listParams.set('year', String(selectedYear))
+  }
+  const listQuery = listParams.toString()
   const { data, isLoading, error, refetch, isFetching } = useQuery<IncomingLeadPageData, Error>({
-    queryKey: ['crm-incoming-leads', selectedMonth, selectedYear, effectiveSearchColumn, serverPhoneSearch?.last10 ?? ''],
-    queryFn: () => {
-      const params = new URLSearchParams()
-      if (selectedMonth !== null) {
-        params.set('month', String(selectedMonth))
-        params.set('year', String(selectedYear))
-      }
-      if (serverPhoneSearch && (effectiveSearchColumn === 'normalizedPhone' || effectiveSearchColumn === 'alternatePhone' || effectiveSearchColumn === 'whatsapp')) {
-        params.set('searchColumn', effectiveSearchColumn)
-        params.set('searchValue', searchValue.trim())
-      }
-      const query = params.toString()
-      return apiGet<IncomingLeadPageData>(query ? `/api/crm/incoming-leads?${query}` : '/api/crm/incoming-leads')
-    },
+    queryKey: ['crm-incoming-leads', listQuery],
+    queryFn: () => apiGet<IncomingLeadPageData>(`/api/crm/incoming-leads?${listQuery}`),
     retry: false,
     enabled: hasAccess,
   })
@@ -1030,149 +970,14 @@ export function CrmIncomingLeadsPage() {
     [availableIncomingLeadColumns, visibleColumns]
   )
 
-  const filteredRows = useMemo(() => {
-    const normalizedSearch = searchValue.trim().toLowerCase()
-    const selectedSearchColumn = availableIncomingLeadColumns.find((column) => column.id === effectiveSearchColumn)
-
-    return rows.filter((row) => {
-      for (const [colId, filterVal] of Object.entries(columnFilters)) {
-        if (filterVal === undefined || filterVal === null) continue
-        const config = filterConfigByField.get(colId)
-        const filterType = config?.filterType ?? 'multiSelect'
-        const rawValue = String(row[colId as keyof IncomingLeadTableRow] ?? '').trim()
-
-        if (filterType === 'multiSelect') {
-          if (Array.isArray(filterVal) && filterVal.length > 0) {
-            if (!filterVal.includes(rawValue)) {
-              return false
-            }
-          }
-        } else if (filterType === 'search') {
-          if (typeof filterVal === 'string' && filterVal.trim()) {
-            if (!rawValue.toLowerCase().includes(filterVal.trim().toLowerCase())) {
-              return false
-            }
-          }
-        } else if (filterType === 'dateRange') {
-          if (Array.isArray(filterVal) && filterVal.length === 2 && (filterVal[0] || filterVal[1])) {
-            const [startStr, endStr] = filterVal
-            if (!isWithinDateRange(rawValue, getDateOnlyValue(startStr), getDateOnlyValue(endStr || startStr))) {
-              return false
-            }
-          }
-        }
-      }
-
-      if (assignDateFrom || assignDateTo) {
-        if (!isWithinDateRange(row.assignedDate, assignDateFrom, assignDateTo)) return false
-      }
-
-      if (leadDateFrom || leadDateTo) {
-        if (!isWithinDateRange(row.leadDate, leadDateFrom, leadDateTo)) return false
-      }
-
-      if (followUpDateFrom || followUpDateTo) {
-        if (!isWithinDateRange(row.followUpDate, followUpDateFrom, followUpDateTo)) return false
-      }
-
-      if (surgeryDateFrom || surgeryDateTo) {
-        if (!isWithinDateRange(row.surgeryDate, surgeryDateFrom, surgeryDateTo)) return false
-      }
-
-      if (statusFilter !== ALL_FILTER_VALUE && row.status !== statusFilter) return false
-      if (sourceFilter !== ALL_FILTER_VALUE && row.source !== sourceFilter) return false
-      if (campaignSourceFilter !== ALL_FILTER_VALUE && row.campaignSource !== campaignSourceFilter) return false
-      if (leadSourceFilter !== ALL_FILTER_VALUE && row.leadSource !== leadSourceFilter) return false
-      if (categoryFilter !== ALL_FILTER_VALUE && row.category !== categoryFilter) return false
-      if (treatmentFilter !== ALL_FILTER_VALUE && row.treatment !== treatmentFilter) return false
-      if (circleFilter !== ALL_FILTER_VALUE && row.circle !== circleFilter) return false
-      if (cityFilter !== ALL_FILTER_VALUE && row.city !== cityFilter) return false
-      if (teamLeadFilter !== ALL_FILTER_VALUE && row.teamLeadName !== teamLeadFilter) return false
-      if (bdFilter !== ALL_FILTER_VALUE && row.bdName !== bdFilter) return false
-
-      if (!normalizedSearch) return true
-
-      if (
-        serverPhoneSearch &&
-        ['normalizedPhone', 'alternatePhone', 'whatsapp'].includes(effectiveSearchColumn)
-      ) {
-        // The API already performed an exact last-10-digit match before masking phone data.
-        return true
-      }
-
-      const rawValue = String(row[effectiveSearchColumn] ?? '')
-      if (selectedSearchColumn?.type === 'date') {
-        const dateOnlyValue = getDateOnlyValue(rawValue)
-        const displayValue = formatDateOnly(rawValue).toLowerCase()
-        return `${dateOnlyValue} ${displayValue}`.includes(normalizedSearch)
-      }
-      if (selectedSearchColumn?.masterKey) {
-        return rawValue.trim().toLowerCase() === normalizedSearch
-      }
-      return rawValue.toLowerCase().includes(normalizedSearch)
-    })
-  }, [
-    rows,
-    effectiveSearchColumn,
-    searchValue,
-    statusFilter,
-    sourceFilter,
-    campaignSourceFilter,
-    leadSourceFilter,
-    categoryFilter,
-    treatmentFilter,
-    circleFilter,
-    cityFilter,
-    teamLeadFilter,
-    bdFilter,
-    assignDateFrom,
-    assignDateTo,
-    leadDateFrom,
-    leadDateTo,
-    followUpDateFrom,
-    followUpDateTo,
-    surgeryDateFrom,
-    surgeryDateTo,
-    columnFilters,
-    filterConfigByField,
-    availableIncomingLeadColumns,
-    serverPhoneSearch,
-  ])
-
-  const sortedRows = useMemo(() => {
-    const selectedSortColumn = availableIncomingLeadColumns.find((column) => column.id === effectiveSortColumn)
-    if (!selectedSortColumn) return filteredRows
-
-    const nextRows = [...filteredRows].sort((left, right) =>
-      compareValues(
-        selectedSortColumn.type === 'date'
-          ? getDateOnlyValue(String(left[effectiveSortColumn] ?? ''))
-          : String(left[effectiveSortColumn] ?? ''),
-        selectedSortColumn.type === 'date'
-          ? getDateOnlyValue(String(right[effectiveSortColumn] ?? ''))
-          : String(right[effectiveSortColumn] ?? ''),
-        selectedSortColumn.type
-      )
-    )
-
-    if (sortDirection === 'desc') {
-      nextRows.reverse()
-    }
-
-    return nextRows
-  }, [availableIncomingLeadColumns, effectiveSortColumn, filteredRows, sortDirection])
-
-  const pageSizeNumber = Number.parseInt(pageSize, 10) || 50
-  const totalRows = sortedRows.length
-  const totalPages = Math.max(1, Math.ceil(totalRows / pageSizeNumber))
-  const safeCurrentPage = Math.min(currentPage, totalPages)
+  const sortedRows = rows
+  const paginatedRows = rows
+  const pageSizeNumber = Number.parseInt(pageSize, 10) || 20
+  const totalRows = data?.total ?? 0
+  const totalPages = data?.totalPages ?? 1
+  const safeCurrentPage = data?.page ?? currentPage
   const pageStartIndex = totalRows === 0 ? 0 : (safeCurrentPage - 1) * pageSizeNumber
-  const pageEndIndex = totalRows === 0 ? 0 : Math.min(pageStartIndex + pageSizeNumber, totalRows)
-
-  const paginatedRows = useMemo(
-    () => sortedRows.slice(pageStartIndex, pageEndIndex),
-    [pageEndIndex, pageStartIndex, sortedRows]
-  )
+  const pageEndIndex = totalRows === 0 ? 0 : Math.min(pageStartIndex + rows.length, totalRows)
 
   const selectedManualAssignLeads = useMemo(
     () =>
@@ -1225,7 +1030,7 @@ export function CrmIncomingLeadsPage() {
     month,
     year,
     searchColumn,
-    searchValue,
+    appliedSearchValue,
     sortColumn,
     sortDirection,
     assignDateFrom,
@@ -1247,6 +1052,7 @@ export function CrmIncomingLeadsPage() {
     teamLeadFilter,
     bdFilter,
     pageSize,
+    columnFilters,
   ])
 
   useEffect(() => {
@@ -1276,24 +1082,13 @@ export function CrmIncomingLeadsPage() {
   }, [data?.masters, selectedSearchColumnDefinition])
 
   const filterOptions = useMemo(() => {
-    const circleScopedRows =
-      circleFilter === ALL_FILTER_VALUE ? rows : rows.filter((row) => row.circle === circleFilter)
-    const teamLeadScopedRows =
-      teamLeadFilter === ALL_FILTER_VALUE ? rows : rows.filter((row) => row.teamLeadName === teamLeadFilter)
-
+    const values = (field: string) => (filterConfigByField.get(field)?.options ?? []).map(option => option.value)
     return {
-      statuses: getUniqueRowValues(rows, 'status'),
-      sources: getUniqueRowValues(rows, 'source'),
-      campaignSources: getUniqueRowValues(rows, 'campaignSource'),
-      leadSources: getUniqueRowValues(rows, 'leadSource'),
-      categories: getUniqueRowValues(rows, 'category'),
-      treatments: getUniqueRowValues(rows, 'treatment'),
-      circles: getUniqueRowValues(rows, 'circle'),
-      cities: getUniqueRowValues(circleScopedRows, 'city'),
-      teamLeads: getUniqueRowValues(rows, 'teamLeadName'),
-      bds: getUniqueRowValues(teamLeadScopedRows, 'bdName'),
+      statuses: values('status'), sources: values('source'), campaignSources: values('campaignSource'),
+      leadSources: values('leadSource'), categories: values('category'), treatments: values('treatment'),
+      circles: values('circle'), cities: values('city'), teamLeads: values('teamLeadName'), bds: values('bdName'),
     }
-  }, [circleFilter, rows, teamLeadFilter])
+  }, [filterConfigByField])
 
   const activeFilterCount = useMemo(
     () =>
@@ -1346,6 +1141,7 @@ export function CrmIncomingLeadsPage() {
   const clearFilters = () => {
     setColumnFilters({})
     setSearchValue('')
+    setAppliedSearchValue('')
     setAssignDateFrom('')
     setAssignDateTo('')
     setLeadDateFrom('')
@@ -1372,7 +1168,7 @@ export function CrmIncomingLeadsPage() {
     setCurrentPage(1)
   }
 
-  function toggleManualAssignLead(leadId: string, checked: boolean) {
+  function toggleManualAssignLead(leadId: number, checked: boolean) {
     if (checked) {
       setSelectedManualAssignLeadIds((current) =>
         current.includes(leadId) ? current : [...current, leadId]
@@ -1384,7 +1180,7 @@ export function CrmIncomingLeadsPage() {
   }
 
   const manualAssignMutation = useMutation({
-    mutationFn: (payload: { incomingLeadIds: string[]; assigneeUserIds: string[] }) =>
+    mutationFn: (payload: { incomingLeadIds: number[]; assigneeUserIds: string[] }) =>
       apiPost<IncomingLeadManualAssignResult>(
         '/api/crm/incoming-leads/manual-assign',
         payload
@@ -1414,7 +1210,7 @@ export function CrmIncomingLeadsPage() {
   })
 
   const retryFailedLeadsMutation = useMutation({
-    mutationFn: (payload: { incomingLeadIds: string[] }) =>
+    mutationFn: (payload: { incomingLeadIds: number[] }) =>
       apiPost<IncomingLeadRetryResult>('/api/crm/incoming-leads/retry', payload),
     onSuccess: async (result) => {
       if (result.bucketCount > 0) {
@@ -1446,7 +1242,7 @@ export function CrmIncomingLeadsPage() {
   })
 
   const editIncomingLeadMutation = useMutation({
-    mutationFn: (payload: { incomingLeadId: string; data: Record<string, string | null> }) =>
+    mutationFn: (payload: { incomingLeadId: number; data: Record<string, string | null> }) =>
       apiPatch<IncomingLeadRecord>(
         `/api/crm/incoming-leads/${payload.incomingLeadId}`,
         payload.data,
@@ -1465,14 +1261,7 @@ export function CrmIncomingLeadsPage() {
     },
   })
 
-  const summary = useMemo(() => {
-    const total = rows.length
-    const processed = rows.filter((row) => row.status === 'PROCESSED').length
-    const duplicates = rows.filter((row) => row.status === 'DUPLICATE').length
-    const failed = rows.filter((row) => row.status === 'FAILED').length
-    const bucket = rows.filter((row) => row.status === 'BUCKET').length
-    return { total, processed, duplicates, failed, bucket }
-  }, [rows])
+  const summary = data?.summary ?? { total: 0, processed: 0, duplicates: 0, failed: 0, bucket: 0 }
 
   const errorMessage =
     error instanceof Error ? error.message : 'We could not load the incoming lead audit right now.'
@@ -1677,6 +1466,7 @@ export function CrmIncomingLeadsPage() {
                       onValueChange={(value) => {
                         setSearchColumn(value as IncomingLeadColumn['id'])
                         setSearchValue('')
+                        setAppliedSearchValue('')
                       }}
                     >
                       <SelectTrigger>
@@ -1759,9 +1549,15 @@ export function CrmIncomingLeadsPage() {
                       <Input
                         value={searchValue}
                         onChange={(event) => setSearchValue(event.target.value)}
+                        onKeyDown={(event) => {
+                          if (event.key === 'Enter') setAppliedSearchValue(searchValue)
+                        }}
                         placeholder={`Search ${selectedSearchColumnDefinition?.label.toLowerCase() ?? 'column'}...`}
                       />
                     )}
+                    <Button type="button" onClick={() => setAppliedSearchValue(searchValue)}>
+                      Search
+                    </Button>
                   </div>
                   <div className="min-w-0 space-y-2">
                     <Label>Sort by</Label>
@@ -2035,8 +1831,8 @@ export function CrmIncomingLeadsPage() {
                     <CardTitle>Incoming lead table</CardTitle>
                     <CardDescription>
                       {selectedMonth === null
-                        ? `${pageStartIndex + (totalRows > 0 ? 1 : 0)}-${pageEndIndex} of ${formatWholeNumber(sortedRows.length)} rows across all months.`
-                        : `${pageStartIndex + (totalRows > 0 ? 1 : 0)}-${pageEndIndex} of ${formatWholeNumber(sortedRows.length)} rows for ${MONTH_OPTIONS.find((option) => option.value === selectedMonth)?.label} ${selectedYear}.`}
+                        ? `${pageStartIndex + (totalRows > 0 ? 1 : 0)}-${pageEndIndex} of ${formatWholeNumber(totalRows)} rows across all months.`
+                        : `${pageStartIndex + (totalRows > 0 ? 1 : 0)}-${pageEndIndex} of ${formatWholeNumber(totalRows)} rows for ${MONTH_OPTIONS.find((option) => option.value === selectedMonth)?.label} ${selectedYear}.`}
                     </CardDescription>
                   </div>
                   <div className="flex w-full flex-wrap gap-2 sm:w-auto sm:items-center">
@@ -2423,10 +2219,10 @@ export function CrmIncomingLeadsPage() {
                             }}
                           >
                             <SelectTrigger className="w-[110px]">
-                              <SelectValue placeholder="50 / page" />
+                              <SelectValue placeholder="20 / page" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="25">25 / page</SelectItem>
+                              <SelectItem value="20">20 / page</SelectItem>
                               <SelectItem value="50">50 / page</SelectItem>
                               <SelectItem value="100">100 / page</SelectItem>
                               <SelectItem value="200">200 / page</SelectItem>
@@ -2438,7 +2234,7 @@ export function CrmIncomingLeadsPage() {
                               variant="outline"
                               size="sm"
                               onClick={() => setCurrentPage((page) => Math.max(1, Math.min(page, totalPages) - 1))}
-                              disabled={safeCurrentPage <= 1}
+                              disabled={isFetching || safeCurrentPage <= 1}
                             >
                               Prev
                             </Button>
@@ -2450,7 +2246,7 @@ export function CrmIncomingLeadsPage() {
                               variant="outline"
                               size="sm"
                               onClick={() => setCurrentPage((page) => Math.min(totalPages, Math.min(page, totalPages) + 1))}
-                              disabled={safeCurrentPage >= totalPages}
+                              disabled={isFetching || safeCurrentPage >= totalPages}
                             >
                               Next
                             </Button>

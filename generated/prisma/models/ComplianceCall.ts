@@ -27,16 +27,18 @@ export type AggregateComplianceCall = {
 }
 
 export type ComplianceCallAvgAggregateOutputType = {
+  leadId: number | null
   rating: number | null
 }
 
 export type ComplianceCallSumAggregateOutputType = {
+  leadId: number | null
   rating: number | null
 }
 
 export type ComplianceCallMinAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   status: $Enums.ComplianceCallStatus | null
   rating: number | null
   notes: string | null
@@ -69,7 +71,7 @@ export type ComplianceCallMinAggregateOutputType = {
 
 export type ComplianceCallMaxAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   status: $Enums.ComplianceCallStatus | null
   rating: number | null
   notes: string | null
@@ -137,10 +139,12 @@ export type ComplianceCallCountAggregateOutputType = {
 
 
 export type ComplianceCallAvgAggregateInputType = {
+  leadId?: true
   rating?: true
 }
 
 export type ComplianceCallSumAggregateInputType = {
+  leadId?: true
   rating?: true
 }
 
@@ -333,7 +337,7 @@ export type ComplianceCallGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
 
 export type ComplianceCallGroupByOutputType = {
   id: string
-  leadId: string
+  leadId: number
   status: $Enums.ComplianceCallStatus
   rating: number | null
   notes: string | null
@@ -390,7 +394,7 @@ export type ComplianceCallWhereInput = {
   OR?: Prisma.ComplianceCallWhereInput[]
   NOT?: Prisma.ComplianceCallWhereInput | Prisma.ComplianceCallWhereInput[]
   id?: Prisma.StringFilter<"ComplianceCall"> | string
-  leadId?: Prisma.StringFilter<"ComplianceCall"> | string
+  leadId?: Prisma.IntFilter<"ComplianceCall"> | number
   status?: Prisma.EnumComplianceCallStatusFilter<"ComplianceCall"> | $Enums.ComplianceCallStatus
   rating?: Prisma.IntNullableFilter<"ComplianceCall"> | number | null
   notes?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
@@ -462,7 +466,7 @@ export type ComplianceCallOrderByWithRelationInput = {
 
 export type ComplianceCallWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  leadId?: string
+  leadId?: number
   AND?: Prisma.ComplianceCallWhereInput | Prisma.ComplianceCallWhereInput[]
   OR?: Prisma.ComplianceCallWhereInput[]
   NOT?: Prisma.ComplianceCallWhereInput | Prisma.ComplianceCallWhereInput[]
@@ -543,7 +547,7 @@ export type ComplianceCallScalarWhereWithAggregatesInput = {
   OR?: Prisma.ComplianceCallScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ComplianceCallScalarWhereWithAggregatesInput | Prisma.ComplianceCallScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"ComplianceCall"> | string
-  leadId?: Prisma.StringWithAggregatesFilter<"ComplianceCall"> | string
+  leadId?: Prisma.IntWithAggregatesFilter<"ComplianceCall"> | number
   status?: Prisma.EnumComplianceCallStatusWithAggregatesFilter<"ComplianceCall"> | $Enums.ComplianceCallStatus
   rating?: Prisma.IntNullableWithAggregatesFilter<"ComplianceCall"> | number | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"ComplianceCall"> | string | null
@@ -611,7 +615,7 @@ export type ComplianceCallCreateInput = {
 
 export type ComplianceCallUncheckedCreateInput = {
   id?: string
-  leadId: string
+  leadId: number
   status?: $Enums.ComplianceCallStatus
   rating?: number | null
   notes?: string | null
@@ -679,7 +683,7 @@ export type ComplianceCallUpdateInput = {
 
 export type ComplianceCallUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumComplianceCallStatusFieldUpdateOperationsInput | $Enums.ComplianceCallStatus
   rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -713,7 +717,7 @@ export type ComplianceCallUncheckedUpdateInput = {
 
 export type ComplianceCallCreateManyInput = {
   id?: string
-  leadId: string
+  leadId: number
   status?: $Enums.ComplianceCallStatus
   rating?: number | null
   notes?: string | null
@@ -779,7 +783,7 @@ export type ComplianceCallUpdateManyMutationInput = {
 
 export type ComplianceCallUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumComplianceCallStatusFieldUpdateOperationsInput | $Enums.ComplianceCallStatus
   rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -869,6 +873,7 @@ export type ComplianceCallCountOrderByAggregateInput = {
 }
 
 export type ComplianceCallAvgOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   rating?: Prisma.SortOrder
 }
 
@@ -939,6 +944,7 @@ export type ComplianceCallMinOrderByAggregateInput = {
 }
 
 export type ComplianceCallSumOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   rating?: Prisma.SortOrder
 }
 
@@ -1072,7 +1078,7 @@ export type ComplianceCallCreateWithoutCalledByInput = {
 
 export type ComplianceCallUncheckedCreateWithoutCalledByInput = {
   id?: string
-  leadId: string
+  leadId: number
   status?: $Enums.ComplianceCallStatus
   rating?: number | null
   notes?: string | null
@@ -1134,7 +1140,7 @@ export type ComplianceCallScalarWhereInput = {
   OR?: Prisma.ComplianceCallScalarWhereInput[]
   NOT?: Prisma.ComplianceCallScalarWhereInput | Prisma.ComplianceCallScalarWhereInput[]
   id?: Prisma.StringFilter<"ComplianceCall"> | string
-  leadId?: Prisma.StringFilter<"ComplianceCall"> | string
+  leadId?: Prisma.IntFilter<"ComplianceCall"> | number
   status?: Prisma.EnumComplianceCallStatusFilter<"ComplianceCall"> | $Enums.ComplianceCallStatus
   rating?: Prisma.IntNullableFilter<"ComplianceCall"> | number | null
   notes?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
@@ -1316,7 +1322,7 @@ export type ComplianceCallUncheckedUpdateWithoutLeadInput = {
 
 export type ComplianceCallCreateManyCalledByInput = {
   id?: string
-  leadId: string
+  leadId: number
   status?: $Enums.ComplianceCallStatus
   rating?: number | null
   notes?: string | null
@@ -1382,7 +1388,7 @@ export type ComplianceCallUpdateWithoutCalledByInput = {
 
 export type ComplianceCallUncheckedUpdateWithoutCalledByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumComplianceCallStatusFieldUpdateOperationsInput | $Enums.ComplianceCallStatus
   rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1415,7 +1421,7 @@ export type ComplianceCallUncheckedUpdateWithoutCalledByInput = {
 
 export type ComplianceCallUncheckedUpdateManyWithoutCalledByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumComplianceCallStatusFieldUpdateOperationsInput | $Enums.ComplianceCallStatus
   rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1612,7 +1618,7 @@ export type $ComplianceCallPayload<ExtArgs extends runtime.Types.Extensions.Inte
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    leadId: string
+    leadId: number
     status: $Enums.ComplianceCallStatus
     rating: number | null
     notes: string | null
@@ -2068,7 +2074,7 @@ export interface Prisma__ComplianceCallClient<T, Null = never, ExtArgs extends r
  */
 export interface ComplianceCallFieldRefs {
   readonly id: Prisma.FieldRef<"ComplianceCall", 'String'>
-  readonly leadId: Prisma.FieldRef<"ComplianceCall", 'String'>
+  readonly leadId: Prisma.FieldRef<"ComplianceCall", 'Int'>
   readonly status: Prisma.FieldRef<"ComplianceCall", 'ComplianceCallStatus'>
   readonly rating: Prisma.FieldRef<"ComplianceCall", 'Int'>
   readonly notes: Prisma.FieldRef<"ComplianceCall", 'String'>

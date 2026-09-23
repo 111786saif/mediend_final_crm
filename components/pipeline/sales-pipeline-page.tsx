@@ -135,16 +135,7 @@ type BulkLeadReassignOptionsResponse = {
   }>
 }
 
-function useDebouncedValue<T>(value: T, ms: number): T {
-  const [debounced, setDebounced] = useState(value)
-  useEffect(() => {
-    const id = setTimeout(() => setDebounced(value), ms)
-    return () => clearTimeout(id)
-  }, [value, ms])
-  return debounced
-}
-
-async function fetchNoteCountsForLeads(leadIds: string[]): Promise<Record<string, number>> {
+async function fetchNoteCountsForLeads(leadIds: number[]): Promise<Record<string, number>> {
   if (leadIds.length === 0) return {}
   const chunk = 200
   const out: Record<string, number> = {}
@@ -365,6 +356,7 @@ const PIPELINE_STAGE_FILTER_OPTIONS = uniqueSorted([
 type PipelineColumnId =
   | 'sno'
   | 'leadRef'
+  | 'legacyId'
   | 'assignDate'
   | 'leadDate'
   | 'patient'
@@ -416,6 +408,7 @@ const PIPELINE_COLUMN_ORDER_STORAGE_KEY_PREFIX = 'crm-pipeline-col-order'
 const PIPELINE_COLUMN_DEFINITIONS: PipelineColumnDefinition[] = [
   { id: 'sno', label: 'S No.', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'leadRef', label: 'Lead Ref', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'legacyId', label: 'Old Lead ID', defaultVisible: { bd: false, 'team-lead': false } },
   { id: 'assignDate', label: 'Assign Date', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'leadDate', label: 'Lead Date', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'patient', label: 'Patient Name', defaultVisible: { bd: true, 'team-lead': true } },
@@ -809,6 +802,8 @@ function getPipelineColumnFilterValue(lead: Lead, columnId: PipelineColumnId): s
   switch (columnId) {
     case 'leadRef':
       return typeof lead.leadRef === 'string' || typeof lead.leadRef === 'number' ? String(lead.leadRef) : '—'
+    case 'legacyId':
+      return typeof lead.legacyId === 'string' ? lead.legacyId : '—'
     case 'assignDate':
       return formatTableDateTime(lead.assignedDate)
     case 'leadDate':
@@ -969,8 +964,8 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
 
   const { state, setState, campaignSelection } = usePipelineUrlState()
 
-  const [editingLeadId, setEditingLeadId] = useState<string | null>(null)
-  const [callingLeadId, setCallingLeadId] = useState<string | null>(null)
+  const [editingLeadId, setEditingLeadId] = useState<number | null>(null)
+  const [callingLeadId, setCallingLeadId] = useState<number | null>(null)
   const handleInitiateCall = useCallback(async (targetLead: Lead) => {
     const patientName = targetLead.patientName || 'patient'
     try {
@@ -989,8 +984,8 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const [manualLeadCreateOpen, setManualLeadCreateOpen] = useState(false)
   const [activeBulkReassignJobId, setActiveBulkReassignJobId] = useState<string | null>(null)
   const [handledBulkReassignTerminalKey, setHandledBulkReassignTerminalKey] = useState<string | null>(null)
-  const [optimisticallyOpenedLeadIds, setOptimisticallyOpenedLeadIds] = useState<string[]>([])
-  const [selectedLeadIds, setSelectedLeadIds] = useState<string[]>([])
+  const [optimisticallyOpenedLeadIds, setOptimisticallyOpenedLeadIds] = useState<number[]>([])
+  const [selectedLeadIds, setSelectedLeadIds] = useState<number[]>([])
   const [visibleColumns, setVisibleColumns] = useState<Record<PipelineColumnId, boolean>>(() =>
     readPipelineVisibleColumns(variant)
   )
@@ -1131,7 +1126,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   }
 
   const [searchInput, setSearchInput] = useState(state.q)
-  const debouncedSearch = useDebouncedValue(searchInput, 400)
   const isBulkReassignAllowedRole =
     user?.role !== 'BD' && user?.role !== 'USER'
   const canCreateManualLead = new Set([
@@ -1289,13 +1283,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
       page: 1,
     })
   }, [clearColumnFilters, setState])
-
-  useEffect(() => {
-    if (debouncedSearch !== state.q) {
-      setState({ q: debouncedSearch })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch])
 
   useEffect(() => {
     writePipelineVisibleColumns(variant, visibleColumns)
@@ -1481,7 +1468,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   })
 
   const markLeadOpenedMutation = useMutation({
-    mutationFn: async (id: string) =>
+    mutationFn: async (id: number) =>
       apiPost<{ marked: boolean; openedInCrmAt: string }>(`/api/leads/${id}/opened`, {}),
     onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: ['pipeline'] })
@@ -1490,7 +1477,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   })
 
   const markLeadOpened = useCallback(
-    (id: string, alreadyOpened = false) => {
+    (id: number, alreadyOpened = false) => {
       if (alreadyOpened) return
 
       let shouldRequest = false
@@ -1518,7 +1505,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     [optimisticallyOpenedLeadIds]
   )
 
-  const handleEditLead = useCallback((id: string, alreadyOpened: boolean) => {
+  const handleEditLead = useCallback((id: number, alreadyOpened: boolean) => {
     markLeadOpened(id, alreadyOpened)
     setEditingLeadId(id)
   }, [markLeadOpened])
@@ -1533,7 +1520,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     [queryClient]
   )
 
-  const toggleLeadSelection = useCallback((leadId: string, checked: boolean) => {
+  const toggleLeadSelection = useCallback((leadId: number, checked: boolean) => {
     setSelectedLeadIds((current) => {
       if (checked) {
         return current.includes(leadId) ? current : [...current, leadId]
@@ -1634,41 +1621,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     const query = searchParams.toString()
     return query ? `${pathname}?${query}` : pathname
   }, [pathname, searchParams])
-
-  // Prefetch next page for instant (0ms) pagination transition
-  useEffect(() => {
-    if (page < totalPages) {
-      const nextPage = page + 1
-      const p = new URLSearchParams()
-      p.set('page', String(nextPage))
-      p.set('pageSize', String(pageSize))
-      if (state.q) p.set('q', state.q)
-      if (state.status !== 'all') p.set('status', state.status)
-      if (state.bdId !== 'all') p.set('bdId', state.bdId)
-      if (state.category !== 'all') p.set('category', state.category)
-      if (state.circle !== 'all') p.set('circle', state.circle)
-      if (state.age !== 'all') p.set('age', state.age)
-      if (state.from) p.set('from', state.from)
-      if (state.to) p.set('to', state.to)
-      if (state.campaign) {
-        p.set('campaign', state.campaign)
-        if (state.groupBy === 'disease' && state.groupValue) {
-          p.set('treatment', state.groupValue)
-        }
-      }
-      p.set('groupBy', state.groupBy)
-      p.set('sort', state.sort)
-      p.set('dir', state.dir)
-      if (serverColumnFilters) p.set('filters', serverColumnFilters)
-      const nextQueryString = p.toString()
-
-      queryClient.prefetchQuery({
-        queryKey: ['pipeline', 'table', nextQueryString],
-        queryFn: () => apiGet(`/api/pipeline?${nextQueryString}`),
-        staleTime: 10_000,
-      })
-    }
-  }, [page, totalPages, pageSize, state, serverColumnFilters, queryClient])
 
   // -----------------------------------------------------------------------
   // TanStack ColumnDef array — exact 1-to-1 port of PipelineRow + HeaderCell
@@ -1802,6 +1754,12 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
         )
       },
       meta: { headerStyle: { minWidth: 120 } },
+    })
+
+    addCol('legacyId', {
+      header: () => <HeaderCell label="Old Lead ID" {...getHeaderFilterProps('legacyId')} />,
+      cell: ({ row }) => <span className="block max-w-[180px] truncate" title={String(row.original.legacyId ?? '')}>{row.original.legacyId ?? '—'}</span>,
+      meta: { headerStyle: { minWidth: 160 } },
     })
 
     addCol('assignDate', {
@@ -2617,8 +2575,19 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                       className="pl-9 h-9 text-xs bg-background/80 hover:bg-background focus:bg-background border-border/80 rounded-lg shadow-xs transition-colors"
                       value={searchInput}
                       onChange={(e) => setSearchInput(e.target.value)}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter') setState({ q: searchInput.trim(), page: 1 })
+                      }}
                     />
                   </div>
+                  <Button
+                    type="button"
+                    size="sm"
+                    className="h-9"
+                    onClick={() => setState({ q: searchInput.trim(), page: 1 })}
+                  >
+                    Search
+                  </Button>
                   {variant === 'team-lead' && (data?.facets.bds.length ?? 0) > 0 && (
                     <Select value={state.bdId} onValueChange={(v) => setState({ bdId: v })}>
                       <SelectTrigger className="w-full lg:w-[200px] h-9 text-xs bg-background/80 hover:bg-background border-border/80 rounded-lg shadow-xs font-medium">

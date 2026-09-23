@@ -38,7 +38,7 @@ interface UntouchedLeadsTableProps {
 }
 
 interface UntouchedLead {
-  id: string
+  id: number
   leadRef: string
   patientName: string
   status: string
@@ -202,7 +202,7 @@ export function UntouchedLeadsTable({ teams }: UntouchedLeadsTableProps) {
   }, [allBDs, searchQuery])
 
   const assignLeadMutation = useMutation({
-    mutationFn: ({ leadId, bdId }: { leadId: string; bdId: string }) =>
+    mutationFn: ({ leadId, bdId }: { leadId: number; bdId: string }) =>
       apiPatch(`/api/leads/${leadId}`, { bdId }),
     onSuccess: (_, { leadId }) => {
       queryClient.invalidateQueries({ queryKey: ['untouched-leads'] })

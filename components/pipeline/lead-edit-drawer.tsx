@@ -102,7 +102,7 @@ function getTodayDateInputValue() {
 }
 
 type LeadEditLead = {
-  id: string
+  id: number
   leadRef: string
   patientName: string
   phoneNumber?: string | null
@@ -295,7 +295,7 @@ export function LeadEditDrawer({
   open,
   onOpenChange,
 }: {
-  leadId: string | null
+  leadId: number | null
   open: boolean
   onOpenChange: (open: boolean) => void
 }) {
@@ -321,7 +321,7 @@ export function LeadEditDrawer({
   const [followUpTimeDraft, setFollowUpTimeDraft] = useState<string | null>(null)
   const [modeOfPaymentDraft, setModeOfPaymentDraft] = useState<string | null>(null)
   const [statusChangeRemarkDraftState, setStatusChangeRemarkDraftState] = useState<{
-    leadId: string | null
+    leadId: number | null
     baseValue: string
     value: string | null
   }>({
@@ -329,7 +329,7 @@ export function LeadEditDrawer({
     baseValue: '',
     value: null,
   })
-  const [expandedRemarksLeadId, setExpandedRemarksLeadId] = useState<string | null>(null)
+  const [expandedRemarksLeadId, setExpandedRemarksLeadId] = useState<number | null>(null)
   const [saving, setSaving] = useState(false)
   const [makeCallLoading, setMakeCallLoading] = useState(false)
   const leadStatusSearchInputRef = useRef<HTMLInputElement | null>(null)

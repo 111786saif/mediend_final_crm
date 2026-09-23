@@ -33,7 +33,7 @@ export type BulkLeadReassignmentRunResponse = {
 }
 
 export type CreateBulkLeadReassignmentRunInput = {
-  leadIds: string[]
+  leadIds: number[]
   bdUserIds: string[]
   pauseSeconds: number
   removePreviousRemarks: boolean

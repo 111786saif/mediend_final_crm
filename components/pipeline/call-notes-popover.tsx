@@ -22,7 +22,7 @@ export function CallNotesPopover({
   onRowClickStop,
   noteCount,
 }: {
-  leadId: string
+  leadId: number
   onRowClickStop?: boolean
   /** From batch /api/call-notes/counts — avoids N+1 */
   noteCount?: number

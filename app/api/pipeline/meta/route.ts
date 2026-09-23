@@ -11,8 +11,8 @@ import {
   buildPipelineRoleWhere,
   bucketsFromStatusGroups,
   parsePipelineQueryParams,
+  statusBucketWhere,
 } from '@/lib/pipeline/server-query'
-import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
 
 interface CacheEntry<T> {
   data: T
@@ -269,7 +269,7 @@ export async function GET(request: NextRequest) {
         _count: { _all: true },
       }),
       prisma.lead.count({
-        where: { AND: [facetWhere, canonicalSalesCompletedWhere({})] },
+        where: { AND: [facetWhere, statusBucketWhere('ipd_done')!] },
       }),
       prisma.lead.count({ where: facetWhere }),
       prisma.lead.findMany({

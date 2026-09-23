@@ -34,7 +34,7 @@ import { useRouter } from 'next/navigation'
 import { resolveLeadHospitalDoctor } from '@/lib/lead-display'
 
 interface Lead {
-  id: string
+  id: number
   leadRef?: string
   patientName?: string
   phoneNumber?: string
@@ -86,7 +86,7 @@ type PaidBy = '' | 'MEDIEND' | 'HOSPITAL'
 interface PlRecordSheetProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  leadId: string
+  leadId: number
 }
 
 const DC_FIELD_KEYS = [

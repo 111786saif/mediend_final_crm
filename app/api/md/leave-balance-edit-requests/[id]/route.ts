@@ -57,7 +57,7 @@ export async function PATCH(
           title: 'Leave balance change rejected',
           message: `MD rejected the baseline update for ${row.employee.user.name}.`,
           link: '/hr/dashboard',
-          relatedId: id,
+          relatedId: String(id),
         },
       })
       return successResponse({ message: 'Request rejected' })
@@ -88,7 +88,7 @@ export async function PATCH(
         title: 'Leave balance change approved',
         message: `MD approved the baseline CL/SL/EL update for ${row.employee.user.name}.`,
         link: '/hr/dashboard',
-        relatedId: id,
+        relatedId: String(id),
       },
     })
 
@@ -101,7 +101,7 @@ export async function PATCH(
           title: 'Your leave balances were updated',
           message: 'Your leave baseline balances (CL/SL/EL) were updated after MD approval.',
           link: '/employee/dashboard/core-hr',
-          relatedId: id,
+          relatedId: String(id),
         },
       })
     }

@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
@@ -31,7 +32,10 @@ export async function POST(
       return errorResponse('Forbidden', 403)
     }
 
-    const { id } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     const body = await request.json()
     const { action, reason } = reviewSchema.parse(body)
 
@@ -104,7 +108,7 @@ export async function POST(
           type: NotificationType.CASE_CHAT_MESSAGE,
           title: `Cash Case ${action === 'APPROVE' ? 'Approved' : 'On Hold'}`,
           message: `Your cash case for ${lead.patientName} has been ${action === 'APPROVE' ? 'approved' : 'put on hold'}.`,
-          relatedId: id,
+          relatedId: String(id),
           link: `/patient/${id}`,
         },
       })

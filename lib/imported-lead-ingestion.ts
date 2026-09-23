@@ -50,14 +50,14 @@ export type ImportedLeadCreateInput = {
 export type ImportedLeadIngestionResult = {
   created: boolean
   deduplicated: boolean
-  leadId: string
+  leadId: number
   leadRef: string
   assignmentApplied: boolean
   matchedRule: CrmAssignmentDryRunResult['matchedRule']
   assignment: CrmAssignmentDryRunResult['assignment']
   candidateDiagnostics: CrmAssignmentDryRunResult['candidateDiagnostics']
   explanation: string
-  duplicateLeadId?: string
+  duplicateLeadId?: number
   duplicateLeadRef?: string
   duplicateCount?: number
   normalizedPhone?: string

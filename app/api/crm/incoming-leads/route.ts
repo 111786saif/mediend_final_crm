@@ -1,3 +1,4 @@
+import { incomingLeadPageQuery, parseIncomingLeadPage } from '@/lib/incoming-leads/page-query'
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
@@ -5,7 +6,6 @@ import { extractIncomingLeadSummary } from '@/lib/crm-incoming-leads'
 import { getBusinessMonthRange, getBusinessMonthYear, getCampaignManagementPageData } from '@/lib/crm-campaigns'
 import { hasCrmPermission } from '@/lib/crm-permissions'
 import { getLeadVisibilityScopeUserIds } from '@/lib/lead-ownership'
-import { last10DigitsFromStored, parsePhoneSearchQuery } from '@/lib/phone-search'
 import { maskPhoneNumber } from '@/lib/phone-utils'
 import { prisma } from '@/lib/prisma'
 import { getSessionWithFreshUser } from '@/lib/session'
@@ -61,24 +61,29 @@ export async function GET(request: NextRequest) {
     const year = hasExplicitMonthFilter ? parsed.data.year! : fallback.year
     const dateRange = hasExplicitMonthFilter ? getBusinessMonthRange(year, month) : null
 
+    let pageParams
+    try {
+      pageParams = parseIncomingLeadPage(searchParams)
+    } catch {
+      return errorResponse('Invalid pagination, sorting, or filters', 400)
+    }
+    const [pageResult] = await prisma.$queryRaw<Array<{ total: number; page: number; ids: number[]; processed: number; duplicates: number; failed: number; bucket: number }>>(
+      incomingLeadPageQuery(pageParams, hierarchyScopedUserIds, dateRange, String(currentUser.role) === 'ADMIN')
+    )
     const campaignData = await getCampaignManagementPageData(month, year)
-    const incomingLeads = await prisma.incomingLead.findMany({
-      where: {
-        ...(dateRange
-          ? {
-              receivedAt: {
-                gte: dateRange.start,
-                lte: dateRange.end,
-              },
-            }
-          : {}),
-      },
-      orderBy: { receivedAt: 'desc' },
+    const pageLeads = await prisma.incomingLead.findMany({
+      where: { id: { in: pageResult.ids } },
+      take: pageParams.pageSize,
+    })
+    const byId = new Map(pageLeads.map(lead => [lead.id, lead]))
+    const incomingLeads = pageResult.ids.flatMap(id => {
+      const lead = byId.get(id)
+      return lead ? [lead] : []
     })
 
     const processedLeadIds = incomingLeads
       .map((incomingLead) => incomingLead.processedLeadId)
-      .filter((value): value is string => Boolean(value))
+      .filter((value): value is number => value !== null)
     const relatedUserIds = incomingLeads
       .flatMap((incomingLead) => [
         incomingLead.selectedTeamLeadUserId,
@@ -124,76 +129,19 @@ export async function GET(request: NextRequest) {
     )
     const processedLeadById = new Map(processedLeads.map((lead) => [lead.id, lead]))
     const userById = new Map(relatedUsers.map((user) => [user.id, user]))
-    const visibleScopeUserIds =
-      Array.isArray(hierarchyScopedUserIds) && hierarchyScopedUserIds.length > 0
-        ? new Set(hierarchyScopedUserIds)
-        : null
     const canViewPhone = String(currentUser.role) === 'ADMIN'
-    const isPhoneSearchColumn =
-      parsed.data.searchColumn === 'normalizedPhone' ||
-      parsed.data.searchColumn === 'alternatePhone' ||
-      parsed.data.searchColumn === 'whatsapp'
-    const phoneSearch =
-      isPhoneSearchColumn && parsed.data.searchValue
-        ? parsePhoneSearchQuery(parsed.data.searchValue)
-        : null
-    const filteredIncomingLeads =
-      // An exact phone lookup is needed to recover failed, still-unassigned
-      // incoming leads. Page access is already enforced above; ordinary table
-      // browsing remains limited to the user's ownership scope.
-      visibleScopeUserIds === null || phoneSearch !== null
-        ? incomingLeads
-        : incomingLeads.filter((incomingLead) => {
-            const processedLead = incomingLead.processedLeadId
-              ? processedLeadById.get(incomingLead.processedLeadId)
-              : undefined
-
-            return (
-              (processedLead?.bdId ? visibleScopeUserIds.has(processedLead.bdId) : false) ||
-              (incomingLead.selectedBdUserId
-                ? visibleScopeUserIds.has(incomingLead.selectedBdUserId)
-                : false) ||
-              (incomingLead.selectedTeamLeadUserId
-                ? visibleScopeUserIds.has(incomingLead.selectedTeamLeadUserId)
-                : false)
-            )
-          })
-    const searchedIncomingLeads =
-      phoneSearch == null
-        ? filteredIncomingLeads
-        : filteredIncomingLeads.filter((incomingLead) => {
-            const processedLead = incomingLead.processedLeadId
-              ? processedLeadById.get(incomingLead.processedLeadId)
-              : undefined
-            const summary = extractIncomingLeadSummary(incomingLead.payload)
-
-            if (parsed.data.searchColumn === 'alternatePhone') {
-              return (
-                last10DigitsFromStored(summary.alternatePhone) === phoneSearch.last10 ||
-                last10DigitsFromStored(processedLead?.alternateNumber) === phoneSearch.last10
-              )
-            }
-
-            if (parsed.data.searchColumn === 'whatsapp') {
-              return (
-                last10DigitsFromStored(summary.whatsapp) === phoneSearch.last10 ||
-                last10DigitsFromStored(processedLead?.whatsapp) === phoneSearch.last10
-              )
-            }
-
-            return (
-              incomingLead.normalizedPhone === phoneSearch.last10 ||
-              last10DigitsFromStored(summary.phone) === phoneSearch.last10 ||
-              last10DigitsFromStored(processedLead?.phoneNumber) === phoneSearch.last10
-            )
-          })
 
     return successResponse({
+      total: pageResult.total,
+      summary: { total: pageResult.total, processed: pageResult.processed, duplicates: pageResult.duplicates, failed: pageResult.failed, bucket: pageResult.bucket },
+      page: pageResult.page,
+      pageSize: pageParams.pageSize,
+      totalPages: Math.max(1, Math.ceil(pageResult.total / pageParams.pageSize)),
       month: hasExplicitMonthFilter ? month : null,
       year: hasExplicitMonthFilter ? year : null,
       masters: campaignData.masters,
       campaigns: campaignData.campaigns,
-      incomingLeads: searchedIncomingLeads.map((incomingLead) => {
+      incomingLeads: incomingLeads.map((incomingLead) => {
         const summary = extractIncomingLeadSummary(incomingLead.payload)
         const campaign = incomingLead.externalCampaignId
           ? campaignByExternalId.get(incomingLead.externalCampaignId)

@@ -16,6 +16,7 @@ import { DataTable } from '@/components/ui/data-table'
 import { ColumnDef } from '@tanstack/react-table'
 import { usePermissions } from '@/hooks/use-permissions'
 import { RESOURCE_MAP } from '@/lib/rbac/resourceMap'
+import { hasPlOrFinanceWrite } from '@/lib/rbac'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   DropdownMenu,
@@ -49,6 +50,7 @@ import {
   ReceiptText,
   Settings2,
   TrendingUp,
+  Upload,
   Users,
   X
 } from 'lucide-react'
@@ -542,7 +544,7 @@ export default function PLLedgerPage() {
         r.plRecord?.hospitalPayoutStatus === 'PENDING' || r.plRecord?.doctorPayoutStatus === 'PENDING'
     ).length || 0
 
-  const [sheetLeadId, setSheetLeadId] = useState<string | null>(null)
+  const [sheetLeadId, setSheetLeadId] = useState<number | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
   const [payoutsDrawerOpen, setPayoutsDrawerOpen] = useState(false)
 
@@ -1573,7 +1575,13 @@ export default function PLLedgerPage() {
                   Reset {activeFilterCount > 0 && `(${activeFilterCount})`}
                 </Button>
               )}
-              <DropdownMenu>
+              <div className="flex items-center gap-2">
+                {hasPlOrFinanceWrite(user) && (
+                  <Button variant="default" size="sm" className="gap-2" asChild>
+                    <Link href="/pl/import"><Upload className="h-4 w-4" />Import P&amp;L</Link>
+                  </Button>
+                )}
+                <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
@@ -1644,7 +1652,8 @@ export default function PLLedgerPage() {
                     </DropdownMenuCheckboxItem>
                   ))}
                 </DropdownMenuContent>
-              </DropdownMenu>
+                </DropdownMenu>
+              </div>
             </div>
           </div>
 
@@ -2089,7 +2098,7 @@ export default function PLLedgerPage() {
           <PlRecordSheet
             open={sheetOpen}
             onOpenChange={setSheetOpen}
-            leadId={sheetLeadId ?? ''}
+            leadId={sheetLeadId ?? 0}
           />
 
           <PlPatientDrawer

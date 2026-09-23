@@ -111,7 +111,7 @@ function loadColVisibility(): Record<string, boolean> {
 }
 
 export type InsuranceTableLead = Record<string, unknown> & {
-  id: string
+  id: number
   leadRef?: string | null
   dischargeSheet?: Record<string, unknown> | null
 }

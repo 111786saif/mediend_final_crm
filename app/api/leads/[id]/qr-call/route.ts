@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest, NextResponse } from 'next/server'
 import { errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { canUserViewLeadOwner } from '@/lib/lead-ownership'
@@ -11,7 +12,7 @@ import { getSessionWithFreshUser } from '@/lib/session'
 const VALID_POST_ACTIONS = new Set(['QR_VIEWED'])
 const VALID_GET_SOURCES = new Set(['qr', 'button'])
 
-async function authorizeLeadAccess(request: NextRequest, id: string) {
+async function authorizeLeadAccess(request: NextRequest, id: number) {
   const user = await getSessionWithFreshUser()
   if (!user) {
     return { user: null, lead: null, response: unauthorizedResponse() }
@@ -35,7 +36,10 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     const auth = await authorizeLeadAccess(request, id)
     if (auth.response || !auth.user || !auth.lead) {
       return auth.response!
@@ -78,7 +82,10 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     const auth = await authorizeLeadAccess(request, id)
     if (auth.response || !auth.user || !auth.lead) {
       return auth.response!

@@ -70,7 +70,7 @@ import {
 } from '@/lib/finance/invoice-request/types'
 
 type HospitalCase = {
-  leadId: string
+  leadId: number
   leadRef: string | null
   patientName: string | null
   doctorName: string | null
@@ -139,7 +139,7 @@ export default function HospitalDetailPage() {
   const [uploadFileMeta, setUploadFileMeta] = useState<{ url: string; name: string } | null>(null)
 
   // Column filter states
-  const [selectedLeads, setSelectedLeads] = useState<string[]>([])
+  const [selectedLeads, setSelectedLeads] = useState<number[]>([])
   const [leadRefFilter, setLeadRefFilter] = useState('')
   const [patientNameFilter, setPatientNameFilter] = useState('')
   const [doctorFilter, setDoctorFilter] = useState<string[]>([])
@@ -213,7 +213,7 @@ export default function HospitalDetailPage() {
   )
 
   const invoiceByLeadId = useMemo(() => {
-    const map = new Map<string, InvoiceRequestRecord>()
+    const map = new Map<number, InvoiceRequestRecord>()
     for (const req of invoiceData?.requests ?? []) {
       map.set(req.leadId, req)
     }
@@ -299,7 +299,7 @@ export default function HospitalDetailPage() {
       mode: 'NEFT' | 'CHEQUE' | 'UPI' | 'OTHER'
       reference: string | null
       /** Empty = hospital-level receipt (no case). Otherwise equal-split across selected cases. */
-      leadIds: string[]
+      leadIds: number[]
       attachments?: Array<{ name: string; url: string; type: string }>
     }) => {
       const notes = `Recorded via Hospital Detail Page for ${name}. Attachments:\n${
@@ -356,9 +356,9 @@ export default function HospitalDetailPage() {
 
   /** Equal-split the payment across the explicitly selected cases only. */
   function buildPaymentAllocations(
-    leadIds: string[],
+    leadIds: number[],
     amount: number,
-  ): Array<{ leadId: string; amount: number }> {
+  ): Array<{ leadId: number; amount: number }> {
     if (leadIds.length === 0 || amount <= 0) return []
     const split = Math.round((amount / leadIds.length) * 100) / 100
     const allocations = leadIds.map((leadId) => ({ leadId, amount: split }))

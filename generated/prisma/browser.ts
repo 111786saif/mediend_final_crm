@@ -58,6 +58,11 @@ export type LeadQrCallAuditLog = Prisma.LeadQrCallAuditLogModel
  */
 export type LeadQrPublicLink = Prisma.LeadQrPublicLinkModel
 /**
+ * Model LeadQrScanLink
+ * 
+ */
+export type LeadQrScanLink = Prisma.LeadQrScanLinkModel
+/**
  * Model LeadStageEvent
  * 
  */
@@ -107,6 +112,26 @@ export type DoctorPayoffRequest = Prisma.DoctorPayoffRequestModel
  * 
  */
 export type DoctorPayoffRequestActivity = Prisma.DoctorPayoffRequestActivityModel
+/**
+ * Model LeadIdMigrationMap
+ * 
+ */
+export type LeadIdMigrationMap = Prisma.LeadIdMigrationMapModel
+/**
+ * Model StatusCategory
+ * 
+ */
+export type StatusCategory = Prisma.StatusCategoryModel
+/**
+ * Model StatusGroup
+ * 
+ */
+export type StatusGroup = Prisma.StatusGroupModel
+/**
+ * Model LeadStatus
+ * 
+ */
+export type LeadStatus = Prisma.LeadStatusModel
 /**
  * Model IncomingLead
  * 
@@ -853,3 +878,78 @@ export type AiMessage = Prisma.AiMessageModel
  * 
  */
 export type AiToolCall = Prisma.AiToolCallModel
+/**
+ * Model InventoryWorkspace
+ * 
+ */
+export type InventoryWorkspace = Prisma.InventoryWorkspaceModel
+/**
+ * Model InventoryAuditEvent
+ * 
+ */
+export type InventoryAuditEvent = Prisma.InventoryAuditEventModel
+/**
+ * Model InventoryCommandReceipt
+ * 
+ */
+export type InventoryCommandReceipt = Prisma.InventoryCommandReceiptModel
+/**
+ * Model InventoryVendor
+ * 
+ */
+export type InventoryVendor = Prisma.InventoryVendorModel
+/**
+ * Model InventoryProduct
+ * 
+ */
+export type InventoryProduct = Prisma.InventoryProductModel
+/**
+ * Model InventoryLocation
+ * 
+ */
+export type InventoryLocation = Prisma.InventoryLocationModel
+/**
+ * Model InventoryLot
+ * 
+ */
+export type InventoryLot = Prisma.InventoryLotModel
+/**
+ * Model InventoryBalance
+ * 
+ */
+export type InventoryBalance = Prisma.InventoryBalanceModel
+/**
+ * Model InventoryPurchase
+ * 
+ */
+export type InventoryPurchase = Prisma.InventoryPurchaseModel
+/**
+ * Model InventorySale
+ * 
+ */
+export type InventorySale = Prisma.InventorySaleModel
+/**
+ * Model InventoryTransfer
+ * 
+ */
+export type InventoryTransfer = Prisma.InventoryTransferModel
+/**
+ * Model InventoryDelivery
+ * 
+ */
+export type InventoryDelivery = Prisma.InventoryDeliveryModel
+/**
+ * Model InventoryPayment
+ * 
+ */
+export type InventoryPayment = Prisma.InventoryPaymentModel
+/**
+ * Model InventoryAttachment
+ * 
+ */
+export type InventoryAttachment = Prisma.InventoryAttachmentModel
+/**
+ * Model InventoryAttachmentBytes
+ * 
+ */
+export type InventoryAttachmentBytes = Prisma.InventoryAttachmentBytesModel

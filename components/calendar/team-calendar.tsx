@@ -85,7 +85,7 @@ export interface TeamCalendarProps {
   onDateClick: (date: Date) => void
   onDatesSet?: (range: { start: Date; end: Date }) => void
   /** Called when a case marker is clicked — usually to open the patient page */
-  onCaseClick?: (leadId: string) => void
+  onCaseClick?: (leadId: number) => void
   className?: string
 }
 
@@ -181,7 +181,7 @@ export function TeamCalendar({
       return
     }
     if (type === 'case') {
-      onCaseClick?.(id)
+      onCaseClick?.(Number(id))
     }
   }
 

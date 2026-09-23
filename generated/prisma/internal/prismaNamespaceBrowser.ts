@@ -59,6 +59,7 @@ export const ModelName = {
   LeadRemarkEntry: 'LeadRemarkEntry',
   LeadQrCallAuditLog: 'LeadQrCallAuditLog',
   LeadQrPublicLink: 'LeadQrPublicLink',
+  LeadQrScanLink: 'LeadQrScanLink',
   LeadStageEvent: 'LeadStageEvent',
   Target: 'Target',
   BonusRule: 'BonusRule',
@@ -69,6 +70,10 @@ export const ModelName = {
   InvoiceRequestActivity: 'InvoiceRequestActivity',
   DoctorPayoffRequest: 'DoctorPayoffRequest',
   DoctorPayoffRequestActivity: 'DoctorPayoffRequestActivity',
+  LeadIdMigrationMap: 'LeadIdMigrationMap',
+  StatusCategory: 'StatusCategory',
+  StatusGroup: 'StatusGroup',
+  LeadStatus: 'LeadStatus',
   IncomingLead: 'IncomingLead',
   Department: 'Department',
   DepartmentTeam: 'DepartmentTeam',
@@ -217,7 +222,22 @@ export const ModelName = {
   KnowledgeDocumentDepartment: 'KnowledgeDocumentDepartment',
   AiConversation: 'AiConversation',
   AiMessage: 'AiMessage',
-  AiToolCall: 'AiToolCall'
+  AiToolCall: 'AiToolCall',
+  InventoryWorkspace: 'InventoryWorkspace',
+  InventoryAuditEvent: 'InventoryAuditEvent',
+  InventoryCommandReceipt: 'InventoryCommandReceipt',
+  InventoryVendor: 'InventoryVendor',
+  InventoryProduct: 'InventoryProduct',
+  InventoryLocation: 'InventoryLocation',
+  InventoryLot: 'InventoryLot',
+  InventoryBalance: 'InventoryBalance',
+  InventoryPurchase: 'InventoryPurchase',
+  InventorySale: 'InventorySale',
+  InventoryTransfer: 'InventoryTransfer',
+  InventoryDelivery: 'InventoryDelivery',
+  InventoryPayment: 'InventoryPayment',
+  InventoryAttachment: 'InventoryAttachment',
+  InventoryAttachmentBytes: 'InventoryAttachmentBytes'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -272,6 +292,7 @@ export type UserStatusScalarFieldEnum = (typeof UserStatusScalarFieldEnum)[keyof
 
 export const LeadScalarFieldEnum = {
   id: 'id',
+  legacyId: 'legacyId',
   leadRef: 'leadRef',
   patientName: 'patientName',
   age: 'age',
@@ -282,6 +303,7 @@ export const LeadScalarFieldEnum = {
   attendantName: 'attendantName',
   bdId: 'bdId',
   status: 'status',
+  statusId: 'statusId',
   pipelineStage: 'pipelineStage',
   caseStage: 'caseStage',
   circle: 'circle',
@@ -451,6 +473,7 @@ export type LeadQrCallAuditLogScalarFieldEnum = (typeof LeadQrCallAuditLogScalar
 
 export const LeadQrPublicLinkScalarFieldEnum = {
   id: 'id',
+  token: 'token',
   leadId: 'leadId',
   actorUserId: 'actorUserId',
   expiresAt: 'expiresAt',
@@ -459,6 +482,18 @@ export const LeadQrPublicLinkScalarFieldEnum = {
 } as const
 
 export type LeadQrPublicLinkScalarFieldEnum = (typeof LeadQrPublicLinkScalarFieldEnum)[keyof typeof LeadQrPublicLinkScalarFieldEnum]
+
+
+export const LeadQrScanLinkScalarFieldEnum = {
+  id: 'id',
+  token: 'token',
+  leadId: 'leadId',
+  actorUserId: 'actorUserId',
+  lastScannedAt: 'lastScannedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type LeadQrScanLinkScalarFieldEnum = (typeof LeadQrScanLinkScalarFieldEnum)[keyof typeof LeadQrScanLinkScalarFieldEnum]
 
 
 export const LeadStageEventScalarFieldEnum = {
@@ -547,6 +582,7 @@ export const PLRecordScalarFieldEnum = {
   surgeryDate: 'surgeryDate',
   status: 'status',
   paymentType: 'paymentType',
+  caseType: 'caseType',
   approvedOrCash: 'approvedOrCash',
   paymentCollectedAt: 'paymentCollectedAt',
   managerRole: 'managerRole',
@@ -566,10 +602,17 @@ export const PLRecordScalarFieldEnum = {
   cashOrDedPaid: 'cashOrDedPaid',
   referralAmount: 'referralAmount',
   cabCharges: 'cabCharges',
+  cabStatus: 'cabStatus',
+  emiSubventionPct: 'emiSubventionPct',
+  emiSubventionCharges: 'emiSubventionCharges',
+  referralPct: 'referralPct',
+  referralStatus: 'referralStatus',
+  referralName: 'referralName',
   implantCost: 'implantCost',
   instrumentsCost: 'instrumentsCost',
   implantPaidBy: 'implantPaidBy',
   instrumentsPaidBy: 'instrumentsPaidBy',
+  instrumentsPaymentStatus: 'instrumentsPaymentStatus',
   actualImplantCost: 'actualImplantCost',
   actualInstrumentCost: 'actualInstrumentCost',
   hospitalRecoverAmount: 'hospitalRecoverAmount',
@@ -670,13 +713,66 @@ export const DoctorPayoffRequestActivityScalarFieldEnum = {
 export type DoctorPayoffRequestActivityScalarFieldEnum = (typeof DoctorPayoffRequestActivityScalarFieldEnum)[keyof typeof DoctorPayoffRequestActivityScalarFieldEnum]
 
 
+export const LeadIdMigrationMapScalarFieldEnum = {
+  tableName: 'tableName',
+  oldId: 'oldId',
+  newId: 'newId'
+} as const
+
+export type LeadIdMigrationMapScalarFieldEnum = (typeof LeadIdMigrationMapScalarFieldEnum)[keyof typeof LeadIdMigrationMapScalarFieldEnum]
+
+
+export const StatusCategoryScalarFieldEnum = {
+  id: 'id',
+  category: 'category',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StatusCategoryScalarFieldEnum = (typeof StatusCategoryScalarFieldEnum)[keyof typeof StatusCategoryScalarFieldEnum]
+
+
+export const StatusGroupScalarFieldEnum = {
+  id: 'id',
+  categoryId: 'categoryId',
+  group: 'group',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StatusGroupScalarFieldEnum = (typeof StatusGroupScalarFieldEnum)[keyof typeof StatusGroupScalarFieldEnum]
+
+
+export const LeadStatusScalarFieldEnum = {
+  id: 'id',
+  categoryId: 'categoryId',
+  groupId: 'groupId',
+  status: 'status',
+  code: 'code',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LeadStatusScalarFieldEnum = (typeof LeadStatusScalarFieldEnum)[keyof typeof LeadStatusScalarFieldEnum]
+
+
 export const IncomingLeadScalarFieldEnum = {
   id: 'id',
+  legacyId: 'legacyId',
   source: 'source',
   payload: 'payload',
   status: 'status',
   externalCampaignId: 'externalCampaignId',
   normalizedPhone: 'normalizedPhone',
+  circle: 'circle',
+  category: 'category',
+  treatment: 'treatment',
   processedLeadId: 'processedLeadId',
   selectedTeamLeadUserId: 'selectedTeamLeadUserId',
   selectedTeamLeadEmployeeId: 'selectedTeamLeadEmployeeId',
@@ -3254,6 +3350,142 @@ export const AiToolCallScalarFieldEnum = {
 } as const
 
 export type AiToolCallScalarFieldEnum = (typeof AiToolCallScalarFieldEnum)[keyof typeof AiToolCallScalarFieldEnum]
+
+
+export const InventoryWorkspaceScalarFieldEnum = {
+  workspaceId: 'workspaceId',
+  revision: 'revision'
+} as const
+
+export type InventoryWorkspaceScalarFieldEnum = (typeof InventoryWorkspaceScalarFieldEnum)[keyof typeof InventoryWorkspaceScalarFieldEnum]
+
+
+export const InventoryAuditEventScalarFieldEnum = {
+  workspaceId: 'workspaceId',
+  id: 'id',
+  at: 'at',
+  data: 'data'
+} as const
+
+export type InventoryAuditEventScalarFieldEnum = (typeof InventoryAuditEventScalarFieldEnum)[keyof typeof InventoryAuditEventScalarFieldEnum]
+
+
+export const InventoryCommandReceiptScalarFieldEnum = {
+  workspaceId: 'workspaceId',
+  requestId: 'requestId',
+  bodyHash: 'bodyHash',
+  revision: 'revision'
+} as const
+
+export type InventoryCommandReceiptScalarFieldEnum = (typeof InventoryCommandReceiptScalarFieldEnum)[keyof typeof InventoryCommandReceiptScalarFieldEnum]
+
+
+export const InventoryVendorScalarFieldEnum = {
+  workspaceId: 'workspaceId',
+  id: 'id',
+  data: 'data'
+} as const
+
+export type InventoryVendorScalarFieldEnum = (typeof InventoryVendorScalarFieldEnum)[keyof typeof InventoryVendorScalarFieldEnum]
+
+
+export const InventoryProductScalarFieldEnum = {
+  workspaceId: 'workspaceId',
+  id: 'id',
+  data: 'data'
+} as const
+
+export type InventoryProductScalarFieldEnum = (typeof InventoryProductScalarFieldEnum)[keyof typeof InventoryProductScalarFieldEnum]
+
+
+export const InventoryLocationScalarFieldEnum = {
+  workspaceId: 'workspaceId',
+  id: 'id',
+  data: 'data'
+} as const
+
+export type InventoryLocationScalarFieldEnum = (typeof InventoryLocationScalarFieldEnum)[keyof typeof InventoryLocationScalarFieldEnum]
+
+
+export const InventoryLotScalarFieldEnum = {
+  workspaceId: 'workspaceId',
+  id: 'id',
+  data: 'data'
+} as const
+
+export type InventoryLotScalarFieldEnum = (typeof InventoryLotScalarFieldEnum)[keyof typeof InventoryLotScalarFieldEnum]
+
+
+export const InventoryBalanceScalarFieldEnum = {
+  workspaceId: 'workspaceId',
+  id: 'id',
+  data: 'data'
+} as const
+
+export type InventoryBalanceScalarFieldEnum = (typeof InventoryBalanceScalarFieldEnum)[keyof typeof InventoryBalanceScalarFieldEnum]
+
+
+export const InventoryPurchaseScalarFieldEnum = {
+  workspaceId: 'workspaceId',
+  id: 'id',
+  data: 'data'
+} as const
+
+export type InventoryPurchaseScalarFieldEnum = (typeof InventoryPurchaseScalarFieldEnum)[keyof typeof InventoryPurchaseScalarFieldEnum]
+
+
+export const InventorySaleScalarFieldEnum = {
+  workspaceId: 'workspaceId',
+  id: 'id',
+  data: 'data'
+} as const
+
+export type InventorySaleScalarFieldEnum = (typeof InventorySaleScalarFieldEnum)[keyof typeof InventorySaleScalarFieldEnum]
+
+
+export const InventoryTransferScalarFieldEnum = {
+  workspaceId: 'workspaceId',
+  id: 'id',
+  data: 'data'
+} as const
+
+export type InventoryTransferScalarFieldEnum = (typeof InventoryTransferScalarFieldEnum)[keyof typeof InventoryTransferScalarFieldEnum]
+
+
+export const InventoryDeliveryScalarFieldEnum = {
+  workspaceId: 'workspaceId',
+  id: 'id',
+  data: 'data'
+} as const
+
+export type InventoryDeliveryScalarFieldEnum = (typeof InventoryDeliveryScalarFieldEnum)[keyof typeof InventoryDeliveryScalarFieldEnum]
+
+
+export const InventoryPaymentScalarFieldEnum = {
+  workspaceId: 'workspaceId',
+  id: 'id',
+  data: 'data'
+} as const
+
+export type InventoryPaymentScalarFieldEnum = (typeof InventoryPaymentScalarFieldEnum)[keyof typeof InventoryPaymentScalarFieldEnum]
+
+
+export const InventoryAttachmentScalarFieldEnum = {
+  workspaceId: 'workspaceId',
+  id: 'id',
+  data: 'data'
+} as const
+
+export type InventoryAttachmentScalarFieldEnum = (typeof InventoryAttachmentScalarFieldEnum)[keyof typeof InventoryAttachmentScalarFieldEnum]
+
+
+export const InventoryAttachmentBytesScalarFieldEnum = {
+  workspaceId: 'workspaceId',
+  id: 'id',
+  bytes: 'bytes'
+} as const
+
+export type InventoryAttachmentBytesScalarFieldEnum = (typeof InventoryAttachmentBytesScalarFieldEnum)[keyof typeof InventoryAttachmentBytesScalarFieldEnum]
 
 
 export const SortOrder = {

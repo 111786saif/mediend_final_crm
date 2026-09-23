@@ -27,12 +27,14 @@ export type AggregateLeadOpdAppointment = {
 }
 
 export type LeadOpdAppointmentAvgAggregateOutputType = {
+  leadId: number | null
   slot: number | null
   charges: number | null
   meetingType: number | null
 }
 
 export type LeadOpdAppointmentSumAggregateOutputType = {
+  leadId: number | null
   slot: number | null
   charges: number | null
   meetingType: number | null
@@ -40,7 +42,7 @@ export type LeadOpdAppointmentSumAggregateOutputType = {
 
 export type LeadOpdAppointmentMinAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   phase: $Enums.LeadOpdPhase | null
   slot: number | null
   status: $Enums.LeadOpdStatus | null
@@ -65,7 +67,7 @@ export type LeadOpdAppointmentMinAggregateOutputType = {
 
 export type LeadOpdAppointmentMaxAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   phase: $Enums.LeadOpdPhase | null
   slot: number | null
   status: $Enums.LeadOpdStatus | null
@@ -116,12 +118,14 @@ export type LeadOpdAppointmentCountAggregateOutputType = {
 
 
 export type LeadOpdAppointmentAvgAggregateInputType = {
+  leadId?: true
   slot?: true
   charges?: true
   meetingType?: true
 }
 
 export type LeadOpdAppointmentSumAggregateInputType = {
+  leadId?: true
   slot?: true
   charges?: true
   meetingType?: true
@@ -291,7 +295,7 @@ export type LeadOpdAppointmentGroupByArgs<ExtArgs extends runtime.Types.Extensio
 
 export type LeadOpdAppointmentGroupByOutputType = {
   id: string
-  leadId: string
+  leadId: number
   phase: $Enums.LeadOpdPhase
   slot: number
   status: $Enums.LeadOpdStatus
@@ -339,7 +343,7 @@ export type LeadOpdAppointmentWhereInput = {
   OR?: Prisma.LeadOpdAppointmentWhereInput[]
   NOT?: Prisma.LeadOpdAppointmentWhereInput | Prisma.LeadOpdAppointmentWhereInput[]
   id?: Prisma.StringFilter<"LeadOpdAppointment"> | string
-  leadId?: Prisma.StringFilter<"LeadOpdAppointment"> | string
+  leadId?: Prisma.IntFilter<"LeadOpdAppointment"> | number
   phase?: Prisma.EnumLeadOpdPhaseFilter<"LeadOpdAppointment"> | $Enums.LeadOpdPhase
   slot?: Prisma.IntFilter<"LeadOpdAppointment"> | number
   status?: Prisma.EnumLeadOpdStatusFilter<"LeadOpdAppointment"> | $Enums.LeadOpdStatus
@@ -403,7 +407,7 @@ export type LeadOpdAppointmentWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.LeadOpdAppointmentWhereInput | Prisma.LeadOpdAppointmentWhereInput[]
   OR?: Prisma.LeadOpdAppointmentWhereInput[]
   NOT?: Prisma.LeadOpdAppointmentWhereInput | Prisma.LeadOpdAppointmentWhereInput[]
-  leadId?: Prisma.StringFilter<"LeadOpdAppointment"> | string
+  leadId?: Prisma.IntFilter<"LeadOpdAppointment"> | number
   phase?: Prisma.EnumLeadOpdPhaseFilter<"LeadOpdAppointment"> | $Enums.LeadOpdPhase
   slot?: Prisma.IntFilter<"LeadOpdAppointment"> | number
   status?: Prisma.EnumLeadOpdStatusFilter<"LeadOpdAppointment"> | $Enums.LeadOpdStatus
@@ -466,7 +470,7 @@ export type LeadOpdAppointmentScalarWhereWithAggregatesInput = {
   OR?: Prisma.LeadOpdAppointmentScalarWhereWithAggregatesInput[]
   NOT?: Prisma.LeadOpdAppointmentScalarWhereWithAggregatesInput | Prisma.LeadOpdAppointmentScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"LeadOpdAppointment"> | string
-  leadId?: Prisma.StringWithAggregatesFilter<"LeadOpdAppointment"> | string
+  leadId?: Prisma.IntWithAggregatesFilter<"LeadOpdAppointment"> | number
   phase?: Prisma.EnumLeadOpdPhaseWithAggregatesFilter<"LeadOpdAppointment"> | $Enums.LeadOpdPhase
   slot?: Prisma.IntWithAggregatesFilter<"LeadOpdAppointment"> | number
   status?: Prisma.EnumLeadOpdStatusWithAggregatesFilter<"LeadOpdAppointment"> | $Enums.LeadOpdStatus
@@ -517,7 +521,7 @@ export type LeadOpdAppointmentCreateInput = {
 
 export type LeadOpdAppointmentUncheckedCreateInput = {
   id?: string
-  leadId: string
+  leadId: number
   phase: $Enums.LeadOpdPhase
   slot: number
   status?: $Enums.LeadOpdStatus
@@ -569,7 +573,7 @@ export type LeadOpdAppointmentUpdateInput = {
 
 export type LeadOpdAppointmentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   phase?: Prisma.EnumLeadOpdPhaseFieldUpdateOperationsInput | $Enums.LeadOpdPhase
   slot?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLeadOpdStatusFieldUpdateOperationsInput | $Enums.LeadOpdStatus
@@ -595,7 +599,7 @@ export type LeadOpdAppointmentUncheckedUpdateInput = {
 
 export type LeadOpdAppointmentCreateManyInput = {
   id?: string
-  leadId: string
+  leadId: number
   phase: $Enums.LeadOpdPhase
   slot: number
   status?: $Enums.LeadOpdStatus
@@ -641,7 +645,7 @@ export type LeadOpdAppointmentUpdateManyMutationInput = {
 
 export type LeadOpdAppointmentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   phase?: Prisma.EnumLeadOpdPhaseFieldUpdateOperationsInput | $Enums.LeadOpdPhase
   slot?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLeadOpdStatusFieldUpdateOperationsInput | $Enums.LeadOpdStatus
@@ -675,7 +679,7 @@ export type LeadOpdAppointmentOrderByRelationAggregateInput = {
 }
 
 export type LeadOpdAppointmentLeadIdPhaseSlotCompoundUniqueInput = {
-  leadId: string
+  leadId: number
   phase: $Enums.LeadOpdPhase
   slot: number
 }
@@ -706,6 +710,7 @@ export type LeadOpdAppointmentCountOrderByAggregateInput = {
 }
 
 export type LeadOpdAppointmentAvgOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   slot?: Prisma.SortOrder
   charges?: Prisma.SortOrder
   meetingType?: Prisma.SortOrder
@@ -762,6 +767,7 @@ export type LeadOpdAppointmentMinOrderByAggregateInput = {
 }
 
 export type LeadOpdAppointmentSumOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   slot?: Prisma.SortOrder
   charges?: Prisma.SortOrder
   meetingType?: Prisma.SortOrder
@@ -1043,7 +1049,7 @@ export type LeadOpdAppointmentScalarWhereInput = {
   OR?: Prisma.LeadOpdAppointmentScalarWhereInput[]
   NOT?: Prisma.LeadOpdAppointmentScalarWhereInput | Prisma.LeadOpdAppointmentScalarWhereInput[]
   id?: Prisma.StringFilter<"LeadOpdAppointment"> | string
-  leadId?: Prisma.StringFilter<"LeadOpdAppointment"> | string
+  leadId?: Prisma.IntFilter<"LeadOpdAppointment"> | number
   phase?: Prisma.EnumLeadOpdPhaseFilter<"LeadOpdAppointment"> | $Enums.LeadOpdPhase
   slot?: Prisma.IntFilter<"LeadOpdAppointment"> | number
   status?: Prisma.EnumLeadOpdStatusFilter<"LeadOpdAppointment"> | $Enums.LeadOpdStatus
@@ -1093,7 +1099,7 @@ export type LeadOpdAppointmentCreateWithoutPrescriptionImagesInput = {
 
 export type LeadOpdAppointmentUncheckedCreateWithoutPrescriptionImagesInput = {
   id?: string
-  leadId: string
+  leadId: number
   phase: $Enums.LeadOpdPhase
   slot: number
   status?: $Enums.LeadOpdStatus
@@ -1159,7 +1165,7 @@ export type LeadOpdAppointmentUpdateWithoutPrescriptionImagesInput = {
 
 export type LeadOpdAppointmentUncheckedUpdateWithoutPrescriptionImagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   phase?: Prisma.EnumLeadOpdPhaseFieldUpdateOperationsInput | $Enums.LeadOpdPhase
   slot?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLeadOpdStatusFieldUpdateOperationsInput | $Enums.LeadOpdStatus
@@ -1209,7 +1215,7 @@ export type LeadOpdAppointmentCreateWithoutSurgeryRemarkInput = {
 
 export type LeadOpdAppointmentUncheckedCreateWithoutSurgeryRemarkInput = {
   id?: string
-  leadId: string
+  leadId: number
   phase: $Enums.LeadOpdPhase
   slot: number
   status?: $Enums.LeadOpdStatus
@@ -1285,7 +1291,7 @@ export type LeadOpdAppointmentCreateWithoutReasonNoSurgeryInput = {
 
 export type LeadOpdAppointmentUncheckedCreateWithoutReasonNoSurgeryInput = {
   id?: string
-  leadId: string
+  leadId: number
   phase: $Enums.LeadOpdPhase
   slot: number
   status?: $Enums.LeadOpdStatus
@@ -1361,7 +1367,7 @@ export type LeadOpdAppointmentCreateWithoutFollowUpReasonInput = {
 
 export type LeadOpdAppointmentUncheckedCreateWithoutFollowUpReasonInput = {
   id?: string
-  leadId: string
+  leadId: number
   phase: $Enums.LeadOpdPhase
   slot: number
   status?: $Enums.LeadOpdStatus
@@ -1510,7 +1516,7 @@ export type LeadOpdAppointmentUncheckedUpdateManyWithoutLeadInput = {
 
 export type LeadOpdAppointmentCreateManySurgeryRemarkInput = {
   id?: string
-  leadId: string
+  leadId: number
   phase: $Enums.LeadOpdPhase
   slot: number
   status?: $Enums.LeadOpdStatus
@@ -1559,7 +1565,7 @@ export type LeadOpdAppointmentUpdateWithoutSurgeryRemarkInput = {
 
 export type LeadOpdAppointmentUncheckedUpdateWithoutSurgeryRemarkInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   phase?: Prisma.EnumLeadOpdPhaseFieldUpdateOperationsInput | $Enums.LeadOpdPhase
   slot?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLeadOpdStatusFieldUpdateOperationsInput | $Enums.LeadOpdStatus
@@ -1584,7 +1590,7 @@ export type LeadOpdAppointmentUncheckedUpdateWithoutSurgeryRemarkInput = {
 
 export type LeadOpdAppointmentUncheckedUpdateManyWithoutSurgeryRemarkInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   phase?: Prisma.EnumLeadOpdPhaseFieldUpdateOperationsInput | $Enums.LeadOpdPhase
   slot?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLeadOpdStatusFieldUpdateOperationsInput | $Enums.LeadOpdStatus
@@ -1608,7 +1614,7 @@ export type LeadOpdAppointmentUncheckedUpdateManyWithoutSurgeryRemarkInput = {
 
 export type LeadOpdAppointmentCreateManyReasonNoSurgeryInput = {
   id?: string
-  leadId: string
+  leadId: number
   phase: $Enums.LeadOpdPhase
   slot: number
   status?: $Enums.LeadOpdStatus
@@ -1657,7 +1663,7 @@ export type LeadOpdAppointmentUpdateWithoutReasonNoSurgeryInput = {
 
 export type LeadOpdAppointmentUncheckedUpdateWithoutReasonNoSurgeryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   phase?: Prisma.EnumLeadOpdPhaseFieldUpdateOperationsInput | $Enums.LeadOpdPhase
   slot?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLeadOpdStatusFieldUpdateOperationsInput | $Enums.LeadOpdStatus
@@ -1682,7 +1688,7 @@ export type LeadOpdAppointmentUncheckedUpdateWithoutReasonNoSurgeryInput = {
 
 export type LeadOpdAppointmentUncheckedUpdateManyWithoutReasonNoSurgeryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   phase?: Prisma.EnumLeadOpdPhaseFieldUpdateOperationsInput | $Enums.LeadOpdPhase
   slot?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLeadOpdStatusFieldUpdateOperationsInput | $Enums.LeadOpdStatus
@@ -1706,7 +1712,7 @@ export type LeadOpdAppointmentUncheckedUpdateManyWithoutReasonNoSurgeryInput = {
 
 export type LeadOpdAppointmentCreateManyFollowUpReasonInput = {
   id?: string
-  leadId: string
+  leadId: number
   phase: $Enums.LeadOpdPhase
   slot: number
   status?: $Enums.LeadOpdStatus
@@ -1755,7 +1761,7 @@ export type LeadOpdAppointmentUpdateWithoutFollowUpReasonInput = {
 
 export type LeadOpdAppointmentUncheckedUpdateWithoutFollowUpReasonInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   phase?: Prisma.EnumLeadOpdPhaseFieldUpdateOperationsInput | $Enums.LeadOpdPhase
   slot?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLeadOpdStatusFieldUpdateOperationsInput | $Enums.LeadOpdStatus
@@ -1780,7 +1786,7 @@ export type LeadOpdAppointmentUncheckedUpdateWithoutFollowUpReasonInput = {
 
 export type LeadOpdAppointmentUncheckedUpdateManyWithoutFollowUpReasonInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   phase?: Prisma.EnumLeadOpdPhaseFieldUpdateOperationsInput | $Enums.LeadOpdPhase
   slot?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLeadOpdStatusFieldUpdateOperationsInput | $Enums.LeadOpdStatus
@@ -1980,7 +1986,7 @@ export type $LeadOpdAppointmentPayload<ExtArgs extends runtime.Types.Extensions.
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    leadId: string
+    leadId: number
     phase: $Enums.LeadOpdPhase
     slot: number
     status: $Enums.LeadOpdStatus
@@ -2430,7 +2436,7 @@ export interface Prisma__LeadOpdAppointmentClient<T, Null = never, ExtArgs exten
  */
 export interface LeadOpdAppointmentFieldRefs {
   readonly id: Prisma.FieldRef<"LeadOpdAppointment", 'String'>
-  readonly leadId: Prisma.FieldRef<"LeadOpdAppointment", 'String'>
+  readonly leadId: Prisma.FieldRef<"LeadOpdAppointment", 'Int'>
   readonly phase: Prisma.FieldRef<"LeadOpdAppointment", 'LeadOpdPhase'>
   readonly slot: Prisma.FieldRef<"LeadOpdAppointment", 'Int'>
   readonly status: Prisma.FieldRef<"LeadOpdAppointment", 'LeadOpdStatus'>

@@ -27,6 +27,7 @@ export type AggregateInsuranceInitiateForm = {
 }
 
 export type InsuranceInitiateFormAvgAggregateOutputType = {
+  leadId: number | null
   totalBillAmount: number | null
   discount: number | null
   otherReductions: number | null
@@ -39,6 +40,7 @@ export type InsuranceInitiateFormAvgAggregateOutputType = {
 }
 
 export type InsuranceInitiateFormSumAggregateOutputType = {
+  leadId: number | null
   totalBillAmount: number | null
   discount: number | null
   otherReductions: number | null
@@ -52,7 +54,7 @@ export type InsuranceInitiateFormSumAggregateOutputType = {
 
 export type InsuranceInitiateFormMinAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   totalBillAmount: number | null
   discount: number | null
   otherReductions: number | null
@@ -72,7 +74,7 @@ export type InsuranceInitiateFormMinAggregateOutputType = {
 
 export type InsuranceInitiateFormMaxAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   totalBillAmount: number | null
   discount: number | null
   otherReductions: number | null
@@ -113,6 +115,7 @@ export type InsuranceInitiateFormCountAggregateOutputType = {
 
 
 export type InsuranceInitiateFormAvgAggregateInputType = {
+  leadId?: true
   totalBillAmount?: true
   discount?: true
   otherReductions?: true
@@ -125,6 +128,7 @@ export type InsuranceInitiateFormAvgAggregateInputType = {
 }
 
 export type InsuranceInitiateFormSumAggregateInputType = {
+  leadId?: true
   totalBillAmount?: true
   discount?: true
   otherReductions?: true
@@ -285,7 +289,7 @@ export type InsuranceInitiateFormGroupByArgs<ExtArgs extends runtime.Types.Exten
 
 export type InsuranceInitiateFormGroupByOutputType = {
   id: string
-  leadId: string
+  leadId: number
   totalBillAmount: number
   discount: number
   otherReductions: number
@@ -328,7 +332,7 @@ export type InsuranceInitiateFormWhereInput = {
   OR?: Prisma.InsuranceInitiateFormWhereInput[]
   NOT?: Prisma.InsuranceInitiateFormWhereInput | Prisma.InsuranceInitiateFormWhereInput[]
   id?: Prisma.StringFilter<"InsuranceInitiateForm"> | string
-  leadId?: Prisma.StringFilter<"InsuranceInitiateForm"> | string
+  leadId?: Prisma.IntFilter<"InsuranceInitiateForm"> | number
   totalBillAmount?: Prisma.FloatFilter<"InsuranceInitiateForm"> | number
   discount?: Prisma.FloatFilter<"InsuranceInitiateForm"> | number
   otherReductions?: Prisma.FloatFilter<"InsuranceInitiateForm"> | number
@@ -372,7 +376,7 @@ export type InsuranceInitiateFormOrderByWithRelationInput = {
 
 export type InsuranceInitiateFormWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  leadId?: string
+  leadId?: number
   AND?: Prisma.InsuranceInitiateFormWhereInput | Prisma.InsuranceInitiateFormWhereInput[]
   OR?: Prisma.InsuranceInitiateFormWhereInput[]
   NOT?: Prisma.InsuranceInitiateFormWhereInput | Prisma.InsuranceInitiateFormWhereInput[]
@@ -425,7 +429,7 @@ export type InsuranceInitiateFormScalarWhereWithAggregatesInput = {
   OR?: Prisma.InsuranceInitiateFormScalarWhereWithAggregatesInput[]
   NOT?: Prisma.InsuranceInitiateFormScalarWhereWithAggregatesInput | Prisma.InsuranceInitiateFormScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"InsuranceInitiateForm"> | string
-  leadId?: Prisma.StringWithAggregatesFilter<"InsuranceInitiateForm"> | string
+  leadId?: Prisma.IntWithAggregatesFilter<"InsuranceInitiateForm"> | number
   totalBillAmount?: Prisma.FloatWithAggregatesFilter<"InsuranceInitiateForm"> | number
   discount?: Prisma.FloatWithAggregatesFilter<"InsuranceInitiateForm"> | number
   otherReductions?: Prisma.FloatWithAggregatesFilter<"InsuranceInitiateForm"> | number
@@ -465,7 +469,7 @@ export type InsuranceInitiateFormCreateInput = {
 
 export type InsuranceInitiateFormUncheckedCreateInput = {
   id?: string
-  leadId: string
+  leadId: number
   totalBillAmount?: number
   discount?: number
   otherReductions?: number
@@ -505,7 +509,7 @@ export type InsuranceInitiateFormUpdateInput = {
 
 export type InsuranceInitiateFormUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   totalBillAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discount?: Prisma.FloatFieldUpdateOperationsInput | number
   otherReductions?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -525,7 +529,7 @@ export type InsuranceInitiateFormUncheckedUpdateInput = {
 
 export type InsuranceInitiateFormCreateManyInput = {
   id?: string
-  leadId: string
+  leadId: number
   totalBillAmount?: number
   discount?: number
   otherReductions?: number
@@ -563,7 +567,7 @@ export type InsuranceInitiateFormUpdateManyMutationInput = {
 
 export type InsuranceInitiateFormUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   totalBillAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discount?: Prisma.FloatFieldUpdateOperationsInput | number
   otherReductions?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -617,6 +621,7 @@ export type InsuranceInitiateFormCountOrderByAggregateInput = {
 }
 
 export type InsuranceInitiateFormAvgOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   totalBillAmount?: Prisma.SortOrder
   discount?: Prisma.SortOrder
   otherReductions?: Prisma.SortOrder
@@ -669,6 +674,7 @@ export type InsuranceInitiateFormMinOrderByAggregateInput = {
 }
 
 export type InsuranceInitiateFormSumOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   totalBillAmount?: Prisma.SortOrder
   discount?: Prisma.SortOrder
   otherReductions?: Prisma.SortOrder
@@ -775,7 +781,7 @@ export type InsuranceInitiateFormCreateWithoutCreatedByInput = {
 
 export type InsuranceInitiateFormUncheckedCreateWithoutCreatedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   totalBillAmount?: number
   discount?: number
   otherReductions?: number
@@ -823,7 +829,7 @@ export type InsuranceInitiateFormScalarWhereInput = {
   OR?: Prisma.InsuranceInitiateFormScalarWhereInput[]
   NOT?: Prisma.InsuranceInitiateFormScalarWhereInput | Prisma.InsuranceInitiateFormScalarWhereInput[]
   id?: Prisma.StringFilter<"InsuranceInitiateForm"> | string
-  leadId?: Prisma.StringFilter<"InsuranceInitiateForm"> | string
+  leadId?: Prisma.IntFilter<"InsuranceInitiateForm"> | number
   totalBillAmount?: Prisma.FloatFilter<"InsuranceInitiateForm"> | number
   discount?: Prisma.FloatFilter<"InsuranceInitiateForm"> | number
   otherReductions?: Prisma.FloatFilter<"InsuranceInitiateForm"> | number
@@ -935,7 +941,7 @@ export type InsuranceInitiateFormUncheckedUpdateWithoutLeadInput = {
 
 export type InsuranceInitiateFormCreateManyCreatedByInput = {
   id?: string
-  leadId: string
+  leadId: number
   totalBillAmount?: number
   discount?: number
   otherReductions?: number
@@ -973,7 +979,7 @@ export type InsuranceInitiateFormUpdateWithoutCreatedByInput = {
 
 export type InsuranceInitiateFormUncheckedUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   totalBillAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discount?: Prisma.FloatFieldUpdateOperationsInput | number
   otherReductions?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -992,7 +998,7 @@ export type InsuranceInitiateFormUncheckedUpdateWithoutCreatedByInput = {
 
 export type InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   totalBillAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discount?: Prisma.FloatFieldUpdateOperationsInput | number
   otherReductions?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1119,7 +1125,7 @@ export type $InsuranceInitiateFormPayload<ExtArgs extends runtime.Types.Extensio
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    leadId: string
+    leadId: number
     totalBillAmount: number
     discount: number
     otherReductions: number
@@ -1561,7 +1567,7 @@ export interface Prisma__InsuranceInitiateFormClient<T, Null = never, ExtArgs ex
  */
 export interface InsuranceInitiateFormFieldRefs {
   readonly id: Prisma.FieldRef<"InsuranceInitiateForm", 'String'>
-  readonly leadId: Prisma.FieldRef<"InsuranceInitiateForm", 'String'>
+  readonly leadId: Prisma.FieldRef<"InsuranceInitiateForm", 'Int'>
   readonly totalBillAmount: Prisma.FieldRef<"InsuranceInitiateForm", 'Float'>
   readonly discount: Prisma.FieldRef<"InsuranceInitiateForm", 'Float'>
   readonly otherReductions: Prisma.FieldRef<"InsuranceInitiateForm", 'Float'>

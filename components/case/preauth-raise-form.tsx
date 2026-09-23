@@ -41,7 +41,7 @@ interface FilePreview {
 }
 
 export interface PreAuthRaiseFormProps {
-  leadId: string
+  leadId: number
   leadData?: {
     patientName?: string | null
     age?: number | null

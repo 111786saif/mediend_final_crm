@@ -28,12 +28,14 @@ export type AggregateWorkflowResetLog = {
 }
 
 export type WorkflowResetLogAvgAggregateOutputType = {
+  leadId: number | null
   previousStepNumber: number | null
   resetToStepNumber: number | null
   stepsReverted: number | null
 }
 
 export type WorkflowResetLogSumAggregateOutputType = {
+  leadId: number | null
   previousStepNumber: number | null
   resetToStepNumber: number | null
   stepsReverted: number | null
@@ -41,7 +43,7 @@ export type WorkflowResetLogSumAggregateOutputType = {
 
 export type WorkflowResetLogMinAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   patientName: string | null
   leadRef: string | null
   previousStepNumber: number | null
@@ -60,7 +62,7 @@ export type WorkflowResetLogMinAggregateOutputType = {
 
 export type WorkflowResetLogMaxAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   patientName: string | null
   leadRef: string | null
   previousStepNumber: number | null
@@ -99,12 +101,14 @@ export type WorkflowResetLogCountAggregateOutputType = {
 
 
 export type WorkflowResetLogAvgAggregateInputType = {
+  leadId?: true
   previousStepNumber?: true
   resetToStepNumber?: true
   stepsReverted?: true
 }
 
 export type WorkflowResetLogSumAggregateInputType = {
+  leadId?: true
   previousStepNumber?: true
   resetToStepNumber?: true
   stepsReverted?: true
@@ -256,7 +260,7 @@ export type WorkflowResetLogGroupByArgs<ExtArgs extends runtime.Types.Extensions
 
 export type WorkflowResetLogGroupByOutputType = {
   id: string
-  leadId: string
+  leadId: number
   patientName: string
   leadRef: string
   previousStepNumber: number
@@ -298,7 +302,7 @@ export type WorkflowResetLogWhereInput = {
   OR?: Prisma.WorkflowResetLogWhereInput[]
   NOT?: Prisma.WorkflowResetLogWhereInput | Prisma.WorkflowResetLogWhereInput[]
   id?: Prisma.StringFilter<"WorkflowResetLog"> | string
-  leadId?: Prisma.StringFilter<"WorkflowResetLog"> | string
+  leadId?: Prisma.IntFilter<"WorkflowResetLog"> | number
   patientName?: Prisma.StringFilter<"WorkflowResetLog"> | string
   leadRef?: Prisma.StringFilter<"WorkflowResetLog"> | string
   previousStepNumber?: Prisma.IntFilter<"WorkflowResetLog"> | number
@@ -343,7 +347,7 @@ export type WorkflowResetLogWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.WorkflowResetLogWhereInput | Prisma.WorkflowResetLogWhereInput[]
   OR?: Prisma.WorkflowResetLogWhereInput[]
   NOT?: Prisma.WorkflowResetLogWhereInput | Prisma.WorkflowResetLogWhereInput[]
-  leadId?: Prisma.StringFilter<"WorkflowResetLog"> | string
+  leadId?: Prisma.IntFilter<"WorkflowResetLog"> | number
   patientName?: Prisma.StringFilter<"WorkflowResetLog"> | string
   leadRef?: Prisma.StringFilter<"WorkflowResetLog"> | string
   previousStepNumber?: Prisma.IntFilter<"WorkflowResetLog"> | number
@@ -391,7 +395,7 @@ export type WorkflowResetLogScalarWhereWithAggregatesInput = {
   OR?: Prisma.WorkflowResetLogScalarWhereWithAggregatesInput[]
   NOT?: Prisma.WorkflowResetLogScalarWhereWithAggregatesInput | Prisma.WorkflowResetLogScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"WorkflowResetLog"> | string
-  leadId?: Prisma.StringWithAggregatesFilter<"WorkflowResetLog"> | string
+  leadId?: Prisma.IntWithAggregatesFilter<"WorkflowResetLog"> | number
   patientName?: Prisma.StringWithAggregatesFilter<"WorkflowResetLog"> | string
   leadRef?: Prisma.StringWithAggregatesFilter<"WorkflowResetLog"> | string
   previousStepNumber?: Prisma.IntWithAggregatesFilter<"WorkflowResetLog"> | number
@@ -429,7 +433,7 @@ export type WorkflowResetLogCreateInput = {
 
 export type WorkflowResetLogUncheckedCreateInput = {
   id?: string
-  leadId: string
+  leadId: number
   patientName: string
   leadRef: string
   previousStepNumber: number
@@ -467,7 +471,7 @@ export type WorkflowResetLogUpdateInput = {
 
 export type WorkflowResetLogUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   previousStepNumber?: Prisma.IntFieldUpdateOperationsInput | number
@@ -486,7 +490,7 @@ export type WorkflowResetLogUncheckedUpdateInput = {
 
 export type WorkflowResetLogCreateManyInput = {
   id?: string
-  leadId: string
+  leadId: number
   patientName: string
   leadRef: string
   previousStepNumber: number
@@ -522,7 +526,7 @@ export type WorkflowResetLogUpdateManyMutationInput = {
 
 export type WorkflowResetLogUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   previousStepNumber?: Prisma.IntFieldUpdateOperationsInput | number
@@ -569,6 +573,7 @@ export type WorkflowResetLogCountOrderByAggregateInput = {
 }
 
 export type WorkflowResetLogAvgOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   previousStepNumber?: Prisma.SortOrder
   resetToStepNumber?: Prisma.SortOrder
   stepsReverted?: Prisma.SortOrder
@@ -613,6 +618,7 @@ export type WorkflowResetLogMinOrderByAggregateInput = {
 }
 
 export type WorkflowResetLogSumOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
   previousStepNumber?: Prisma.SortOrder
   resetToStepNumber?: Prisma.SortOrder
   stepsReverted?: Prisma.SortOrder
@@ -722,7 +728,7 @@ export type WorkflowResetLogCreateWithoutResetByInput = {
 
 export type WorkflowResetLogUncheckedCreateWithoutResetByInput = {
   id?: string
-  leadId: string
+  leadId: number
   patientName: string
   leadRef: string
   previousStepNumber: number
@@ -769,7 +775,7 @@ export type WorkflowResetLogScalarWhereInput = {
   OR?: Prisma.WorkflowResetLogScalarWhereInput[]
   NOT?: Prisma.WorkflowResetLogScalarWhereInput | Prisma.WorkflowResetLogScalarWhereInput[]
   id?: Prisma.StringFilter<"WorkflowResetLog"> | string
-  leadId?: Prisma.StringFilter<"WorkflowResetLog"> | string
+  leadId?: Prisma.IntFilter<"WorkflowResetLog"> | number
   patientName?: Prisma.StringFilter<"WorkflowResetLog"> | string
   leadRef?: Prisma.StringFilter<"WorkflowResetLog"> | string
   previousStepNumber?: Prisma.IntFilter<"WorkflowResetLog"> | number
@@ -850,7 +856,7 @@ export type WorkflowResetLogUpdateManyWithWhereWithoutLeadInput = {
 
 export type WorkflowResetLogCreateManyResetByInput = {
   id?: string
-  leadId: string
+  leadId: number
   patientName: string
   leadRef: string
   previousStepNumber: number
@@ -886,7 +892,7 @@ export type WorkflowResetLogUpdateWithoutResetByInput = {
 
 export type WorkflowResetLogUncheckedUpdateWithoutResetByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   previousStepNumber?: Prisma.IntFieldUpdateOperationsInput | number
@@ -904,7 +910,7 @@ export type WorkflowResetLogUncheckedUpdateWithoutResetByInput = {
 
 export type WorkflowResetLogUncheckedUpdateManyWithoutResetByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   previousStepNumber?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1098,7 +1104,7 @@ export type $WorkflowResetLogPayload<ExtArgs extends runtime.Types.Extensions.In
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    leadId: string
+    leadId: number
     patientName: string
     leadRef: string
     previousStepNumber: number
@@ -1539,7 +1545,7 @@ export interface Prisma__WorkflowResetLogClient<T, Null = never, ExtArgs extends
  */
 export interface WorkflowResetLogFieldRefs {
   readonly id: Prisma.FieldRef<"WorkflowResetLog", 'String'>
-  readonly leadId: Prisma.FieldRef<"WorkflowResetLog", 'String'>
+  readonly leadId: Prisma.FieldRef<"WorkflowResetLog", 'Int'>
   readonly patientName: Prisma.FieldRef<"WorkflowResetLog", 'String'>
   readonly leadRef: Prisma.FieldRef<"WorkflowResetLog", 'String'>
   readonly previousStepNumber: Prisma.FieldRef<"WorkflowResetLog", 'Int'>

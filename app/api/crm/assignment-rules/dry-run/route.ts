@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { z } from 'zod'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
@@ -7,7 +8,7 @@ import { logCrmActivity } from '@/lib/crm-activity'
 
 const dryRunSchema = z
   .object({
-    leadId: z.string().trim().optional(),
+    leadId: leadIdSchema.optional(),
     city: z.string().trim().optional().nullable(),
     category: z.string().trim().optional().nullable(),
     departmentId: z.string().trim().optional().nullable(),

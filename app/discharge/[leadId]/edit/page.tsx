@@ -14,7 +14,7 @@ import { useFileUpload } from '@/hooks/use-file-upload'
 import { DischargeFileUploadField } from '@/components/discharge/discharge-file-upload-field'
 
 interface DischargeSheet {
-  id: string
+  id: number
   patientName?: string | null
   admissionDate?: string | null
   surgeryDate?: string | null

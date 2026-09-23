@@ -117,7 +117,7 @@ export type CaseEventType = 'IPD' | 'OPD'
 export type CaseEventStatus = 'DONE' | 'SCHEDULED' | 'POSTPONED' | 'CANCELLED' | 'POSSIBLE'
 export type CaseEvent = {
   id: string
-  leadId: string
+  leadId: number
   patientName: string
   bdId: string
   bdName: string

@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { format } from 'date-fns'
 import { prisma } from '@/lib/prisma'
@@ -100,7 +101,10 @@ export async function GET(
       return unauthorizedResponse()
     }
 
-    const { id } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     console.log('[DEBUG] GET /api/leads/[id]', { id, userId: user.id, userRole: user.role })
 
     const lead = await prisma.lead.findUnique({
@@ -474,7 +478,10 @@ export async function PATCH(
       return errorResponse('Forbidden', 403)
     }
 
-    const { id } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     const lead = await prisma.lead.findUnique({
       where: { id },
       include: {
@@ -1206,7 +1213,7 @@ export async function PATCH(
         logCrmActivity({
           action: 'CRM_LEAD_REMARK_ADDED',
           entityType: 'CRM_LEAD_REMARK',
-          entityId: lead.id,
+          entityId: String(lead.id),
           entityLabel: leadEntityLabel,
           actorUserId: user.id,
           actorRole: user.role,

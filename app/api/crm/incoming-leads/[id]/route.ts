@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
@@ -285,7 +286,7 @@ async function buildProcessedLeadUpdateData(params: {
   }
 }
 
-async function buildResponsePayload(incomingLeadId: string, canViewPhone: boolean) {
+async function buildResponsePayload(incomingLeadId: number, canViewPhone: boolean) {
   const updated = await prisma.incomingLead.findUnique({
     where: { id: incomingLeadId },
   })
@@ -405,7 +406,10 @@ export async function PATCH(
       return errorResponse('Forbidden', 403)
     }
 
-    const { id } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     const body = await request.json().catch(() => null)
     const parsed = updateIncomingLeadSchema.safeParse(body)
 

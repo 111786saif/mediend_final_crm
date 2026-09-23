@@ -701,7 +701,8 @@ model UserStatus {
 }
 
 model Lead {
-  id                  String           @id @default(cuid())
+  id                  Int @id @default(autoincrement())
+  legacyId String? @unique
   leadRef             String           @unique
   patientName         String
   age                 Int
@@ -712,7 +713,10 @@ model Lead {
   attendantName       String?
   bdId                String
   bd                  User             @relation("LeadBD", fields: [bdId], references: [id])
+  /// Kept in sync with statusId for existing reports and integrations.
   status              String
+  statusId            Int?
+  statusMaster        LeadStatus?     @relation(fields: [statusId], references: [id], onDelete: Restrict)
   pipelineStage       PipelineStage    @default(SALES)
   caseStage           CaseStage        @default(NEW_LEAD)
   circle              String // From MySQL (e.g. "PUNE", "Mumbai")
@@ -864,6 +868,7 @@ model Lead {
 
   @@index([bdId])
   @@index([status])
+  @@index([statusId])
   @@index([pipelineStage])
   @@index([caseStage])
   @@index([circle])
@@ -884,7 +889,7 @@ model Lead {
 
 model LeadOpdPrescriptionImage {
   id         String   @id @default(cuid())
-  leadId      String
+  leadId      Int
   lead        Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
   fileName    String
   fileUrl     String
@@ -898,7 +903,7 @@ model LeadOpdPrescriptionImage {
 
 model CallNote {
   id          String   @id @default(cuid())
-  leadId      String
+  leadId      Int
   lead        Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
   content     String   @db.Text
   createdById String
@@ -911,7 +916,7 @@ model CallNote {
 
 model LeadRemarkEntry {
   id          String   @id @default(cuid())
-  leadId      String
+  leadId      Int
   lead        Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
   content     String   @db.Text
   createdById String
@@ -924,7 +929,7 @@ model LeadRemarkEntry {
 
 model LeadQrCallAuditLog {
   id          String   @id @default(cuid())
-  leadId       String
+  leadId       Int
   lead         Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
   userId       String
   user         User     @relation("LeadQrCallAuditActor", fields: [userId], references: [id], onDelete: Cascade)
@@ -944,7 +949,7 @@ model LeadQrCallAuditLog {
 model LeadQrPublicLink {
   id           String   @id @default(cuid())
   token        String   @unique
-  leadId       String
+  leadId       Int
   lead         Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
   actorUserId  String
   actorUser    User     @relation("LeadQrPublicLinkActor", fields: [actorUserId], references: [id], onDelete: Cascade)
@@ -960,7 +965,7 @@ model LeadQrPublicLink {
 model LeadQrScanLink {
   id            String   @id @default(cuid())
   token         String   @unique
-  leadId        String
+  leadId        Int
   lead          Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
   actorUserId   String
   actorUser     User     @relation("LeadQrScanLinkActor", fields: [actorUserId], references: [id], onDelete: Cascade)
@@ -973,7 +978,7 @@ model LeadQrScanLink {
 
 model LeadStageEvent {
   id          String        @id @default(cuid())
-  leadId      String
+  leadId      Int
   lead        Lead          @relation(fields: [leadId], references: [id], onDelete: Cascade)
   fromStage   PipelineStage
   toStage     PipelineStage
@@ -1039,7 +1044,7 @@ model TierDefinition {
 
 model InsuranceCase {
   id             String              @id @default(cuid())
-  leadId         String              @unique
+  leadId         Int              @unique
   lead           Lead                @relation(fields: [leadId], references: [id], onDelete: Cascade)
   caseStatus     InsuranceCaseStatus @default(IN_PROGRESS)
   approvalAmount Float?
@@ -1058,7 +1063,7 @@ model InsuranceCase {
 
 model PLRecord {
   id     String @id @default(cuid())
-  leadId String @unique
+  leadId Int @unique
   lead   Lead   @relation(fields: [leadId], references: [id], onDelete: Cascade)
 
   // Workflow
@@ -1070,6 +1075,7 @@ model PLRecord {
   surgeryDate        DateTime? // Date of surgery
   status             String? // Case status
   paymentType        String? // Payment mode
+  caseType           String? // Corporate / retail / other reporting type
   approvedOrCash     String? // Approved / Cash
   paymentCollectedAt String? // Collection source
 
@@ -1095,10 +1101,17 @@ model PLRecord {
   cashOrDedPaid         Float        @default(0) // Deduction / amount paid by patient
   referralAmount        Float        @default(0) // Referral payout
   cabCharges            Float        @default(0) // Logistics cost
+  cabStatus             String?
+  emiSubventionPct      Float?
+  emiSubventionCharges  Float        @default(0)
+  referralPct           Float?
+  referralStatus        String?
+  referralName          String?
   implantCost           Float        @default(0) // Implant
   instrumentsCost       Float        @default(0) // Instruments (separate from implant)
   implantPaidBy         PaidByParty? // Who paid for implants (affects Mediend expense)
   instrumentsPaidBy     PaidByParty? // Who paid for instruments (affects Mediend expense)
+  instrumentsPaymentStatus String?
   actualImplantCost     Float        @default(0) // Actual implant cost for profit calculation
   actualInstrumentCost  Float        @default(0) // Actual instrument cost for profit calculation
   hospitalRecoverAmount Float        @default(0) // Hospital recover amount (deducted from Mediend profit)
@@ -1148,7 +1161,7 @@ model PLRecord {
 
 model InvoiceRequest {
   id               String               @id @default(cuid())
-  leadId           String
+  leadId           Int
   lead             Lead                 @relation(fields: [leadId], references: [id], onDelete: Cascade)
   status           InvoiceRequestStatus @default(PENDING)
 
@@ -1198,7 +1211,7 @@ model DoctorPayoffRequest {
   id               String                    @id @default(cuid())
   doctorName       String
   hospitalName     String?
-  leadId           String?
+  leadId           Int?
   lead             Lead?                     @relation(fields: [leadId], references: [id], onDelete: SetNull)
   /// string[] of related lead IDs (batch requests)
   leadIds          Json?
@@ -1248,8 +1261,66 @@ model DoctorPayoffRequestActivity {
   @@index([actorId])
 }
 
+model LeadIdMigrationMap {
+  tableName String
+  oldId     String
+  newId     Int
+
+  @@id([tableName, oldId])
+  @@unique([tableName, newId])
+}
+
+model StatusCategory {
+  id        Int           @id @default(autoincrement())
+  category  String        @unique
+  sortOrder Int           @default(0)
+  isActive  Boolean       @default(true)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  groups    StatusGroup[]
+  statuses  LeadStatus[]
+
+  @@map("status_category")
+}
+
+model StatusGroup {
+  id         Int            @id @default(autoincrement())
+  categoryId Int
+  category   StatusCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  group      String
+  sortOrder  Int            @default(0)
+  isActive   Boolean        @default(true)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  statuses   LeadStatus[]
+
+  @@unique([categoryId, group])
+  @@index([categoryId])
+  @@map("status_group")
+}
+
+model LeadStatus {
+  id         Int            @id @default(autoincrement())
+  categoryId Int
+  groupId    Int
+  category   StatusCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  group      StatusGroup    @relation(fields: [groupId], references: [id], onDelete: Restrict)
+  status     String
+  code       String         @unique
+  sortOrder  Int            @default(0)
+  isActive   Boolean        @default(true)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  leads      Lead[]
+
+  @@unique([groupId, status])
+  @@index([categoryId, groupId])
+  @@map("status")
+}
+
 model IncomingLead {
-  id                       String   @id @default(cuid())
+  id                       Int @id @default(autoincrement())
+  legacyId String? @unique
   source                   String?
   payload                  Json
   status                   String   @default("PENDING") // PENDING, PROCESSED, FAILED, DUPLICATE
@@ -1258,7 +1329,7 @@ model IncomingLead {
   circle                   String?
   category                 String?
   treatment                String?
-  processedLeadId          String?
+  processedLeadId          Int?
   selectedTeamLeadUserId   String?
   selectedTeamLeadEmployeeId String?
   selectedBdUserId         String?
@@ -1268,6 +1339,7 @@ model IncomingLead {
 
   @@index([status])
   @@index([receivedAt])
+  @@index([receivedAt, id])
   @@index([externalCampaignId])
   @@index([normalizedPhone])
   @@index([selectedTeamLeadEmployeeId, receivedAt])
@@ -2402,7 +2474,7 @@ model SyncState {
 
 model KYPSubmission {
   id     String @id @default(cuid())
-  leadId String @unique
+  leadId Int @unique
   lead   Lead   @relation(fields: [leadId], references: [id], onDelete: Cascade)
 
   // Form fields (all optional)
@@ -2733,7 +2805,7 @@ model CrmAssignmentRuleMember {
 
 model CrmAssignmentPreviewLog {
   id                          String                 @id @default(cuid())
-  leadId                      String
+  leadId                      Int
   leadRef                     String
   syncSource                  String
   currentBdUserId             String
@@ -3150,7 +3222,7 @@ model PreAuthPDF {
 
 model AdmissionRecord {
   id     String @id @default(cuid())
-  leadId String @unique
+  leadId Int @unique
   lead   Lead   @relation(fields: [leadId], references: [id], onDelete: Cascade)
 
   admissionDate       DateTime
@@ -3202,7 +3274,7 @@ model AdmissionRecord {
 
 model LeadOpdAppointment {
   id                      String                    @id @default(cuid())
-  leadId                  String
+  leadId                  Int
   lead                    Lead                      @relation(fields: [leadId], references: [id], onDelete: Cascade)
   phase                   LeadOpdPhase
   slot                    Int
@@ -3288,7 +3360,7 @@ model AdmissionRecordPrescriptionImage {
 
 model InsuranceInitiateForm {
   id     String @id @default(cuid())
-  leadId String @unique
+  leadId Int @unique
   lead   Lead   @relation(fields: [leadId], references: [id], onDelete: Cascade)
 
   // Financial fields
@@ -3322,7 +3394,7 @@ model InsuranceInitiateForm {
 
 model CaseStageHistory {
   id     String @id @default(cuid())
-  leadId String
+  leadId Int
   lead   Lead   @relation(fields: [leadId], references: [id], onDelete: Cascade)
 
   fromStage   CaseStage?
@@ -3340,7 +3412,7 @@ model CaseStageHistory {
 /// Rows are append-only — there is no update/delete API for this model.
 model WorkflowResetLog {
   id     String @id @default(cuid())
-  leadId String
+  leadId Int
   lead   Lead   @relation(fields: [leadId], references: [id], onDelete: Cascade)
 
   patientName String
@@ -3374,7 +3446,7 @@ model WorkflowResetLog {
 
 model CaseChatMessage {
   id        String          @id @default(cuid())
-  leadId    String
+  leadId    Int
   lead      Lead            @relation(fields: [leadId], references: [id], onDelete: Cascade)
   senderId  String? // null for system messages
   sender    User?           @relation("CaseChatSender", fields: [senderId], references: [id])
@@ -3389,7 +3461,7 @@ model CaseChatMessage {
 
 model ChatReadReceipt {
   id         String   @id @default(cuid())
-  leadId     String
+  leadId     Int
   lead       Lead     @relation("ChatReadLead", fields: [leadId], references: [id], onDelete: Cascade)
   userId     String
   user       User     @relation("ChatReadUser", fields: [userId], references: [id], onDelete: Cascade)
@@ -3405,7 +3477,7 @@ model ChatReadReceipt {
 
 model DischargeSheet {
   id              String         @id @default(cuid())
-  leadId          String         @unique
+  leadId          Int         @unique
   lead            Lead           @relation(fields: [leadId], references: [id], onDelete: Cascade)
   kypSubmissionId String?        @unique // Optional link to KYP
   kypSubmission   KYPSubmission? @relation("DischargeSheetKYP", fields: [kypSubmissionId], references: [id])
@@ -3546,7 +3618,7 @@ model DischargeSheet {
 
 model OutstandingCase {
   id     String @id @default(cuid())
-  leadId String @unique
+  leadId Int @unique
   lead   Lead   @relation(fields: [leadId], references: [id], onDelete: Cascade)
 
   // Core Identification
@@ -3625,7 +3697,7 @@ enum InstallmentVerificationStatus {
 model PaymentInstallment {
   id           String               @id @default(cuid())
   /// Optional — hospital-level MediEND receipts may have no case attached
-  leadId       String?
+  leadId       Int?
   lead         Lead?                @relation(fields: [leadId], references: [id], onDelete: Cascade)
   /// Set when payment is recorded against a hospital without selecting cases
   hospitalName String?
@@ -3659,7 +3731,7 @@ model PaymentInstallment {
 
 model ComplianceCall {
   id     String @id @default(cuid())
-  leadId String @unique
+  leadId Int @unique
   lead   Lead   @relation(fields: [leadId], references: [id], onDelete: Cascade)
 
   status ComplianceCallStatus @default(PENDING)

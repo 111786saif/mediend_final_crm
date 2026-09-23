@@ -20,7 +20,7 @@ import { useFileUpload } from '@/hooks/use-file-upload'
 import { File } from 'lucide-react'
 
 interface PreAuthInlineApprovalProps {
-  leadId: string
+  leadId: number
   kypSubmissionId: string
   lead?: {
     caseStage?: string

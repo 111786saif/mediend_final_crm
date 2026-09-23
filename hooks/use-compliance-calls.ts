@@ -58,7 +58,7 @@ export const CONCERN_CATEGORIES: ConcernCategory[] = [
 ]
 
 export interface ComplianceCallLead {
-  id: string
+  id: number
   leadRef: string
   patientName: string
   phoneNumber: string
@@ -89,7 +89,7 @@ export interface ComplianceCallLead {
 
 export interface ComplianceCall {
   id: string
-  leadId: string
+  leadId: number
   status: ComplianceCallStatus
   rating: number | null
   notes: string | null

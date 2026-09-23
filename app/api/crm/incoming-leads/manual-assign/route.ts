@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { EmployeeStatus, UserRole } from '@/generated/prisma/client'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
@@ -70,11 +71,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = (await request.json()) as ManualAssignBody
-    const incomingLeadIds = Array.isArray(body.incomingLeadIds)
-      ? body.incomingLeadIds.filter(
-          (value): value is string => typeof value === 'string' && value.trim().length > 0
-        )
-      : []
+    const incomingLeadIds = leadIdSchema.array().parse(body.incomingLeadIds ?? [])
     const assigneeUserIds = Array.isArray(body.assigneeUserIds)
       ? body.assigneeUserIds.filter(
           (value): value is string => typeof value === 'string' && value.trim().length > 0

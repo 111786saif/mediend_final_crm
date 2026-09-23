@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
@@ -15,7 +16,10 @@ export async function POST(
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
 
-    const { id: leadId } = await params
+    const { id: rawLeadId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const leadId = parsedLeadId.data
 
     await Promise.all([
       prisma.chatReadReceipt.upsert({
@@ -27,7 +31,7 @@ export async function POST(
         where: {
           userId: user.id,
           type: 'CASE_CHAT_MESSAGE',
-          relatedId: leadId,
+          relatedId: String(leadId),
           isRead: false,
         },
         data: {

@@ -13,7 +13,7 @@ import { Loader2 } from 'lucide-react'
 import { canAccessChat } from '@/lib/chat/access'
 
 interface Lead {
-  id: string
+  id: number
   leadRef: string
   patientName: string
   phoneNumber: string
@@ -35,7 +35,7 @@ export default function ChatPage() {
   const { hasAccess } = usePermissions()
   const params = useParams()
   const router = useRouter()
-  const leadId = params.leadId as string | undefined
+  const leadId = Number(params.leadId)
   const allowed = !!(user && (hasAccess('main.chat') || canAccessChat(user)))
 
   const { data: lead, isLoading } = useQuery<Lead>({

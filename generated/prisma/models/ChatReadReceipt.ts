@@ -20,20 +20,30 @@ export type ChatReadReceiptModel = runtime.Types.Result.DefaultSelection<Prisma.
 
 export type AggregateChatReadReceipt = {
   _count: ChatReadReceiptCountAggregateOutputType | null
+  _avg: ChatReadReceiptAvgAggregateOutputType | null
+  _sum: ChatReadReceiptSumAggregateOutputType | null
   _min: ChatReadReceiptMinAggregateOutputType | null
   _max: ChatReadReceiptMaxAggregateOutputType | null
 }
 
+export type ChatReadReceiptAvgAggregateOutputType = {
+  leadId: number | null
+}
+
+export type ChatReadReceiptSumAggregateOutputType = {
+  leadId: number | null
+}
+
 export type ChatReadReceiptMinAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   userId: string | null
   lastReadAt: Date | null
 }
 
 export type ChatReadReceiptMaxAggregateOutputType = {
   id: string | null
-  leadId: string | null
+  leadId: number | null
   userId: string | null
   lastReadAt: Date | null
 }
@@ -46,6 +56,14 @@ export type ChatReadReceiptCountAggregateOutputType = {
   _all: number
 }
 
+
+export type ChatReadReceiptAvgAggregateInputType = {
+  leadId?: true
+}
+
+export type ChatReadReceiptSumAggregateInputType = {
+  leadId?: true
+}
 
 export type ChatReadReceiptMinAggregateInputType = {
   id?: true
@@ -107,6 +125,18 @@ export type ChatReadReceiptAggregateArgs<ExtArgs extends runtime.Types.Extension
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: ChatReadReceiptAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: ChatReadReceiptSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: ChatReadReceiptMinAggregateInputType
@@ -137,16 +167,20 @@ export type ChatReadReceiptGroupByArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   _count?: ChatReadReceiptCountAggregateInputType | true
+  _avg?: ChatReadReceiptAvgAggregateInputType
+  _sum?: ChatReadReceiptSumAggregateInputType
   _min?: ChatReadReceiptMinAggregateInputType
   _max?: ChatReadReceiptMaxAggregateInputType
 }
 
 export type ChatReadReceiptGroupByOutputType = {
   id: string
-  leadId: string
+  leadId: number
   userId: string
   lastReadAt: Date
   _count: ChatReadReceiptCountAggregateOutputType | null
+  _avg: ChatReadReceiptAvgAggregateOutputType | null
+  _sum: ChatReadReceiptSumAggregateOutputType | null
   _min: ChatReadReceiptMinAggregateOutputType | null
   _max: ChatReadReceiptMaxAggregateOutputType | null
 }
@@ -171,7 +205,7 @@ export type ChatReadReceiptWhereInput = {
   OR?: Prisma.ChatReadReceiptWhereInput[]
   NOT?: Prisma.ChatReadReceiptWhereInput | Prisma.ChatReadReceiptWhereInput[]
   id?: Prisma.StringFilter<"ChatReadReceipt"> | string
-  leadId?: Prisma.StringFilter<"ChatReadReceipt"> | string
+  leadId?: Prisma.IntFilter<"ChatReadReceipt"> | number
   userId?: Prisma.StringFilter<"ChatReadReceipt"> | string
   lastReadAt?: Prisma.DateTimeFilter<"ChatReadReceipt"> | Date | string
   lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
@@ -193,7 +227,7 @@ export type ChatReadReceiptWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ChatReadReceiptWhereInput | Prisma.ChatReadReceiptWhereInput[]
   OR?: Prisma.ChatReadReceiptWhereInput[]
   NOT?: Prisma.ChatReadReceiptWhereInput | Prisma.ChatReadReceiptWhereInput[]
-  leadId?: Prisma.StringFilter<"ChatReadReceipt"> | string
+  leadId?: Prisma.IntFilter<"ChatReadReceipt"> | number
   userId?: Prisma.StringFilter<"ChatReadReceipt"> | string
   lastReadAt?: Prisma.DateTimeFilter<"ChatReadReceipt"> | Date | string
   lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
@@ -206,8 +240,10 @@ export type ChatReadReceiptOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   lastReadAt?: Prisma.SortOrder
   _count?: Prisma.ChatReadReceiptCountOrderByAggregateInput
+  _avg?: Prisma.ChatReadReceiptAvgOrderByAggregateInput
   _max?: Prisma.ChatReadReceiptMaxOrderByAggregateInput
   _min?: Prisma.ChatReadReceiptMinOrderByAggregateInput
+  _sum?: Prisma.ChatReadReceiptSumOrderByAggregateInput
 }
 
 export type ChatReadReceiptScalarWhereWithAggregatesInput = {
@@ -215,7 +251,7 @@ export type ChatReadReceiptScalarWhereWithAggregatesInput = {
   OR?: Prisma.ChatReadReceiptScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ChatReadReceiptScalarWhereWithAggregatesInput | Prisma.ChatReadReceiptScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"ChatReadReceipt"> | string
-  leadId?: Prisma.StringWithAggregatesFilter<"ChatReadReceipt"> | string
+  leadId?: Prisma.IntWithAggregatesFilter<"ChatReadReceipt"> | number
   userId?: Prisma.StringWithAggregatesFilter<"ChatReadReceipt"> | string
   lastReadAt?: Prisma.DateTimeWithAggregatesFilter<"ChatReadReceipt"> | Date | string
 }
@@ -229,7 +265,7 @@ export type ChatReadReceiptCreateInput = {
 
 export type ChatReadReceiptUncheckedCreateInput = {
   id?: string
-  leadId: string
+  leadId: number
   userId: string
   lastReadAt?: Date | string
 }
@@ -243,14 +279,14 @@ export type ChatReadReceiptUpdateInput = {
 
 export type ChatReadReceiptUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   lastReadAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ChatReadReceiptCreateManyInput = {
   id?: string
-  leadId: string
+  leadId: number
   userId: string
   lastReadAt?: Date | string
 }
@@ -262,7 +298,7 @@ export type ChatReadReceiptUpdateManyMutationInput = {
 
 export type ChatReadReceiptUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   lastReadAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -278,7 +314,7 @@ export type ChatReadReceiptOrderByRelationAggregateInput = {
 }
 
 export type ChatReadReceiptLeadIdUserIdCompoundUniqueInput = {
-  leadId: string
+  leadId: number
   userId: string
 }
 
@@ -287,6 +323,10 @@ export type ChatReadReceiptCountOrderByAggregateInput = {
   leadId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   lastReadAt?: Prisma.SortOrder
+}
+
+export type ChatReadReceiptAvgOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
 }
 
 export type ChatReadReceiptMaxOrderByAggregateInput = {
@@ -301,6 +341,10 @@ export type ChatReadReceiptMinOrderByAggregateInput = {
   leadId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   lastReadAt?: Prisma.SortOrder
+}
+
+export type ChatReadReceiptSumOrderByAggregateInput = {
+  leadId?: Prisma.SortOrder
 }
 
 export type ChatReadReceiptCreateNestedManyWithoutUserInput = {
@@ -395,7 +439,7 @@ export type ChatReadReceiptCreateWithoutUserInput = {
 
 export type ChatReadReceiptUncheckedCreateWithoutUserInput = {
   id?: string
-  leadId: string
+  leadId: number
   lastReadAt?: Date | string
 }
 
@@ -430,7 +474,7 @@ export type ChatReadReceiptScalarWhereInput = {
   OR?: Prisma.ChatReadReceiptScalarWhereInput[]
   NOT?: Prisma.ChatReadReceiptScalarWhereInput | Prisma.ChatReadReceiptScalarWhereInput[]
   id?: Prisma.StringFilter<"ChatReadReceipt"> | string
-  leadId?: Prisma.StringFilter<"ChatReadReceipt"> | string
+  leadId?: Prisma.IntFilter<"ChatReadReceipt"> | number
   userId?: Prisma.StringFilter<"ChatReadReceipt"> | string
   lastReadAt?: Prisma.DateTimeFilter<"ChatReadReceipt"> | Date | string
 }
@@ -475,7 +519,7 @@ export type ChatReadReceiptUpdateManyWithWhereWithoutLeadInput = {
 
 export type ChatReadReceiptCreateManyUserInput = {
   id?: string
-  leadId: string
+  leadId: number
   lastReadAt?: Date | string
 }
 
@@ -487,13 +531,13 @@ export type ChatReadReceiptUpdateWithoutUserInput = {
 
 export type ChatReadReceiptUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   lastReadAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ChatReadReceiptUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.IntFieldUpdateOperationsInput | number
   lastReadAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -579,7 +623,7 @@ export type $ChatReadReceiptPayload<ExtArgs extends runtime.Types.Extensions.Int
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    leadId: string
+    leadId: number
     userId: string
     lastReadAt: Date
   }, ExtArgs["result"]["chatReadReceipt"]>
@@ -1008,7 +1052,7 @@ export interface Prisma__ChatReadReceiptClient<T, Null = never, ExtArgs extends 
  */
 export interface ChatReadReceiptFieldRefs {
   readonly id: Prisma.FieldRef<"ChatReadReceipt", 'String'>
-  readonly leadId: Prisma.FieldRef<"ChatReadReceipt", 'String'>
+  readonly leadId: Prisma.FieldRef<"ChatReadReceipt", 'Int'>
   readonly userId: Prisma.FieldRef<"ChatReadReceipt", 'String'>
   readonly lastReadAt: Prisma.FieldRef<"ChatReadReceipt", 'DateTime'>
 }

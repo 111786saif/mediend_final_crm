@@ -26,7 +26,7 @@ type VerificationStatus = 'PENDING' | 'VERIFIED' | 'REJECTED'
 
 type Installment = {
   id: string
-  leadId: string
+  leadId: number
   recipient: Recipient
   amount: number
   paidOn: string
@@ -47,7 +47,7 @@ function todayYmd(): string {
 }
 
 interface Props {
-  leadId: string
+  leadId: number
   lockRecipient?: Recipient
   doctorName?: string | null
   hospitalName?: string | null

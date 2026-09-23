@@ -27,7 +27,9 @@ export type AggregateLead = {
 }
 
 export type LeadAvgAggregateOutputType = {
+  id: number | null
   age: number | null
+  statusId: number | null
   atsAmount: number | null
   discount: number | null
   copay: number | null
@@ -57,7 +59,9 @@ export type LeadAvgAggregateOutputType = {
 }
 
 export type LeadSumAggregateOutputType = {
+  id: number | null
   age: number | null
+  statusId: number | null
   atsAmount: number | null
   discount: number | null
   copay: number | null
@@ -87,7 +91,8 @@ export type LeadSumAggregateOutputType = {
 }
 
 export type LeadMinAggregateOutputType = {
-  id: string | null
+  id: number | null
+  legacyId: string | null
   leadRef: string | null
   patientName: string | null
   age: number | null
@@ -98,6 +103,7 @@ export type LeadMinAggregateOutputType = {
   attendantName: string | null
   bdId: string | null
   status: string | null
+  statusId: number | null
   pipelineStage: $Enums.PipelineStage | null
   caseStage: $Enums.CaseStage | null
   circle: string | null
@@ -211,7 +217,8 @@ export type LeadMinAggregateOutputType = {
 }
 
 export type LeadMaxAggregateOutputType = {
-  id: string | null
+  id: number | null
+  legacyId: string | null
   leadRef: string | null
   patientName: string | null
   age: number | null
@@ -222,6 +229,7 @@ export type LeadMaxAggregateOutputType = {
   attendantName: string | null
   bdId: string | null
   status: string | null
+  statusId: number | null
   pipelineStage: $Enums.PipelineStage | null
   caseStage: $Enums.CaseStage | null
   circle: string | null
@@ -336,6 +344,7 @@ export type LeadMaxAggregateOutputType = {
 
 export type LeadCountAggregateOutputType = {
   id: number
+  legacyId: number
   leadRef: number
   patientName: number
   age: number
@@ -346,6 +355,7 @@ export type LeadCountAggregateOutputType = {
   attendantName: number
   bdId: number
   status: number
+  statusId: number
   pipelineStage: number
   caseStage: number
   circle: number
@@ -461,7 +471,9 @@ export type LeadCountAggregateOutputType = {
 
 
 export type LeadAvgAggregateInputType = {
+  id?: true
   age?: true
+  statusId?: true
   atsAmount?: true
   discount?: true
   copay?: true
@@ -491,7 +503,9 @@ export type LeadAvgAggregateInputType = {
 }
 
 export type LeadSumAggregateInputType = {
+  id?: true
   age?: true
+  statusId?: true
   atsAmount?: true
   discount?: true
   copay?: true
@@ -522,6 +536,7 @@ export type LeadSumAggregateInputType = {
 
 export type LeadMinAggregateInputType = {
   id?: true
+  legacyId?: true
   leadRef?: true
   patientName?: true
   age?: true
@@ -532,6 +547,7 @@ export type LeadMinAggregateInputType = {
   attendantName?: true
   bdId?: true
   status?: true
+  statusId?: true
   pipelineStage?: true
   caseStage?: true
   circle?: true
@@ -646,6 +662,7 @@ export type LeadMinAggregateInputType = {
 
 export type LeadMaxAggregateInputType = {
   id?: true
+  legacyId?: true
   leadRef?: true
   patientName?: true
   age?: true
@@ -656,6 +673,7 @@ export type LeadMaxAggregateInputType = {
   attendantName?: true
   bdId?: true
   status?: true
+  statusId?: true
   pipelineStage?: true
   caseStage?: true
   circle?: true
@@ -770,6 +788,7 @@ export type LeadMaxAggregateInputType = {
 
 export type LeadCountAggregateInputType = {
   id?: true
+  legacyId?: true
   leadRef?: true
   patientName?: true
   age?: true
@@ -780,6 +799,7 @@ export type LeadCountAggregateInputType = {
   attendantName?: true
   bdId?: true
   status?: true
+  statusId?: true
   pipelineStage?: true
   caseStage?: true
   circle?: true
@@ -980,7 +1000,8 @@ export type LeadGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 }
 
 export type LeadGroupByOutputType = {
-  id: string
+  id: number
+  legacyId: string | null
   leadRef: string
   patientName: string
   age: number
@@ -991,6 +1012,7 @@ export type LeadGroupByOutputType = {
   attendantName: string | null
   bdId: string
   status: string
+  statusId: number | null
   pipelineStage: $Enums.PipelineStage
   caseStage: $Enums.CaseStage
   circle: string
@@ -1127,7 +1149,8 @@ export type LeadWhereInput = {
   AND?: Prisma.LeadWhereInput | Prisma.LeadWhereInput[]
   OR?: Prisma.LeadWhereInput[]
   NOT?: Prisma.LeadWhereInput | Prisma.LeadWhereInput[]
-  id?: Prisma.StringFilter<"Lead"> | string
+  id?: Prisma.IntFilter<"Lead"> | number
+  legacyId?: Prisma.StringNullableFilter<"Lead"> | string | null
   leadRef?: Prisma.StringFilter<"Lead"> | string
   patientName?: Prisma.StringFilter<"Lead"> | string
   age?: Prisma.IntFilter<"Lead"> | number
@@ -1138,6 +1161,7 @@ export type LeadWhereInput = {
   attendantName?: Prisma.StringNullableFilter<"Lead"> | string | null
   bdId?: Prisma.StringFilter<"Lead"> | string
   status?: Prisma.StringFilter<"Lead"> | string
+  statusId?: Prisma.IntNullableFilter<"Lead"> | number | null
   pipelineStage?: Prisma.EnumPipelineStageFilter<"Lead"> | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFilter<"Lead"> | $Enums.CaseStage
   circle?: Prisma.StringFilter<"Lead"> | string
@@ -1249,6 +1273,7 @@ export type LeadWhereInput = {
   lostReason?: Prisma.StringNullableFilter<"Lead"> | string | null
   lostAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
   bd?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  statusMaster?: Prisma.XOR<Prisma.LeadStatusNullableScalarRelationFilter, Prisma.LeadStatusWhereInput> | null
   treatmentMaster?: Prisma.XOR<Prisma.TreatmentMasterNullableScalarRelationFilter, Prisma.TreatmentMasterWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   updatedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -1272,6 +1297,7 @@ export type LeadWhereInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryListRelationFilter
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogListRelationFilter
   qrPublicLinks?: Prisma.LeadQrPublicLinkListRelationFilter
+  qrScanLinks?: Prisma.LeadQrScanLinkListRelationFilter
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogListRelationFilter
   opdSurgeryRemark?: Prisma.XOR<Prisma.SurgeryRemarkMasterNullableScalarRelationFilter, Prisma.SurgeryRemarkMasterWhereInput> | null
   opdReasonNoSurgery?: Prisma.XOR<Prisma.ReasonNoSurgeryMasterNullableScalarRelationFilter, Prisma.ReasonNoSurgeryMasterWhereInput> | null
@@ -1282,6 +1308,7 @@ export type LeadWhereInput = {
 
 export type LeadOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  legacyId?: Prisma.SortOrderInput | Prisma.SortOrder
   leadRef?: Prisma.SortOrder
   patientName?: Prisma.SortOrder
   age?: Prisma.SortOrder
@@ -1292,6 +1319,7 @@ export type LeadOrderByWithRelationInput = {
   attendantName?: Prisma.SortOrderInput | Prisma.SortOrder
   bdId?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  statusId?: Prisma.SortOrderInput | Prisma.SortOrder
   pipelineStage?: Prisma.SortOrder
   caseStage?: Prisma.SortOrder
   circle?: Prisma.SortOrder
@@ -1403,6 +1431,7 @@ export type LeadOrderByWithRelationInput = {
   lostReason?: Prisma.SortOrderInput | Prisma.SortOrder
   lostAt?: Prisma.SortOrderInput | Prisma.SortOrder
   bd?: Prisma.UserOrderByWithRelationInput
+  statusMaster?: Prisma.LeadStatusOrderByWithRelationInput
   treatmentMaster?: Prisma.TreatmentMasterOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
   updatedBy?: Prisma.UserOrderByWithRelationInput
@@ -1426,6 +1455,7 @@ export type LeadOrderByWithRelationInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryOrderByRelationAggregateInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogOrderByRelationAggregateInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkOrderByRelationAggregateInput
+  qrScanLinks?: Prisma.LeadQrScanLinkOrderByRelationAggregateInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogOrderByRelationAggregateInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterOrderByWithRelationInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterOrderByWithRelationInput
@@ -1435,7 +1465,8 @@ export type LeadOrderByWithRelationInput = {
 }
 
 export type LeadWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  id?: number
+  legacyId?: string
   leadRef?: string
   AND?: Prisma.LeadWhereInput | Prisma.LeadWhereInput[]
   OR?: Prisma.LeadWhereInput[]
@@ -1449,6 +1480,7 @@ export type LeadWhereUniqueInput = Prisma.AtLeast<{
   attendantName?: Prisma.StringNullableFilter<"Lead"> | string | null
   bdId?: Prisma.StringFilter<"Lead"> | string
   status?: Prisma.StringFilter<"Lead"> | string
+  statusId?: Prisma.IntNullableFilter<"Lead"> | number | null
   pipelineStage?: Prisma.EnumPipelineStageFilter<"Lead"> | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFilter<"Lead"> | $Enums.CaseStage
   circle?: Prisma.StringFilter<"Lead"> | string
@@ -1560,6 +1592,7 @@ export type LeadWhereUniqueInput = Prisma.AtLeast<{
   lostReason?: Prisma.StringNullableFilter<"Lead"> | string | null
   lostAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
   bd?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  statusMaster?: Prisma.XOR<Prisma.LeadStatusNullableScalarRelationFilter, Prisma.LeadStatusWhereInput> | null
   treatmentMaster?: Prisma.XOR<Prisma.TreatmentMasterNullableScalarRelationFilter, Prisma.TreatmentMasterWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   updatedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -1583,16 +1616,18 @@ export type LeadWhereUniqueInput = Prisma.AtLeast<{
   leadRemarkEntries?: Prisma.LeadRemarkEntryListRelationFilter
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogListRelationFilter
   qrPublicLinks?: Prisma.LeadQrPublicLinkListRelationFilter
+  qrScanLinks?: Prisma.LeadQrScanLinkListRelationFilter
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogListRelationFilter
   opdSurgeryRemark?: Prisma.XOR<Prisma.SurgeryRemarkMasterNullableScalarRelationFilter, Prisma.SurgeryRemarkMasterWhereInput> | null
   opdReasonNoSurgery?: Prisma.XOR<Prisma.ReasonNoSurgeryMasterNullableScalarRelationFilter, Prisma.ReasonNoSurgeryMasterWhereInput> | null
   opdFollowUpReason?: Prisma.XOR<Prisma.FollowUpReasonMasterNullableScalarRelationFilter, Prisma.FollowUpReasonMasterWhereInput> | null
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageListRelationFilter
   opdAppointments?: Prisma.LeadOpdAppointmentListRelationFilter
-}, "id" | "leadRef">
+}, "id" | "legacyId" | "leadRef">
 
 export type LeadOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  legacyId?: Prisma.SortOrderInput | Prisma.SortOrder
   leadRef?: Prisma.SortOrder
   patientName?: Prisma.SortOrder
   age?: Prisma.SortOrder
@@ -1603,6 +1638,7 @@ export type LeadOrderByWithAggregationInput = {
   attendantName?: Prisma.SortOrderInput | Prisma.SortOrder
   bdId?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  statusId?: Prisma.SortOrderInput | Prisma.SortOrder
   pipelineStage?: Prisma.SortOrder
   caseStage?: Prisma.SortOrder
   circle?: Prisma.SortOrder
@@ -1724,7 +1760,8 @@ export type LeadScalarWhereWithAggregatesInput = {
   AND?: Prisma.LeadScalarWhereWithAggregatesInput | Prisma.LeadScalarWhereWithAggregatesInput[]
   OR?: Prisma.LeadScalarWhereWithAggregatesInput[]
   NOT?: Prisma.LeadScalarWhereWithAggregatesInput | Prisma.LeadScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"Lead"> | string
+  id?: Prisma.IntWithAggregatesFilter<"Lead"> | number
+  legacyId?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   leadRef?: Prisma.StringWithAggregatesFilter<"Lead"> | string
   patientName?: Prisma.StringWithAggregatesFilter<"Lead"> | string
   age?: Prisma.IntWithAggregatesFilter<"Lead"> | number
@@ -1735,6 +1772,7 @@ export type LeadScalarWhereWithAggregatesInput = {
   attendantName?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   bdId?: Prisma.StringWithAggregatesFilter<"Lead"> | string
   status?: Prisma.StringWithAggregatesFilter<"Lead"> | string
+  statusId?: Prisma.IntNullableWithAggregatesFilter<"Lead"> | number | null
   pipelineStage?: Prisma.EnumPipelineStageWithAggregatesFilter<"Lead"> | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageWithAggregatesFilter<"Lead"> | $Enums.CaseStage
   circle?: Prisma.StringWithAggregatesFilter<"Lead"> | string
@@ -1848,7 +1886,7 @@ export type LeadScalarWhereWithAggregatesInput = {
 }
 
 export type LeadCreateInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -1963,6 +2001,7 @@ export type LeadCreateInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -1986,6 +2025,7 @@ export type LeadCreateInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -1995,7 +2035,8 @@ export type LeadCreateInput = {
 }
 
 export type LeadUncheckedCreateInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -2006,6 +2047,7 @@ export type LeadUncheckedCreateInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -2136,13 +2178,14 @@ export type LeadUncheckedCreateInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2257,6 +2300,7 @@ export type LeadUpdateInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -2280,6 +2324,7 @@ export type LeadUpdateInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -2289,7 +2334,8 @@ export type LeadUpdateInput = {
 }
 
 export type LeadUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2300,6 +2346,7 @@ export type LeadUncheckedUpdateInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2430,13 +2477,15 @@ export type LeadUncheckedUpdateInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateManyInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -2447,6 +2496,7 @@ export type LeadCreateManyInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -2560,7 +2610,7 @@ export type LeadCreateManyInput = {
 }
 
 export type LeadUpdateManyMutationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2677,7 +2727,8 @@ export type LeadUpdateManyMutationInput = {
 }
 
 export type LeadUncheckedUpdateManyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2688,6 +2739,7 @@ export type LeadUncheckedUpdateManyInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2812,6 +2864,7 @@ export type LeadOrderByRelationAggregateInput = {
 
 export type LeadCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  legacyId?: Prisma.SortOrder
   leadRef?: Prisma.SortOrder
   patientName?: Prisma.SortOrder
   age?: Prisma.SortOrder
@@ -2822,6 +2875,7 @@ export type LeadCountOrderByAggregateInput = {
   attendantName?: Prisma.SortOrder
   bdId?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  statusId?: Prisma.SortOrder
   pipelineStage?: Prisma.SortOrder
   caseStage?: Prisma.SortOrder
   circle?: Prisma.SortOrder
@@ -2935,7 +2989,9 @@ export type LeadCountOrderByAggregateInput = {
 }
 
 export type LeadAvgOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   age?: Prisma.SortOrder
+  statusId?: Prisma.SortOrder
   atsAmount?: Prisma.SortOrder
   discount?: Prisma.SortOrder
   copay?: Prisma.SortOrder
@@ -2966,6 +3022,7 @@ export type LeadAvgOrderByAggregateInput = {
 
 export type LeadMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  legacyId?: Prisma.SortOrder
   leadRef?: Prisma.SortOrder
   patientName?: Prisma.SortOrder
   age?: Prisma.SortOrder
@@ -2976,6 +3033,7 @@ export type LeadMaxOrderByAggregateInput = {
   attendantName?: Prisma.SortOrder
   bdId?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  statusId?: Prisma.SortOrder
   pipelineStage?: Prisma.SortOrder
   caseStage?: Prisma.SortOrder
   circle?: Prisma.SortOrder
@@ -3090,6 +3148,7 @@ export type LeadMaxOrderByAggregateInput = {
 
 export type LeadMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  legacyId?: Prisma.SortOrder
   leadRef?: Prisma.SortOrder
   patientName?: Prisma.SortOrder
   age?: Prisma.SortOrder
@@ -3100,6 +3159,7 @@ export type LeadMinOrderByAggregateInput = {
   attendantName?: Prisma.SortOrder
   bdId?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  statusId?: Prisma.SortOrder
   pipelineStage?: Prisma.SortOrder
   caseStage?: Prisma.SortOrder
   circle?: Prisma.SortOrder
@@ -3213,7 +3273,9 @@ export type LeadMinOrderByAggregateInput = {
 }
 
 export type LeadSumOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   age?: Prisma.SortOrder
+  statusId?: Prisma.SortOrder
   atsAmount?: Prisma.SortOrder
   discount?: Prisma.SortOrder
   copay?: Prisma.SortOrder
@@ -3508,6 +3570,20 @@ export type LeadUpdateOneRequiredWithoutQrPublicLinksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.LeadUpdateToOneWithWhereWithoutQrPublicLinksInput, Prisma.LeadUpdateWithoutQrPublicLinksInput>, Prisma.LeadUncheckedUpdateWithoutQrPublicLinksInput>
 }
 
+export type LeadCreateNestedOneWithoutQrScanLinksInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutQrScanLinksInput, Prisma.LeadUncheckedCreateWithoutQrScanLinksInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutQrScanLinksInput
+  connect?: Prisma.LeadWhereUniqueInput
+}
+
+export type LeadUpdateOneRequiredWithoutQrScanLinksNestedInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutQrScanLinksInput, Prisma.LeadUncheckedCreateWithoutQrScanLinksInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutQrScanLinksInput
+  upsert?: Prisma.LeadUpsertWithoutQrScanLinksInput
+  connect?: Prisma.LeadWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LeadUpdateToOneWithWhereWithoutQrScanLinksInput, Prisma.LeadUpdateWithoutQrScanLinksInput>, Prisma.LeadUncheckedUpdateWithoutQrScanLinksInput>
+}
+
 export type LeadCreateNestedOneWithoutStageEventsInput = {
   create?: Prisma.XOR<Prisma.LeadCreateWithoutStageEventsInput, Prisma.LeadUncheckedCreateWithoutStageEventsInput>
   connectOrCreate?: Prisma.LeadCreateOrConnectWithoutStageEventsInput
@@ -3578,6 +3654,48 @@ export type LeadUpdateOneWithoutDoctorPayoffRequestsNestedInput = {
   delete?: Prisma.LeadWhereInput | boolean
   connect?: Prisma.LeadWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.LeadUpdateToOneWithWhereWithoutDoctorPayoffRequestsInput, Prisma.LeadUpdateWithoutDoctorPayoffRequestsInput>, Prisma.LeadUncheckedUpdateWithoutDoctorPayoffRequestsInput>
+}
+
+export type LeadCreateNestedManyWithoutStatusMasterInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutStatusMasterInput, Prisma.LeadUncheckedCreateWithoutStatusMasterInput> | Prisma.LeadCreateWithoutStatusMasterInput[] | Prisma.LeadUncheckedCreateWithoutStatusMasterInput[]
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutStatusMasterInput | Prisma.LeadCreateOrConnectWithoutStatusMasterInput[]
+  createMany?: Prisma.LeadCreateManyStatusMasterInputEnvelope
+  connect?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+}
+
+export type LeadUncheckedCreateNestedManyWithoutStatusMasterInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutStatusMasterInput, Prisma.LeadUncheckedCreateWithoutStatusMasterInput> | Prisma.LeadCreateWithoutStatusMasterInput[] | Prisma.LeadUncheckedCreateWithoutStatusMasterInput[]
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutStatusMasterInput | Prisma.LeadCreateOrConnectWithoutStatusMasterInput[]
+  createMany?: Prisma.LeadCreateManyStatusMasterInputEnvelope
+  connect?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+}
+
+export type LeadUpdateManyWithoutStatusMasterNestedInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutStatusMasterInput, Prisma.LeadUncheckedCreateWithoutStatusMasterInput> | Prisma.LeadCreateWithoutStatusMasterInput[] | Prisma.LeadUncheckedCreateWithoutStatusMasterInput[]
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutStatusMasterInput | Prisma.LeadCreateOrConnectWithoutStatusMasterInput[]
+  upsert?: Prisma.LeadUpsertWithWhereUniqueWithoutStatusMasterInput | Prisma.LeadUpsertWithWhereUniqueWithoutStatusMasterInput[]
+  createMany?: Prisma.LeadCreateManyStatusMasterInputEnvelope
+  set?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  disconnect?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  delete?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  connect?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  update?: Prisma.LeadUpdateWithWhereUniqueWithoutStatusMasterInput | Prisma.LeadUpdateWithWhereUniqueWithoutStatusMasterInput[]
+  updateMany?: Prisma.LeadUpdateManyWithWhereWithoutStatusMasterInput | Prisma.LeadUpdateManyWithWhereWithoutStatusMasterInput[]
+  deleteMany?: Prisma.LeadScalarWhereInput | Prisma.LeadScalarWhereInput[]
+}
+
+export type LeadUncheckedUpdateManyWithoutStatusMasterNestedInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutStatusMasterInput, Prisma.LeadUncheckedCreateWithoutStatusMasterInput> | Prisma.LeadCreateWithoutStatusMasterInput[] | Prisma.LeadUncheckedCreateWithoutStatusMasterInput[]
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutStatusMasterInput | Prisma.LeadCreateOrConnectWithoutStatusMasterInput[]
+  upsert?: Prisma.LeadUpsertWithWhereUniqueWithoutStatusMasterInput | Prisma.LeadUpsertWithWhereUniqueWithoutStatusMasterInput[]
+  createMany?: Prisma.LeadCreateManyStatusMasterInputEnvelope
+  set?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  disconnect?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  delete?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  connect?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  update?: Prisma.LeadUpdateWithWhereUniqueWithoutStatusMasterInput | Prisma.LeadUpdateWithWhereUniqueWithoutStatusMasterInput[]
+  updateMany?: Prisma.LeadUpdateManyWithWhereWithoutStatusMasterInput | Prisma.LeadUpdateManyWithWhereWithoutStatusMasterInput[]
+  deleteMany?: Prisma.LeadScalarWhereInput | Prisma.LeadScalarWhereInput[]
 }
 
 export type LeadCreateNestedOneWithoutKypSubmissionInput = {
@@ -3933,7 +4051,7 @@ export type LeadUncheckedUpdateManyWithoutTreatmentMasterNestedInput = {
 }
 
 export type LeadCreateWithoutCreatedByInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -4048,6 +4166,7 @@ export type LeadCreateWithoutCreatedByInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
   stageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutLeadInput
@@ -4070,6 +4189,7 @@ export type LeadCreateWithoutCreatedByInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -4079,7 +4199,8 @@ export type LeadCreateWithoutCreatedByInput = {
 }
 
 export type LeadUncheckedCreateWithoutCreatedByInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -4090,6 +4211,7 @@ export type LeadUncheckedCreateWithoutCreatedByInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -4219,6 +4341,7 @@ export type LeadUncheckedCreateWithoutCreatedByInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -4235,7 +4358,7 @@ export type LeadCreateManyCreatedByInputEnvelope = {
 }
 
 export type LeadCreateWithoutBdInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -4349,6 +4472,7 @@ export type LeadCreateWithoutBdInput = {
   openedInCrmAt?: Date | string | null
   lostReason?: string | null
   lostAt?: Date | string | null
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -4372,6 +4496,7 @@ export type LeadCreateWithoutBdInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -4381,7 +4506,8 @@ export type LeadCreateWithoutBdInput = {
 }
 
 export type LeadUncheckedCreateWithoutBdInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -4391,6 +4517,7 @@ export type LeadUncheckedCreateWithoutBdInput = {
   alternateNumber?: string | null
   attendantName?: string | null
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -4521,6 +4648,7 @@ export type LeadUncheckedCreateWithoutBdInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -4537,7 +4665,7 @@ export type LeadCreateManyBdInputEnvelope = {
 }
 
 export type LeadCreateWithoutUpdatedByInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -4652,6 +4780,7 @@ export type LeadCreateWithoutUpdatedByInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   stageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutLeadInput
@@ -4674,6 +4803,7 @@ export type LeadCreateWithoutUpdatedByInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -4683,7 +4813,8 @@ export type LeadCreateWithoutUpdatedByInput = {
 }
 
 export type LeadUncheckedCreateWithoutUpdatedByInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -4694,6 +4825,7 @@ export type LeadUncheckedCreateWithoutUpdatedByInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -4823,6 +4955,7 @@ export type LeadUncheckedCreateWithoutUpdatedByInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -4858,7 +4991,8 @@ export type LeadScalarWhereInput = {
   AND?: Prisma.LeadScalarWhereInput | Prisma.LeadScalarWhereInput[]
   OR?: Prisma.LeadScalarWhereInput[]
   NOT?: Prisma.LeadScalarWhereInput | Prisma.LeadScalarWhereInput[]
-  id?: Prisma.StringFilter<"Lead"> | string
+  id?: Prisma.IntFilter<"Lead"> | number
+  legacyId?: Prisma.StringNullableFilter<"Lead"> | string | null
   leadRef?: Prisma.StringFilter<"Lead"> | string
   patientName?: Prisma.StringFilter<"Lead"> | string
   age?: Prisma.IntFilter<"Lead"> | number
@@ -4869,6 +5003,7 @@ export type LeadScalarWhereInput = {
   attendantName?: Prisma.StringNullableFilter<"Lead"> | string | null
   bdId?: Prisma.StringFilter<"Lead"> | string
   status?: Prisma.StringFilter<"Lead"> | string
+  statusId?: Prisma.IntNullableFilter<"Lead"> | number | null
   pipelineStage?: Prisma.EnumPipelineStageFilter<"Lead"> | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFilter<"Lead"> | $Enums.CaseStage
   circle?: Prisma.StringFilter<"Lead"> | string
@@ -5014,7 +5149,7 @@ export type LeadUpdateManyWithWhereWithoutUpdatedByInput = {
 }
 
 export type LeadCreateWithoutOpdPrescriptionImagesInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -5129,6 +5264,7 @@ export type LeadCreateWithoutOpdPrescriptionImagesInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -5152,6 +5288,7 @@ export type LeadCreateWithoutOpdPrescriptionImagesInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -5160,7 +5297,8 @@ export type LeadCreateWithoutOpdPrescriptionImagesInput = {
 }
 
 export type LeadUncheckedCreateWithoutOpdPrescriptionImagesInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -5171,6 +5309,7 @@ export type LeadUncheckedCreateWithoutOpdPrescriptionImagesInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -5301,6 +5440,7 @@ export type LeadUncheckedCreateWithoutOpdPrescriptionImagesInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
 }
@@ -5322,7 +5462,7 @@ export type LeadUpdateToOneWithWhereWithoutOpdPrescriptionImagesInput = {
 }
 
 export type LeadUpdateWithoutOpdPrescriptionImagesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -5437,6 +5577,7 @@ export type LeadUpdateWithoutOpdPrescriptionImagesInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -5460,6 +5601,7 @@ export type LeadUpdateWithoutOpdPrescriptionImagesInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -5468,7 +5610,8 @@ export type LeadUpdateWithoutOpdPrescriptionImagesInput = {
 }
 
 export type LeadUncheckedUpdateWithoutOpdPrescriptionImagesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -5479,6 +5622,7 @@ export type LeadUncheckedUpdateWithoutOpdPrescriptionImagesInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -5609,12 +5753,13 @@ export type LeadUncheckedUpdateWithoutOpdPrescriptionImagesInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutCallNotesInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -5729,6 +5874,7 @@ export type LeadCreateWithoutCallNotesInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -5751,6 +5897,7 @@ export type LeadCreateWithoutCallNotesInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -5760,7 +5907,8 @@ export type LeadCreateWithoutCallNotesInput = {
 }
 
 export type LeadUncheckedCreateWithoutCallNotesInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -5771,6 +5919,7 @@ export type LeadUncheckedCreateWithoutCallNotesInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -5900,6 +6049,7 @@ export type LeadUncheckedCreateWithoutCallNotesInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -5922,7 +6072,7 @@ export type LeadUpdateToOneWithWhereWithoutCallNotesInput = {
 }
 
 export type LeadUpdateWithoutCallNotesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -6037,6 +6187,7 @@ export type LeadUpdateWithoutCallNotesInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -6059,6 +6210,7 @@ export type LeadUpdateWithoutCallNotesInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -6068,7 +6220,8 @@ export type LeadUpdateWithoutCallNotesInput = {
 }
 
 export type LeadUncheckedUpdateWithoutCallNotesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -6079,6 +6232,7 @@ export type LeadUncheckedUpdateWithoutCallNotesInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -6208,13 +6362,14 @@ export type LeadUncheckedUpdateWithoutCallNotesInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutLeadRemarkEntriesInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -6329,6 +6484,7 @@ export type LeadCreateWithoutLeadRemarkEntriesInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -6351,6 +6507,7 @@ export type LeadCreateWithoutLeadRemarkEntriesInput = {
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -6360,7 +6517,8 @@ export type LeadCreateWithoutLeadRemarkEntriesInput = {
 }
 
 export type LeadUncheckedCreateWithoutLeadRemarkEntriesInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -6371,6 +6529,7 @@ export type LeadUncheckedCreateWithoutLeadRemarkEntriesInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -6500,6 +6659,7 @@ export type LeadUncheckedCreateWithoutLeadRemarkEntriesInput = {
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -6522,7 +6682,7 @@ export type LeadUpdateToOneWithWhereWithoutLeadRemarkEntriesInput = {
 }
 
 export type LeadUpdateWithoutLeadRemarkEntriesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -6637,6 +6797,7 @@ export type LeadUpdateWithoutLeadRemarkEntriesInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -6659,6 +6820,7 @@ export type LeadUpdateWithoutLeadRemarkEntriesInput = {
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -6668,7 +6830,8 @@ export type LeadUpdateWithoutLeadRemarkEntriesInput = {
 }
 
 export type LeadUncheckedUpdateWithoutLeadRemarkEntriesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -6679,6 +6842,7 @@ export type LeadUncheckedUpdateWithoutLeadRemarkEntriesInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -6808,13 +6972,14 @@ export type LeadUncheckedUpdateWithoutLeadRemarkEntriesInput = {
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutQrCallAuditLogsInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -6929,6 +7094,7 @@ export type LeadCreateWithoutQrCallAuditLogsInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -6951,6 +7117,7 @@ export type LeadCreateWithoutQrCallAuditLogsInput = {
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -6960,7 +7127,8 @@ export type LeadCreateWithoutQrCallAuditLogsInput = {
 }
 
 export type LeadUncheckedCreateWithoutQrCallAuditLogsInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -6971,6 +7139,7 @@ export type LeadUncheckedCreateWithoutQrCallAuditLogsInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -7100,6 +7269,7 @@ export type LeadUncheckedCreateWithoutQrCallAuditLogsInput = {
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -7122,7 +7292,7 @@ export type LeadUpdateToOneWithWhereWithoutQrCallAuditLogsInput = {
 }
 
 export type LeadUpdateWithoutQrCallAuditLogsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -7237,6 +7407,7 @@ export type LeadUpdateWithoutQrCallAuditLogsInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -7259,6 +7430,7 @@ export type LeadUpdateWithoutQrCallAuditLogsInput = {
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -7268,7 +7440,8 @@ export type LeadUpdateWithoutQrCallAuditLogsInput = {
 }
 
 export type LeadUncheckedUpdateWithoutQrCallAuditLogsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -7279,6 +7452,7 @@ export type LeadUncheckedUpdateWithoutQrCallAuditLogsInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -7408,13 +7582,14 @@ export type LeadUncheckedUpdateWithoutQrCallAuditLogsInput = {
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutQrPublicLinksInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -7529,6 +7704,7 @@ export type LeadCreateWithoutQrPublicLinksInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -7551,6 +7727,7 @@ export type LeadCreateWithoutQrPublicLinksInput = {
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -7560,7 +7737,8 @@ export type LeadCreateWithoutQrPublicLinksInput = {
 }
 
 export type LeadUncheckedCreateWithoutQrPublicLinksInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -7571,6 +7749,7 @@ export type LeadUncheckedCreateWithoutQrPublicLinksInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -7700,6 +7879,7 @@ export type LeadUncheckedCreateWithoutQrPublicLinksInput = {
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -7722,7 +7902,7 @@ export type LeadUpdateToOneWithWhereWithoutQrPublicLinksInput = {
 }
 
 export type LeadUpdateWithoutQrPublicLinksInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -7837,6 +8017,7 @@ export type LeadUpdateWithoutQrPublicLinksInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -7859,6 +8040,7 @@ export type LeadUpdateWithoutQrPublicLinksInput = {
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -7868,7 +8050,8 @@ export type LeadUpdateWithoutQrPublicLinksInput = {
 }
 
 export type LeadUncheckedUpdateWithoutQrPublicLinksInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -7879,6 +8062,7 @@ export type LeadUncheckedUpdateWithoutQrPublicLinksInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -8008,13 +8192,14 @@ export type LeadUncheckedUpdateWithoutQrPublicLinksInput = {
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
-export type LeadCreateWithoutStageEventsInput = {
-  id?: string
+export type LeadCreateWithoutQrScanLinksInput = {
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -8129,9 +8314,11 @@ export type LeadCreateWithoutStageEventsInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
+  stageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutLeadInput
   insuranceCase?: Prisma.InsuranceCaseCreateNestedOneWithoutLeadInput
   plRecord?: Prisma.PLRecordCreateNestedOneWithoutLeadInput
   kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
@@ -8159,8 +8346,9 @@ export type LeadCreateWithoutStageEventsInput = {
   opdAppointments?: Prisma.LeadOpdAppointmentCreateNestedManyWithoutLeadInput
 }
 
-export type LeadUncheckedCreateWithoutStageEventsInput = {
-  id?: string
+export type LeadUncheckedCreateWithoutQrScanLinksInput = {
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -8171,6 +8359,617 @@ export type LeadUncheckedCreateWithoutStageEventsInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
+  pipelineStage?: $Enums.PipelineStage
+  caseStage?: $Enums.CaseStage
+  circle: string
+  category?: string | null
+  treatment?: string | null
+  treatmentMasterId?: string | null
+  atsAmount?: number | null
+  atsStatus?: $Enums.ATSStatus | null
+  anesthesia?: string | null
+  quantityGrade?: string | null
+  surgeonName?: string | null
+  surgeonType?: string | null
+  hospitalName: string
+  flowType?: $Enums.FlowType
+  modeOfPayment?: string | null
+  discount?: number
+  copay?: number
+  deduction?: number
+  settledTotal?: number
+  billAmount?: number
+  insuranceName?: string | null
+  tpa?: string | null
+  sumInsured?: number | null
+  roomRent?: number | null
+  icu?: number | null
+  capping?: number | null
+  arrivalDate?: Date | string | null
+  arrivalTime?: string | null
+  surgeryDate?: Date | string | null
+  ipdPotentialDate?: Date | string | null
+  ipdPotentialMarkedAt?: Date | string | null
+  operationTime?: string | null
+  implantType?: string | null
+  implantAmount?: number
+  instrument?: string | null
+  consumables?: string | null
+  createdById: string
+  createdDate?: Date | string
+  updatedById: string
+  updatedDate?: Date | string
+  remarks?: string | null
+  source?: string | null
+  campaignName?: string | null
+  bdeName?: string | null
+  conversionDate?: Date | string | null
+  mediendProfit?: number
+  hospitalShare?: number
+  doctorShare?: number
+  othersShare?: number
+  netProfit?: number
+  ticketSize?: number
+  collectedByMediend?: number
+  collectedByHospital?: number
+  month?: string | null
+  assignedDate?: Date | string | null
+  leadEntryDate?: Date | string | null
+  patientEmail?: string | null
+  whatsapp?: string | null
+  address?: string | null
+  docUpload?: string | null
+  diseaseDetails?: string | null
+  followUpDate?: Date | string | null
+  subStatus?: string | null
+  opdHospital?: string | null
+  opdDrName?: string | null
+  opdContactNo?: string | null
+  opdCharges?: number
+  opdScheduleDate?: Date | string | null
+  opdMeeting?: number | null
+  opdSurgeryAdvised?: string | null
+  opdSurgeryRemarkCode?: string | null
+  opdReasonNoSurgeryCode?: string | null
+  opdFollowUpReasonCode?: string | null
+  opdImplantRequired?: boolean | null
+  opdDiagnosis?: string | null
+  ipdAdmissionDate?: Date | string | null
+  ipdHospital?: string | null
+  ipdDrName?: string | null
+  ipdContactNo?: string | null
+  ipdTotalPayment?: number
+  ipdDetails?: string | null
+  paymentDetails?: number | null
+  attendantContactNo?: string | null
+  waFormat?: string | null
+  leadSource?: number | null
+  whatsappMessage?: string | null
+  notification?: boolean
+  emailSent?: boolean
+  smsSent?: boolean
+  whatsappSent?: boolean
+  website?: string | null
+  description?: string | null
+  refId?: string | null
+  duplCount?: number
+  aes?: boolean
+  profession?: string | null
+  qr?: string | null
+  removeRemarks?: boolean
+  isOldCrmLead?: boolean
+  remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
+  adId?: string | null
+  campaignId?: string | null
+  formId?: string | null
+  teamLeadId?: number | null
+  remarksId?: string | null
+  openedInCrmAt?: Date | string | null
+  lostReason?: string | null
+  lostAt?: Date | string | null
+  stageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutLeadInput
+  insuranceCase?: Prisma.InsuranceCaseUncheckedCreateNestedOneWithoutLeadInput
+  plRecord?: Prisma.PLRecordUncheckedCreateNestedOneWithoutLeadInput
+  kypSubmission?: Prisma.KYPSubmissionUncheckedCreateNestedOneWithoutLeadInput
+  dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutLeadInput
+  outstandingCase?: Prisma.OutstandingCaseUncheckedCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallUncheckedCreateNestedOneWithoutLeadInput
+  admissionRecord?: Prisma.AdmissionRecordUncheckedCreateNestedOneWithoutLeadInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedCreateNestedOneWithoutLeadInput
+  caseStageHistory?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutLeadInput
+  workflowResetLogs?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutLeadInput
+  caseChatMessages?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutLeadInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutLeadInput
+  callNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutLeadInput
+  paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
+  invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
+  doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
+  opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
+  opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
+}
+
+export type LeadCreateOrConnectWithoutQrScanLinksInput = {
+  where: Prisma.LeadWhereUniqueInput
+  create: Prisma.XOR<Prisma.LeadCreateWithoutQrScanLinksInput, Prisma.LeadUncheckedCreateWithoutQrScanLinksInput>
+}
+
+export type LeadUpsertWithoutQrScanLinksInput = {
+  update: Prisma.XOR<Prisma.LeadUpdateWithoutQrScanLinksInput, Prisma.LeadUncheckedUpdateWithoutQrScanLinksInput>
+  create: Prisma.XOR<Prisma.LeadCreateWithoutQrScanLinksInput, Prisma.LeadUncheckedCreateWithoutQrScanLinksInput>
+  where?: Prisma.LeadWhereInput
+}
+
+export type LeadUpdateToOneWithWhereWithoutQrScanLinksInput = {
+  where?: Prisma.LeadWhereInput
+  data: Prisma.XOR<Prisma.LeadUpdateWithoutQrScanLinksInput, Prisma.LeadUncheckedUpdateWithoutQrScanLinksInput>
+}
+
+export type LeadUpdateWithoutQrScanLinksInput = {
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadRef?: Prisma.StringFieldUpdateOperationsInput | string
+  patientName?: Prisma.StringFieldUpdateOperationsInput | string
+  age?: Prisma.IntFieldUpdateOperationsInput | number
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sex?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+  caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
+  circle?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  atsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  atsStatus?: Prisma.NullableEnumATSStatusFieldUpdateOperationsInput | $Enums.ATSStatus | null
+  anesthesia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.StringFieldUpdateOperationsInput | string
+  flowType?: Prisma.EnumFlowTypeFieldUpdateOperationsInput | $Enums.FlowType
+  modeOfPayment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copay?: Prisma.FloatFieldUpdateOperationsInput | number
+  deduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  settledTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  billAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  insuranceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumInsured?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  roomRent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  icu?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  capping?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  arrivalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  arrivalTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdPotentialDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdPotentialMarkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  operationTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrument?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  consumables?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  othersShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  netProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  ticketSize?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  month?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leadEntryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  patientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsapp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  docUpload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  diseaseDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdCharges?: Prisma.IntFieldUpdateOperationsInput | number
+  opdScheduleDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  opdMeeting?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  opdSurgeryAdvised?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdImplantRequired?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  opdDiagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdAdmissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdTotalPayment?: Prisma.IntFieldUpdateOperationsInput | number
+  ipdDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentDetails?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  attendantContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadSource?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  whatsappMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  smsSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duplCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aes?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamLeadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remarksId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  openedInCrmAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
+  treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
+  updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
+  stageEvents?: Prisma.LeadStageEventUpdateManyWithoutLeadNestedInput
+  insuranceCase?: Prisma.InsuranceCaseUpdateOneWithoutLeadNestedInput
+  plRecord?: Prisma.PLRecordUpdateOneWithoutLeadNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutLeadNestedInput
+  dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutLeadNestedInput
+  outstandingCase?: Prisma.OutstandingCaseUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUpdateOneWithoutLeadNestedInput
+  admissionRecord?: Prisma.AdmissionRecordUpdateOneWithoutLeadNestedInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormUpdateOneWithoutLeadNestedInput
+  caseStageHistory?: Prisma.CaseStageHistoryUpdateManyWithoutLeadNestedInput
+  workflowResetLogs?: Prisma.WorkflowResetLogUpdateManyWithoutLeadNestedInput
+  caseChatMessages?: Prisma.CaseChatMessageUpdateManyWithoutLeadNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutLeadNestedInput
+  callNotes?: Prisma.CallNoteUpdateManyWithoutLeadNestedInput
+  paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
+  invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
+  doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
+  opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
+  opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
+  opdFollowUpReason?: Prisma.FollowUpReasonMasterUpdateOneWithoutOpdLeadsNestedInput
+  opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUpdateManyWithoutLeadNestedInput
+  opdAppointments?: Prisma.LeadOpdAppointmentUpdateManyWithoutLeadNestedInput
+}
+
+export type LeadUncheckedUpdateWithoutQrScanLinksInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadRef?: Prisma.StringFieldUpdateOperationsInput | string
+  patientName?: Prisma.StringFieldUpdateOperationsInput | string
+  age?: Prisma.IntFieldUpdateOperationsInput | number
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sex?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+  caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
+  circle?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentMasterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  atsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  atsStatus?: Prisma.NullableEnumATSStatusFieldUpdateOperationsInput | $Enums.ATSStatus | null
+  anesthesia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.StringFieldUpdateOperationsInput | string
+  flowType?: Prisma.EnumFlowTypeFieldUpdateOperationsInput | $Enums.FlowType
+  modeOfPayment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copay?: Prisma.FloatFieldUpdateOperationsInput | number
+  deduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  settledTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  billAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  insuranceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumInsured?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  roomRent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  icu?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  capping?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  arrivalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  arrivalTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdPotentialDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdPotentialMarkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  operationTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrument?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  consumables?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedById?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  othersShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  netProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  ticketSize?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  month?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leadEntryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  patientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsapp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  docUpload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  diseaseDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdCharges?: Prisma.IntFieldUpdateOperationsInput | number
+  opdScheduleDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  opdMeeting?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  opdSurgeryAdvised?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdSurgeryRemarkCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdReasonNoSurgeryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdFollowUpReasonCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdImplantRequired?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  opdDiagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdAdmissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdTotalPayment?: Prisma.IntFieldUpdateOperationsInput | number
+  ipdDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentDetails?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  attendantContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadSource?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  whatsappMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  smsSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duplCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aes?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamLeadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remarksId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  openedInCrmAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutLeadNestedInput
+  insuranceCase?: Prisma.InsuranceCaseUncheckedUpdateOneWithoutLeadNestedInput
+  plRecord?: Prisma.PLRecordUncheckedUpdateOneWithoutLeadNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUncheckedUpdateOneWithoutLeadNestedInput
+  dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutLeadNestedInput
+  outstandingCase?: Prisma.OutstandingCaseUncheckedUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput
+  admissionRecord?: Prisma.AdmissionRecordUncheckedUpdateOneWithoutLeadNestedInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedUpdateOneWithoutLeadNestedInput
+  caseStageHistory?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutLeadNestedInput
+  workflowResetLogs?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutLeadNestedInput
+  caseChatMessages?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutLeadNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutLeadNestedInput
+  callNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutLeadNestedInput
+  paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
+  invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
+  doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
+  opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
+  opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
+}
+
+export type LeadCreateWithoutStageEventsInput = {
+  legacyId?: string | null
+  leadRef: string
+  patientName: string
+  age: number
+  dateOfBirth?: Date | string | null
+  sex: string
+  phoneNumber: string
+  alternateNumber?: string | null
+  attendantName?: string | null
+  status: string
+  pipelineStage?: $Enums.PipelineStage
+  caseStage?: $Enums.CaseStage
+  circle: string
+  category?: string | null
+  treatment?: string | null
+  atsAmount?: number | null
+  atsStatus?: $Enums.ATSStatus | null
+  anesthesia?: string | null
+  quantityGrade?: string | null
+  surgeonName?: string | null
+  surgeonType?: string | null
+  hospitalName: string
+  flowType?: $Enums.FlowType
+  modeOfPayment?: string | null
+  discount?: number
+  copay?: number
+  deduction?: number
+  settledTotal?: number
+  billAmount?: number
+  insuranceName?: string | null
+  tpa?: string | null
+  sumInsured?: number | null
+  roomRent?: number | null
+  icu?: number | null
+  capping?: number | null
+  arrivalDate?: Date | string | null
+  arrivalTime?: string | null
+  surgeryDate?: Date | string | null
+  ipdPotentialDate?: Date | string | null
+  ipdPotentialMarkedAt?: Date | string | null
+  operationTime?: string | null
+  implantType?: string | null
+  implantAmount?: number
+  instrument?: string | null
+  consumables?: string | null
+  createdDate?: Date | string
+  updatedDate?: Date | string
+  remarks?: string | null
+  source?: string | null
+  campaignName?: string | null
+  bdeName?: string | null
+  conversionDate?: Date | string | null
+  mediendProfit?: number
+  hospitalShare?: number
+  doctorShare?: number
+  othersShare?: number
+  netProfit?: number
+  ticketSize?: number
+  collectedByMediend?: number
+  collectedByHospital?: number
+  month?: string | null
+  assignedDate?: Date | string | null
+  leadEntryDate?: Date | string | null
+  patientEmail?: string | null
+  whatsapp?: string | null
+  address?: string | null
+  docUpload?: string | null
+  diseaseDetails?: string | null
+  followUpDate?: Date | string | null
+  subStatus?: string | null
+  opdHospital?: string | null
+  opdDrName?: string | null
+  opdContactNo?: string | null
+  opdCharges?: number
+  opdScheduleDate?: Date | string | null
+  opdMeeting?: number | null
+  opdSurgeryAdvised?: string | null
+  opdImplantRequired?: boolean | null
+  opdDiagnosis?: string | null
+  ipdAdmissionDate?: Date | string | null
+  ipdHospital?: string | null
+  ipdDrName?: string | null
+  ipdContactNo?: string | null
+  ipdTotalPayment?: number
+  ipdDetails?: string | null
+  paymentDetails?: number | null
+  attendantContactNo?: string | null
+  waFormat?: string | null
+  leadSource?: number | null
+  whatsappMessage?: string | null
+  notification?: boolean
+  emailSent?: boolean
+  smsSent?: boolean
+  whatsappSent?: boolean
+  website?: string | null
+  description?: string | null
+  refId?: string | null
+  duplCount?: number
+  aes?: boolean
+  profession?: string | null
+  qr?: string | null
+  removeRemarks?: boolean
+  isOldCrmLead?: boolean
+  remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
+  adId?: string | null
+  campaignId?: string | null
+  formId?: string | null
+  teamLeadId?: number | null
+  remarksId?: string | null
+  openedInCrmAt?: Date | string | null
+  lostReason?: string | null
+  lostAt?: Date | string | null
+  bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
+  treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
+  updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
+  insuranceCase?: Prisma.InsuranceCaseCreateNestedOneWithoutLeadInput
+  plRecord?: Prisma.PLRecordCreateNestedOneWithoutLeadInput
+  kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
+  dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
+  outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
+  admissionRecord?: Prisma.AdmissionRecordCreateNestedOneWithoutLeadInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormCreateNestedOneWithoutLeadInput
+  caseStageHistory?: Prisma.CaseStageHistoryCreateNestedManyWithoutLeadInput
+  workflowResetLogs?: Prisma.WorkflowResetLogCreateNestedManyWithoutLeadInput
+  caseChatMessages?: Prisma.CaseChatMessageCreateNestedManyWithoutLeadInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutLeadInput
+  callNotes?: Prisma.CallNoteCreateNestedManyWithoutLeadInput
+  paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
+  invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
+  doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
+  opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
+  opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
+  opdFollowUpReason?: Prisma.FollowUpReasonMasterCreateNestedOneWithoutOpdLeadsInput
+  opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageCreateNestedManyWithoutLeadInput
+  opdAppointments?: Prisma.LeadOpdAppointmentCreateNestedManyWithoutLeadInput
+}
+
+export type LeadUncheckedCreateWithoutStageEventsInput = {
+  id?: number
+  legacyId?: string | null
+  leadRef: string
+  patientName: string
+  age: number
+  dateOfBirth?: Date | string | null
+  sex: string
+  phoneNumber: string
+  alternateNumber?: string | null
+  attendantName?: string | null
+  bdId: string
+  status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -8300,6 +9099,7 @@ export type LeadUncheckedCreateWithoutStageEventsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -8322,7 +9122,7 @@ export type LeadUpdateToOneWithWhereWithoutStageEventsInput = {
 }
 
 export type LeadUpdateWithoutStageEventsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -8437,6 +9237,7 @@ export type LeadUpdateWithoutStageEventsInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -8459,6 +9260,7 @@ export type LeadUpdateWithoutStageEventsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -8468,7 +9270,8 @@ export type LeadUpdateWithoutStageEventsInput = {
 }
 
 export type LeadUncheckedUpdateWithoutStageEventsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -8479,6 +9282,7 @@ export type LeadUncheckedUpdateWithoutStageEventsInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -8608,13 +9412,14 @@ export type LeadUncheckedUpdateWithoutStageEventsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutInsuranceCaseInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -8729,6 +9534,7 @@ export type LeadCreateWithoutInsuranceCaseInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -8751,6 +9557,7 @@ export type LeadCreateWithoutInsuranceCaseInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -8760,7 +9567,8 @@ export type LeadCreateWithoutInsuranceCaseInput = {
 }
 
 export type LeadUncheckedCreateWithoutInsuranceCaseInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -8771,6 +9579,7 @@ export type LeadUncheckedCreateWithoutInsuranceCaseInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -8900,6 +9709,7 @@ export type LeadUncheckedCreateWithoutInsuranceCaseInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -8922,7 +9732,7 @@ export type LeadUpdateToOneWithWhereWithoutInsuranceCaseInput = {
 }
 
 export type LeadUpdateWithoutInsuranceCaseInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -9037,6 +9847,7 @@ export type LeadUpdateWithoutInsuranceCaseInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -9059,6 +9870,7 @@ export type LeadUpdateWithoutInsuranceCaseInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -9068,7 +9880,8 @@ export type LeadUpdateWithoutInsuranceCaseInput = {
 }
 
 export type LeadUncheckedUpdateWithoutInsuranceCaseInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -9079,6 +9892,7 @@ export type LeadUncheckedUpdateWithoutInsuranceCaseInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -9208,13 +10022,14 @@ export type LeadUncheckedUpdateWithoutInsuranceCaseInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutPlRecordInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -9329,6 +10144,7 @@ export type LeadCreateWithoutPlRecordInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -9351,6 +10167,7 @@ export type LeadCreateWithoutPlRecordInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -9360,7 +10177,8 @@ export type LeadCreateWithoutPlRecordInput = {
 }
 
 export type LeadUncheckedCreateWithoutPlRecordInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -9371,6 +10189,7 @@ export type LeadUncheckedCreateWithoutPlRecordInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -9500,6 +10319,7 @@ export type LeadUncheckedCreateWithoutPlRecordInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -9522,7 +10342,7 @@ export type LeadUpdateToOneWithWhereWithoutPlRecordInput = {
 }
 
 export type LeadUpdateWithoutPlRecordInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -9637,6 +10457,7 @@ export type LeadUpdateWithoutPlRecordInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -9659,6 +10480,7 @@ export type LeadUpdateWithoutPlRecordInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -9668,7 +10490,8 @@ export type LeadUpdateWithoutPlRecordInput = {
 }
 
 export type LeadUncheckedUpdateWithoutPlRecordInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -9679,6 +10502,7 @@ export type LeadUncheckedUpdateWithoutPlRecordInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -9808,13 +10632,14 @@ export type LeadUncheckedUpdateWithoutPlRecordInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutInvoiceRequestsInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -9929,6 +10754,7 @@ export type LeadCreateWithoutInvoiceRequestsInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -9951,6 +10777,7 @@ export type LeadCreateWithoutInvoiceRequestsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -9960,7 +10787,8 @@ export type LeadCreateWithoutInvoiceRequestsInput = {
 }
 
 export type LeadUncheckedCreateWithoutInvoiceRequestsInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -9971,6 +10799,7 @@ export type LeadUncheckedCreateWithoutInvoiceRequestsInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -10100,6 +10929,7 @@ export type LeadUncheckedCreateWithoutInvoiceRequestsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -10122,7 +10952,7 @@ export type LeadUpdateToOneWithWhereWithoutInvoiceRequestsInput = {
 }
 
 export type LeadUpdateWithoutInvoiceRequestsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -10237,6 +11067,7 @@ export type LeadUpdateWithoutInvoiceRequestsInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -10259,6 +11090,7 @@ export type LeadUpdateWithoutInvoiceRequestsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -10268,7 +11100,8 @@ export type LeadUpdateWithoutInvoiceRequestsInput = {
 }
 
 export type LeadUncheckedUpdateWithoutInvoiceRequestsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -10279,6 +11112,7 @@ export type LeadUncheckedUpdateWithoutInvoiceRequestsInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -10408,13 +11242,14 @@ export type LeadUncheckedUpdateWithoutInvoiceRequestsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutDoctorPayoffRequestsInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -10529,6 +11364,7 @@ export type LeadCreateWithoutDoctorPayoffRequestsInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -10551,6 +11387,7 @@ export type LeadCreateWithoutDoctorPayoffRequestsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -10560,7 +11397,8 @@ export type LeadCreateWithoutDoctorPayoffRequestsInput = {
 }
 
 export type LeadUncheckedCreateWithoutDoctorPayoffRequestsInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -10571,6 +11409,7 @@ export type LeadUncheckedCreateWithoutDoctorPayoffRequestsInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -10700,6 +11539,7 @@ export type LeadUncheckedCreateWithoutDoctorPayoffRequestsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -10722,7 +11562,7 @@ export type LeadUpdateToOneWithWhereWithoutDoctorPayoffRequestsInput = {
 }
 
 export type LeadUpdateWithoutDoctorPayoffRequestsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -10837,6 +11677,7 @@ export type LeadUpdateWithoutDoctorPayoffRequestsInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -10859,6 +11700,7 @@ export type LeadUpdateWithoutDoctorPayoffRequestsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -10868,7 +11710,8 @@ export type LeadUpdateWithoutDoctorPayoffRequestsInput = {
 }
 
 export type LeadUncheckedUpdateWithoutDoctorPayoffRequestsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -10879,6 +11722,7 @@ export type LeadUncheckedUpdateWithoutDoctorPayoffRequestsInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -11008,13 +11852,14 @@ export type LeadUncheckedUpdateWithoutDoctorPayoffRequestsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
-export type LeadCreateWithoutKypSubmissionInput = {
-  id?: string
+export type LeadCreateWithoutStatusMasterInput = {
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -11135,6 +11980,7 @@ export type LeadCreateWithoutKypSubmissionInput = {
   stageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutLeadInput
   insuranceCase?: Prisma.InsuranceCaseCreateNestedOneWithoutLeadInput
   plRecord?: Prisma.PLRecordCreateNestedOneWithoutLeadInput
+  kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
   complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
@@ -11151,6 +11997,7 @@ export type LeadCreateWithoutKypSubmissionInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -11159,8 +12006,9 @@ export type LeadCreateWithoutKypSubmissionInput = {
   opdAppointments?: Prisma.LeadOpdAppointmentCreateNestedManyWithoutLeadInput
 }
 
-export type LeadUncheckedCreateWithoutKypSubmissionInput = {
-  id?: string
+export type LeadUncheckedCreateWithoutStatusMasterInput = {
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -11171,6 +12019,330 @@ export type LeadUncheckedCreateWithoutKypSubmissionInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  pipelineStage?: $Enums.PipelineStage
+  caseStage?: $Enums.CaseStage
+  circle: string
+  category?: string | null
+  treatment?: string | null
+  treatmentMasterId?: string | null
+  atsAmount?: number | null
+  atsStatus?: $Enums.ATSStatus | null
+  anesthesia?: string | null
+  quantityGrade?: string | null
+  surgeonName?: string | null
+  surgeonType?: string | null
+  hospitalName: string
+  flowType?: $Enums.FlowType
+  modeOfPayment?: string | null
+  discount?: number
+  copay?: number
+  deduction?: number
+  settledTotal?: number
+  billAmount?: number
+  insuranceName?: string | null
+  tpa?: string | null
+  sumInsured?: number | null
+  roomRent?: number | null
+  icu?: number | null
+  capping?: number | null
+  arrivalDate?: Date | string | null
+  arrivalTime?: string | null
+  surgeryDate?: Date | string | null
+  ipdPotentialDate?: Date | string | null
+  ipdPotentialMarkedAt?: Date | string | null
+  operationTime?: string | null
+  implantType?: string | null
+  implantAmount?: number
+  instrument?: string | null
+  consumables?: string | null
+  createdById: string
+  createdDate?: Date | string
+  updatedById: string
+  updatedDate?: Date | string
+  remarks?: string | null
+  source?: string | null
+  campaignName?: string | null
+  bdeName?: string | null
+  conversionDate?: Date | string | null
+  mediendProfit?: number
+  hospitalShare?: number
+  doctorShare?: number
+  othersShare?: number
+  netProfit?: number
+  ticketSize?: number
+  collectedByMediend?: number
+  collectedByHospital?: number
+  month?: string | null
+  assignedDate?: Date | string | null
+  leadEntryDate?: Date | string | null
+  patientEmail?: string | null
+  whatsapp?: string | null
+  address?: string | null
+  docUpload?: string | null
+  diseaseDetails?: string | null
+  followUpDate?: Date | string | null
+  subStatus?: string | null
+  opdHospital?: string | null
+  opdDrName?: string | null
+  opdContactNo?: string | null
+  opdCharges?: number
+  opdScheduleDate?: Date | string | null
+  opdMeeting?: number | null
+  opdSurgeryAdvised?: string | null
+  opdSurgeryRemarkCode?: string | null
+  opdReasonNoSurgeryCode?: string | null
+  opdFollowUpReasonCode?: string | null
+  opdImplantRequired?: boolean | null
+  opdDiagnosis?: string | null
+  ipdAdmissionDate?: Date | string | null
+  ipdHospital?: string | null
+  ipdDrName?: string | null
+  ipdContactNo?: string | null
+  ipdTotalPayment?: number
+  ipdDetails?: string | null
+  paymentDetails?: number | null
+  attendantContactNo?: string | null
+  waFormat?: string | null
+  leadSource?: number | null
+  whatsappMessage?: string | null
+  notification?: boolean
+  emailSent?: boolean
+  smsSent?: boolean
+  whatsappSent?: boolean
+  website?: string | null
+  description?: string | null
+  refId?: string | null
+  duplCount?: number
+  aes?: boolean
+  profession?: string | null
+  qr?: string | null
+  removeRemarks?: boolean
+  isOldCrmLead?: boolean
+  remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
+  adId?: string | null
+  campaignId?: string | null
+  formId?: string | null
+  teamLeadId?: number | null
+  remarksId?: string | null
+  openedInCrmAt?: Date | string | null
+  lostReason?: string | null
+  lostAt?: Date | string | null
+  stageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutLeadInput
+  insuranceCase?: Prisma.InsuranceCaseUncheckedCreateNestedOneWithoutLeadInput
+  plRecord?: Prisma.PLRecordUncheckedCreateNestedOneWithoutLeadInput
+  kypSubmission?: Prisma.KYPSubmissionUncheckedCreateNestedOneWithoutLeadInput
+  dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutLeadInput
+  outstandingCase?: Prisma.OutstandingCaseUncheckedCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallUncheckedCreateNestedOneWithoutLeadInput
+  admissionRecord?: Prisma.AdmissionRecordUncheckedCreateNestedOneWithoutLeadInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedCreateNestedOneWithoutLeadInput
+  caseStageHistory?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutLeadInput
+  workflowResetLogs?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutLeadInput
+  caseChatMessages?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutLeadInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutLeadInput
+  callNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutLeadInput
+  paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
+  invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
+  doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
+  opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
+  opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
+}
+
+export type LeadCreateOrConnectWithoutStatusMasterInput = {
+  where: Prisma.LeadWhereUniqueInput
+  create: Prisma.XOR<Prisma.LeadCreateWithoutStatusMasterInput, Prisma.LeadUncheckedCreateWithoutStatusMasterInput>
+}
+
+export type LeadCreateManyStatusMasterInputEnvelope = {
+  data: Prisma.LeadCreateManyStatusMasterInput | Prisma.LeadCreateManyStatusMasterInput[]
+  skipDuplicates?: boolean
+}
+
+export type LeadUpsertWithWhereUniqueWithoutStatusMasterInput = {
+  where: Prisma.LeadWhereUniqueInput
+  update: Prisma.XOR<Prisma.LeadUpdateWithoutStatusMasterInput, Prisma.LeadUncheckedUpdateWithoutStatusMasterInput>
+  create: Prisma.XOR<Prisma.LeadCreateWithoutStatusMasterInput, Prisma.LeadUncheckedCreateWithoutStatusMasterInput>
+}
+
+export type LeadUpdateWithWhereUniqueWithoutStatusMasterInput = {
+  where: Prisma.LeadWhereUniqueInput
+  data: Prisma.XOR<Prisma.LeadUpdateWithoutStatusMasterInput, Prisma.LeadUncheckedUpdateWithoutStatusMasterInput>
+}
+
+export type LeadUpdateManyWithWhereWithoutStatusMasterInput = {
+  where: Prisma.LeadScalarWhereInput
+  data: Prisma.XOR<Prisma.LeadUpdateManyMutationInput, Prisma.LeadUncheckedUpdateManyWithoutStatusMasterInput>
+}
+
+export type LeadCreateWithoutKypSubmissionInput = {
+  legacyId?: string | null
+  leadRef: string
+  patientName: string
+  age: number
+  dateOfBirth?: Date | string | null
+  sex: string
+  phoneNumber: string
+  alternateNumber?: string | null
+  attendantName?: string | null
+  status: string
+  pipelineStage?: $Enums.PipelineStage
+  caseStage?: $Enums.CaseStage
+  circle: string
+  category?: string | null
+  treatment?: string | null
+  atsAmount?: number | null
+  atsStatus?: $Enums.ATSStatus | null
+  anesthesia?: string | null
+  quantityGrade?: string | null
+  surgeonName?: string | null
+  surgeonType?: string | null
+  hospitalName: string
+  flowType?: $Enums.FlowType
+  modeOfPayment?: string | null
+  discount?: number
+  copay?: number
+  deduction?: number
+  settledTotal?: number
+  billAmount?: number
+  insuranceName?: string | null
+  tpa?: string | null
+  sumInsured?: number | null
+  roomRent?: number | null
+  icu?: number | null
+  capping?: number | null
+  arrivalDate?: Date | string | null
+  arrivalTime?: string | null
+  surgeryDate?: Date | string | null
+  ipdPotentialDate?: Date | string | null
+  ipdPotentialMarkedAt?: Date | string | null
+  operationTime?: string | null
+  implantType?: string | null
+  implantAmount?: number
+  instrument?: string | null
+  consumables?: string | null
+  createdDate?: Date | string
+  updatedDate?: Date | string
+  remarks?: string | null
+  source?: string | null
+  campaignName?: string | null
+  bdeName?: string | null
+  conversionDate?: Date | string | null
+  mediendProfit?: number
+  hospitalShare?: number
+  doctorShare?: number
+  othersShare?: number
+  netProfit?: number
+  ticketSize?: number
+  collectedByMediend?: number
+  collectedByHospital?: number
+  month?: string | null
+  assignedDate?: Date | string | null
+  leadEntryDate?: Date | string | null
+  patientEmail?: string | null
+  whatsapp?: string | null
+  address?: string | null
+  docUpload?: string | null
+  diseaseDetails?: string | null
+  followUpDate?: Date | string | null
+  subStatus?: string | null
+  opdHospital?: string | null
+  opdDrName?: string | null
+  opdContactNo?: string | null
+  opdCharges?: number
+  opdScheduleDate?: Date | string | null
+  opdMeeting?: number | null
+  opdSurgeryAdvised?: string | null
+  opdImplantRequired?: boolean | null
+  opdDiagnosis?: string | null
+  ipdAdmissionDate?: Date | string | null
+  ipdHospital?: string | null
+  ipdDrName?: string | null
+  ipdContactNo?: string | null
+  ipdTotalPayment?: number
+  ipdDetails?: string | null
+  paymentDetails?: number | null
+  attendantContactNo?: string | null
+  waFormat?: string | null
+  leadSource?: number | null
+  whatsappMessage?: string | null
+  notification?: boolean
+  emailSent?: boolean
+  smsSent?: boolean
+  whatsappSent?: boolean
+  website?: string | null
+  description?: string | null
+  refId?: string | null
+  duplCount?: number
+  aes?: boolean
+  profession?: string | null
+  qr?: string | null
+  removeRemarks?: boolean
+  isOldCrmLead?: boolean
+  remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
+  adId?: string | null
+  campaignId?: string | null
+  formId?: string | null
+  teamLeadId?: number | null
+  remarksId?: string | null
+  openedInCrmAt?: Date | string | null
+  lostReason?: string | null
+  lostAt?: Date | string | null
+  bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
+  treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
+  updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
+  stageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutLeadInput
+  insuranceCase?: Prisma.InsuranceCaseCreateNestedOneWithoutLeadInput
+  plRecord?: Prisma.PLRecordCreateNestedOneWithoutLeadInput
+  dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
+  outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
+  admissionRecord?: Prisma.AdmissionRecordCreateNestedOneWithoutLeadInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormCreateNestedOneWithoutLeadInput
+  caseStageHistory?: Prisma.CaseStageHistoryCreateNestedManyWithoutLeadInput
+  workflowResetLogs?: Prisma.WorkflowResetLogCreateNestedManyWithoutLeadInput
+  caseChatMessages?: Prisma.CaseChatMessageCreateNestedManyWithoutLeadInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutLeadInput
+  callNotes?: Prisma.CallNoteCreateNestedManyWithoutLeadInput
+  paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
+  invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
+  doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
+  opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
+  opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
+  opdFollowUpReason?: Prisma.FollowUpReasonMasterCreateNestedOneWithoutOpdLeadsInput
+  opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageCreateNestedManyWithoutLeadInput
+  opdAppointments?: Prisma.LeadOpdAppointmentCreateNestedManyWithoutLeadInput
+}
+
+export type LeadUncheckedCreateWithoutKypSubmissionInput = {
+  id?: number
+  legacyId?: string | null
+  leadRef: string
+  patientName: string
+  age: number
+  dateOfBirth?: Date | string | null
+  sex: string
+  phoneNumber: string
+  alternateNumber?: string | null
+  attendantName?: string | null
+  bdId: string
+  status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -11300,6 +12472,7 @@ export type LeadUncheckedCreateWithoutKypSubmissionInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -11322,7 +12495,7 @@ export type LeadUpdateToOneWithWhereWithoutKypSubmissionInput = {
 }
 
 export type LeadUpdateWithoutKypSubmissionInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -11437,6 +12610,7 @@ export type LeadUpdateWithoutKypSubmissionInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -11459,6 +12633,7 @@ export type LeadUpdateWithoutKypSubmissionInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -11468,7 +12643,8 @@ export type LeadUpdateWithoutKypSubmissionInput = {
 }
 
 export type LeadUncheckedUpdateWithoutKypSubmissionInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -11479,6 +12655,7 @@ export type LeadUncheckedUpdateWithoutKypSubmissionInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -11608,13 +12785,14 @@ export type LeadUncheckedUpdateWithoutKypSubmissionInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutCrmAssignmentPreviewLogsInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -11729,6 +12907,7 @@ export type LeadCreateWithoutCrmAssignmentPreviewLogsInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -11752,6 +12931,7 @@ export type LeadCreateWithoutCrmAssignmentPreviewLogsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
   opdFollowUpReason?: Prisma.FollowUpReasonMasterCreateNestedOneWithoutOpdLeadsInput
@@ -11760,7 +12940,8 @@ export type LeadCreateWithoutCrmAssignmentPreviewLogsInput = {
 }
 
 export type LeadUncheckedCreateWithoutCrmAssignmentPreviewLogsInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -11771,6 +12952,7 @@ export type LeadUncheckedCreateWithoutCrmAssignmentPreviewLogsInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -11901,6 +13083,7 @@ export type LeadUncheckedCreateWithoutCrmAssignmentPreviewLogsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
 }
@@ -11922,7 +13105,7 @@ export type LeadUpdateToOneWithWhereWithoutCrmAssignmentPreviewLogsInput = {
 }
 
 export type LeadUpdateWithoutCrmAssignmentPreviewLogsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -12037,6 +13220,7 @@ export type LeadUpdateWithoutCrmAssignmentPreviewLogsInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -12060,6 +13244,7 @@ export type LeadUpdateWithoutCrmAssignmentPreviewLogsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
   opdFollowUpReason?: Prisma.FollowUpReasonMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -12068,7 +13253,8 @@ export type LeadUpdateWithoutCrmAssignmentPreviewLogsInput = {
 }
 
 export type LeadUncheckedUpdateWithoutCrmAssignmentPreviewLogsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -12079,6 +13265,7 @@ export type LeadUncheckedUpdateWithoutCrmAssignmentPreviewLogsInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -12209,12 +13396,13 @@ export type LeadUncheckedUpdateWithoutCrmAssignmentPreviewLogsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutAdmissionRecordInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -12329,6 +13517,7 @@ export type LeadCreateWithoutAdmissionRecordInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -12351,6 +13540,7 @@ export type LeadCreateWithoutAdmissionRecordInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -12360,7 +13550,8 @@ export type LeadCreateWithoutAdmissionRecordInput = {
 }
 
 export type LeadUncheckedCreateWithoutAdmissionRecordInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -12371,6 +13562,7 @@ export type LeadUncheckedCreateWithoutAdmissionRecordInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -12500,6 +13692,7 @@ export type LeadUncheckedCreateWithoutAdmissionRecordInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -12522,7 +13715,7 @@ export type LeadUpdateToOneWithWhereWithoutAdmissionRecordInput = {
 }
 
 export type LeadUpdateWithoutAdmissionRecordInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -12637,6 +13830,7 @@ export type LeadUpdateWithoutAdmissionRecordInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -12659,6 +13853,7 @@ export type LeadUpdateWithoutAdmissionRecordInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -12668,7 +13863,8 @@ export type LeadUpdateWithoutAdmissionRecordInput = {
 }
 
 export type LeadUncheckedUpdateWithoutAdmissionRecordInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -12679,6 +13875,7 @@ export type LeadUncheckedUpdateWithoutAdmissionRecordInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -12808,13 +14005,14 @@ export type LeadUncheckedUpdateWithoutAdmissionRecordInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutOpdAppointmentsInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -12929,6 +14127,7 @@ export type LeadCreateWithoutOpdAppointmentsInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -12952,6 +14151,7 @@ export type LeadCreateWithoutOpdAppointmentsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -12960,7 +14160,8 @@ export type LeadCreateWithoutOpdAppointmentsInput = {
 }
 
 export type LeadUncheckedCreateWithoutOpdAppointmentsInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -12971,6 +14172,7 @@ export type LeadUncheckedCreateWithoutOpdAppointmentsInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -13101,6 +14303,7 @@ export type LeadUncheckedCreateWithoutOpdAppointmentsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
 }
@@ -13122,7 +14325,7 @@ export type LeadUpdateToOneWithWhereWithoutOpdAppointmentsInput = {
 }
 
 export type LeadUpdateWithoutOpdAppointmentsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -13237,6 +14440,7 @@ export type LeadUpdateWithoutOpdAppointmentsInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -13260,6 +14464,7 @@ export type LeadUpdateWithoutOpdAppointmentsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -13268,7 +14473,8 @@ export type LeadUpdateWithoutOpdAppointmentsInput = {
 }
 
 export type LeadUncheckedUpdateWithoutOpdAppointmentsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -13279,6 +14485,7 @@ export type LeadUncheckedUpdateWithoutOpdAppointmentsInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -13409,12 +14616,13 @@ export type LeadUncheckedUpdateWithoutOpdAppointmentsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutInsuranceInitiateFormInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -13529,6 +14737,7 @@ export type LeadCreateWithoutInsuranceInitiateFormInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -13551,6 +14760,7 @@ export type LeadCreateWithoutInsuranceInitiateFormInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -13560,7 +14770,8 @@ export type LeadCreateWithoutInsuranceInitiateFormInput = {
 }
 
 export type LeadUncheckedCreateWithoutInsuranceInitiateFormInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -13571,6 +14782,7 @@ export type LeadUncheckedCreateWithoutInsuranceInitiateFormInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -13700,6 +14912,7 @@ export type LeadUncheckedCreateWithoutInsuranceInitiateFormInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -13722,7 +14935,7 @@ export type LeadUpdateToOneWithWhereWithoutInsuranceInitiateFormInput = {
 }
 
 export type LeadUpdateWithoutInsuranceInitiateFormInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -13837,6 +15050,7 @@ export type LeadUpdateWithoutInsuranceInitiateFormInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -13859,6 +15073,7 @@ export type LeadUpdateWithoutInsuranceInitiateFormInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -13868,7 +15083,8 @@ export type LeadUpdateWithoutInsuranceInitiateFormInput = {
 }
 
 export type LeadUncheckedUpdateWithoutInsuranceInitiateFormInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -13879,6 +15095,7 @@ export type LeadUncheckedUpdateWithoutInsuranceInitiateFormInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -14008,13 +15225,14 @@ export type LeadUncheckedUpdateWithoutInsuranceInitiateFormInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutCaseStageHistoryInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -14129,6 +15347,7 @@ export type LeadCreateWithoutCaseStageHistoryInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -14151,6 +15370,7 @@ export type LeadCreateWithoutCaseStageHistoryInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -14160,7 +15380,8 @@ export type LeadCreateWithoutCaseStageHistoryInput = {
 }
 
 export type LeadUncheckedCreateWithoutCaseStageHistoryInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -14171,6 +15392,7 @@ export type LeadUncheckedCreateWithoutCaseStageHistoryInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -14300,6 +15522,7 @@ export type LeadUncheckedCreateWithoutCaseStageHistoryInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -14322,7 +15545,7 @@ export type LeadUpdateToOneWithWhereWithoutCaseStageHistoryInput = {
 }
 
 export type LeadUpdateWithoutCaseStageHistoryInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -14437,6 +15660,7 @@ export type LeadUpdateWithoutCaseStageHistoryInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -14459,6 +15683,7 @@ export type LeadUpdateWithoutCaseStageHistoryInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -14468,7 +15693,8 @@ export type LeadUpdateWithoutCaseStageHistoryInput = {
 }
 
 export type LeadUncheckedUpdateWithoutCaseStageHistoryInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -14479,6 +15705,7 @@ export type LeadUncheckedUpdateWithoutCaseStageHistoryInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -14608,13 +15835,14 @@ export type LeadUncheckedUpdateWithoutCaseStageHistoryInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutWorkflowResetLogsInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -14729,6 +15957,7 @@ export type LeadCreateWithoutWorkflowResetLogsInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -14751,6 +15980,7 @@ export type LeadCreateWithoutWorkflowResetLogsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -14760,7 +15990,8 @@ export type LeadCreateWithoutWorkflowResetLogsInput = {
 }
 
 export type LeadUncheckedCreateWithoutWorkflowResetLogsInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -14771,6 +16002,7 @@ export type LeadUncheckedCreateWithoutWorkflowResetLogsInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -14900,6 +16132,7 @@ export type LeadUncheckedCreateWithoutWorkflowResetLogsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -14922,7 +16155,7 @@ export type LeadUpdateToOneWithWhereWithoutWorkflowResetLogsInput = {
 }
 
 export type LeadUpdateWithoutWorkflowResetLogsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -15037,6 +16270,7 @@ export type LeadUpdateWithoutWorkflowResetLogsInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -15059,6 +16293,7 @@ export type LeadUpdateWithoutWorkflowResetLogsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -15068,7 +16303,8 @@ export type LeadUpdateWithoutWorkflowResetLogsInput = {
 }
 
 export type LeadUncheckedUpdateWithoutWorkflowResetLogsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -15079,6 +16315,7 @@ export type LeadUncheckedUpdateWithoutWorkflowResetLogsInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -15208,13 +16445,14 @@ export type LeadUncheckedUpdateWithoutWorkflowResetLogsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutCaseChatMessagesInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -15329,6 +16567,7 @@ export type LeadCreateWithoutCaseChatMessagesInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -15351,6 +16590,7 @@ export type LeadCreateWithoutCaseChatMessagesInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -15360,7 +16600,8 @@ export type LeadCreateWithoutCaseChatMessagesInput = {
 }
 
 export type LeadUncheckedCreateWithoutCaseChatMessagesInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -15371,6 +16612,7 @@ export type LeadUncheckedCreateWithoutCaseChatMessagesInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -15500,6 +16742,7 @@ export type LeadUncheckedCreateWithoutCaseChatMessagesInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -15522,7 +16765,7 @@ export type LeadUpdateToOneWithWhereWithoutCaseChatMessagesInput = {
 }
 
 export type LeadUpdateWithoutCaseChatMessagesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -15637,6 +16880,7 @@ export type LeadUpdateWithoutCaseChatMessagesInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -15659,6 +16903,7 @@ export type LeadUpdateWithoutCaseChatMessagesInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -15668,7 +16913,8 @@ export type LeadUpdateWithoutCaseChatMessagesInput = {
 }
 
 export type LeadUncheckedUpdateWithoutCaseChatMessagesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -15679,6 +16925,7 @@ export type LeadUncheckedUpdateWithoutCaseChatMessagesInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -15808,13 +17055,14 @@ export type LeadUncheckedUpdateWithoutCaseChatMessagesInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutChatReadReceiptsInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -15929,6 +17177,7 @@ export type LeadCreateWithoutChatReadReceiptsInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -15951,6 +17200,7 @@ export type LeadCreateWithoutChatReadReceiptsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -15960,7 +17210,8 @@ export type LeadCreateWithoutChatReadReceiptsInput = {
 }
 
 export type LeadUncheckedCreateWithoutChatReadReceiptsInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -15971,6 +17222,7 @@ export type LeadUncheckedCreateWithoutChatReadReceiptsInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -16100,6 +17352,7 @@ export type LeadUncheckedCreateWithoutChatReadReceiptsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -16122,7 +17375,7 @@ export type LeadUpdateToOneWithWhereWithoutChatReadReceiptsInput = {
 }
 
 export type LeadUpdateWithoutChatReadReceiptsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -16237,6 +17490,7 @@ export type LeadUpdateWithoutChatReadReceiptsInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -16259,6 +17513,7 @@ export type LeadUpdateWithoutChatReadReceiptsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -16268,7 +17523,8 @@ export type LeadUpdateWithoutChatReadReceiptsInput = {
 }
 
 export type LeadUncheckedUpdateWithoutChatReadReceiptsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -16279,6 +17535,7 @@ export type LeadUncheckedUpdateWithoutChatReadReceiptsInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -16408,13 +17665,14 @@ export type LeadUncheckedUpdateWithoutChatReadReceiptsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutDischargeSheetInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -16529,6 +17787,7 @@ export type LeadCreateWithoutDischargeSheetInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -16551,6 +17810,7 @@ export type LeadCreateWithoutDischargeSheetInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -16560,7 +17820,8 @@ export type LeadCreateWithoutDischargeSheetInput = {
 }
 
 export type LeadUncheckedCreateWithoutDischargeSheetInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -16571,6 +17832,7 @@ export type LeadUncheckedCreateWithoutDischargeSheetInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -16700,6 +17962,7 @@ export type LeadUncheckedCreateWithoutDischargeSheetInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -16722,7 +17985,7 @@ export type LeadUpdateToOneWithWhereWithoutDischargeSheetInput = {
 }
 
 export type LeadUpdateWithoutDischargeSheetInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -16837,6 +18100,7 @@ export type LeadUpdateWithoutDischargeSheetInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -16859,6 +18123,7 @@ export type LeadUpdateWithoutDischargeSheetInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -16868,7 +18133,8 @@ export type LeadUpdateWithoutDischargeSheetInput = {
 }
 
 export type LeadUncheckedUpdateWithoutDischargeSheetInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -16879,6 +18145,7 @@ export type LeadUncheckedUpdateWithoutDischargeSheetInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -17008,13 +18275,14 @@ export type LeadUncheckedUpdateWithoutDischargeSheetInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutOutstandingCaseInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -17129,6 +18397,7 @@ export type LeadCreateWithoutOutstandingCaseInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -17151,6 +18420,7 @@ export type LeadCreateWithoutOutstandingCaseInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -17160,7 +18430,8 @@ export type LeadCreateWithoutOutstandingCaseInput = {
 }
 
 export type LeadUncheckedCreateWithoutOutstandingCaseInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -17171,6 +18442,7 @@ export type LeadUncheckedCreateWithoutOutstandingCaseInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -17300,6 +18572,7 @@ export type LeadUncheckedCreateWithoutOutstandingCaseInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -17322,7 +18595,7 @@ export type LeadUpdateToOneWithWhereWithoutOutstandingCaseInput = {
 }
 
 export type LeadUpdateWithoutOutstandingCaseInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -17437,6 +18710,7 @@ export type LeadUpdateWithoutOutstandingCaseInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -17459,6 +18733,7 @@ export type LeadUpdateWithoutOutstandingCaseInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -17468,7 +18743,8 @@ export type LeadUpdateWithoutOutstandingCaseInput = {
 }
 
 export type LeadUncheckedUpdateWithoutOutstandingCaseInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -17479,6 +18755,7 @@ export type LeadUncheckedUpdateWithoutOutstandingCaseInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -17608,13 +18885,14 @@ export type LeadUncheckedUpdateWithoutOutstandingCaseInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutPaymentInstallmentsInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -17729,6 +19007,7 @@ export type LeadCreateWithoutPaymentInstallmentsInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -17751,6 +19030,7 @@ export type LeadCreateWithoutPaymentInstallmentsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -17760,7 +19040,8 @@ export type LeadCreateWithoutPaymentInstallmentsInput = {
 }
 
 export type LeadUncheckedCreateWithoutPaymentInstallmentsInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -17771,6 +19052,7 @@ export type LeadUncheckedCreateWithoutPaymentInstallmentsInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -17900,6 +19182,7 @@ export type LeadUncheckedCreateWithoutPaymentInstallmentsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -17922,7 +19205,7 @@ export type LeadUpdateToOneWithWhereWithoutPaymentInstallmentsInput = {
 }
 
 export type LeadUpdateWithoutPaymentInstallmentsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -18037,6 +19320,7 @@ export type LeadUpdateWithoutPaymentInstallmentsInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -18059,6 +19343,7 @@ export type LeadUpdateWithoutPaymentInstallmentsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -18068,7 +19353,8 @@ export type LeadUpdateWithoutPaymentInstallmentsInput = {
 }
 
 export type LeadUncheckedUpdateWithoutPaymentInstallmentsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -18079,6 +19365,7 @@ export type LeadUncheckedUpdateWithoutPaymentInstallmentsInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -18208,13 +19495,14 @@ export type LeadUncheckedUpdateWithoutPaymentInstallmentsInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutComplianceCallInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -18329,6 +19617,7 @@ export type LeadCreateWithoutComplianceCallInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -18351,6 +19640,7 @@ export type LeadCreateWithoutComplianceCallInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -18360,7 +19650,8 @@ export type LeadCreateWithoutComplianceCallInput = {
 }
 
 export type LeadUncheckedCreateWithoutComplianceCallInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -18371,6 +19662,7 @@ export type LeadUncheckedCreateWithoutComplianceCallInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -18500,6 +19792,7 @@ export type LeadUncheckedCreateWithoutComplianceCallInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -18522,7 +19815,7 @@ export type LeadUpdateToOneWithWhereWithoutComplianceCallInput = {
 }
 
 export type LeadUpdateWithoutComplianceCallInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -18637,6 +19930,7 @@ export type LeadUpdateWithoutComplianceCallInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -18659,6 +19953,7 @@ export type LeadUpdateWithoutComplianceCallInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -18668,7 +19963,8 @@ export type LeadUpdateWithoutComplianceCallInput = {
 }
 
 export type LeadUncheckedUpdateWithoutComplianceCallInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -18679,6 +19975,7 @@ export type LeadUncheckedUpdateWithoutComplianceCallInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -18808,13 +20105,14 @@ export type LeadUncheckedUpdateWithoutComplianceCallInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutOpdSurgeryRemarkInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -18929,6 +20227,7 @@ export type LeadCreateWithoutOpdSurgeryRemarkInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -18952,6 +20251,7 @@ export type LeadCreateWithoutOpdSurgeryRemarkInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
   opdFollowUpReason?: Prisma.FollowUpReasonMasterCreateNestedOneWithoutOpdLeadsInput
@@ -18960,7 +20260,8 @@ export type LeadCreateWithoutOpdSurgeryRemarkInput = {
 }
 
 export type LeadUncheckedCreateWithoutOpdSurgeryRemarkInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -18971,6 +20272,7 @@ export type LeadUncheckedCreateWithoutOpdSurgeryRemarkInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -19100,6 +20402,7 @@ export type LeadUncheckedCreateWithoutOpdSurgeryRemarkInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -19132,7 +20435,7 @@ export type LeadUpdateManyWithWhereWithoutOpdSurgeryRemarkInput = {
 }
 
 export type LeadCreateWithoutOpdReasonNoSurgeryInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -19247,6 +20550,7 @@ export type LeadCreateWithoutOpdReasonNoSurgeryInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -19270,6 +20574,7 @@ export type LeadCreateWithoutOpdReasonNoSurgeryInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdFollowUpReason?: Prisma.FollowUpReasonMasterCreateNestedOneWithoutOpdLeadsInput
@@ -19278,7 +20583,8 @@ export type LeadCreateWithoutOpdReasonNoSurgeryInput = {
 }
 
 export type LeadUncheckedCreateWithoutOpdReasonNoSurgeryInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -19289,6 +20595,7 @@ export type LeadUncheckedCreateWithoutOpdReasonNoSurgeryInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -19418,6 +20725,7 @@ export type LeadUncheckedCreateWithoutOpdReasonNoSurgeryInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -19450,7 +20758,7 @@ export type LeadUpdateManyWithWhereWithoutOpdReasonNoSurgeryInput = {
 }
 
 export type LeadCreateWithoutOpdFollowUpReasonInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -19565,6 +20873,7 @@ export type LeadCreateWithoutOpdFollowUpReasonInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
@@ -19588,6 +20897,7 @@ export type LeadCreateWithoutOpdFollowUpReasonInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -19596,7 +20906,8 @@ export type LeadCreateWithoutOpdFollowUpReasonInput = {
 }
 
 export type LeadUncheckedCreateWithoutOpdFollowUpReasonInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -19607,6 +20918,7 @@ export type LeadUncheckedCreateWithoutOpdFollowUpReasonInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -19736,6 +21048,7 @@ export type LeadUncheckedCreateWithoutOpdFollowUpReasonInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -19768,7 +21081,7 @@ export type LeadUpdateManyWithWhereWithoutOpdFollowUpReasonInput = {
 }
 
 export type LeadCreateWithoutTreatmentMasterInput = {
-  id?: string
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -19883,6 +21196,7 @@ export type LeadCreateWithoutTreatmentMasterInput = {
   lostReason?: string | null
   lostAt?: Date | string | null
   bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  statusMaster?: Prisma.LeadStatusCreateNestedOneWithoutLeadsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
   stageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutLeadInput
@@ -19905,6 +21219,7 @@ export type LeadCreateWithoutTreatmentMasterInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput
@@ -19914,7 +21229,8 @@ export type LeadCreateWithoutTreatmentMasterInput = {
 }
 
 export type LeadUncheckedCreateWithoutTreatmentMasterInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -19925,6 +21241,7 @@ export type LeadUncheckedCreateWithoutTreatmentMasterInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -20054,6 +21371,7 @@ export type LeadUncheckedCreateWithoutTreatmentMasterInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutLeadInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutLeadInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedCreateNestedManyWithoutLeadInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutLeadInput
@@ -20086,7 +21404,8 @@ export type LeadUpdateManyWithWhereWithoutTreatmentMasterInput = {
 }
 
 export type LeadCreateManyCreatedByInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -20097,6 +21416,7 @@ export type LeadCreateManyCreatedByInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -20209,7 +21529,8 @@ export type LeadCreateManyCreatedByInput = {
 }
 
 export type LeadCreateManyBdInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -20219,6 +21540,7 @@ export type LeadCreateManyBdInput = {
   alternateNumber?: string | null
   attendantName?: string | null
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -20332,7 +21654,8 @@ export type LeadCreateManyBdInput = {
 }
 
 export type LeadCreateManyUpdatedByInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -20343,6 +21666,7 @@ export type LeadCreateManyUpdatedByInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -20455,7 +21779,7 @@ export type LeadCreateManyUpdatedByInput = {
 }
 
 export type LeadUpdateWithoutCreatedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -20570,6 +21894,7 @@ export type LeadUpdateWithoutCreatedByInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
   stageEvents?: Prisma.LeadStageEventUpdateManyWithoutLeadNestedInput
@@ -20592,6 +21917,7 @@ export type LeadUpdateWithoutCreatedByInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -20601,7 +21927,8 @@ export type LeadUpdateWithoutCreatedByInput = {
 }
 
 export type LeadUncheckedUpdateWithoutCreatedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -20612,6 +21939,7 @@ export type LeadUncheckedUpdateWithoutCreatedByInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -20741,13 +22069,15 @@ export type LeadUncheckedUpdateWithoutCreatedByInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateManyWithoutCreatedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -20758,6 +22088,7 @@ export type LeadUncheckedUpdateManyWithoutCreatedByInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -20870,7 +22201,7 @@ export type LeadUncheckedUpdateManyWithoutCreatedByInput = {
 }
 
 export type LeadUpdateWithoutBdInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -20984,6 +22315,7 @@ export type LeadUpdateWithoutBdInput = {
   openedInCrmAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -21007,6 +22339,7 @@ export type LeadUpdateWithoutBdInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -21016,7 +22349,8 @@ export type LeadUpdateWithoutBdInput = {
 }
 
 export type LeadUncheckedUpdateWithoutBdInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -21026,6 +22360,7 @@ export type LeadUncheckedUpdateWithoutBdInput = {
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -21156,13 +22491,15 @@ export type LeadUncheckedUpdateWithoutBdInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateManyWithoutBdInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -21172,6 +22509,7 @@ export type LeadUncheckedUpdateManyWithoutBdInput = {
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -21285,7 +22623,7 @@ export type LeadUncheckedUpdateManyWithoutBdInput = {
 }
 
 export type LeadUpdateWithoutUpdatedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -21400,6 +22738,7 @@ export type LeadUpdateWithoutUpdatedByInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   stageEvents?: Prisma.LeadStageEventUpdateManyWithoutLeadNestedInput
@@ -21422,6 +22761,7 @@ export type LeadUpdateWithoutUpdatedByInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -21431,7 +22771,8 @@ export type LeadUpdateWithoutUpdatedByInput = {
 }
 
 export type LeadUncheckedUpdateWithoutUpdatedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -21442,6 +22783,7 @@ export type LeadUncheckedUpdateWithoutUpdatedByInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -21571,13 +22913,15 @@ export type LeadUncheckedUpdateWithoutUpdatedByInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateManyWithoutUpdatedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -21588,6 +22932,7 @@ export type LeadUncheckedUpdateManyWithoutUpdatedByInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -21699,8 +23044,9 @@ export type LeadUncheckedUpdateManyWithoutUpdatedByInput = {
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
-export type LeadCreateManyOpdSurgeryRemarkInput = {
-  id?: string
+export type LeadCreateManyStatusMasterInput = {
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -21711,6 +23057,554 @@ export type LeadCreateManyOpdSurgeryRemarkInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  pipelineStage?: $Enums.PipelineStage
+  caseStage?: $Enums.CaseStage
+  circle: string
+  category?: string | null
+  treatment?: string | null
+  treatmentMasterId?: string | null
+  atsAmount?: number | null
+  atsStatus?: $Enums.ATSStatus | null
+  anesthesia?: string | null
+  quantityGrade?: string | null
+  surgeonName?: string | null
+  surgeonType?: string | null
+  hospitalName: string
+  flowType?: $Enums.FlowType
+  modeOfPayment?: string | null
+  discount?: number
+  copay?: number
+  deduction?: number
+  settledTotal?: number
+  billAmount?: number
+  insuranceName?: string | null
+  tpa?: string | null
+  sumInsured?: number | null
+  roomRent?: number | null
+  icu?: number | null
+  capping?: number | null
+  arrivalDate?: Date | string | null
+  arrivalTime?: string | null
+  surgeryDate?: Date | string | null
+  ipdPotentialDate?: Date | string | null
+  ipdPotentialMarkedAt?: Date | string | null
+  operationTime?: string | null
+  implantType?: string | null
+  implantAmount?: number
+  instrument?: string | null
+  consumables?: string | null
+  createdById: string
+  createdDate?: Date | string
+  updatedById: string
+  updatedDate?: Date | string
+  remarks?: string | null
+  source?: string | null
+  campaignName?: string | null
+  bdeName?: string | null
+  conversionDate?: Date | string | null
+  mediendProfit?: number
+  hospitalShare?: number
+  doctorShare?: number
+  othersShare?: number
+  netProfit?: number
+  ticketSize?: number
+  collectedByMediend?: number
+  collectedByHospital?: number
+  month?: string | null
+  assignedDate?: Date | string | null
+  leadEntryDate?: Date | string | null
+  patientEmail?: string | null
+  whatsapp?: string | null
+  address?: string | null
+  docUpload?: string | null
+  diseaseDetails?: string | null
+  followUpDate?: Date | string | null
+  subStatus?: string | null
+  opdHospital?: string | null
+  opdDrName?: string | null
+  opdContactNo?: string | null
+  opdCharges?: number
+  opdScheduleDate?: Date | string | null
+  opdMeeting?: number | null
+  opdSurgeryAdvised?: string | null
+  opdSurgeryRemarkCode?: string | null
+  opdReasonNoSurgeryCode?: string | null
+  opdFollowUpReasonCode?: string | null
+  opdImplantRequired?: boolean | null
+  opdDiagnosis?: string | null
+  ipdAdmissionDate?: Date | string | null
+  ipdHospital?: string | null
+  ipdDrName?: string | null
+  ipdContactNo?: string | null
+  ipdTotalPayment?: number
+  ipdDetails?: string | null
+  paymentDetails?: number | null
+  attendantContactNo?: string | null
+  waFormat?: string | null
+  leadSource?: number | null
+  whatsappMessage?: string | null
+  notification?: boolean
+  emailSent?: boolean
+  smsSent?: boolean
+  whatsappSent?: boolean
+  website?: string | null
+  description?: string | null
+  refId?: string | null
+  duplCount?: number
+  aes?: boolean
+  profession?: string | null
+  qr?: string | null
+  removeRemarks?: boolean
+  isOldCrmLead?: boolean
+  remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
+  adId?: string | null
+  campaignId?: string | null
+  formId?: string | null
+  teamLeadId?: number | null
+  remarksId?: string | null
+  openedInCrmAt?: Date | string | null
+  lostReason?: string | null
+  lostAt?: Date | string | null
+}
+
+export type LeadUpdateWithoutStatusMasterInput = {
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadRef?: Prisma.StringFieldUpdateOperationsInput | string
+  patientName?: Prisma.StringFieldUpdateOperationsInput | string
+  age?: Prisma.IntFieldUpdateOperationsInput | number
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sex?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+  caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
+  circle?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  atsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  atsStatus?: Prisma.NullableEnumATSStatusFieldUpdateOperationsInput | $Enums.ATSStatus | null
+  anesthesia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.StringFieldUpdateOperationsInput | string
+  flowType?: Prisma.EnumFlowTypeFieldUpdateOperationsInput | $Enums.FlowType
+  modeOfPayment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copay?: Prisma.FloatFieldUpdateOperationsInput | number
+  deduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  settledTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  billAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  insuranceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumInsured?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  roomRent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  icu?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  capping?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  arrivalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  arrivalTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdPotentialDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdPotentialMarkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  operationTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrument?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  consumables?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  othersShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  netProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  ticketSize?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  month?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leadEntryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  patientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsapp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  docUpload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  diseaseDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdCharges?: Prisma.IntFieldUpdateOperationsInput | number
+  opdScheduleDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  opdMeeting?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  opdSurgeryAdvised?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdImplantRequired?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  opdDiagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdAdmissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdTotalPayment?: Prisma.IntFieldUpdateOperationsInput | number
+  ipdDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentDetails?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  attendantContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadSource?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  whatsappMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  smsSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duplCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aes?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamLeadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remarksId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  openedInCrmAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
+  updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
+  stageEvents?: Prisma.LeadStageEventUpdateManyWithoutLeadNestedInput
+  insuranceCase?: Prisma.InsuranceCaseUpdateOneWithoutLeadNestedInput
+  plRecord?: Prisma.PLRecordUpdateOneWithoutLeadNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutLeadNestedInput
+  dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutLeadNestedInput
+  outstandingCase?: Prisma.OutstandingCaseUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUpdateOneWithoutLeadNestedInput
+  admissionRecord?: Prisma.AdmissionRecordUpdateOneWithoutLeadNestedInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormUpdateOneWithoutLeadNestedInput
+  caseStageHistory?: Prisma.CaseStageHistoryUpdateManyWithoutLeadNestedInput
+  workflowResetLogs?: Prisma.WorkflowResetLogUpdateManyWithoutLeadNestedInput
+  caseChatMessages?: Prisma.CaseChatMessageUpdateManyWithoutLeadNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutLeadNestedInput
+  callNotes?: Prisma.CallNoteUpdateManyWithoutLeadNestedInput
+  paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
+  invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
+  doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
+  opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
+  opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
+  opdFollowUpReason?: Prisma.FollowUpReasonMasterUpdateOneWithoutOpdLeadsNestedInput
+  opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUpdateManyWithoutLeadNestedInput
+  opdAppointments?: Prisma.LeadOpdAppointmentUpdateManyWithoutLeadNestedInput
+}
+
+export type LeadUncheckedUpdateWithoutStatusMasterInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadRef?: Prisma.StringFieldUpdateOperationsInput | string
+  patientName?: Prisma.StringFieldUpdateOperationsInput | string
+  age?: Prisma.IntFieldUpdateOperationsInput | number
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sex?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+  caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
+  circle?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentMasterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  atsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  atsStatus?: Prisma.NullableEnumATSStatusFieldUpdateOperationsInput | $Enums.ATSStatus | null
+  anesthesia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.StringFieldUpdateOperationsInput | string
+  flowType?: Prisma.EnumFlowTypeFieldUpdateOperationsInput | $Enums.FlowType
+  modeOfPayment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copay?: Prisma.FloatFieldUpdateOperationsInput | number
+  deduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  settledTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  billAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  insuranceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumInsured?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  roomRent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  icu?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  capping?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  arrivalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  arrivalTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdPotentialDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdPotentialMarkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  operationTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrument?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  consumables?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedById?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  othersShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  netProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  ticketSize?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  month?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leadEntryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  patientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsapp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  docUpload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  diseaseDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdCharges?: Prisma.IntFieldUpdateOperationsInput | number
+  opdScheduleDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  opdMeeting?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  opdSurgeryAdvised?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdSurgeryRemarkCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdReasonNoSurgeryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdFollowUpReasonCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdImplantRequired?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  opdDiagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdAdmissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdTotalPayment?: Prisma.IntFieldUpdateOperationsInput | number
+  ipdDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentDetails?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  attendantContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadSource?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  whatsappMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  smsSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duplCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aes?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamLeadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remarksId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  openedInCrmAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutLeadNestedInput
+  insuranceCase?: Prisma.InsuranceCaseUncheckedUpdateOneWithoutLeadNestedInput
+  plRecord?: Prisma.PLRecordUncheckedUpdateOneWithoutLeadNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUncheckedUpdateOneWithoutLeadNestedInput
+  dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutLeadNestedInput
+  outstandingCase?: Prisma.OutstandingCaseUncheckedUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput
+  admissionRecord?: Prisma.AdmissionRecordUncheckedUpdateOneWithoutLeadNestedInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedUpdateOneWithoutLeadNestedInput
+  caseStageHistory?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutLeadNestedInput
+  workflowResetLogs?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutLeadNestedInput
+  caseChatMessages?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutLeadNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutLeadNestedInput
+  callNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutLeadNestedInput
+  paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
+  invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
+  doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
+  opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
+  opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
+}
+
+export type LeadUncheckedUpdateManyWithoutStatusMasterInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadRef?: Prisma.StringFieldUpdateOperationsInput | string
+  patientName?: Prisma.StringFieldUpdateOperationsInput | string
+  age?: Prisma.IntFieldUpdateOperationsInput | number
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sex?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+  caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
+  circle?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentMasterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  atsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  atsStatus?: Prisma.NullableEnumATSStatusFieldUpdateOperationsInput | $Enums.ATSStatus | null
+  anesthesia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.StringFieldUpdateOperationsInput | string
+  flowType?: Prisma.EnumFlowTypeFieldUpdateOperationsInput | $Enums.FlowType
+  modeOfPayment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copay?: Prisma.FloatFieldUpdateOperationsInput | number
+  deduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  settledTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  billAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  insuranceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumInsured?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  roomRent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  icu?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  capping?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  arrivalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  arrivalTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdPotentialDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdPotentialMarkedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  operationTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrument?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  consumables?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedById?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  othersShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  netProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  ticketSize?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  month?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leadEntryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  patientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsapp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  docUpload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  diseaseDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdCharges?: Prisma.IntFieldUpdateOperationsInput | number
+  opdScheduleDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  opdMeeting?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  opdSurgeryAdvised?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdSurgeryRemarkCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdReasonNoSurgeryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdFollowUpReasonCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdImplantRequired?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  opdDiagnosis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdAdmissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdTotalPayment?: Prisma.IntFieldUpdateOperationsInput | number
+  ipdDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentDetails?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  attendantContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadSource?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  whatsappMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  smsSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duplCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aes?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamLeadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remarksId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  openedInCrmAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type LeadCreateManyOpdSurgeryRemarkInput = {
+  id?: number
+  legacyId?: string | null
+  leadRef: string
+  patientName: string
+  age: number
+  dateOfBirth?: Date | string | null
+  sex: string
+  phoneNumber: string
+  alternateNumber?: string | null
+  attendantName?: string | null
+  bdId: string
+  status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -21823,7 +23717,7 @@ export type LeadCreateManyOpdSurgeryRemarkInput = {
 }
 
 export type LeadUpdateWithoutOpdSurgeryRemarkInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -21938,6 +23832,7 @@ export type LeadUpdateWithoutOpdSurgeryRemarkInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -21961,6 +23856,7 @@ export type LeadUpdateWithoutOpdSurgeryRemarkInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
   opdFollowUpReason?: Prisma.FollowUpReasonMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -21969,7 +23865,8 @@ export type LeadUpdateWithoutOpdSurgeryRemarkInput = {
 }
 
 export type LeadUncheckedUpdateWithoutOpdSurgeryRemarkInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -21980,6 +23877,7 @@ export type LeadUncheckedUpdateWithoutOpdSurgeryRemarkInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -22109,13 +24007,15 @@ export type LeadUncheckedUpdateWithoutOpdSurgeryRemarkInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateManyWithoutOpdSurgeryRemarkInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -22126,6 +24026,7 @@ export type LeadUncheckedUpdateManyWithoutOpdSurgeryRemarkInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -22238,7 +24139,8 @@ export type LeadUncheckedUpdateManyWithoutOpdSurgeryRemarkInput = {
 }
 
 export type LeadCreateManyOpdReasonNoSurgeryInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -22249,6 +24151,7 @@ export type LeadCreateManyOpdReasonNoSurgeryInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -22361,7 +24264,7 @@ export type LeadCreateManyOpdReasonNoSurgeryInput = {
 }
 
 export type LeadUpdateWithoutOpdReasonNoSurgeryInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -22476,6 +24379,7 @@ export type LeadUpdateWithoutOpdReasonNoSurgeryInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -22499,6 +24403,7 @@ export type LeadUpdateWithoutOpdReasonNoSurgeryInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdFollowUpReason?: Prisma.FollowUpReasonMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -22507,7 +24412,8 @@ export type LeadUpdateWithoutOpdReasonNoSurgeryInput = {
 }
 
 export type LeadUncheckedUpdateWithoutOpdReasonNoSurgeryInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -22518,6 +24424,7 @@ export type LeadUncheckedUpdateWithoutOpdReasonNoSurgeryInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -22647,13 +24554,15 @@ export type LeadUncheckedUpdateWithoutOpdReasonNoSurgeryInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateManyWithoutOpdReasonNoSurgeryInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -22664,6 +24573,7 @@ export type LeadUncheckedUpdateManyWithoutOpdReasonNoSurgeryInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -22776,7 +24686,8 @@ export type LeadUncheckedUpdateManyWithoutOpdReasonNoSurgeryInput = {
 }
 
 export type LeadCreateManyOpdFollowUpReasonInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -22787,6 +24698,7 @@ export type LeadCreateManyOpdFollowUpReasonInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -22899,7 +24811,7 @@ export type LeadCreateManyOpdFollowUpReasonInput = {
 }
 
 export type LeadUpdateWithoutOpdFollowUpReasonInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -23014,6 +24926,7 @@ export type LeadUpdateWithoutOpdFollowUpReasonInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
@@ -23037,6 +24950,7 @@ export type LeadUpdateWithoutOpdFollowUpReasonInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -23045,7 +24959,8 @@ export type LeadUpdateWithoutOpdFollowUpReasonInput = {
 }
 
 export type LeadUncheckedUpdateWithoutOpdFollowUpReasonInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -23056,6 +24971,7 @@ export type LeadUncheckedUpdateWithoutOpdFollowUpReasonInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -23185,13 +25101,15 @@ export type LeadUncheckedUpdateWithoutOpdFollowUpReasonInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateManyWithoutOpdFollowUpReasonInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -23202,6 +25120,7 @@ export type LeadUncheckedUpdateManyWithoutOpdFollowUpReasonInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -23314,7 +25233,8 @@ export type LeadUncheckedUpdateManyWithoutOpdFollowUpReasonInput = {
 }
 
 export type LeadCreateManyTreatmentMasterInput = {
-  id?: string
+  id?: number
+  legacyId?: string | null
   leadRef: string
   patientName: string
   age: number
@@ -23325,6 +25245,7 @@ export type LeadCreateManyTreatmentMasterInput = {
   attendantName?: string | null
   bdId: string
   status: string
+  statusId?: number | null
   pipelineStage?: $Enums.PipelineStage
   caseStage?: $Enums.CaseStage
   circle: string
@@ -23437,7 +25358,7 @@ export type LeadCreateManyTreatmentMasterInput = {
 }
 
 export type LeadUpdateWithoutTreatmentMasterInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -23552,6 +25473,7 @@ export type LeadUpdateWithoutTreatmentMasterInput = {
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  statusMaster?: Prisma.LeadStatusUpdateOneWithoutLeadsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
   stageEvents?: Prisma.LeadStageEventUpdateManyWithoutLeadNestedInput
@@ -23574,6 +25496,7 @@ export type LeadUpdateWithoutTreatmentMasterInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
   opdSurgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput
   opdReasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput
@@ -23583,7 +25506,8 @@ export type LeadUpdateWithoutTreatmentMasterInput = {
 }
 
 export type LeadUncheckedUpdateWithoutTreatmentMasterInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -23594,6 +25518,7 @@ export type LeadUncheckedUpdateWithoutTreatmentMasterInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -23723,13 +25648,15 @@ export type LeadUncheckedUpdateWithoutTreatmentMasterInput = {
   leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
   qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
   qrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutLeadNestedInput
+  qrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutLeadNestedInput
   crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
   opdPrescriptionImages?: Prisma.LeadOpdPrescriptionImageUncheckedUpdateManyWithoutLeadNestedInput
   opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateManyWithoutTreatmentMasterInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  legacyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadRef?: Prisma.StringFieldUpdateOperationsInput | string
   patientName?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
@@ -23740,6 +25667,7 @@ export type LeadUncheckedUpdateManyWithoutTreatmentMasterInput = {
   attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bdId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  statusId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
   caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   circle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -23869,6 +25797,7 @@ export type LeadCountOutputType = {
   leadRemarkEntries: number
   qrCallAuditLogs: number
   qrPublicLinks: number
+  qrScanLinks: number
   crmAssignmentPreviewLogs: number
   opdPrescriptionImages: number
   opdAppointments: number
@@ -23887,6 +25816,7 @@ export type LeadCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   leadRemarkEntries?: boolean | LeadCountOutputTypeCountLeadRemarkEntriesArgs
   qrCallAuditLogs?: boolean | LeadCountOutputTypeCountQrCallAuditLogsArgs
   qrPublicLinks?: boolean | LeadCountOutputTypeCountQrPublicLinksArgs
+  qrScanLinks?: boolean | LeadCountOutputTypeCountQrScanLinksArgs
   crmAssignmentPreviewLogs?: boolean | LeadCountOutputTypeCountCrmAssignmentPreviewLogsArgs
   opdPrescriptionImages?: boolean | LeadCountOutputTypeCountOpdPrescriptionImagesArgs
   opdAppointments?: boolean | LeadCountOutputTypeCountOpdAppointmentsArgs
@@ -23989,6 +25919,13 @@ export type LeadCountOutputTypeCountQrPublicLinksArgs<ExtArgs extends runtime.Ty
 /**
  * LeadCountOutputType without action
  */
+export type LeadCountOutputTypeCountQrScanLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LeadQrScanLinkWhereInput
+}
+
+/**
+ * LeadCountOutputType without action
+ */
 export type LeadCountOutputTypeCountCrmAssignmentPreviewLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CrmAssignmentPreviewLogWhereInput
 }
@@ -24010,6 +25947,7 @@ export type LeadCountOutputTypeCountOpdAppointmentsArgs<ExtArgs extends runtime.
 
 export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  legacyId?: boolean
   leadRef?: boolean
   patientName?: boolean
   age?: boolean
@@ -24020,6 +25958,7 @@ export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   attendantName?: boolean
   bdId?: boolean
   status?: boolean
+  statusId?: boolean
   pipelineStage?: boolean
   caseStage?: boolean
   circle?: boolean
@@ -24131,6 +26070,7 @@ export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   lostReason?: boolean
   lostAt?: boolean
   bd?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  statusMaster?: boolean | Prisma.Lead$statusMasterArgs<ExtArgs>
   treatmentMaster?: boolean | Prisma.Lead$treatmentMasterArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -24154,6 +26094,7 @@ export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   leadRemarkEntries?: boolean | Prisma.Lead$leadRemarkEntriesArgs<ExtArgs>
   qrCallAuditLogs?: boolean | Prisma.Lead$qrCallAuditLogsArgs<ExtArgs>
   qrPublicLinks?: boolean | Prisma.Lead$qrPublicLinksArgs<ExtArgs>
+  qrScanLinks?: boolean | Prisma.Lead$qrScanLinksArgs<ExtArgs>
   crmAssignmentPreviewLogs?: boolean | Prisma.Lead$crmAssignmentPreviewLogsArgs<ExtArgs>
   opdSurgeryRemark?: boolean | Prisma.Lead$opdSurgeryRemarkArgs<ExtArgs>
   opdReasonNoSurgery?: boolean | Prisma.Lead$opdReasonNoSurgeryArgs<ExtArgs>
@@ -24165,6 +26106,7 @@ export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 
 export type LeadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  legacyId?: boolean
   leadRef?: boolean
   patientName?: boolean
   age?: boolean
@@ -24175,6 +26117,7 @@ export type LeadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   attendantName?: boolean
   bdId?: boolean
   status?: boolean
+  statusId?: boolean
   pipelineStage?: boolean
   caseStage?: boolean
   circle?: boolean
@@ -24286,6 +26229,7 @@ export type LeadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   lostReason?: boolean
   lostAt?: boolean
   bd?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  statusMaster?: boolean | Prisma.Lead$statusMasterArgs<ExtArgs>
   treatmentMaster?: boolean | Prisma.Lead$treatmentMasterArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -24296,6 +26240,7 @@ export type LeadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type LeadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  legacyId?: boolean
   leadRef?: boolean
   patientName?: boolean
   age?: boolean
@@ -24306,6 +26251,7 @@ export type LeadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   attendantName?: boolean
   bdId?: boolean
   status?: boolean
+  statusId?: boolean
   pipelineStage?: boolean
   caseStage?: boolean
   circle?: boolean
@@ -24417,6 +26363,7 @@ export type LeadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   lostReason?: boolean
   lostAt?: boolean
   bd?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  statusMaster?: boolean | Prisma.Lead$statusMasterArgs<ExtArgs>
   treatmentMaster?: boolean | Prisma.Lead$treatmentMasterArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -24427,6 +26374,7 @@ export type LeadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type LeadSelectScalar = {
   id?: boolean
+  legacyId?: boolean
   leadRef?: boolean
   patientName?: boolean
   age?: boolean
@@ -24437,6 +26385,7 @@ export type LeadSelectScalar = {
   attendantName?: boolean
   bdId?: boolean
   status?: boolean
+  statusId?: boolean
   pipelineStage?: boolean
   caseStage?: boolean
   circle?: boolean
@@ -24549,9 +26498,10 @@ export type LeadSelectScalar = {
   lostAt?: boolean
 }
 
-export type LeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadRef" | "patientName" | "age" | "dateOfBirth" | "sex" | "phoneNumber" | "alternateNumber" | "attendantName" | "bdId" | "status" | "pipelineStage" | "caseStage" | "circle" | "category" | "treatment" | "treatmentMasterId" | "atsAmount" | "atsStatus" | "anesthesia" | "quantityGrade" | "surgeonName" | "surgeonType" | "hospitalName" | "flowType" | "modeOfPayment" | "discount" | "copay" | "deduction" | "settledTotal" | "billAmount" | "insuranceName" | "tpa" | "sumInsured" | "roomRent" | "icu" | "capping" | "arrivalDate" | "arrivalTime" | "surgeryDate" | "ipdPotentialDate" | "ipdPotentialMarkedAt" | "operationTime" | "implantType" | "implantAmount" | "instrument" | "consumables" | "createdById" | "createdDate" | "updatedById" | "updatedDate" | "remarks" | "source" | "campaignName" | "bdeName" | "conversionDate" | "mediendProfit" | "hospitalShare" | "doctorShare" | "othersShare" | "netProfit" | "ticketSize" | "collectedByMediend" | "collectedByHospital" | "month" | "assignedDate" | "leadEntryDate" | "patientEmail" | "whatsapp" | "address" | "docUpload" | "diseaseDetails" | "followUpDate" | "subStatus" | "opdHospital" | "opdDrName" | "opdContactNo" | "opdCharges" | "opdScheduleDate" | "opdMeeting" | "opdSurgeryAdvised" | "opdSurgeryRemarkCode" | "opdReasonNoSurgeryCode" | "opdFollowUpReasonCode" | "opdImplantRequired" | "opdDiagnosis" | "ipdAdmissionDate" | "ipdHospital" | "ipdDrName" | "ipdContactNo" | "ipdTotalPayment" | "ipdDetails" | "paymentDetails" | "attendantContactNo" | "waFormat" | "leadSource" | "whatsappMessage" | "notification" | "emailSent" | "smsSent" | "whatsappSent" | "website" | "description" | "refId" | "duplCount" | "aes" | "profession" | "qr" | "removeRemarks" | "isOldCrmLead" | "remarksClearedAt" | "removeFollowUpDate" | "followUpDateClearedAt" | "adId" | "campaignId" | "formId" | "teamLeadId" | "remarksId" | "openedInCrmAt" | "lostReason" | "lostAt", ExtArgs["result"]["lead"]>
+export type LeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "legacyId" | "leadRef" | "patientName" | "age" | "dateOfBirth" | "sex" | "phoneNumber" | "alternateNumber" | "attendantName" | "bdId" | "status" | "statusId" | "pipelineStage" | "caseStage" | "circle" | "category" | "treatment" | "treatmentMasterId" | "atsAmount" | "atsStatus" | "anesthesia" | "quantityGrade" | "surgeonName" | "surgeonType" | "hospitalName" | "flowType" | "modeOfPayment" | "discount" | "copay" | "deduction" | "settledTotal" | "billAmount" | "insuranceName" | "tpa" | "sumInsured" | "roomRent" | "icu" | "capping" | "arrivalDate" | "arrivalTime" | "surgeryDate" | "ipdPotentialDate" | "ipdPotentialMarkedAt" | "operationTime" | "implantType" | "implantAmount" | "instrument" | "consumables" | "createdById" | "createdDate" | "updatedById" | "updatedDate" | "remarks" | "source" | "campaignName" | "bdeName" | "conversionDate" | "mediendProfit" | "hospitalShare" | "doctorShare" | "othersShare" | "netProfit" | "ticketSize" | "collectedByMediend" | "collectedByHospital" | "month" | "assignedDate" | "leadEntryDate" | "patientEmail" | "whatsapp" | "address" | "docUpload" | "diseaseDetails" | "followUpDate" | "subStatus" | "opdHospital" | "opdDrName" | "opdContactNo" | "opdCharges" | "opdScheduleDate" | "opdMeeting" | "opdSurgeryAdvised" | "opdSurgeryRemarkCode" | "opdReasonNoSurgeryCode" | "opdFollowUpReasonCode" | "opdImplantRequired" | "opdDiagnosis" | "ipdAdmissionDate" | "ipdHospital" | "ipdDrName" | "ipdContactNo" | "ipdTotalPayment" | "ipdDetails" | "paymentDetails" | "attendantContactNo" | "waFormat" | "leadSource" | "whatsappMessage" | "notification" | "emailSent" | "smsSent" | "whatsappSent" | "website" | "description" | "refId" | "duplCount" | "aes" | "profession" | "qr" | "removeRemarks" | "isOldCrmLead" | "remarksClearedAt" | "removeFollowUpDate" | "followUpDateClearedAt" | "adId" | "campaignId" | "formId" | "teamLeadId" | "remarksId" | "openedInCrmAt" | "lostReason" | "lostAt", ExtArgs["result"]["lead"]>
 export type LeadInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   bd?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  statusMaster?: boolean | Prisma.Lead$statusMasterArgs<ExtArgs>
   treatmentMaster?: boolean | Prisma.Lead$treatmentMasterArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -24575,6 +26525,7 @@ export type LeadInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   leadRemarkEntries?: boolean | Prisma.Lead$leadRemarkEntriesArgs<ExtArgs>
   qrCallAuditLogs?: boolean | Prisma.Lead$qrCallAuditLogsArgs<ExtArgs>
   qrPublicLinks?: boolean | Prisma.Lead$qrPublicLinksArgs<ExtArgs>
+  qrScanLinks?: boolean | Prisma.Lead$qrScanLinksArgs<ExtArgs>
   crmAssignmentPreviewLogs?: boolean | Prisma.Lead$crmAssignmentPreviewLogsArgs<ExtArgs>
   opdSurgeryRemark?: boolean | Prisma.Lead$opdSurgeryRemarkArgs<ExtArgs>
   opdReasonNoSurgery?: boolean | Prisma.Lead$opdReasonNoSurgeryArgs<ExtArgs>
@@ -24585,6 +26536,7 @@ export type LeadInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 }
 export type LeadIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   bd?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  statusMaster?: boolean | Prisma.Lead$statusMasterArgs<ExtArgs>
   treatmentMaster?: boolean | Prisma.Lead$treatmentMasterArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -24594,6 +26546,7 @@ export type LeadIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 }
 export type LeadIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   bd?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  statusMaster?: boolean | Prisma.Lead$statusMasterArgs<ExtArgs>
   treatmentMaster?: boolean | Prisma.Lead$treatmentMasterArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -24606,6 +26559,7 @@ export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "Lead"
   objects: {
     bd: Prisma.$UserPayload<ExtArgs>
+    statusMaster: Prisma.$LeadStatusPayload<ExtArgs> | null
     treatmentMaster: Prisma.$TreatmentMasterPayload<ExtArgs> | null
     createdBy: Prisma.$UserPayload<ExtArgs>
     updatedBy: Prisma.$UserPayload<ExtArgs>
@@ -24629,6 +26583,7 @@ export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     leadRemarkEntries: Prisma.$LeadRemarkEntryPayload<ExtArgs>[]
     qrCallAuditLogs: Prisma.$LeadQrCallAuditLogPayload<ExtArgs>[]
     qrPublicLinks: Prisma.$LeadQrPublicLinkPayload<ExtArgs>[]
+    qrScanLinks: Prisma.$LeadQrScanLinkPayload<ExtArgs>[]
     crmAssignmentPreviewLogs: Prisma.$CrmAssignmentPreviewLogPayload<ExtArgs>[]
     opdSurgeryRemark: Prisma.$SurgeryRemarkMasterPayload<ExtArgs> | null
     opdReasonNoSurgery: Prisma.$ReasonNoSurgeryMasterPayload<ExtArgs> | null
@@ -24637,7 +26592,8 @@ export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     opdAppointments: Prisma.$LeadOpdAppointmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: string
+    id: number
+    legacyId: string | null
     leadRef: string
     patientName: string
     age: number
@@ -24647,7 +26603,11 @@ export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     alternateNumber: string | null
     attendantName: string | null
     bdId: string
+    /**
+     * Kept in sync with statusId for existing reports and integrations.
+     */
     status: string
+    statusId: number | null
     pipelineStage: $Enums.PipelineStage
     caseStage: $Enums.CaseStage
     circle: string
@@ -25153,6 +27113,7 @@ readonly fields: LeadFieldRefs;
 export interface Prisma__LeadClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   bd<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  statusMaster<T extends Prisma.Lead$statusMasterArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$statusMasterArgs<ExtArgs>>): Prisma.Prisma__LeadStatusClient<runtime.Types.Result.GetResult<Prisma.$LeadStatusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   treatmentMaster<T extends Prisma.Lead$treatmentMasterArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$treatmentMasterArgs<ExtArgs>>): Prisma.Prisma__TreatmentMasterClient<runtime.Types.Result.GetResult<Prisma.$TreatmentMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   updatedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -25176,6 +27137,7 @@ export interface Prisma__LeadClient<T, Null = never, ExtArgs extends runtime.Typ
   leadRemarkEntries<T extends Prisma.Lead$leadRemarkEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$leadRemarkEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadRemarkEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   qrCallAuditLogs<T extends Prisma.Lead$qrCallAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$qrCallAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadQrCallAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   qrPublicLinks<T extends Prisma.Lead$qrPublicLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$qrPublicLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadQrPublicLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  qrScanLinks<T extends Prisma.Lead$qrScanLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$qrScanLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadQrScanLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   crmAssignmentPreviewLogs<T extends Prisma.Lead$crmAssignmentPreviewLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$crmAssignmentPreviewLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmAssignmentPreviewLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   opdSurgeryRemark<T extends Prisma.Lead$opdSurgeryRemarkArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$opdSurgeryRemarkArgs<ExtArgs>>): Prisma.Prisma__SurgeryRemarkMasterClient<runtime.Types.Result.GetResult<Prisma.$SurgeryRemarkMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   opdReasonNoSurgery<T extends Prisma.Lead$opdReasonNoSurgeryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$opdReasonNoSurgeryArgs<ExtArgs>>): Prisma.Prisma__ReasonNoSurgeryMasterClient<runtime.Types.Result.GetResult<Prisma.$ReasonNoSurgeryMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -25211,7 +27173,8 @@ export interface Prisma__LeadClient<T, Null = never, ExtArgs extends runtime.Typ
  * Fields of the Lead model
  */
 export interface LeadFieldRefs {
-  readonly id: Prisma.FieldRef<"Lead", 'String'>
+  readonly id: Prisma.FieldRef<"Lead", 'Int'>
+  readonly legacyId: Prisma.FieldRef<"Lead", 'String'>
   readonly leadRef: Prisma.FieldRef<"Lead", 'String'>
   readonly patientName: Prisma.FieldRef<"Lead", 'String'>
   readonly age: Prisma.FieldRef<"Lead", 'Int'>
@@ -25222,6 +27185,7 @@ export interface LeadFieldRefs {
   readonly attendantName: Prisma.FieldRef<"Lead", 'String'>
   readonly bdId: Prisma.FieldRef<"Lead", 'String'>
   readonly status: Prisma.FieldRef<"Lead", 'String'>
+  readonly statusId: Prisma.FieldRef<"Lead", 'Int'>
   readonly pipelineStage: Prisma.FieldRef<"Lead", 'PipelineStage'>
   readonly caseStage: Prisma.FieldRef<"Lead", 'CaseStage'>
   readonly circle: Prisma.FieldRef<"Lead", 'String'>
@@ -25733,6 +27697,25 @@ export type LeadDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
+ * Lead.statusMaster
+ */
+export type Lead$statusMasterArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LeadStatus
+   */
+  select?: Prisma.LeadStatusSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LeadStatus
+   */
+  omit?: Prisma.LeadStatusOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LeadStatusInclude<ExtArgs> | null
+  where?: Prisma.LeadStatusWhereInput
+}
+
+/**
  * Lead.treatmentMaster
  */
 export type Lead$treatmentMasterArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -26189,6 +28172,30 @@ export type Lead$qrPublicLinksArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.LeadQrPublicLinkScalarFieldEnum | Prisma.LeadQrPublicLinkScalarFieldEnum[]
+}
+
+/**
+ * Lead.qrScanLinks
+ */
+export type Lead$qrScanLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LeadQrScanLink
+   */
+  select?: Prisma.LeadQrScanLinkSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LeadQrScanLink
+   */
+  omit?: Prisma.LeadQrScanLinkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LeadQrScanLinkInclude<ExtArgs> | null
+  where?: Prisma.LeadQrScanLinkWhereInput
+  orderBy?: Prisma.LeadQrScanLinkOrderByWithRelationInput | Prisma.LeadQrScanLinkOrderByWithRelationInput[]
+  cursor?: Prisma.LeadQrScanLinkWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LeadQrScanLinkScalarFieldEnum | Prisma.LeadQrScanLinkScalarFieldEnum[]
 }
 
 /**

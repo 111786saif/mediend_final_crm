@@ -75,7 +75,7 @@ export interface DoctorAdminCabItem {
 }
 
 export interface DoctorAdminMonitoringItem {
-  id: string
+  id: number
   leadRef: string
   patientName: string
   phoneNumber: string
@@ -94,7 +94,7 @@ export interface DoctorAdminMonitoringItem {
 }
 
 export interface DoctorAdminPipelineCard {
-  id: string
+  id: number
   leadRef: string
   patientName: string
   doctorName: string
@@ -109,7 +109,7 @@ export interface DoctorAdminPipelineCard {
 }
 
 export interface DoctorAdminIpdItem {
-  id: string
+  id: number
   leadRef: string
   patientName: string
   doctorName: string

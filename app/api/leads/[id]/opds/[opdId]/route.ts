@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getEffectiveOpdCounts } from '@/lib/lead-opd-appointments'
@@ -18,7 +19,10 @@ export async function PATCH(
       return errorResponse('Forbidden', 403)
     }
 
-    const { id, opdId } = await params
+    const { id: rawLeadId, opdId } = await params
+    const parsedLeadId = leadIdSchema.safeParse(rawLeadId)
+    if (!parsedLeadId.success) return errorResponse('Invalid lead ID', 400)
+    const id = parsedLeadId.data
     const lead = await prisma.lead.findUnique({
       where: { id },
       select: { id: true, bdId: true },

@@ -1,3 +1,5 @@
+import { optionalLeadId } from '@/lib/lead-id'
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
@@ -7,7 +9,7 @@ import { z } from 'zod'
 import { CaseStage } from '@/generated/prisma/client'
 
 const createInsuranceInitiateFormSchema = z.object({
-  leadId: z.string(),
+  leadId: leadIdSchema,
   totalBillAmount: z.number().default(0),
   discount: z.number().default(0),
   otherReductions: z.number().default(0),
@@ -113,7 +115,7 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url)
-    const leadId = searchParams.get('leadId')
+    const leadId = optionalLeadId(searchParams.get('leadId'))
 
     if (!leadId) {
       return errorResponse('leadId is required', 400)

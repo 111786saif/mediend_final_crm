@@ -33,7 +33,7 @@ import Link from 'next/link'
 import type { ReactNode } from 'react'
 
 interface LeadDetail {
-  id: string
+  id: number
   leadRef?: string
   patientName?: string
   phoneNumber?: string | null
@@ -103,7 +103,7 @@ function Field({
 }
 
 interface PatientQuickViewDrawerProps {
-  leadId: string | null
+  leadId: number | null
   teamLeadName?: string | null
   daysSinceUpload?: number | null
   uploadDate?: string | null

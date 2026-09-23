@@ -40,7 +40,7 @@ type CampaignReferenceValidationInput = {
 }
 
 type ProcessSaveMyLeadsInput = {
-  incomingLeadId: string
+  incomingLeadId: number
   externalCampaignId: string
   patientName: string
   phone: string

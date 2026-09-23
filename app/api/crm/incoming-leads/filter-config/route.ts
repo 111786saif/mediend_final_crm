@@ -69,28 +69,23 @@ export async function GET(request: NextRequest) {
         select: { name: true },
         orderBy: { name: 'asc' },
       }),
-      prisma.incomingLead.findMany({
-        select: { source: true },
-        distinct: ['source'],
+      prisma.incomingLead.groupBy({
+        by: ['source'],
       }),
-      prisma.incomingLead.findMany({
-        select: { status: true },
-        distinct: ['status'],
+      prisma.incomingLead.groupBy({
+        by: ['status'],
       }),
-      prisma.lead.findMany({
+      prisma.lead.groupBy({
         where: { category: { not: null } },
-        select: { category: true },
-        distinct: ['category'],
+        by: ['category'],
       }),
-      prisma.lead.findMany({
+      prisma.lead.groupBy({
         where: { treatment: { not: '' } },
-        select: { treatment: true },
-        distinct: ['treatment'],
+        by: ['treatment'],
       }),
-      prisma.lead.findMany({
+      prisma.lead.groupBy({
         where: { circle: { not: '' } },
-        select: { circle: true },
-        distinct: ['circle'],
+        by: ['circle'],
       }),
     ])
 

@@ -14,8 +14,8 @@ export type CrmActivityLogInput = {
   entityType: string
   summary: string
   status?: CrmActivityStatus
-  entityId?: string | null
-  entityLabel?: string | null
+  entityId?: string | number | null
+  entityLabel?: string | number | null
   actorUserId?: string | null
   actorRole?: string | null
   metadata?: unknown
@@ -70,8 +70,8 @@ export async function logCrmActivity(input: CrmActivityLogInput) {
       data: {
         action: input.action,
         entityType: input.entityType,
-        entityId: input.entityId ?? null,
-        entityLabel: input.entityLabel ?? null,
+        entityId: input.entityId == null ? null : String(input.entityId),
+        entityLabel: input.entityLabel == null ? null : String(input.entityLabel),
         status: input.status ?? 'SUCCESS',
         summary: input.summary,
         metadata: toJsonSafeValue(input.metadata),

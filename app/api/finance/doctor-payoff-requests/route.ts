@@ -1,3 +1,4 @@
+import { leadIdSchema } from '@/lib/lead-id'
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { DoctorPayoffRequestStatus, Prisma } from '@/generated/prisma/client'
@@ -14,8 +15,8 @@ import {
 const createSchema = z.object({
   doctorName: z.string().min(1).max(500),
   hospitalName: z.string().max(500).optional().nullable(),
-  leadId: z.string().min(1).optional().nullable(),
-  leadIds: z.array(z.string().min(1)).optional(),
+  leadId: leadIdSchema.optional().nullable(),
+  leadIds: z.array(leadIdSchema).optional(),
   requestAmount: z.number().positive(),
   requestRemarks: z.string().max(10000).optional().nullable(),
   attachments: z
@@ -78,7 +79,7 @@ export async function GET(request: NextRequest) {
     let mapped = requests.map(mapDoctorPayoffRequest)
 
     if (latestPerLead) {
-      const byLead = new Map<string, (typeof mapped)[number]>()
+      const byLead = new Map<number | null, (typeof mapped)[number]>()
       for (const req of mapped) {
         const ids = req.leadIds.length ? req.leadIds : req.leadId ? [req.leadId] : []
         for (const leadId of ids) {

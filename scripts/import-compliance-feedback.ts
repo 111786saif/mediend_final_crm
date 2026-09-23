@@ -170,7 +170,7 @@ async function main() {
   const leads = await prisma.lead.findMany({
     select: { id: true, patientName: true, phoneNumber: true },
   })
-  const byPhone = new Map<string, { id: string; patientName: string; phoneNumber: string }[]>()
+  const byPhone = new Map<string, { id: number; patientName: string; phoneNumber: string }[]>()
   for (const l of leads) {
     const p = normPhone(l.phoneNumber)
     if (!p) continue
@@ -182,7 +182,7 @@ async function main() {
 
   // Batch-load every existing compliance call once, keyed by leadId. Avoids
   // 500 round-trips during the per-row decisions below.
-  let existingByLeadId: Map<string, Awaited<ReturnType<typeof prisma.complianceCall.findUnique>>>
+  let existingByLeadId: Map<number, Awaited<ReturnType<typeof prisma.complianceCall.findUnique>>>
   try {
     const existingCalls = await prisma.complianceCall.findMany()
     existingByLeadId = new Map(existingCalls.map((c) => [c.leadId, c]))
