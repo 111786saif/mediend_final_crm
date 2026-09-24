@@ -28,6 +28,8 @@
     "typesense:create": "tsx scripts/typesense/create.ts",
     "typesense:reset": "tsx scripts/typesense/reset.ts",
     "typesense:recreate": "tsx scripts/typesense/recreate.ts",
+    "typesense:sync": "tsx scripts/typesense/sync.ts",
+    "typesense:sync:daemon": "tsx scripts/typesense/sync.ts --daemon",
     "verify:mysql": "tsx scripts/verify-mysql-connection.ts",
     "migrate:case-stages": "bunx prisma generate && bun scripts/migrate-case-stages.ts",
     "migrate:case-stages-v2": "bunx prisma generate && bun scripts/migrate-case-stages-v2.ts",
