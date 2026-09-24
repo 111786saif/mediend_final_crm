@@ -1802,7 +1802,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href={appendReturnTo(`/patient/${lead.id}?action=edit-lead`, pipelineReturnTo)}
+                  href={appendReturnTo(`/patient/${lead.id}`, pipelineReturnTo)}
                   onClick={(e) => {
                     e.stopPropagation()
                     markLeadOpened(lead.id, isOpened)

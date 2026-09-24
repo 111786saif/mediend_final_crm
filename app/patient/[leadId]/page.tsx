@@ -735,13 +735,6 @@ export default function PatientDetailsPage() {
       return () => window.clearTimeout(timer)
     }
 
-    if (quickAction === 'edit-lead') {
-      const timer = window.setTimeout(() => {
-        setLeadEditDrawerOpen(true)
-        setHandledQuickAction(quickAction)
-      }, 0)
-      return () => window.clearTimeout(timer)
-    }
   }, [handledQuickAction, lead, quickAction])
 
   if (isLoading || isLoadingKYP) {
@@ -1278,8 +1271,10 @@ export default function PatientDetailsPage() {
                       variant="outline"
                       className="gap-2"
                       onClick={() => setLeadEditDrawerOpen(true)}
+                      aria-label="Edit lead details"
                     >
                       <Pencil className="h-4 w-4" />
+                      <span>Edit</span>
                     </Button>
                   </div>
                   <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-gray-600 dark:text-gray-400">
