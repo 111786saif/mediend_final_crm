@@ -16,9 +16,11 @@ import {
   buildPipelineRoleWhere,
   parsePipelineQueryParams,
   pipelineOrderBy,
+  type PipelineQueryParams,
   type PipelineSelectedLead,
   pipelineTableSelect,
 } from '@/lib/pipeline/server-query'
+import { fetchPipelineLeadsFromTypesense } from '@/lib/pipeline/typesense-service'
 
 export async function GET(request: NextRequest) {
   try {
@@ -28,14 +30,20 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url)
     const params = parsePipelineQueryParams(searchParams)
-    const { where: roleWhere } = await buildPipelineRoleWhere(user)
+    const { where: roleWhere, subordinateUserIds, teamLeadId } = await buildPipelineRoleWhere(user)
+
+    // Primary path: Use Typesense search service (transparently returns null if unconfigured or error)
+    const tsData = await fetchPipelineLeadsFromTypesense(params, user, { subordinateUserIds, teamLeadId })
+    if (tsData) {
+      return successResponse(tsData)
+    }
 
     const listWhere = buildPipelineFiltersWhere(params, roleWhere, { includeStatusBucket: true })
+
     const skip = (params.page - 1) * params.pageSize
     const orderBy = pipelineOrderBy(params.sortBy, params.sortDir)
 
-    // Lightning-fast execution: only fetch table rows and count
-    const [total, leads]: [number, PipelineSelectedLead[]] = await Promise.all([
+    const [total, rawLeads]: [number, PipelineSelectedLead[]] = await Promise.all([
       prisma.lead.count({ where: listWhere }),
       prisma.lead.findMany({
         where: listWhere,
@@ -45,6 +53,8 @@ export async function GET(request: NextRequest) {
         take: params.pageSize,
       }),
     ])
+
+    const leads = rawLeads
 
     const canViewPhone = user.role === 'ADMIN'
     const mappedLeads = leads.map((lead) => {

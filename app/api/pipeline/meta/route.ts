@@ -12,6 +12,7 @@ import {
   bucketsFromStatusGroups,
   parsePipelineQueryParams,
 } from '@/lib/pipeline/server-query'
+import { fetchPipelineMatchedLeadIdsFromTypesense } from '@/lib/pipeline/typesense-service'
 import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
 
 interface CacheEntry<T> {
@@ -248,10 +249,29 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url)
     const params = parsePipelineQueryParams(searchParams)
-    const { where: roleWhere } = await buildPipelineRoleWhere(user)
+    const { where: roleWhere, subordinateUserIds, teamLeadId } = await buildPipelineRoleWhere(user)
 
     // Status card counts ignore the selected status bucket so cards stay stable while drilling in.
-    const facetWhere = buildPipelineFiltersWhere(params, roleWhere, { includeStatusBucket: false })
+    let facetWhere = buildPipelineFiltersWhere(params, roleWhere, { includeStatusBucket: false })
+
+    // Accelerate with Typesense when configured (transparent fallback if offline or unconfigured)
+    const tsMatched = await fetchPipelineMatchedLeadIdsFromTypesense(
+      params,
+      user,
+      { subordinateUserIds, teamLeadId },
+      { includeStatusBucket: false, perPage: 250 }
+    )
+
+    if (tsMatched && tsMatched.matchedLeadIds.length > 0) {
+      const paramsWithoutSearch = { ...params, search: '' }
+      const baseWhere = buildPipelineFiltersWhere(paramsWithoutSearch, roleWhere, { includeStatusBucket: false })
+      facetWhere = {
+        AND: [
+          baseWhere,
+          { id: { in: tsMatched.matchedLeadIds } },
+        ],
+      }
+    }
 
     const [
       statusGroups,

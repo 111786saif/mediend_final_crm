@@ -48,6 +48,7 @@ import { buildEffectiveOpdEntries, getEffectiveOpdCounts } from '@/lib/lead-opd-
 import { leadOpdAppointmentSelect } from '@/lib/lead-opd-records'
 import { resolveLeadCity } from '@/lib/lead-display'
 import { isCaseStageRegression } from '@/lib/case-stage-transition'
+import { syncSingleLeadToTypesense } from '@/lib/typesense/client'
 
 function parseFollowUpDateInput(value: unknown) {
   if (value === undefined) return { provided: false, value: undefined as Date | null | undefined }
@@ -1468,6 +1469,11 @@ export async function PATCH(
           },
         }
       : mapped
+
+    // Asynchronously synchronize updated lead record to Typesense
+    syncSingleLeadToTypesense(id).catch((err) => {
+      console.warn('[Typesense] Background sync failed for lead update:', err)
+    })
 
     return successResponse(responsePayload, 'Lead updated successfully')
   } catch (error) {

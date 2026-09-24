@@ -74,11 +74,15 @@ export async function GET(request: NextRequest) {
       // Converted IPD leads from the cohort of leads entered in range
       prisma.lead.findMany({
         where: {
-          ...(bdIdFilter ? { bdId: { in: bdIdFilter } } : {}),
-          ...leadConvertedWhere(),
-          OR: [
-            { leadEntryDate: { gte: start, lte: end } },
-            { AND: [{ leadEntryDate: null }, { createdDate: { gte: start, lte: end } }] },
+          AND: [
+            ...(bdIdFilter ? [{ bdId: { in: bdIdFilter } }] : []),
+            leadConvertedWhere(),
+            {
+              OR: [
+                { leadEntryDate: { gte: start, lte: end } },
+                { AND: [{ leadEntryDate: null }, { createdDate: { gte: start, lte: end } }] },
+              ],
+            },
           ],
         },
         select: {

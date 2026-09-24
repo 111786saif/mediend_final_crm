@@ -13,6 +13,7 @@ import {
   canUserRemoveLeadRemarks,
   canUserViewLeadOwner,
 } from '@/lib/lead-ownership'
+import { syncSingleLeadToTypesense } from '@/lib/typesense/client'
 
 type MergedLeadRemark = {
   id: string
@@ -307,6 +308,11 @@ export async function POST(
         remarkId: remark.id,
         remarkContent: remark.content,
       },
+    })
+
+    // Asynchronously synchronize updated lead remark to Typesense
+    syncSingleLeadToTypesense(lead.id).catch((err) => {
+      console.warn('[Typesense] Background sync failed for remark add:', err)
     })
 
     return successResponse(remark, 'Remark added')
