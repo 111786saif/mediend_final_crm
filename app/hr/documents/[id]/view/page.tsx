@@ -202,9 +202,10 @@ export default function DocumentViewPage() {
         <div className="max-w-4xl mx-auto">
           {/* Document Container */}
           <div className="bg-white shadow-lg rounded-lg overflow-hidden print:shadow-none print:rounded-none">
-            <div 
+            <style>{`.signature img { width: 120px !important; max-width: 120px !important; height: auto !important; }`}</style>
+            <div
               className="p-8 print:p-0"
-              dangerouslySetInnerHTML={{ __html: data.htmlContent }} 
+              dangerouslySetInnerHTML={{ __html: data.htmlContent }}
             />
           </div>
         </div>

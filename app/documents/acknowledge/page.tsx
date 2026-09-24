@@ -129,6 +129,7 @@ function DocumentAcknowledgeContent() {
       <div className="flex-1 overflow-auto p-4">
         <div className="max-w-4xl mx-auto">
           <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+            <style>{`.signature img { width: 120px !important; max-width: 120px !important; height: auto !important; }`}</style>
             <div
               className="p-6 md:p-8"
               dangerouslySetInnerHTML={{ __html: data?.htmlContent ?? '' }}
