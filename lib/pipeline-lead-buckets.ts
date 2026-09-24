@@ -10,6 +10,11 @@ export type PipelineStatusBucket =
   | 'all'
   | 'new_hot'
   | 'nurture'
+  | 'nurture_1'
+  | 'nurture_2'
+  | 'nurture_3'
+  | 'nurture_4'
+  | 'nurture_5'
   | 'follow_up'
   | 'callback'
   | 'opd_done'
@@ -20,6 +25,7 @@ export type PipelineStatusBucket =
   | 'dnp_exh'
   | 'junk'
   | 'outstation'
+  | 'outstation_follow_up'
   | 'duplicate'
   | 'ipd_loss'
   | 'fund_issues'
@@ -155,23 +161,25 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
   ) {
     return 'fund_issues'
   }
-  // 8. Nurture: ONLY Nurture
+  // 8. Nurture levels are individually selectable in Churning Data.
+  for (const level of [1, 2, 3, 4, 5] as const) {
+    if (
+      s === `Nurture ${level}` ||
+      s === `Nuture ${level}` ||
+      s === `Nurture${level}` ||
+      s === `Nurture-${level}` ||
+      lower === `nurture ${level}` ||
+      lower === `nuture ${level}` ||
+      lower === `nurture${level}` ||
+      lower === `nurture-${level}` ||
+      lower === `nuture-${level}`
+    ) {
+      return `nurture_${level}` as Exclude<PipelineStatusBucket, 'all'>
+    }
+  }
+  // 9. Nurture: unnumbered Nurture only.
   if (
-    [
-      'Nurture',
-      'Nurture 1',
-      'Nurture 2',
-      'Nurture 3',
-      'Nurture 4',
-      'Nurture 5',
-      'Nuture 1',
-      'Nuture 2',
-      'Nuture 3',
-      'Nuture 4',
-      'Nuture 5',
-    ].includes(s) ||
-    lower.includes('nurture') ||
-    lower.includes('nuture') ||
+    s === 'Nurture' || lower === 'nurture' ||
     s === '37'
   ) {
     return 'nurture'
@@ -192,12 +200,19 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
   if (s === 'Junk' || lower === 'junk' || s === '26') {
     return 'junk'
   }
-  // 11. Out of Station (ONLY Out of station)
+  // 11. Out of Station follow-up has its own irrelevant-lead bucket.
   if (
-    ['Out of Station', 'Out of Station follow-up', 'Out of station follow-up'].includes(s) ||
-    lower.includes('out of station') ||
-    s === '16' ||
+    lower.includes('out of station follow') ||
+    lower.includes('out of station followup') ||
     s === '42'
+  ) {
+    return 'outstation_follow_up'
+  }
+  // 12. Out of Station (ONLY Out of station)
+  if (
+    s === 'Out of Station' ||
+    lower.includes('out of station') ||
+    s === '16'
   ) {
     return 'outstation'
   }
@@ -255,6 +270,11 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
 export const PIPELINE_BUCKET_LABELS: Record<Exclude<PipelineStatusBucket, 'all'>, string> = {
   new_hot: 'New Lead',
   nurture: 'Nurture',
+  nurture_1: 'Nurture 1',
+  nurture_2: 'Nurture 2',
+  nurture_3: 'Nurture 3',
+  nurture_4: 'Nurture 4',
+  nurture_5: 'Nurture 5',
   follow_up: 'Follow-up',
   callback: 'Callback',
   opd_done: 'OPD Done',
@@ -265,6 +285,7 @@ export const PIPELINE_BUCKET_LABELS: Record<Exclude<PipelineStatusBucket, 'all'>
   dnp_exh: 'DNP Exhausted',
   junk: 'Junk',
   outstation: 'Out of Station',
+  outstation_follow_up: 'Out of Station follow-up',
   duplicate: 'Duplicate',
   ipd_loss: 'IPD Lost',
   fund_issues: 'Fund Issues',
@@ -276,6 +297,11 @@ export function countBuckets(leads: { status?: string | null }[]) {
   const counts: Record<Exclude<PipelineStatusBucket, 'all'>, number> = {
     new_hot: 0,
     nurture: 0,
+    nurture_1: 0,
+    nurture_2: 0,
+    nurture_3: 0,
+    nurture_4: 0,
+    nurture_5: 0,
     follow_up: 0,
     callback: 0,
     opd_done: 0,
@@ -286,6 +312,7 @@ export function countBuckets(leads: { status?: string | null }[]) {
     dnp_exh: 0,
     junk: 0,
     outstation: 0,
+    outstation_follow_up: 0,
     duplicate: 0,
     ipd_loss: 0,
     fund_issues: 0,

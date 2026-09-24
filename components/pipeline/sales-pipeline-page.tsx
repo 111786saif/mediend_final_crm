@@ -1233,6 +1233,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     let count = activeColumnFilterCount
     if (Boolean(searchInput.trim() || state.q)) count++
     if (Boolean(state.from || state.to)) count++
+    if (Boolean(state.followUp && state.followUp !== 'all')) count++
     if (Boolean(state.bdId && state.bdId !== 'all' && state.bdId !== '')) count++
     if (Boolean(state.status && state.status !== 'all')) count++
     if (Boolean(state.category && state.category !== 'all')) count++
@@ -1245,6 +1246,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     state.q,
     state.from,
     state.to,
+    state.followUp,
     state.bdId,
     state.status,
     state.category,
@@ -1265,10 +1267,11 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
       Boolean(state.q) ||
       Boolean(state.from) ||
       Boolean(state.to) ||
+      (state.followUp && state.followUp !== 'all') ||
       Boolean(state.bdId) ||
       (state.status && state.status !== 'all') ||
       Boolean(searchInput),
-    [activeColumnFilterCount, state.q, state.from, state.to, state.bdId, state.status, searchInput]
+    [activeColumnFilterCount, state.q, state.from, state.to, state.followUp, state.bdId, state.status, searchInput]
   )
 
   const handleResetAllFilters = useCallback(() => {
@@ -1278,6 +1281,9 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
       q: '',
       from: '',
       to: '',
+      followUp: 'all',
+      followUpFrom: '',
+      followUpTo: '',
       bdId: '',
       status: 'all',
       page: 1,
@@ -2642,6 +2648,43 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                       ))}
                     </SelectContent>
                   </Select>
+                  <Select value={state.followUp} onValueChange={(v) => setState({ followUp: v as typeof state.followUp, followUpFrom: '', followUpTo: '' })}>
+                    <SelectTrigger className="w-full lg:w-[175px] h-9 text-xs bg-background/80 hover:bg-background border-border/80 rounded-lg shadow-xs font-medium">
+                      <SelectValue placeholder="Follow-up date" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All follow-ups</SelectItem>
+                      <SelectItem value="today">Today&apos;s follow-up</SelectItem>
+                      <SelectItem value="pending">Pending follow-up</SelectItem>
+                      <SelectItem value="overdue">Overdue follow-up</SelectItem>
+                      <SelectItem value="missing">Follow-up not created</SelectItem>
+                      <SelectItem value="custom">Custom follow-up date</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {state.followUp === 'custom' && <>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" className="w-full justify-start text-left font-medium lg:w-[120px] h-9 text-xs bg-background/80 hover:bg-background border-border/80 rounded-lg shadow-xs">
+                          <CalendarIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
+                          {state.followUpFrom ? format(new Date(`${state.followUpFrom}T00:00:00`), 'MMM d') : 'Follow-up from'}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar mode="single" selected={state.followUpFrom ? new Date(`${state.followUpFrom}T00:00:00`) : undefined} onSelect={(d) => setState({ followUpFrom: d ? format(d, 'yyyy-MM-dd') : '' })} />
+                      </PopoverContent>
+                    </Popover>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" className="w-full justify-start text-left font-medium lg:w-[120px] h-9 text-xs bg-background/80 hover:bg-background border-border/80 rounded-lg shadow-xs">
+                          <CalendarIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
+                          {state.followUpTo ? format(new Date(`${state.followUpTo}T00:00:00`), 'MMM d') : 'Follow-up to'}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar mode="single" selected={state.followUpTo ? new Date(`${state.followUpTo}T00:00:00`) : undefined} onSelect={(d) => setState({ followUpTo: d ? format(d, 'yyyy-MM-dd') : '' })} />
+                      </PopoverContent>
+                    </Popover>
+                  </>}
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button variant="outline" className="w-full justify-start text-left font-medium lg:w-[120px] h-9 text-xs bg-background/80 hover:bg-background border-border/80 rounded-lg shadow-xs">

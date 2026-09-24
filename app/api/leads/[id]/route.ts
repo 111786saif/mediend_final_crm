@@ -79,6 +79,11 @@ function normalizeStatusLabel(value: string | null | undefined) {
   return String(value ?? '').trim().toLowerCase()
 }
 
+function isFollowUpTerminalStatus(value: string | null | undefined) {
+  const normalized = normalizeStatusLabel(value)
+  return normalized === 'closed' || normalized === 'junk' || normalized === '25' || normalized === '26'
+}
+
 const CASH_CONVERSION_SOURCE_STAGES = new Set<CaseStage>([
   CaseStage.NEW_LEAD,
   CaseStage.OPD_SCHEDULED,
@@ -990,8 +995,17 @@ export async function PATCH(
       }
     }
 
-    if (parsedFollowUpDateInput.provided) {
+    const deactivateFollowUp = statusChanged && isFollowUpTerminalStatus(requestedStatus)
+    if (deactivateFollowUp) {
+      updateData.followUpDate = null
+      updateData.removeFollowUpDate = true
+      updateData.followUpDateClearedAt = new Date()
+    } else if (parsedFollowUpDateInput.provided) {
       updateData.followUpDate = parsedFollowUpDateInput.value
+      if (parsedFollowUpDateInput.value) {
+        updateData.removeFollowUpDate = false
+        updateData.followUpDateClearedAt = null
+      }
     }
 
     let churnAutomationResult:

@@ -83,7 +83,12 @@ export async function POST(
 
     await prisma.lead.update({
       where: { id: leadId },
-      data: { caseStage: CaseStage.DISCHARGED },
+      data: {
+        caseStage: CaseStage.DISCHARGED,
+        followUpDate: null,
+        removeFollowUpDate: true,
+        followUpDateClearedAt: new Date(),
+      },
     })
 
     await prisma.caseStageHistory.create({

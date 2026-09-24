@@ -24,6 +24,7 @@ const IST_OFFSET_MS = 5.5 * 60 * 60 * 1000 // UTC+5:30
 
 export type PipelineSortField = 'date' | 'patient' | 'status' | 'leadRef' | 'bd' | 'followUpDate'
 export type PipelineSortDir = 'asc' | 'desc'
+export type PipelineFollowUpFilter = 'all' | 'today' | 'pending' | 'overdue' | 'missing' | 'custom'
 
 export type PipelineServerColumnFilterField =
   | 'leadRef'
@@ -128,6 +129,9 @@ export interface PipelineQueryParams {
   leadAge: LeadAgeFilter
   startDate: string | null
   endDate: string | null
+  followUpFilter: PipelineFollowUpFilter
+  followUpFrom: string | null
+  followUpTo: string | null
   columnFilters: PipelineServerColumnFilter[]
   sortBy: PipelineSortField
   sortDir: PipelineSortDir
@@ -143,6 +147,11 @@ export function parsePipelineQueryParams(searchParams: URLSearchParams): Pipelin
     'all',
     'new_hot',
     'nurture',
+    'nurture_1',
+    'nurture_2',
+    'nurture_3',
+    'nurture_4',
+    'nurture_5',
     'follow_up',
     'callback',
     'opd_done',
@@ -153,6 +162,7 @@ export function parsePipelineQueryParams(searchParams: URLSearchParams): Pipelin
     'dnp_exh',
     'junk',
     'outstation',
+    'outstation_follow_up',
     'duplicate',
     'ipd_loss',
     'fund_issues',
@@ -175,6 +185,11 @@ export function parsePipelineQueryParams(searchParams: URLSearchParams): Pipelin
 
   const sortDir: PipelineSortDir = searchParams.get('dir') === 'asc' ? 'asc' : 'desc'
   const groupBy = searchParams.get('groupBy') === 'disease' ? 'disease' : 'circle'
+  const followUpRaw = searchParams.get('followUp') || 'all'
+  const allowedFollowUpFilters: PipelineFollowUpFilter[] = ['all', 'today', 'pending', 'overdue', 'missing', 'custom']
+  const followUpFilter = allowedFollowUpFilters.includes(followUpRaw as PipelineFollowUpFilter)
+    ? followUpRaw as PipelineFollowUpFilter
+    : 'all'
 
   return {
     page,
@@ -190,6 +205,9 @@ export function parsePipelineQueryParams(searchParams: URLSearchParams): Pipelin
     leadAge,
     startDate: emptyToNull(searchParams.get('from')),
     endDate: emptyToNull(searchParams.get('to')),
+    followUpFilter,
+    followUpFrom: emptyToNull(searchParams.get('followUpFrom')),
+    followUpTo: emptyToNull(searchParams.get('followUpTo')),
     columnFilters: parsePipelineColumnFilters(searchParams.get('filters')),
     sortBy,
     sortDir,
@@ -327,11 +345,26 @@ export function statusBucketWhere(
     case 'nurture':
       return {
         OR: [
-          contains('nurture'),
-          contains('nuture'),
+          { status: { equals: 'Nurture', mode: 'insensitive' } },
           { status: '37' },
         ],
       }
+    case 'nurture_1':
+    case 'nurture_2':
+    case 'nurture_3':
+    case 'nurture_4':
+    case 'nurture_5': {
+      const level = statusBucket.split('_')[1]
+      return {
+        OR: [
+          contains(`nurture ${level}`),
+          contains(`nuture ${level}`),
+          contains(`nurture${level}`),
+          contains(`nurture-${level}`),
+          contains(`nuture-${level}`),
+        ],
+      }
+    }
     case 'follow_up':
       return {
         OR: [
@@ -427,8 +460,15 @@ export function statusBucketWhere(
     case 'outstation':
       return {
         OR: [
-          contains('out of station'),
+          { status: { equals: 'Out of Station', mode: 'insensitive' } },
           { status: '16' },
+        ],
+      }
+    case 'outstation_follow_up':
+      return {
+        OR: [
+          contains('out of station follow'),
+          contains('out of station followup'),
           { status: '42' },
         ],
       }
@@ -567,6 +607,9 @@ export function buildPipelineFiltersWhere(
     }
   }
 
+  const followUpWhere = buildActiveFollowUpWhere(params.followUpFilter, params.followUpFrom, params.followUpTo)
+  if (followUpWhere) and.push(followUpWhere)
+
   if (params.search) {
     const trimmedSearch = params.search.trim()
     const pureDigits = trimmedSearch.replace(/\D/g, '')
@@ -613,6 +656,55 @@ export function buildPipelineFiltersWhere(
   if (columnFilterWhere) and.push(columnFilterWhere)
 
   return and.length === 1 ? and[0]! : { AND: and }
+}
+
+function buildActiveFollowUpWhere(
+  filter: PipelineFollowUpFilter,
+  fromValue: string | null,
+  toValue: string | null,
+): Prisma.LeadWhereInput | undefined {
+  if (filter === 'all') return undefined
+
+  const todayStart = parseDateOnlyBoundary(format(new Date(), 'yyyy-MM-dd'), false)
+  const todayEnd = parseDateOnlyBoundary(format(new Date(), 'yyyy-MM-dd'), true)
+  if (!todayStart || !todayEnd) return undefined
+
+  // Closed, junk, and completed-IPD cases never belong to an active follow-up queue.
+  const activeOnly: Prisma.LeadWhereInput = {
+    NOT: [
+      { caseStage: { in: [CaseStage.IPD_DONE, CaseStage.CASH_IPD_DONE, CaseStage.DISCHARGED, CaseStage.CASH_DISCHARGED] } },
+      { status: { in: ['25', '26'] } },
+      { status: { equals: 'Closed', mode: 'insensitive' } },
+      { status: { equals: 'Junk', mode: 'insensitive' } },
+    ],
+  }
+
+  let followUpDateWhere: Prisma.LeadWhereInput
+  switch (filter) {
+    case 'today':
+      followUpDateWhere = { followUpDate: { gte: todayStart, lte: todayEnd } }
+      break
+    case 'pending':
+      followUpDateWhere = { followUpDate: { gte: todayStart } }
+      break
+    case 'overdue':
+      followUpDateWhere = { followUpDate: { lt: todayStart } }
+      break
+    case 'missing':
+      followUpDateWhere = { followUpDate: null }
+      break
+    case 'custom': {
+      const from = fromValue ? parseDateOnlyBoundary(fromValue, false) : null
+      const to = toValue ? parseDateOnlyBoundary(toValue, true) : null
+      if (!from && !to) return undefined
+      followUpDateWhere = { followUpDate: { ...(from ? { gte: from } : {}), ...(to ? { lte: to } : {}) } }
+      break
+    }
+    default:
+      return undefined
+  }
+
+  return { AND: [activeOnly, followUpDateWhere] }
 }
 
 function parseDateOnlyBoundary(value: string, endOfDay: boolean): Date | null {
@@ -1227,6 +1319,11 @@ export function bucketsFromStatusGroups(
   const counts: Record<Exclude<PipelineStatusBucket, 'all'>, number> = {
     new_hot: 0,
     nurture: 0,
+    nurture_1: 0,
+    nurture_2: 0,
+    nurture_3: 0,
+    nurture_4: 0,
+    nurture_5: 0,
     follow_up: 0,
     callback: 0,
     opd_done: 0,
@@ -1237,6 +1334,7 @@ export function bucketsFromStatusGroups(
     dnp_exh: 0,
     junk: 0,
     outstation: 0,
+    outstation_follow_up: 0,
     duplicate: 0,
     ipd_loss: 0,
     fund_issues: 0,

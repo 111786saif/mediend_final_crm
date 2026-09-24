@@ -51,6 +51,21 @@ export interface PipelineCategoryGroup {
   items: PipelineCategoryItem[]
 }
 
+const NURTURE_LEVEL_ITEMS: PipelineCategoryItem[] = [1, 2, 3, 4, 5].map((level) => ({
+  id: `nurture_${level}`,
+  label: `Nurture ${level}`,
+  bucket: `nurture_${level}` as PipelineStatusBucket,
+  countKey: `nurture_${level}`,
+  icon: Sprout,
+  strokeColor: '#9333ea',
+  gradientBgClass: 'bg-gradient-to-br from-purple-50/90 via-white/80 to-purple-100/50 dark:from-purple-950/40 dark:via-card dark:to-purple-900/20',
+  iconBgClass: 'bg-purple-500/15 text-purple-600 dark:text-purple-400',
+  borderClass: 'border-purple-200/80 dark:border-purple-800/50',
+  hoverBorderClass: 'hover:border-purple-400 dark:hover:border-purple-600 hover:shadow-purple-500/10',
+  textClass: 'text-purple-700 dark:text-purple-400',
+  activeRingClass: 'ring-2 ring-purple-500 border-purple-500 shadow-md shadow-purple-500/20 scale-[1.02]',
+}))
+
 const CATEGORY_GROUPS: PipelineCategoryGroup[] = [
   {
     id: 'relevant',
@@ -246,6 +261,20 @@ const CATEGORY_GROUPS: PipelineCategoryGroup[] = [
         activeRingClass: 'ring-2 ring-amber-500 border-amber-500 shadow-md shadow-amber-500/20 scale-[1.02]',
       },
       {
+        id: 'outstation_follow_up',
+        label: 'Out of Station follow-up',
+        bucket: 'outstation_follow_up',
+        countKey: 'outstation_follow_up',
+        icon: CalendarClock,
+        strokeColor: '#d97706',
+        gradientBgClass: 'bg-gradient-to-br from-amber-50/90 via-white/80 to-amber-100/50 dark:from-amber-950/40 dark:via-card dark:to-amber-900/20',
+        iconBgClass: 'bg-amber-500/15 text-amber-600 dark:text-amber-400',
+        borderClass: 'border-amber-200/80 dark:border-amber-800/50',
+        hoverBorderClass: 'hover:border-amber-400 dark:hover:border-amber-600 hover:shadow-amber-500/10',
+        textClass: 'text-amber-700 dark:text-amber-400',
+        activeRingClass: 'ring-2 ring-amber-500 border-amber-500 shadow-md shadow-amber-500/20 scale-[1.02]',
+      },
+      {
         id: 'duplicate',
         label: 'Duplicate',
         bucket: 'duplicate',
@@ -310,6 +339,7 @@ const CATEGORY_GROUPS: PipelineCategoryGroup[] = [
         textClass: 'text-purple-700 dark:text-purple-400',
         activeRingClass: 'ring-2 ring-purple-500 border-purple-500 shadow-md shadow-purple-500/20 scale-[1.02]',
       },
+      ...NURTURE_LEVEL_ITEMS,
       {
         id: 'analytics',
         label: 'Analytics',
@@ -371,7 +401,7 @@ export function PipelineStatusCards({
             key={i}
             className={cn(
               'p-2.5 rounded-xl border border-border/60 bg-muted/20 space-y-2 min-w-0',
-              i === 3 ? 'lg:flex-[0.75] lg:min-w-[140px] lg:shrink' : 'lg:flex-[1.1] lg:min-w-[200px]'
+              i === 3 ? 'lg:flex-[0.95] lg:min-w-[280px]' : 'lg:flex-[1.1] lg:min-w-[200px]'
             )}
           >
             <Skeleton className="h-3.5 w-24 rounded-md bg-muted/60" />
@@ -408,7 +438,7 @@ export function PipelineStatusCards({
             className={cn(
               'p-2.5 rounded-xl border transition-all duration-200 shadow-xs flex flex-col justify-between backdrop-blur-xs min-w-0',
               isChurning
-                ? 'lg:flex-[0.75] lg:min-w-[140px] lg:shrink'
+                ? 'lg:flex-[0.95] lg:min-w-[280px]'
                 : 'lg:flex-[1.1] lg:min-w-[200px]',
               group.containerBgClass,
               group.containerBorderClass
@@ -437,7 +467,7 @@ export function PipelineStatusCards({
               <div
                 className={cn(
                   'grid gap-1.5',
-                  isChurning ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-1' : 'grid-cols-2'
+                  isChurning ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-2'
                 )}
               >
                 {group.items.map((item) => {

@@ -205,6 +205,9 @@ export async function POST(
         leadUpdateData.surgeryDate = surgeryDate
         leadUpdateData.pipelineStage = 'PL' satisfies PipelineStage
         leadUpdateData.conversionDate = surgeryDate
+        leadUpdateData.followUpDate = null
+        leadUpdateData.removeFollowUpDate = true
+        leadUpdateData.followUpDateClearedAt = new Date()
       }
     } else {
       if (data.status === 'IPD_DONE') {
@@ -215,6 +218,9 @@ export async function POST(
         leadUpdateData.surgeryDate = surgeryDate
         leadUpdateData.pipelineStage = 'PL' satisfies PipelineStage
         leadUpdateData.conversionDate = surgeryDate
+        leadUpdateData.followUpDate = null
+        leadUpdateData.removeFollowUpDate = true
+        leadUpdateData.followUpDateClearedAt = new Date()
       } else if (data.status === 'ADMITTED_DONE') {
         toStage = CaseStage.ADMITTED
         leadUpdateData.caseStage = CaseStage.ADMITTED

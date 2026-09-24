@@ -9,6 +9,7 @@ import type { CampaignSelection, SidebarGroupMode } from '@/components/pipeline/
 import type { LeadAgeFilter, PipelineStatusBucket } from '@/lib/pipeline-lead-buckets'
 import type {
   PipelineMultiColumnFilterField,
+  PipelineFollowUpFilter,
   PipelineSortDir,
   PipelineSortField,
 } from '@/lib/pipeline/server-query'
@@ -73,6 +74,9 @@ export interface PipelineUrlState {
   age: LeadAgeFilter
   from: string
   to: string
+  followUp: PipelineFollowUpFilter
+  followUpFrom: string
+  followUpTo: string
   campaign: string
   groupBy: SidebarGroupMode
   groupValue: string
@@ -91,6 +95,9 @@ const DEFAULTS: PipelineUrlState = {
   age: 'all',
   from: '',
   to: '',
+  followUp: 'all',
+  followUpFrom: '',
+  followUpTo: '',
   campaign: '',
   groupBy: 'circle',
   groupValue: '',
@@ -110,6 +117,9 @@ function readState(sp: URLSearchParams): PipelineUrlState {
     age: (sp.get('age') as LeadAgeFilter) || 'all',
     from: sp.get('from') || '',
     to: sp.get('to') || '',
+    followUp: (sp.get('followUp') as PipelineFollowUpFilter) || 'all',
+    followUpFrom: sp.get('followUpFrom') || '',
+    followUpTo: sp.get('followUpTo') || '',
     campaign: sp.get('campaign') || '',
     groupBy: sp.get('groupBy') === 'disease' ? 'disease' : 'circle',
     groupValue: sp.get('groupValue') || '',
@@ -130,6 +140,9 @@ function toSearchParams(state: PipelineUrlState): URLSearchParams {
   if (state.age !== 'all') p.set('age', state.age)
   if (state.from) p.set('from', state.from)
   if (state.to) p.set('to', state.to)
+  if (state.followUp !== 'all') p.set('followUp', state.followUp)
+  if (state.followUpFrom) p.set('followUpFrom', state.followUpFrom)
+  if (state.followUpTo) p.set('followUpTo', state.followUpTo)
   if (state.campaign) {
     p.set('campaign', state.campaign)
     if (state.groupValue) p.set('groupValue', state.groupValue)
@@ -203,6 +216,11 @@ export function usePipelineUrlState() {
 const DEFAULT_STATUS_COUNTS: Record<Exclude<PipelineStatusBucket, 'all'>, number> = {
   new_hot: 0,
   nurture: 0,
+  nurture_1: 0,
+  nurture_2: 0,
+  nurture_3: 0,
+  nurture_4: 0,
+  nurture_5: 0,
   follow_up: 0,
   callback: 0,
   opd_done: 0,
@@ -213,6 +231,7 @@ const DEFAULT_STATUS_COUNTS: Record<Exclude<PipelineStatusBucket, 'all'>, number
   dnp_exh: 0,
   junk: 0,
   outstation: 0,
+  outstation_follow_up: 0,
   duplicate: 0,
   ipd_loss: 0,
   fund_issues: 0,
@@ -239,6 +258,9 @@ export function usePipelinePage(
     if (state.age !== 'all') p.set('age', state.age)
     if (state.from) p.set('from', state.from)
     if (state.to) p.set('to', state.to)
+    if (state.followUp !== 'all') p.set('followUp', state.followUp)
+    if (state.followUpFrom) p.set('followUpFrom', state.followUpFrom)
+    if (state.followUpTo) p.set('followUpTo', state.followUpTo)
     if (state.campaign) {
       p.set('campaign', state.campaign)
       if (state.groupBy === 'disease' && state.groupValue) {
@@ -262,6 +284,9 @@ export function usePipelinePage(
     if (state.age !== 'all') p.set('age', state.age)
     if (state.from) p.set('from', state.from)
     if (state.to) p.set('to', state.to)
+    if (state.followUp !== 'all') p.set('followUp', state.followUp)
+    if (state.followUpFrom) p.set('followUpFrom', state.followUpFrom)
+    if (state.followUpTo) p.set('followUpTo', state.followUpTo)
     if (state.campaign) {
       p.set('campaign', state.campaign)
       if (state.groupBy === 'disease' && state.groupValue) {
