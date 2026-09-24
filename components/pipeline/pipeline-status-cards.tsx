@@ -51,21 +51,6 @@ export interface PipelineCategoryGroup {
   items: PipelineCategoryItem[]
 }
 
-const NURTURE_LEVEL_ITEMS: PipelineCategoryItem[] = [1, 2, 3, 4, 5].map((level) => ({
-  id: `nurture_${level}`,
-  label: `Nurture ${level}`,
-  bucket: `nurture_${level}` as PipelineStatusBucket,
-  countKey: `nurture_${level}`,
-  icon: Sprout,
-  strokeColor: '#9333ea',
-  gradientBgClass: 'bg-gradient-to-br from-purple-50/90 via-white/80 to-purple-100/50 dark:from-purple-950/40 dark:via-card dark:to-purple-900/20',
-  iconBgClass: 'bg-purple-500/15 text-purple-600 dark:text-purple-400',
-  borderClass: 'border-purple-200/80 dark:border-purple-800/50',
-  hoverBorderClass: 'hover:border-purple-400 dark:hover:border-purple-600 hover:shadow-purple-500/10',
-  textClass: 'text-purple-700 dark:text-purple-400',
-  activeRingClass: 'ring-2 ring-purple-500 border-purple-500 shadow-md shadow-purple-500/20 scale-[1.02]',
-}))
-
 const CATEGORY_GROUPS: PipelineCategoryGroup[] = [
   {
     id: 'relevant',
@@ -339,7 +324,6 @@ const CATEGORY_GROUPS: PipelineCategoryGroup[] = [
         textClass: 'text-purple-700 dark:text-purple-400',
         activeRingClass: 'ring-2 ring-purple-500 border-purple-500 shadow-md shadow-purple-500/20 scale-[1.02]',
       },
-      ...NURTURE_LEVEL_ITEMS,
       {
         id: 'analytics',
         label: 'Analytics',

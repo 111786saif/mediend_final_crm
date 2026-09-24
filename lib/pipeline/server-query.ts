@@ -147,11 +147,6 @@ export function parsePipelineQueryParams(searchParams: URLSearchParams): Pipelin
     'all',
     'new_hot',
     'nurture',
-    'nurture_1',
-    'nurture_2',
-    'nurture_3',
-    'nurture_4',
-    'nurture_5',
     'follow_up',
     'callback',
     'opd_done',
@@ -345,26 +340,11 @@ export function statusBucketWhere(
     case 'nurture':
       return {
         OR: [
-          { status: { equals: 'Nurture', mode: 'insensitive' } },
+          contains('nurture'),
+          contains('nuture'),
           { status: '37' },
         ],
       }
-    case 'nurture_1':
-    case 'nurture_2':
-    case 'nurture_3':
-    case 'nurture_4':
-    case 'nurture_5': {
-      const level = statusBucket.split('_')[1]
-      return {
-        OR: [
-          contains(`nurture ${level}`),
-          contains(`nuture ${level}`),
-          contains(`nurture${level}`),
-          contains(`nurture-${level}`),
-          contains(`nuture-${level}`),
-        ],
-      }
-    }
     case 'follow_up':
       return {
         OR: [
@@ -372,6 +352,10 @@ export function statusBucketWhere(
           { status: { equals: 'Follow-up 2', mode: 'insensitive' } },
           { status: { equals: 'Follow-up 3', mode: 'insensitive' } },
           { status: { equals: 'Followup', mode: 'insensitive' } },
+          // Older imports used a space rather than a hyphen.
+          { status: { equals: 'Follow up 1', mode: 'insensitive' } },
+          { status: { equals: 'Follow up 2', mode: 'insensitive' } },
+          { status: { equals: 'Follow up 3', mode: 'insensitive' } },
           // Preserve legacy labels/codes while the migration mapping is rolled out.
           { status: { equals: 'Follow-up', mode: 'insensitive' } },
           { status: { in: ['1', '2', '3', '35'] } },
@@ -1319,11 +1303,6 @@ export function bucketsFromStatusGroups(
   const counts: Record<Exclude<PipelineStatusBucket, 'all'>, number> = {
     new_hot: 0,
     nurture: 0,
-    nurture_1: 0,
-    nurture_2: 0,
-    nurture_3: 0,
-    nurture_4: 0,
-    nurture_5: 0,
     follow_up: 0,
     callback: 0,
     opd_done: 0,

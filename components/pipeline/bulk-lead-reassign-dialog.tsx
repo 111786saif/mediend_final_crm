@@ -32,10 +32,6 @@ import {
   formatLeadAssigneeName,
   formatLeadAssigneeRoleLabel,
 } from '@/lib/lead-assignee-display'
-import {
-  isStatusRequiringFollowUpDate,
-  isStatusRequiringModeOfPayment,
-} from '@/lib/lead-status-rules'
 import { cn } from '@/lib/utils'
 
 type AssignableUser = {
@@ -147,19 +143,10 @@ export function BulkLeadReassignDialog({
     }
     return `${selectedBdUsers.length} assignees selected`
   }, [selectedBdUsers])
-  const statusRequiresFollowUpDate = isStatusRequiringFollowUpDate(leadStatus)
-  const statusRequiresModeOfPayment = isStatusRequiringModeOfPayment(leadStatus)
+  const showOptionalWorkflowFields = leadStatus.trim().length > 0
 
   function handleLeadStatusChange(nextStatus: string) {
     setLeadStatus(nextStatus)
-
-    if (!isStatusRequiringFollowUpDate(nextStatus)) {
-      setFollowUpDate('')
-    }
-
-    if (!isStatusRequiringModeOfPayment(nextStatus)) {
-      setModeOfPayment('')
-    }
   }
 
   function toggleLead(leadId: number, checked: boolean) {
@@ -194,10 +181,10 @@ export function BulkLeadReassignDialog({
       removePreviousRemarks,
       removePreviousFollowUpDate,
       ...(leadStatus.trim().length > 0 ? { leadStatus: leadStatus.trim() } : {}),
-      ...(statusRequiresFollowUpDate && combinedFollowUp.length > 0
+      ...(combinedFollowUp.length > 0
         ? { followUpDate: combinedFollowUp }
         : {}),
-      ...(statusRequiresModeOfPayment && modeOfPayment.trim().length > 0
+      ...(modeOfPayment.trim().length > 0
         ? { modeOfPayment }
         : {}),
       ...(subStatus.trim().length > 0 ? { subStatus: subStatus.trim() } : {}),
@@ -466,11 +453,11 @@ export function BulkLeadReassignDialog({
                 </Select>
               </div>
 
-              {statusRequiresModeOfPayment ? (
+              {showOptionalWorkflowFields ? (
                 <div className="space-y-2">
                   <Label htmlFor="bulk-reassign-mode-of-payment">
                     Mode of Payment
-                    <span className="text-destructive"> *</span>
+                    <span className="text-xs font-normal text-muted-foreground"> (optional)</span>
                   </Label>
                   <Select
                     value={modeOfPayment || '__none__'}
@@ -494,12 +481,12 @@ export function BulkLeadReassignDialog({
               ) : null}
             </div>
 
-            {statusRequiresFollowUpDate ? (
+            {showOptionalWorkflowFields ? (
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="bulk-reassign-follow-up-date">
                     Follow-up date
-                    <span className="text-destructive"> *</span>
+                    <span className="text-xs font-normal text-muted-foreground"> (optional)</span>
                   </Label>
                   <Input
                     id="bulk-reassign-follow-up-date"
@@ -562,9 +549,7 @@ export function BulkLeadReassignDialog({
             disabled={
               isPending ||
               selectedBdUserIds.length === 0 ||
-              selectedLeadIds.length === 0 ||
-              (statusRequiresFollowUpDate && followUpDate.trim().length === 0) ||
-              (statusRequiresModeOfPayment && modeOfPayment.trim().length === 0)
+              selectedLeadIds.length === 0
             }
           >
             {isPending ? (

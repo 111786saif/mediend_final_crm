@@ -10,11 +10,6 @@ export type PipelineStatusBucket =
   | 'all'
   | 'new_hot'
   | 'nurture'
-  | 'nurture_1'
-  | 'nurture_2'
-  | 'nurture_3'
-  | 'nurture_4'
-  | 'nurture_5'
   | 'follow_up'
   | 'callback'
   | 'opd_done'
@@ -113,6 +108,9 @@ export function normalizeLeadStatus(status: string | null | undefined): string {
 export function getLeadPipelineBucket(status: string | null | undefined): Exclude<PipelineStatusBucket, 'all'> {
   const s = normalizeLeadStatus(status)
   const lower = s.toLowerCase()
+  // The CRM has historical values stored with spaces, hyphens, or neither.
+  // Compact these only for matching the grouped dashboard cards.
+  const compactStatus = lower.replace(/[\s-]+/g, '')
 
   // 1. OPD Done
   if (s === OPD_DONE_LABEL || lower.includes('opd done') || s === '11') {
@@ -139,15 +137,9 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
   ) {
     return 'callback'
   }
-  // 6. Follow-up: ONLY Follow-up
+  // 6. Follow-up: the card combines Follow-up 1–3 and Followup.
   if (
-    [
-      'Follow-up 1',
-      'Follow-up 2',
-      'Follow-up 3',
-      'Follow-up',
-      'Followup',
-    ].includes(s) ||
+    /^followup[1-3]?$/.test(compactStatus) ||
     ['1', '2', '3', '35'].includes(s)
   ) {
     return 'follow_up'
@@ -161,25 +153,9 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
   ) {
     return 'fund_issues'
   }
-  // 8. Nurture levels are individually selectable in Churning Data.
-  for (const level of [1, 2, 3, 4, 5] as const) {
-    if (
-      s === `Nurture ${level}` ||
-      s === `Nuture ${level}` ||
-      s === `Nurture${level}` ||
-      s === `Nurture-${level}` ||
-      lower === `nurture ${level}` ||
-      lower === `nuture ${level}` ||
-      lower === `nurture${level}` ||
-      lower === `nurture-${level}` ||
-      lower === `nuture-${level}`
-    ) {
-      return `nurture_${level}` as Exclude<PipelineStatusBucket, 'all'>
-    }
-  }
-  // 9. Nurture: unnumbered Nurture only.
+  // 8. Nurture combines unnumbered and numbered Nurture states.
   if (
-    s === 'Nurture' || lower === 'nurture' ||
+    lower.includes('nurture') || lower.includes('nuture') ||
     s === '37'
   ) {
     return 'nurture'
@@ -232,10 +208,10 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
   if (['DNP Exhausted', 'DNP (1-5, Exhausted)'].includes(s) || lower.includes('exhausted') || s === '9') {
     return 'dnp_exh'
   }
-  // 15. DNP: all other DNP
+  // 15. DNP: the card combines DNP and DNP 1–5. Exhausted is handled above.
   if (
-    ['DNP', 'DNP-1', 'DNP-2', 'DNP-3', 'DNP-4', 'DNP-5'].includes(s) ||
-    lower.includes('dnp') ||
+    compactStatus === 'dnp' ||
+    /^dnp[1-5]$/.test(compactStatus) ||
     lower.includes('did not pick') ||
     lower.includes('not connected') ||
     ['4', '5', '6', '7', '8'].includes(s)
@@ -270,11 +246,6 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
 export const PIPELINE_BUCKET_LABELS: Record<Exclude<PipelineStatusBucket, 'all'>, string> = {
   new_hot: 'New Lead',
   nurture: 'Nurture',
-  nurture_1: 'Nurture 1',
-  nurture_2: 'Nurture 2',
-  nurture_3: 'Nurture 3',
-  nurture_4: 'Nurture 4',
-  nurture_5: 'Nurture 5',
   follow_up: 'Follow-up',
   callback: 'Callback',
   opd_done: 'OPD Done',
@@ -297,11 +268,6 @@ export function countBuckets(leads: { status?: string | null }[]) {
   const counts: Record<Exclude<PipelineStatusBucket, 'all'>, number> = {
     new_hot: 0,
     nurture: 0,
-    nurture_1: 0,
-    nurture_2: 0,
-    nurture_3: 0,
-    nurture_4: 0,
-    nurture_5: 0,
     follow_up: 0,
     callback: 0,
     opd_done: 0,

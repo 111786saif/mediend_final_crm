@@ -216,11 +216,6 @@ export function usePipelineUrlState() {
 const DEFAULT_STATUS_COUNTS: Record<Exclude<PipelineStatusBucket, 'all'>, number> = {
   new_hot: 0,
   nurture: 0,
-  nurture_1: 0,
-  nurture_2: 0,
-  nurture_3: 0,
-  nurture_4: 0,
-  nurture_5: 0,
   follow_up: 0,
   callback: 0,
   opd_done: 0,

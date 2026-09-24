@@ -21,8 +21,6 @@ import { CRM_LEAD_STATUS_OPTIONS } from '@/lib/lead-status-options'
 import { normalizeModeOfPaymentStorageValue } from '@/lib/mode-of-payment'
 import {
   isStatusRequiringAgeSex,
-  isStatusRequiringFollowUpDate,
-  isStatusRequiringModeOfPayment,
 } from '@/lib/lead-status-rules'
 import { prisma } from '@/lib/prisma'
 
@@ -230,20 +228,6 @@ export async function createBulkLeadReassignmentRun(
     )
   }
 
-  if (leadStatus && isStatusRequiringFollowUpDate(leadStatus) && !followUpDate) {
-    throw new BulkLeadReassignError(
-      `Follow-up date is required for status "${leadStatus}"`,
-      400
-    )
-  }
-
-  if (leadStatus && isStatusRequiringModeOfPayment(leadStatus) && !modeOfPayment) {
-    throw new BulkLeadReassignError(
-      `Mode of payment is required for status "${leadStatus}"`,
-      400
-    )
-  }
-
   let parsedFollowUpDate: Date | null = null
   if (followUpDate) {
     parsedFollowUpDate = new Date(followUpDate)
@@ -347,29 +331,6 @@ export async function createBulkLeadReassignmentRun(
       }
     }
 
-    if (
-      leadStatus &&
-      isStatusRequiringModeOfPayment(leadStatus) &&
-      typeof modeOfPayment !== 'string' &&
-      (typeof lead.modeOfPayment !== 'string' || lead.modeOfPayment.trim().length === 0)
-    ) {
-      throw new BulkLeadReassignError(
-        `Mode of payment is required for lead ${lead.leadRef} when applying ${leadStatus}`,
-        400
-      )
-    }
-
-    if (
-      leadStatus &&
-      isStatusRequiringFollowUpDate(leadStatus) &&
-      !parsedFollowUpDate &&
-      !lead.followUpDate
-    ) {
-      throw new BulkLeadReassignError(
-        `Follow-up date is required for lead ${lead.leadRef} when applying ${leadStatus}`,
-        400
-      )
-    }
   }
 
   const run = await prisma.bulkLeadReassignmentRun.create({
