@@ -30,15 +30,13 @@ const employeeSelect = {
   },
 } as const
 
-/**
- * Get direct or all nested subordinates for an employee.
- * @param employeeId - The manager's employee ID
- * @param recursive - If true, returns all descendants; if false, only direct reports
- */
+export type SubordinateEmployee = Prisma.EmployeeGetPayload<{ select: typeof employeeSelect }>
+
+// Get direct or all nested subordinates for an employee
 export async function getSubordinates(
   employeeId: string,
   recursive: boolean = true
-) {
+): Promise<SubordinateEmployee[]> {
   if (!recursive) {
     return prisma.employee.findMany({
       where: { managerId: employeeId, ...headcountEmployeeWhere },
@@ -47,11 +45,8 @@ export async function getSubordinates(
     })
   }
 
-  const result: Awaited<ReturnType<typeof prisma.employee.findMany<{
-    where: { managerId: string }
-    select: typeof employeeSelect
-  }>>> = []
-  let currentLevel = await prisma.employee.findMany({
+  const result: SubordinateEmployee[] = []
+  let currentLevel: SubordinateEmployee[] = await prisma.employee.findMany({
     where: { managerId: employeeId, ...headcountEmployeeWhere },
     select: employeeSelect,
   })
@@ -147,9 +142,7 @@ export async function isManagerOf(
   return chain.some((e) => e.id === managerEmployeeId)
 }
 
-/**
- * Get employee by user ID (for use in APIs that have session user).
- */
+// Get employee by user ID (for use in APIs that have session user)
 export async function getEmployeeByUserId(userId: string) {
   return prisma.employee.findUnique({
     where: { userId },
@@ -199,40 +192,40 @@ export async function resolveTeamLeadForLeadOwner(leadOwnerUserId: string): Prom
   }
 }
 
-/**
- * Get user IDs of all subordinates that report to this user (recursively).
- * Returns empty array if user has no employee record or no subordinates.
- */
+// Get user IDs of all subordinates that report to this user (recursively)
+// Checks Typesense employee-hierarchy collection first for ultra-fast resolution without in-memory cache
 export async function getSubordinateUserIdsForLeadAccess(userId: string): Promise<string[]> {
+  try {
+    const { getEmployeeHierarchyFromTypesense } = await import('@/lib/typesense/client')
+    const tsDoc = await getEmployeeHierarchyFromTypesense(userId)
+    if (tsDoc && Array.isArray(tsDoc.subordinateUserIds)) {
+      return tsDoc.subordinateUserIds
+    }
+  } catch {
+    // Typesense offline or unconfigured, fall back to PostgreSQL
+  }
+
   const employee = await prisma.employee.findUnique({
     where: { userId },
     select: { id: true },
   })
   if (!employee) return []
   const subordinates = await getSubordinates(employee.id, true)
-  return subordinates.map((s) => s.userId)
+  return subordinates.map((s: SubordinateEmployee) => s.userId)
 }
 
-/**
- * TEAM_LEAD / manager lead visibility: all recursive subordinates' user IDs.
- * This replaces the old dual-source (HR org + sales Team) lookup.
- */
+// TEAM_LEAD / manager lead visibility: all recursive subordinates' user IDs
 export async function getTeamLeadLeadAccessBdUserIds(userId: string): Promise<string[]> {
   return getSubordinateUserIdsForLeadAccess(userId)
 }
 
-/**
- * Recursive descendant user IDs for a manager (Employee.id).
- */
+// Recursive descendant user IDs for a manager (Employee.id)
 export async function getDescendantUserIds(managerEmployeeId: string): Promise<string[]> {
   const subordinates = await getSubordinates(managerEmployeeId, true)
-  return subordinates.map((s) => s.userId)
+  return subordinates.map((s: SubordinateEmployee) => s.userId)
 }
 
-/**
- * Manager's own userId + all recursive descendants.
- * Used when selecting a CM/TL/ACM to roll up their full subtree (Mohit/Amir rule).
- */
+// Manager's own userId + all recursive descendants
 export async function getTeamScopeUserIds(managerEmployeeId: string): Promise<string[]> {
   const manager = await prisma.employee.findUnique({
     where: { id: managerEmployeeId },
@@ -272,8 +265,8 @@ export async function resolveLeafBdUserIds(managerEmployeeId: string): Promise<{
 
   const subordinates = await getSubordinates(managerEmployeeId, true)
   const bdMembers = subordinates
-    .filter((s) => s.user.role === UserRole.BD)
-    .map((s) => ({
+    .filter((s: SubordinateEmployee) => s.user.role === UserRole.BD)
+    .map((s: SubordinateEmployee) => ({
       employeeId: s.id,
       userId: s.userId,
       name: s.user.name,
@@ -283,16 +276,16 @@ export async function resolveLeafBdUserIds(managerEmployeeId: string): Promise<{
   // Enrich profile pictures for BD members
   if (bdMembers.length > 0) {
     const users = await prisma.user.findMany({
-      where: { id: { in: bdMembers.map((m) => m.userId) } },
+      where: { id: { in: bdMembers.map((m: { userId: string }) => m.userId) } },
       select: { id: true, profilePicture: true },
     })
-    const picMap = new Map(users.map((u) => [u.id, u.profilePicture ?? null]))
+    const picMap = new Map(users.map((u: { id: string; profilePicture: string | null }) => [u.id, u.profilePicture ?? null]))
     for (const m of bdMembers) {
       m.profilePicture = picMap.get(m.userId) ?? null
     }
   }
 
-  const allUserIds = [manager.userId, ...bdMembers.map((m) => m.userId)]
+  const allUserIds = [manager.userId, ...bdMembers.map((m: { userId: string }) => m.userId)]
   // Also include non-BD descendants who may personally own leads (TL/ACM/CM doing BD work)
   for (const sub of subordinates) {
     if (sub.user.role !== UserRole.BD && !allUserIds.includes(sub.userId)) {
@@ -383,7 +376,7 @@ export async function getSalesTeamUnits(options: {
       employeeCode: m.employeeCode,
       role: m.user.role,
       memberCount: m.subordinates.length,
-      members: m.subordinates.map((s) => ({
+      members: m.subordinates.map((s: { id: string; userId: string; user: { id: string; name: string; profilePicture: string | null } }) => ({
         id: s.userId,
         employeeId: s.id,
         name: s.user.name,
