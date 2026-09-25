@@ -340,6 +340,7 @@ export type UserWhereInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryListRelationFilter
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogListRelationFilter
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkListRelationFilter
+  leadQrScanLinks?: Prisma.LeadQrScanLinkListRelationFilter
   leadCallNotes?: Prisma.CallNoteListRelationFilter
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentListRelationFilter
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentListRelationFilter
@@ -485,6 +486,7 @@ export type UserOrderByWithRelationInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryOrderByRelationAggregateInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogOrderByRelationAggregateInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkOrderByRelationAggregateInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkOrderByRelationAggregateInput
   leadCallNotes?: Prisma.CallNoteOrderByRelationAggregateInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentOrderByRelationAggregateInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentOrderByRelationAggregateInput
@@ -633,6 +635,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryListRelationFilter
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogListRelationFilter
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkListRelationFilter
+  leadQrScanLinks?: Prisma.LeadQrScanLinkListRelationFilter
   leadCallNotes?: Prisma.CallNoteListRelationFilter
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentListRelationFilter
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentListRelationFilter
@@ -820,6 +823,7 @@ export type UserCreateInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -965,6 +969,7 @@ export type UserUncheckedCreateInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -1110,6 +1115,7 @@ export type UserUpdateInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -1255,6 +1261,7 @@ export type UserUncheckedUpdateInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -1538,6 +1545,20 @@ export type UserUpdateOneRequiredWithoutLeadQrPublicLinksNestedInput = {
   upsert?: Prisma.UserUpsertWithoutLeadQrPublicLinksInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLeadQrPublicLinksInput, Prisma.UserUpdateWithoutLeadQrPublicLinksInput>, Prisma.UserUncheckedUpdateWithoutLeadQrPublicLinksInput>
+}
+
+export type UserCreateNestedOneWithoutLeadQrScanLinksInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLeadQrScanLinksInput, Prisma.UserUncheckedCreateWithoutLeadQrScanLinksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLeadQrScanLinksInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutLeadQrScanLinksNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLeadQrScanLinksInput, Prisma.UserUncheckedCreateWithoutLeadQrScanLinksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLeadQrScanLinksInput
+  upsert?: Prisma.UserUpsertWithoutLeadQrScanLinksInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLeadQrScanLinksInput, Prisma.UserUpdateWithoutLeadQrScanLinksInput>, Prisma.UserUncheckedUpdateWithoutLeadQrScanLinksInput>
 }
 
 export type UserCreateNestedOneWithoutLeadStageEventsInput = {
@@ -3394,6 +3415,7 @@ export type UserCreateWithoutStatusesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -3538,6 +3560,7 @@ export type UserUncheckedCreateWithoutStatusesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -3698,6 +3721,7 @@ export type UserUpdateWithoutStatusesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -3842,6 +3866,7 @@ export type UserUncheckedUpdateWithoutStatusesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -3985,6 +4010,7 @@ export type UserCreateWithoutAssignedLeadsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -4129,6 +4155,7 @@ export type UserUncheckedCreateWithoutAssignedLeadsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -4278,6 +4305,7 @@ export type UserCreateWithoutCreatedLeadsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -4422,6 +4450,7 @@ export type UserUncheckedCreateWithoutCreatedLeadsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -4571,6 +4600,7 @@ export type UserCreateWithoutUpdatedLeadsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -4715,6 +4745,7 @@ export type UserUncheckedCreateWithoutUpdatedLeadsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -4875,6 +4906,7 @@ export type UserUpdateWithoutAssignedLeadsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -5019,6 +5051,7 @@ export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -5174,6 +5207,7 @@ export type UserUpdateWithoutCreatedLeadsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -5318,6 +5352,7 @@ export type UserUncheckedUpdateWithoutCreatedLeadsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -5473,6 +5508,7 @@ export type UserUpdateWithoutUpdatedLeadsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -5617,6 +5653,7 @@ export type UserUncheckedUpdateWithoutUpdatedLeadsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -5762,6 +5799,7 @@ export type UserCreateWithoutLeadCallNotesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
   itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
@@ -5906,6 +5944,7 @@ export type UserUncheckedCreateWithoutLeadCallNotesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
   itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
@@ -6066,6 +6105,7 @@ export type UserUpdateWithoutLeadCallNotesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
   itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
@@ -6210,6 +6250,7 @@ export type UserUncheckedUpdateWithoutLeadCallNotesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
   itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -6353,6 +6394,7 @@ export type UserCreateWithoutLeadRemarkEntriesAuthoredInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -6497,6 +6539,7 @@ export type UserUncheckedCreateWithoutLeadRemarkEntriesAuthoredInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -6657,6 +6700,7 @@ export type UserUpdateWithoutLeadRemarkEntriesAuthoredInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -6801,6 +6845,7 @@ export type UserUncheckedUpdateWithoutLeadRemarkEntriesAuthoredInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -6945,6 +6990,7 @@ export type UserCreateWithoutLeadQrCallAuditLogsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -7089,6 +7135,7 @@ export type UserUncheckedCreateWithoutLeadQrCallAuditLogsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -7249,6 +7296,7 @@ export type UserUpdateWithoutLeadQrCallAuditLogsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -7393,6 +7441,7 @@ export type UserUncheckedUpdateWithoutLeadQrCallAuditLogsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -7537,6 +7586,7 @@ export type UserCreateWithoutLeadQrPublicLinksInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -7681,6 +7731,7 @@ export type UserUncheckedCreateWithoutLeadQrPublicLinksInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -7841,6 +7892,7 @@ export type UserUpdateWithoutLeadQrPublicLinksInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -7985,6 +8037,603 @@ export type UserUncheckedUpdateWithoutLeadQrPublicLinksInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
+  paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutUpdatedByNestedInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUncheckedUpdateManyWithoutActorNestedInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUncheckedUpdateManyWithoutActorNestedInput
+  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
+  knowledgeDocumentsUploaded?: Prisma.KnowledgeDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  knowledgeDocumentUsers?: Prisma.KnowledgeDocumentUserUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiMessages?: Prisma.AiMessageUncheckedUpdateManyWithoutUserNestedInput
+  aiToolCalls?: Prisma.AiToolCallUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutLeadQrScanLinksInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
+  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
+  crmPermissions?: Prisma.UserCrmPermissionCreateNestedManyWithoutUserInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionCreateNestedManyWithoutGrantedByInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutCreatedByInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutUpdatedByInput
+  crmActivityLogs?: Prisma.CrmActivityLogCreateNestedManyWithoutActorUserInput
+  permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
+  permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
+  onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
+  paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
+  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutUpdatedByInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryCreateNestedManyWithoutChangedByInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutUpdatedByInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutUpdatedByInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestCreateNestedManyWithoutRequestedByInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestCreateNestedManyWithoutReviewedByInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityCreateNestedManyWithoutActorInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutRequestedByInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutReviewedByInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityCreateNestedManyWithoutActorInput
+  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
+  knowledgeDocumentsUploaded?: Prisma.KnowledgeDocumentCreateNestedManyWithoutUploadedByInput
+  knowledgeDocumentUsers?: Prisma.KnowledgeDocumentUserCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiMessages?: Prisma.AiMessageCreateNestedManyWithoutUserInput
+  aiToolCalls?: Prisma.AiToolCallCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutLeadQrScanLinksInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  crmPermissions?: Prisma.UserCrmPermissionUncheckedCreateNestedManyWithoutUserInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutCreatedByInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutUpdatedByInput
+  crmActivityLogs?: Prisma.CrmActivityLogUncheckedCreateNestedManyWithoutActorUserInput
+  permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
+  permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
+  onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
+  paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutUpdatedByInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutUpdatedByInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUncheckedCreateNestedManyWithoutActorInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUncheckedCreateNestedManyWithoutActorInput
+  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
+  knowledgeDocumentsUploaded?: Prisma.KnowledgeDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  knowledgeDocumentUsers?: Prisma.KnowledgeDocumentUserUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiMessages?: Prisma.AiMessageUncheckedCreateNestedManyWithoutUserInput
+  aiToolCalls?: Prisma.AiToolCallUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutLeadQrScanLinksInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutLeadQrScanLinksInput, Prisma.UserUncheckedCreateWithoutLeadQrScanLinksInput>
+}
+
+export type UserUpsertWithoutLeadQrScanLinksInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutLeadQrScanLinksInput, Prisma.UserUncheckedUpdateWithoutLeadQrScanLinksInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutLeadQrScanLinksInput, Prisma.UserUncheckedCreateWithoutLeadQrScanLinksInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutLeadQrScanLinksInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutLeadQrScanLinksInput, Prisma.UserUncheckedUpdateWithoutLeadQrScanLinksInput>
+}
+
+export type UserUpdateWithoutLeadQrScanLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
+  crmPermissions?: Prisma.UserCrmPermissionUpdateManyWithoutUserNestedInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionUpdateManyWithoutGrantedByNestedInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUpdateManyWithoutCreatedByNestedInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUpdateManyWithoutUpdatedByNestedInput
+  crmActivityLogs?: Prisma.CrmActivityLogUpdateManyWithoutActorUserNestedInput
+  permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
+  permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
+  onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
+  paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutUpdatedByNestedInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUpdateManyWithoutChangedByNestedInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutUpdatedByNestedInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutUpdatedByNestedInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUpdateManyWithoutRequestedByNestedInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestUpdateManyWithoutReviewedByNestedInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUpdateManyWithoutActorNestedInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUpdateManyWithoutRequestedByNestedInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUpdateManyWithoutReviewedByNestedInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUpdateManyWithoutActorNestedInput
+  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
+  knowledgeDocumentsUploaded?: Prisma.KnowledgeDocumentUpdateManyWithoutUploadedByNestedInput
+  knowledgeDocumentUsers?: Prisma.KnowledgeDocumentUserUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiMessages?: Prisma.AiMessageUpdateManyWithoutUserNestedInput
+  aiToolCalls?: Prisma.AiToolCallUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutLeadQrScanLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  crmPermissions?: Prisma.UserCrmPermissionUncheckedUpdateManyWithoutUserNestedInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutCreatedByNestedInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutUpdatedByNestedInput
+  crmActivityLogs?: Prisma.CrmActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
+  permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
+  onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -8129,6 +8778,7 @@ export type UserCreateWithoutLeadStageEventsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -8273,6 +8923,7 @@ export type UserUncheckedCreateWithoutLeadStageEventsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -8433,6 +9084,7 @@ export type UserUpdateWithoutLeadStageEventsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -8577,6 +9229,7 @@ export type UserUncheckedUpdateWithoutLeadStageEventsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -8721,6 +9374,7 @@ export type UserCreateWithoutCreatedTargetsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -8865,6 +9519,7 @@ export type UserUncheckedCreateWithoutCreatedTargetsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -9025,6 +9680,7 @@ export type UserUpdateWithoutCreatedTargetsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -9169,6 +9825,7 @@ export type UserUncheckedUpdateWithoutCreatedTargetsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -9313,6 +9970,7 @@ export type UserCreateWithoutCreatedTierDefinitionsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -9457,6 +10115,7 @@ export type UserUncheckedCreateWithoutCreatedTierDefinitionsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -9617,6 +10276,7 @@ export type UserUpdateWithoutCreatedTierDefinitionsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -9761,6 +10421,7 @@ export type UserUncheckedUpdateWithoutCreatedTierDefinitionsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -9905,6 +10566,7 @@ export type UserCreateWithoutInsuranceCasesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -10049,6 +10711,7 @@ export type UserUncheckedCreateWithoutInsuranceCasesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -10209,6 +10872,7 @@ export type UserUpdateWithoutInsuranceCasesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -10353,6 +11017,7 @@ export type UserUncheckedUpdateWithoutInsuranceCasesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -10497,6 +11162,7 @@ export type UserCreateWithoutPlRecordsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -10641,6 +11307,7 @@ export type UserUncheckedCreateWithoutPlRecordsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -10801,6 +11468,7 @@ export type UserUpdateWithoutPlRecordsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -10945,6 +11613,7 @@ export type UserUncheckedUpdateWithoutPlRecordsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -11090,6 +11759,7 @@ export type UserCreateWithoutInvoiceRequestsSubmittedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -11234,6 +11904,7 @@ export type UserUncheckedCreateWithoutInvoiceRequestsSubmittedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -11383,6 +12054,7 @@ export type UserCreateWithoutInvoiceRequestsReviewedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -11527,6 +12199,7 @@ export type UserUncheckedCreateWithoutInvoiceRequestsReviewedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -11687,6 +12360,7 @@ export type UserUpdateWithoutInvoiceRequestsSubmittedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -11831,6 +12505,7 @@ export type UserUncheckedUpdateWithoutInvoiceRequestsSubmittedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -11986,6 +12661,7 @@ export type UserUpdateWithoutInvoiceRequestsReviewedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -12130,6 +12806,7 @@ export type UserUncheckedUpdateWithoutInvoiceRequestsReviewedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -12274,6 +12951,7 @@ export type UserCreateWithoutInvoiceRequestActivitiesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -12418,6 +13096,7 @@ export type UserUncheckedCreateWithoutInvoiceRequestActivitiesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -12578,6 +13257,7 @@ export type UserUpdateWithoutInvoiceRequestActivitiesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -12722,6 +13402,7 @@ export type UserUncheckedUpdateWithoutInvoiceRequestActivitiesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -12866,6 +13547,7 @@ export type UserCreateWithoutDoctorPayoffRequestsSubmittedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -13010,6 +13692,7 @@ export type UserUncheckedCreateWithoutDoctorPayoffRequestsSubmittedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -13159,6 +13842,7 @@ export type UserCreateWithoutDoctorPayoffRequestsReviewedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -13303,6 +13987,7 @@ export type UserUncheckedCreateWithoutDoctorPayoffRequestsReviewedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -13463,6 +14148,7 @@ export type UserUpdateWithoutDoctorPayoffRequestsSubmittedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -13607,6 +14293,7 @@ export type UserUncheckedUpdateWithoutDoctorPayoffRequestsSubmittedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -13762,6 +14449,7 @@ export type UserUpdateWithoutDoctorPayoffRequestsReviewedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -13906,6 +14594,7 @@ export type UserUncheckedUpdateWithoutDoctorPayoffRequestsReviewedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -14050,6 +14739,7 @@ export type UserCreateWithoutDoctorPayoffRequestActivitiesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -14194,6 +14884,7 @@ export type UserUncheckedCreateWithoutDoctorPayoffRequestActivitiesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -14354,6 +15045,7 @@ export type UserUpdateWithoutDoctorPayoffRequestActivitiesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -14498,6 +15190,7 @@ export type UserUncheckedUpdateWithoutDoctorPayoffRequestActivitiesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -14641,6 +15334,7 @@ export type UserCreateWithoutDepartmentHeadOfInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -14785,6 +15479,7 @@ export type UserUncheckedCreateWithoutDepartmentHeadOfInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -14945,6 +15640,7 @@ export type UserUpdateWithoutDepartmentHeadOfInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -15089,6 +15785,7 @@ export type UserUncheckedUpdateWithoutDepartmentHeadOfInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -15233,6 +15930,7 @@ export type UserCreateWithoutEmployeeInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -15377,6 +16075,7 @@ export type UserUncheckedCreateWithoutEmployeeInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -15526,6 +16225,7 @@ export type UserCreateWithoutOnboardingApprovalsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -15670,6 +16370,7 @@ export type UserUncheckedCreateWithoutOnboardingApprovalsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -15819,6 +16520,7 @@ export type UserCreateWithoutFnfCompletedForEmployeesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -15963,6 +16665,7 @@ export type UserUncheckedCreateWithoutFnfCompletedForEmployeesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -16123,6 +16826,7 @@ export type UserUpdateWithoutEmployeeInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -16267,6 +16971,7 @@ export type UserUncheckedUpdateWithoutEmployeeInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -16422,6 +17127,7 @@ export type UserUpdateWithoutOnboardingApprovalsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -16566,6 +17272,7 @@ export type UserUncheckedUpdateWithoutOnboardingApprovalsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -16721,6 +17428,7 @@ export type UserUpdateWithoutFnfCompletedForEmployeesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -16865,6 +17573,7 @@ export type UserUncheckedUpdateWithoutFnfCompletedForEmployeesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -17009,6 +17718,7 @@ export type UserCreateWithoutEmployeeProfileActivityAsActorInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -17153,6 +17863,7 @@ export type UserUncheckedCreateWithoutEmployeeProfileActivityAsActorInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -17313,6 +18024,7 @@ export type UserUpdateWithoutEmployeeProfileActivityAsActorInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -17457,6 +18169,7 @@ export type UserUncheckedUpdateWithoutEmployeeProfileActivityAsActorInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -17601,6 +18314,7 @@ export type UserCreateWithoutApprovedLeavesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -17745,6 +18459,7 @@ export type UserUncheckedCreateWithoutApprovedLeavesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -17905,6 +18620,7 @@ export type UserUpdateWithoutApprovedLeavesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -18049,6 +18765,7 @@ export type UserUncheckedUpdateWithoutApprovedLeavesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -18193,6 +18910,7 @@ export type UserCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -18337,6 +19055,7 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -18486,6 +19205,7 @@ export type UserCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -18630,6 +19350,7 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -18790,6 +19511,7 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -18934,6 +19656,7 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -19089,6 +19812,7 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -19233,6 +19957,7 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -19378,6 +20103,7 @@ export type UserCreateWithoutMeetsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -19522,6 +20248,7 @@ export type UserUncheckedCreateWithoutMeetsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -19682,6 +20409,7 @@ export type UserUpdateWithoutMeetsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -19826,6 +20554,7 @@ export type UserUncheckedUpdateWithoutMeetsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -19970,6 +20699,7 @@ export type UserCreateWithoutMeetParticipationsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -20114,6 +20844,7 @@ export type UserUncheckedCreateWithoutMeetParticipationsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -20274,6 +21005,7 @@ export type UserUpdateWithoutMeetParticipationsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -20418,6 +21150,7 @@ export type UserUncheckedUpdateWithoutMeetParticipationsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -20561,6 +21294,7 @@ export type UserCreateWithoutDeletedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -20705,6 +21439,7 @@ export type UserUncheckedCreateWithoutDeletedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -20854,6 +21589,7 @@ export type UserCreateWithoutDeleteRequestedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -20998,6 +21734,7 @@ export type UserUncheckedCreateWithoutDeleteRequestedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -21147,6 +21884,7 @@ export type UserCreateWithoutDeleteApprovedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -21291,6 +22029,7 @@ export type UserUncheckedCreateWithoutDeleteApprovedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -21440,6 +22179,7 @@ export type UserCreateWithoutEditRequestedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -21584,6 +22324,7 @@ export type UserUncheckedCreateWithoutEditRequestedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -21733,6 +22474,7 @@ export type UserCreateWithoutEditApprovedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -21877,6 +22619,7 @@ export type UserUncheckedCreateWithoutEditApprovedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -22026,6 +22769,7 @@ export type UserCreateWithoutCreatedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -22170,6 +22914,7 @@ export type UserUncheckedCreateWithoutCreatedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -22319,6 +23064,7 @@ export type UserCreateWithoutApprovedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -22463,6 +23209,7 @@ export type UserUncheckedCreateWithoutApprovedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -22623,6 +23370,7 @@ export type UserUpdateWithoutDeletedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -22767,6 +23515,7 @@ export type UserUncheckedUpdateWithoutDeletedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -22922,6 +23671,7 @@ export type UserUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -23066,6 +23816,7 @@ export type UserUncheckedUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -23221,6 +23972,7 @@ export type UserUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -23365,6 +24117,7 @@ export type UserUncheckedUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -23520,6 +24273,7 @@ export type UserUpdateWithoutEditRequestedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -23664,6 +24418,7 @@ export type UserUncheckedUpdateWithoutEditRequestedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -23819,6 +24574,7 @@ export type UserUpdateWithoutEditApprovedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -23963,6 +24719,7 @@ export type UserUncheckedUpdateWithoutEditApprovedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -24118,6 +24875,7 @@ export type UserUpdateWithoutCreatedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -24262,6 +25020,7 @@ export type UserUncheckedUpdateWithoutCreatedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -24417,6 +25176,7 @@ export type UserUpdateWithoutApprovedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -24561,6 +25321,7 @@ export type UserUncheckedUpdateWithoutApprovedLedgerEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -24705,6 +25466,7 @@ export type UserCreateWithoutLedgerAuditLogsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -24849,6 +25611,7 @@ export type UserUncheckedCreateWithoutLedgerAuditLogsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -25009,6 +25772,7 @@ export type UserUpdateWithoutLedgerAuditLogsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -25153,6 +25917,7 @@ export type UserUncheckedUpdateWithoutLedgerAuditLogsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -25297,6 +26062,7 @@ export type UserCreateWithoutCreatedSalesEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -25441,6 +26207,7 @@ export type UserUncheckedCreateWithoutCreatedSalesEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -25601,6 +26368,7 @@ export type UserUpdateWithoutCreatedSalesEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -25745,6 +26513,7 @@ export type UserUncheckedUpdateWithoutCreatedSalesEntriesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -25889,6 +26658,7 @@ export type UserCreateWithoutStockMovementsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -26033,6 +26803,7 @@ export type UserUncheckedCreateWithoutStockMovementsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -26193,6 +26964,7 @@ export type UserUpdateWithoutStockMovementsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -26337,6 +27109,7 @@ export type UserUncheckedUpdateWithoutStockMovementsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -26481,6 +27254,7 @@ export type UserCreateWithoutPurchasesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -26625,6 +27399,7 @@ export type UserUncheckedCreateWithoutPurchasesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -26785,6 +27560,7 @@ export type UserUpdateWithoutPurchasesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -26929,6 +27705,7 @@ export type UserUncheckedUpdateWithoutPurchasesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -27073,6 +27850,7 @@ export type UserCreateWithoutIssuesReceivedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -27217,6 +27995,7 @@ export type UserUncheckedCreateWithoutIssuesReceivedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -27366,6 +28145,7 @@ export type UserCreateWithoutIssuesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -27510,6 +28290,7 @@ export type UserUncheckedCreateWithoutIssuesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -27670,6 +28451,7 @@ export type UserUpdateWithoutIssuesReceivedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -27814,6 +28596,7 @@ export type UserUncheckedUpdateWithoutIssuesReceivedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -27969,6 +28752,7 @@ export type UserUpdateWithoutIssuesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -28113,6 +28897,7 @@ export type UserUncheckedUpdateWithoutIssuesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -28257,6 +29042,7 @@ export type UserCreateWithoutKypSubmissionsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -28401,6 +29187,7 @@ export type UserUncheckedCreateWithoutKypSubmissionsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -28561,6 +29348,7 @@ export type UserUpdateWithoutKypSubmissionsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -28705,6 +29493,7 @@ export type UserUncheckedUpdateWithoutKypSubmissionsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -28849,6 +29638,7 @@ export type UserCreateWithoutPreAuthsRaisedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -28993,6 +29783,7 @@ export type UserUncheckedCreateWithoutPreAuthsRaisedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -29142,6 +29933,7 @@ export type UserCreateWithoutPreAuthHandledInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -29286,6 +30078,7 @@ export type UserUncheckedCreateWithoutPreAuthHandledInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -29435,6 +30228,7 @@ export type UserCreateWithoutPreAuthHeldInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -29579,6 +30373,7 @@ export type UserUncheckedCreateWithoutPreAuthHeldInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -29739,6 +30534,7 @@ export type UserUpdateWithoutPreAuthsRaisedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -29883,6 +30679,7 @@ export type UserUncheckedUpdateWithoutPreAuthsRaisedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -30038,6 +30835,7 @@ export type UserUpdateWithoutPreAuthHandledInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -30182,6 +30980,7 @@ export type UserUncheckedUpdateWithoutPreAuthHandledInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -30337,6 +31136,7 @@ export type UserUpdateWithoutPreAuthHeldInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -30481,6 +31281,7 @@ export type UserUncheckedUpdateWithoutPreAuthHeldInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -30625,6 +31426,7 @@ export type UserCreateWithoutNotificationsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -30769,6 +31571,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -30929,6 +31732,7 @@ export type UserUpdateWithoutNotificationsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -31073,6 +31877,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -31217,6 +32022,7 @@ export type UserCreateWithoutNoticesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -31361,6 +32167,7 @@ export type UserUncheckedCreateWithoutNoticesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -31521,6 +32328,7 @@ export type UserUpdateWithoutNoticesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -31665,6 +32473,7 @@ export type UserUncheckedUpdateWithoutNoticesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -31809,6 +32618,7 @@ export type UserCreateWithoutNoticeRecipientsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -31953,6 +32763,7 @@ export type UserUncheckedCreateWithoutNoticeRecipientsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -32113,6 +32924,7 @@ export type UserUpdateWithoutNoticeRecipientsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -32257,6 +33069,7 @@ export type UserUncheckedUpdateWithoutNoticeRecipientsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -32401,6 +33214,7 @@ export type UserCreateWithoutMdApprovalRequestsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -32545,6 +33359,7 @@ export type UserUncheckedCreateWithoutMdApprovalRequestsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -32694,6 +33509,7 @@ export type UserCreateWithoutMdApprovalsRespondedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -32838,6 +33654,7 @@ export type UserUncheckedCreateWithoutMdApprovalsRespondedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -32987,6 +33804,7 @@ export type UserCreateWithoutMdApprovalsFinanceAckedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -33131,6 +33949,7 @@ export type UserUncheckedCreateWithoutMdApprovalsFinanceAckedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -33291,6 +34110,7 @@ export type UserUpdateWithoutMdApprovalRequestsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -33435,6 +34255,7 @@ export type UserUncheckedUpdateWithoutMdApprovalRequestsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -33590,6 +34411,7 @@ export type UserUpdateWithoutMdApprovalsRespondedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -33734,6 +34556,7 @@ export type UserUncheckedUpdateWithoutMdApprovalsRespondedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -33889,6 +34712,7 @@ export type UserUpdateWithoutMdApprovalsFinanceAckedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -34033,6 +34857,7 @@ export type UserUncheckedUpdateWithoutMdApprovalsFinanceAckedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -34177,6 +35002,7 @@ export type UserCreateWithoutFeaturePermissionsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -34321,6 +35147,7 @@ export type UserUncheckedCreateWithoutFeaturePermissionsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -34470,6 +35297,7 @@ export type UserCreateWithoutFeaturePermissionsGrantedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -34614,6 +35442,7 @@ export type UserUncheckedCreateWithoutFeaturePermissionsGrantedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -34774,6 +35603,7 @@ export type UserUpdateWithoutFeaturePermissionsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -34918,6 +35748,7 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -35073,6 +35904,7 @@ export type UserUpdateWithoutFeaturePermissionsGrantedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -35217,6 +36049,7 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsGrantedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -35361,6 +36194,7 @@ export type UserCreateWithoutCrmPermissionsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -35505,6 +36339,7 @@ export type UserUncheckedCreateWithoutCrmPermissionsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -35654,6 +36489,7 @@ export type UserCreateWithoutCrmPermissionsGrantedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -35798,6 +36634,7 @@ export type UserUncheckedCreateWithoutCrmPermissionsGrantedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -35958,6 +36795,7 @@ export type UserUpdateWithoutCrmPermissionsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -36102,6 +36940,7 @@ export type UserUncheckedUpdateWithoutCrmPermissionsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -36257,6 +37096,7 @@ export type UserUpdateWithoutCrmPermissionsGrantedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -36401,6 +37241,7 @@ export type UserUncheckedUpdateWithoutCrmPermissionsGrantedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -36545,6 +37386,7 @@ export type UserCreateWithoutCrmAssignmentRulesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -36689,6 +37531,7 @@ export type UserUncheckedCreateWithoutCrmAssignmentRulesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -36838,6 +37681,7 @@ export type UserCreateWithoutCrmAssignmentRulesUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -36982,6 +37826,7 @@ export type UserUncheckedCreateWithoutCrmAssignmentRulesUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -37142,6 +37987,7 @@ export type UserUpdateWithoutCrmAssignmentRulesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -37286,6 +38132,7 @@ export type UserUncheckedUpdateWithoutCrmAssignmentRulesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -37441,6 +38288,7 @@ export type UserUpdateWithoutCrmAssignmentRulesUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -37585,6 +38433,7 @@ export type UserUncheckedUpdateWithoutCrmAssignmentRulesUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -37730,6 +38579,7 @@ export type UserCreateWithoutCampaignTeamLeadAssignmentsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -37874,6 +38724,7 @@ export type UserUncheckedCreateWithoutCampaignTeamLeadAssignmentsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -38034,6 +38885,7 @@ export type UserUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -38178,6 +39030,7 @@ export type UserUncheckedUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -38322,6 +39175,7 @@ export type UserCreateWithoutCampaignBdDailyLimitsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -38466,6 +39320,7 @@ export type UserUncheckedCreateWithoutCampaignBdDailyLimitsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -38626,6 +39481,7 @@ export type UserUpdateWithoutCampaignBdDailyLimitsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -38770,6 +39626,7 @@ export type UserUncheckedUpdateWithoutCampaignBdDailyLimitsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -38913,6 +39770,7 @@ export type UserCreateWithoutCrmActivityLogsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -39057,6 +39915,7 @@ export type UserUncheckedCreateWithoutCrmActivityLogsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -39217,6 +40076,7 @@ export type UserUpdateWithoutCrmActivityLogsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -39361,6 +40221,7 @@ export type UserUncheckedUpdateWithoutCrmActivityLogsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -39505,6 +40366,7 @@ export type UserCreateWithoutBulkLeadReassignmentRunsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -39649,6 +40511,7 @@ export type UserUncheckedCreateWithoutBulkLeadReassignmentRunsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -39809,6 +40672,7 @@ export type UserUpdateWithoutBulkLeadReassignmentRunsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -39953,6 +40817,7 @@ export type UserUncheckedUpdateWithoutBulkLeadReassignmentRunsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -40097,6 +40962,7 @@ export type UserCreateWithoutPermissionSubjectsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -40241,6 +41107,7 @@ export type UserUncheckedCreateWithoutPermissionSubjectsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -40390,6 +41257,7 @@ export type UserCreateWithoutPermissionsGrantedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -40534,6 +41402,7 @@ export type UserUncheckedCreateWithoutPermissionsGrantedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -40694,6 +41563,7 @@ export type UserUpdateWithoutPermissionSubjectsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -40838,6 +41708,7 @@ export type UserUncheckedUpdateWithoutPermissionSubjectsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -40993,6 +41864,7 @@ export type UserUpdateWithoutPermissionsGrantedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -41137,6 +42009,7 @@ export type UserUncheckedUpdateWithoutPermissionsGrantedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -41282,6 +42155,7 @@ export type UserCreateWithoutCampaignCplsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -41426,6 +42300,7 @@ export type UserUncheckedCreateWithoutCampaignCplsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -41586,6 +42461,7 @@ export type UserUpdateWithoutCampaignCplsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -41730,6 +42606,7 @@ export type UserUncheckedUpdateWithoutCampaignCplsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -41874,6 +42751,7 @@ export type UserCreateWithoutDailyCampaignSpendsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -42018,6 +42896,7 @@ export type UserUncheckedCreateWithoutDailyCampaignSpendsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -42178,6 +43057,7 @@ export type UserUpdateWithoutDailyCampaignSpendsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -42322,6 +43202,7 @@ export type UserUncheckedUpdateWithoutDailyCampaignSpendsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -42465,6 +43346,7 @@ export type UserCreateWithoutQueriesRaisedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -42609,6 +43491,7 @@ export type UserUncheckedCreateWithoutQueriesRaisedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -42758,6 +43641,7 @@ export type UserCreateWithoutQueriesAnsweredInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -42902,6 +43786,7 @@ export type UserUncheckedCreateWithoutQueriesAnsweredInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -43062,6 +43947,7 @@ export type UserUpdateWithoutQueriesRaisedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -43206,6 +44092,7 @@ export type UserUncheckedUpdateWithoutQueriesRaisedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -43361,6 +44248,7 @@ export type UserUpdateWithoutQueriesAnsweredInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -43505,6 +44393,7 @@ export type UserUncheckedUpdateWithoutQueriesAnsweredInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -43649,6 +44538,7 @@ export type UserCreateWithoutPdfsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -43793,6 +44683,7 @@ export type UserUncheckedCreateWithoutPdfsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -43953,6 +44844,7 @@ export type UserUpdateWithoutPdfsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -44097,6 +44989,7 @@ export type UserUncheckedUpdateWithoutPdfsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -44241,6 +45134,7 @@ export type UserCreateWithoutAdmissionsInitiatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -44385,6 +45279,7 @@ export type UserUncheckedCreateWithoutAdmissionsInitiatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -44545,6 +45440,7 @@ export type UserUpdateWithoutAdmissionsInitiatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -44689,6 +45585,7 @@ export type UserUncheckedUpdateWithoutAdmissionsInitiatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -44833,6 +45730,7 @@ export type UserCreateWithoutInsuranceInitiateFormsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -44977,6 +45875,7 @@ export type UserUncheckedCreateWithoutInsuranceInitiateFormsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -45137,6 +46036,7 @@ export type UserUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -45281,6 +46181,7 @@ export type UserUncheckedUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -45425,6 +46326,7 @@ export type UserCreateWithoutCaseStageChangesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -45569,6 +46471,7 @@ export type UserUncheckedCreateWithoutCaseStageChangesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -45729,6 +46632,7 @@ export type UserUpdateWithoutCaseStageChangesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -45873,6 +46777,7 @@ export type UserUncheckedUpdateWithoutCaseStageChangesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -46017,6 +46922,7 @@ export type UserCreateWithoutWorkflowResetsPerformedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -46161,6 +47067,7 @@ export type UserUncheckedCreateWithoutWorkflowResetsPerformedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -46321,6 +47228,7 @@ export type UserUpdateWithoutWorkflowResetsPerformedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -46465,6 +47373,7 @@ export type UserUncheckedUpdateWithoutWorkflowResetsPerformedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -46609,6 +47518,7 @@ export type UserCreateWithoutCaseChatMessagesSentInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -46753,6 +47663,7 @@ export type UserUncheckedCreateWithoutCaseChatMessagesSentInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -46913,6 +47824,7 @@ export type UserUpdateWithoutCaseChatMessagesSentInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -47057,6 +47969,7 @@ export type UserUncheckedUpdateWithoutCaseChatMessagesSentInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -47201,6 +48114,7 @@ export type UserCreateWithoutChatReadReceiptsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -47345,6 +48259,7 @@ export type UserUncheckedCreateWithoutChatReadReceiptsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -47505,6 +48420,7 @@ export type UserUpdateWithoutChatReadReceiptsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -47649,6 +48565,7 @@ export type UserUncheckedUpdateWithoutChatReadReceiptsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -47793,6 +48710,7 @@ export type UserCreateWithoutDischargeSheetsMarkedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -47937,6 +48855,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsMarkedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -48086,6 +49005,7 @@ export type UserCreateWithoutDischargeSheetsFinalizedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -48230,6 +49150,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsFinalizedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -48379,6 +49300,7 @@ export type UserCreateWithoutDischargeSheetsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -48523,6 +49445,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -48683,6 +49606,7 @@ export type UserUpdateWithoutDischargeSheetsMarkedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -48827,6 +49751,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsMarkedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -48982,6 +49907,7 @@ export type UserUpdateWithoutDischargeSheetsFinalizedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -49126,6 +50052,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsFinalizedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -49281,6 +50208,7 @@ export type UserUpdateWithoutDischargeSheetsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -49425,6 +50353,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -49569,6 +50498,7 @@ export type UserCreateWithoutOutstandingCasesHandledInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -49713,6 +50643,7 @@ export type UserUncheckedCreateWithoutOutstandingCasesHandledInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -49873,6 +50804,7 @@ export type UserUpdateWithoutOutstandingCasesHandledInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -50017,6 +50949,7 @@ export type UserUncheckedUpdateWithoutOutstandingCasesHandledInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -50162,6 +51095,7 @@ export type UserCreateWithoutPaymentInstallmentsRecordedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
   itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
@@ -50306,6 +51240,7 @@ export type UserUncheckedCreateWithoutPaymentInstallmentsRecordedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
   itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
@@ -50455,6 +51390,7 @@ export type UserCreateWithoutPaymentInstallmentsVerifiedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
@@ -50599,6 +51535,7 @@ export type UserUncheckedCreateWithoutPaymentInstallmentsVerifiedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
@@ -50759,6 +51696,7 @@ export type UserUpdateWithoutPaymentInstallmentsRecordedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
   itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
@@ -50903,6 +51841,7 @@ export type UserUncheckedUpdateWithoutPaymentInstallmentsRecordedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
   itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -51058,6 +51997,7 @@ export type UserUpdateWithoutPaymentInstallmentsVerifiedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
@@ -51202,6 +52142,7 @@ export type UserUncheckedUpdateWithoutPaymentInstallmentsVerifiedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -51345,6 +52286,7 @@ export type UserCreateWithoutComplianceCallsHandledInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -51489,6 +52431,7 @@ export type UserUncheckedCreateWithoutComplianceCallsHandledInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -51649,6 +52592,7 @@ export type UserUpdateWithoutComplianceCallsHandledInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -51793,6 +52737,7 @@ export type UserUncheckedUpdateWithoutComplianceCallsHandledInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -51937,6 +52882,7 @@ export type UserCreateWithoutCumulativeReportManualEntriesUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -52081,6 +53027,7 @@ export type UserUncheckedCreateWithoutCumulativeReportManualEntriesUpdatedInput 
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -52241,6 +53188,7 @@ export type UserUpdateWithoutCumulativeReportManualEntriesUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -52385,6 +53333,7 @@ export type UserUncheckedUpdateWithoutCumulativeReportManualEntriesUpdatedInput 
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -52530,6 +53479,7 @@ export type UserCreateWithoutSalesTeamCostEntriesAddedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -52674,6 +53624,7 @@ export type UserUncheckedCreateWithoutSalesTeamCostEntriesAddedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -52834,6 +53785,7 @@ export type UserUpdateWithoutSalesTeamCostEntriesAddedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -52978,6 +53930,7 @@ export type UserUncheckedUpdateWithoutSalesTeamCostEntriesAddedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -53122,6 +54075,7 @@ export type UserCreateWithoutEmployeeIncentivesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -53266,6 +54220,7 @@ export type UserUncheckedCreateWithoutEmployeeIncentivesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -53415,6 +54370,7 @@ export type UserCreateWithoutEmployeeIncentivesUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -53559,6 +54515,7 @@ export type UserUncheckedCreateWithoutEmployeeIncentivesUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -53719,6 +54676,7 @@ export type UserUpdateWithoutEmployeeIncentivesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -53863,6 +54821,7 @@ export type UserUncheckedUpdateWithoutEmployeeIncentivesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -54018,6 +54977,7 @@ export type UserUpdateWithoutEmployeeIncentivesUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -54162,6 +55122,7 @@ export type UserUncheckedUpdateWithoutEmployeeIncentivesUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -54306,6 +55267,7 @@ export type UserCreateWithoutMasterSeatingCostsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -54450,6 +55412,7 @@ export type UserUncheckedCreateWithoutMasterSeatingCostsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -54599,6 +55562,7 @@ export type UserCreateWithoutMasterSeatingCostsUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -54743,6 +55707,7 @@ export type UserUncheckedCreateWithoutMasterSeatingCostsUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -54903,6 +55868,7 @@ export type UserUpdateWithoutMasterSeatingCostsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -55047,6 +56013,7 @@ export type UserUncheckedUpdateWithoutMasterSeatingCostsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -55202,6 +56169,7 @@ export type UserUpdateWithoutMasterSeatingCostsUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -55346,6 +56314,7 @@ export type UserUncheckedUpdateWithoutMasterSeatingCostsUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -55490,6 +56459,7 @@ export type UserCreateWithoutSeatingMiscCostsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -55634,6 +56604,7 @@ export type UserUncheckedCreateWithoutSeatingMiscCostsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -55783,6 +56754,7 @@ export type UserCreateWithoutSeatingMiscCostsUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -55927,6 +56899,7 @@ export type UserUncheckedCreateWithoutSeatingMiscCostsUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -56087,6 +57060,7 @@ export type UserUpdateWithoutSeatingMiscCostsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -56231,6 +57205,7 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -56386,6 +57361,7 @@ export type UserUpdateWithoutSeatingMiscCostsUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -56530,6 +57506,7 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostsUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -56674,6 +57651,7 @@ export type UserCreateWithoutSeatingMiscCostHistoryInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -56818,6 +57796,7 @@ export type UserUncheckedCreateWithoutSeatingMiscCostHistoryInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -56978,6 +57957,7 @@ export type UserUpdateWithoutSeatingMiscCostHistoryInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -57122,6 +58102,7 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostHistoryInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -57266,6 +58247,7 @@ export type UserCreateWithoutSalesTeamBulkCostsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -57410,6 +58392,7 @@ export type UserUncheckedCreateWithoutSalesTeamBulkCostsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -57559,6 +58542,7 @@ export type UserCreateWithoutSalesTeamBulkCostsUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -57703,6 +58687,7 @@ export type UserUncheckedCreateWithoutSalesTeamBulkCostsUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -57863,6 +58848,7 @@ export type UserUpdateWithoutSalesTeamBulkCostsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -58007,6 +58993,7 @@ export type UserUncheckedUpdateWithoutSalesTeamBulkCostsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -58162,6 +59149,7 @@ export type UserUpdateWithoutSalesTeamBulkCostsUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -58306,6 +59294,7 @@ export type UserUncheckedUpdateWithoutSalesTeamBulkCostsUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -58450,6 +59439,7 @@ export type UserCreateWithoutSalesTeamBulkCostHistoryInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -58594,6 +59584,7 @@ export type UserUncheckedCreateWithoutSalesTeamBulkCostHistoryInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -58754,6 +59745,7 @@ export type UserUpdateWithoutSalesTeamBulkCostHistoryInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -58898,6 +59890,7 @@ export type UserUncheckedUpdateWithoutSalesTeamBulkCostHistoryInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -59042,6 +60035,7 @@ export type UserCreateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -59186,6 +60180,7 @@ export type UserUncheckedCreateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -59346,6 +60341,7 @@ export type UserUpdateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -59490,6 +60486,7 @@ export type UserUncheckedUpdateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -59634,6 +60631,7 @@ export type UserCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -59778,6 +60776,7 @@ export type UserUncheckedCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -59938,6 +60937,7 @@ export type UserUpdateWithoutSalesTeamSalaryOverrideHistoryInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -60082,6 +61082,7 @@ export type UserUncheckedUpdateWithoutSalesTeamSalaryOverrideHistoryInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -60225,6 +61226,7 @@ export type UserCreateWithoutTasksAssignedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -60369,6 +61371,7 @@ export type UserUncheckedCreateWithoutTasksAssignedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -60518,6 +61521,7 @@ export type UserCreateWithoutTasksCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -60662,6 +61666,7 @@ export type UserUncheckedCreateWithoutTasksCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -60811,6 +61816,7 @@ export type UserCreateWithoutTasksCompletedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -60955,6 +61961,7 @@ export type UserUncheckedCreateWithoutTasksCompletedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -61115,6 +62122,7 @@ export type UserUpdateWithoutTasksAssignedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -61259,6 +62267,7 @@ export type UserUncheckedUpdateWithoutTasksAssignedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -61414,6 +62423,7 @@ export type UserUpdateWithoutTasksCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -61558,6 +62568,7 @@ export type UserUncheckedUpdateWithoutTasksCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -61713,6 +62724,7 @@ export type UserUpdateWithoutTasksCompletedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -61857,6 +62869,7 @@ export type UserUncheckedUpdateWithoutTasksCompletedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -62001,6 +63014,7 @@ export type UserCreateWithoutTaskApprovalsRequestedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -62145,6 +63159,7 @@ export type UserUncheckedCreateWithoutTaskApprovalsRequestedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -62305,6 +63320,7 @@ export type UserUpdateWithoutTaskApprovalsRequestedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -62449,6 +63465,7 @@ export type UserUncheckedUpdateWithoutTaskApprovalsRequestedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -62593,6 +63610,7 @@ export type UserCreateWithoutUserTaskSeenInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -62737,6 +63755,7 @@ export type UserUncheckedCreateWithoutUserTaskSeenInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -62897,6 +63916,7 @@ export type UserUpdateWithoutUserTaskSeenInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -63041,6 +64061,7 @@ export type UserUncheckedUpdateWithoutUserTaskSeenInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -63185,6 +64206,7 @@ export type UserCreateWithoutTaskRatingsGivenInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -63329,6 +64351,7 @@ export type UserUncheckedCreateWithoutTaskRatingsGivenInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -63478,6 +64501,7 @@ export type UserCreateWithoutTaskRatingsReceivedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -63622,6 +64646,7 @@ export type UserUncheckedCreateWithoutTaskRatingsReceivedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -63782,6 +64807,7 @@ export type UserUpdateWithoutTaskRatingsGivenInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -63926,6 +64952,7 @@ export type UserUncheckedUpdateWithoutTaskRatingsGivenInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -64081,6 +65108,7 @@ export type UserUpdateWithoutTaskRatingsReceivedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -64225,6 +65253,7 @@ export type UserUncheckedUpdateWithoutTaskRatingsReceivedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -64369,6 +65398,7 @@ export type UserCreateWithoutTaskProjectsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -64513,6 +65543,7 @@ export type UserUncheckedCreateWithoutTaskProjectsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -64673,6 +65704,7 @@ export type UserUpdateWithoutTaskProjectsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -64817,6 +65849,7 @@ export type UserUncheckedUpdateWithoutTaskProjectsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -64961,6 +65994,7 @@ export type UserCreateWithoutTaskCommentsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -65105,6 +66139,7 @@ export type UserUncheckedCreateWithoutTaskCommentsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -65265,6 +66300,7 @@ export type UserUpdateWithoutTaskCommentsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -65409,6 +66445,7 @@ export type UserUncheckedUpdateWithoutTaskCommentsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -65553,6 +66590,7 @@ export type UserCreateWithoutTaskActivityLogsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -65697,6 +66735,7 @@ export type UserUncheckedCreateWithoutTaskActivityLogsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -65857,6 +66896,7 @@ export type UserUpdateWithoutTaskActivityLogsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -66001,6 +67041,7 @@ export type UserUncheckedUpdateWithoutTaskActivityLogsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -66145,6 +67186,7 @@ export type UserCreateWithoutWarningsReceivedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -66289,6 +67331,7 @@ export type UserUncheckedCreateWithoutWarningsReceivedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -66438,6 +67481,7 @@ export type UserCreateWithoutWarningsIssuedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -66582,6 +67626,7 @@ export type UserUncheckedCreateWithoutWarningsIssuedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -66742,6 +67787,7 @@ export type UserUpdateWithoutWarningsReceivedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -66886,6 +67932,7 @@ export type UserUncheckedUpdateWithoutWarningsReceivedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -67041,6 +68088,7 @@ export type UserUpdateWithoutWarningsIssuedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -67185,6 +68233,7 @@ export type UserUncheckedUpdateWithoutWarningsIssuedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -67329,6 +68378,7 @@ export type UserCreateWithoutMdTaskTeamsOwnedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -67473,6 +68523,7 @@ export type UserUncheckedCreateWithoutMdTaskTeamsOwnedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -67633,6 +68684,7 @@ export type UserUpdateWithoutMdTaskTeamsOwnedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -67777,6 +68829,7 @@ export type UserUncheckedUpdateWithoutMdTaskTeamsOwnedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -67921,6 +68974,7 @@ export type UserCreateWithoutMdWatchlistOwnedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -68065,6 +69119,7 @@ export type UserUncheckedCreateWithoutMdWatchlistOwnedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -68225,6 +69280,7 @@ export type UserUpdateWithoutMdWatchlistOwnedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -68369,6 +69425,7 @@ export type UserUncheckedUpdateWithoutMdWatchlistOwnedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -68513,6 +69570,7 @@ export type UserCreateWithoutWorkLogsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -68657,6 +69715,7 @@ export type UserUncheckedCreateWithoutWorkLogsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -68817,6 +69876,7 @@ export type UserUpdateWithoutWorkLogsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -68961,6 +70021,7 @@ export type UserUncheckedUpdateWithoutWorkLogsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -69105,6 +70166,7 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -69249,6 +70311,7 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -69409,6 +70472,7 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -69553,6 +70617,7 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -69697,6 +70762,7 @@ export type UserCreateWithoutDoctorLeaveRequestsReviewedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -69841,6 +70907,7 @@ export type UserUncheckedCreateWithoutDoctorLeaveRequestsReviewedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -70001,6 +71068,7 @@ export type UserUpdateWithoutDoctorLeaveRequestsReviewedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -70145,6 +71213,7 @@ export type UserUncheckedUpdateWithoutDoctorLeaveRequestsReviewedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -70289,6 +71358,7 @@ export type UserCreateWithoutDoctorCabRequestsReviewedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -70433,6 +71503,7 @@ export type UserUncheckedCreateWithoutDoctorCabRequestsReviewedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -70582,6 +71653,7 @@ export type UserCreateWithoutDoctorCabRequestsVendorAssignedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -70726,6 +71798,7 @@ export type UserUncheckedCreateWithoutDoctorCabRequestsVendorAssignedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -70886,6 +71959,7 @@ export type UserUpdateWithoutDoctorCabRequestsReviewedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -71030,6 +72104,7 @@ export type UserUncheckedUpdateWithoutDoctorCabRequestsReviewedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -71185,6 +72260,7 @@ export type UserUpdateWithoutDoctorCabRequestsVendorAssignedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -71329,6 +72405,7 @@ export type UserUncheckedUpdateWithoutDoctorCabRequestsVendorAssignedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -71474,6 +72551,7 @@ export type UserCreateWithoutItProjectsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -71618,6 +72696,7 @@ export type UserUncheckedCreateWithoutItProjectsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -71778,6 +72857,7 @@ export type UserUpdateWithoutItProjectsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -71922,6 +73002,7 @@ export type UserUncheckedUpdateWithoutItProjectsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -72066,6 +73147,7 @@ export type UserCreateWithoutItFreelancersCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -72210,6 +73292,7 @@ export type UserUncheckedCreateWithoutItFreelancersCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -72370,6 +73453,7 @@ export type UserUpdateWithoutItFreelancersCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -72514,6 +73598,7 @@ export type UserUncheckedUpdateWithoutItFreelancersCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -72658,6 +73743,7 @@ export type UserCreateWithoutItProjectBookingsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -72802,6 +73888,7 @@ export type UserUncheckedCreateWithoutItProjectBookingsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -72962,6 +74049,7 @@ export type UserUpdateWithoutItProjectBookingsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -73106,6 +74194,7 @@ export type UserUncheckedUpdateWithoutItProjectBookingsCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -73250,6 +74339,7 @@ export type UserCreateWithoutDepartmentRevenuesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -73394,6 +74484,7 @@ export type UserUncheckedCreateWithoutDepartmentRevenuesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -73554,6 +74645,7 @@ export type UserUpdateWithoutDepartmentRevenuesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -73698,6 +74790,7 @@ export type UserUncheckedUpdateWithoutDepartmentRevenuesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -73842,6 +74935,7 @@ export type UserCreateWithoutPnlCategoriesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -73986,6 +75080,7 @@ export type UserUncheckedCreateWithoutPnlCategoriesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -74146,6 +75241,7 @@ export type UserUpdateWithoutPnlCategoriesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -74290,6 +75386,7 @@ export type UserUncheckedUpdateWithoutPnlCategoriesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -74434,6 +75531,7 @@ export type UserCreateWithoutPnlEntriesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -74578,6 +75676,7 @@ export type UserUncheckedCreateWithoutPnlEntriesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -74738,6 +75837,7 @@ export type UserUpdateWithoutPnlEntriesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -74882,6 +75982,7 @@ export type UserUncheckedUpdateWithoutPnlEntriesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -75026,6 +76127,7 @@ export type UserCreateWithoutTargetPnlEntriesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -75170,6 +76272,7 @@ export type UserUncheckedCreateWithoutTargetPnlEntriesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -75330,6 +76433,7 @@ export type UserUpdateWithoutTargetPnlEntriesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -75474,6 +76578,7 @@ export type UserUncheckedUpdateWithoutTargetPnlEntriesCreatedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -75618,6 +76723,7 @@ export type UserCreateWithoutKnowledgeDocumentsUploadedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -75762,6 +76868,7 @@ export type UserUncheckedCreateWithoutKnowledgeDocumentsUploadedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -75922,6 +77029,7 @@ export type UserUpdateWithoutKnowledgeDocumentsUploadedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -76066,6 +77174,7 @@ export type UserUncheckedUpdateWithoutKnowledgeDocumentsUploadedInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -76210,6 +77319,7 @@ export type UserCreateWithoutKnowledgeDocumentUsersInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -76354,6 +77464,7 @@ export type UserUncheckedCreateWithoutKnowledgeDocumentUsersInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -76514,6 +77625,7 @@ export type UserUpdateWithoutKnowledgeDocumentUsersInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -76658,6 +77770,7 @@ export type UserUncheckedUpdateWithoutKnowledgeDocumentUsersInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -76802,6 +77915,7 @@ export type UserCreateWithoutAiConversationsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -76946,6 +78060,7 @@ export type UserUncheckedCreateWithoutAiConversationsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -77106,6 +78221,7 @@ export type UserUpdateWithoutAiConversationsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -77250,6 +78366,7 @@ export type UserUncheckedUpdateWithoutAiConversationsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -77394,6 +78511,7 @@ export type UserCreateWithoutAiMessagesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -77538,6 +78656,7 @@ export type UserUncheckedCreateWithoutAiMessagesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -77698,6 +78817,7 @@ export type UserUpdateWithoutAiMessagesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -77842,6 +78962,7 @@ export type UserUncheckedUpdateWithoutAiMessagesInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -77986,6 +79107,7 @@ export type UserCreateWithoutAiToolCallsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -78130,6 +79252,7 @@ export type UserUncheckedCreateWithoutAiToolCallsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -78290,6 +79413,7 @@ export type UserUpdateWithoutAiToolCallsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -78434,6 +79558,7 @@ export type UserUncheckedUpdateWithoutAiToolCallsInput = {
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadQrScanLinks?: Prisma.LeadQrScanLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -78567,6 +79692,7 @@ export type UserCountOutputType = {
   leadRemarkEntriesAuthored: number
   leadQrCallAuditLogs: number
   leadQrPublicLinks: number
+  leadQrScanLinks: number
   leadCallNotes: number
   paymentInstallmentsRecorded: number
   paymentInstallmentsVerified: number
@@ -78696,6 +79822,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   leadRemarkEntriesAuthored?: boolean | UserCountOutputTypeCountLeadRemarkEntriesAuthoredArgs
   leadQrCallAuditLogs?: boolean | UserCountOutputTypeCountLeadQrCallAuditLogsArgs
   leadQrPublicLinks?: boolean | UserCountOutputTypeCountLeadQrPublicLinksArgs
+  leadQrScanLinks?: boolean | UserCountOutputTypeCountLeadQrScanLinksArgs
   leadCallNotes?: boolean | UserCountOutputTypeCountLeadCallNotesArgs
   paymentInstallmentsRecorded?: boolean | UserCountOutputTypeCountPaymentInstallmentsRecordedArgs
   paymentInstallmentsVerified?: boolean | UserCountOutputTypeCountPaymentInstallmentsVerifiedArgs
@@ -79347,6 +80474,13 @@ export type UserCountOutputTypeCountLeadQrPublicLinksArgs<ExtArgs extends runtim
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountLeadQrScanLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LeadQrScanLinkWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountLeadCallNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CallNoteWhereInput
 }
@@ -79734,6 +80868,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   leadRemarkEntriesAuthored?: boolean | Prisma.User$leadRemarkEntriesAuthoredArgs<ExtArgs>
   leadQrCallAuditLogs?: boolean | Prisma.User$leadQrCallAuditLogsArgs<ExtArgs>
   leadQrPublicLinks?: boolean | Prisma.User$leadQrPublicLinksArgs<ExtArgs>
+  leadQrScanLinks?: boolean | Prisma.User$leadQrScanLinksArgs<ExtArgs>
   leadCallNotes?: boolean | Prisma.User$leadCallNotesArgs<ExtArgs>
   paymentInstallmentsRecorded?: boolean | Prisma.User$paymentInstallmentsRecordedArgs<ExtArgs>
   paymentInstallmentsVerified?: boolean | Prisma.User$paymentInstallmentsVerifiedArgs<ExtArgs>
@@ -79920,6 +81055,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   leadRemarkEntriesAuthored?: boolean | Prisma.User$leadRemarkEntriesAuthoredArgs<ExtArgs>
   leadQrCallAuditLogs?: boolean | Prisma.User$leadQrCallAuditLogsArgs<ExtArgs>
   leadQrPublicLinks?: boolean | Prisma.User$leadQrPublicLinksArgs<ExtArgs>
+  leadQrScanLinks?: boolean | Prisma.User$leadQrScanLinksArgs<ExtArgs>
   leadCallNotes?: boolean | Prisma.User$leadCallNotesArgs<ExtArgs>
   paymentInstallmentsRecorded?: boolean | Prisma.User$paymentInstallmentsRecordedArgs<ExtArgs>
   paymentInstallmentsVerified?: boolean | Prisma.User$paymentInstallmentsVerifiedArgs<ExtArgs>
@@ -80055,6 +81191,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     leadRemarkEntriesAuthored: Prisma.$LeadRemarkEntryPayload<ExtArgs>[]
     leadQrCallAuditLogs: Prisma.$LeadQrCallAuditLogPayload<ExtArgs>[]
     leadQrPublicLinks: Prisma.$LeadQrPublicLinkPayload<ExtArgs>[]
+    leadQrScanLinks: Prisma.$LeadQrScanLinkPayload<ExtArgs>[]
     leadCallNotes: Prisma.$CallNotePayload<ExtArgs>[]
     paymentInstallmentsRecorded: Prisma.$PaymentInstallmentPayload<ExtArgs>[]
     paymentInstallmentsVerified: Prisma.$PaymentInstallmentPayload<ExtArgs>[]
@@ -80593,6 +81730,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   leadRemarkEntriesAuthored<T extends Prisma.User$leadRemarkEntriesAuthoredArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leadRemarkEntriesAuthoredArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadRemarkEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leadQrCallAuditLogs<T extends Prisma.User$leadQrCallAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leadQrCallAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadQrCallAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leadQrPublicLinks<T extends Prisma.User$leadQrPublicLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leadQrPublicLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadQrPublicLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  leadQrScanLinks<T extends Prisma.User$leadQrScanLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leadQrScanLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadQrScanLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leadCallNotes<T extends Prisma.User$leadCallNotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leadCallNotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CallNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   paymentInstallmentsRecorded<T extends Prisma.User$paymentInstallmentsRecordedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentInstallmentsRecordedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentInstallmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   paymentInstallmentsVerified<T extends Prisma.User$paymentInstallmentsVerifiedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentInstallmentsVerifiedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentInstallmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -83127,6 +84265,30 @@ export type User$leadQrPublicLinksArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.LeadQrPublicLinkScalarFieldEnum | Prisma.LeadQrPublicLinkScalarFieldEnum[]
+}
+
+/**
+ * User.leadQrScanLinks
+ */
+export type User$leadQrScanLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LeadQrScanLink
+   */
+  select?: Prisma.LeadQrScanLinkSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LeadQrScanLink
+   */
+  omit?: Prisma.LeadQrScanLinkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LeadQrScanLinkInclude<ExtArgs> | null
+  where?: Prisma.LeadQrScanLinkWhereInput
+  orderBy?: Prisma.LeadQrScanLinkOrderByWithRelationInput | Prisma.LeadQrScanLinkOrderByWithRelationInput[]
+  cursor?: Prisma.LeadQrScanLinkWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LeadQrScanLinkScalarFieldEnum | Prisma.LeadQrScanLinkScalarFieldEnum[]
 }
 
 /**

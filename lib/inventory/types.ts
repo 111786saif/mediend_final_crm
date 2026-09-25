@@ -122,6 +122,25 @@ export interface Sale {
     unitCost: number;
     unitPrice: number;
   }>;
+  bdmName?: string;
+  patientName?: string;
+  treatment?: string;
+  circle?: string;
+  drName?: string;
+  hospitalName?: string;
+  surgeryDate?: string;
+  mop?: string;
+  sizeUsed?: string;
+  remark?: string;
+  stockUsedForm?: string;
+  invoiceStatus?: string;
+  mrp?: number;
+  buyPrice?: number;
+  salesPrice?: number;
+  gstPercent?: number;
+  gstAmount?: number;
+  salesPriceWithGst?: number;
+  paymentReceivedStatus?: string;
 }
 
 export interface TransferLine {

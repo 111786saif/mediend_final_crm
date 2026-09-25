@@ -183,62 +183,91 @@ export function execute(
     }
 
     case "sale.post": {
-      const loc = next.locations.find((l) => l.id === cmd.locationId && !l.archived);
-      if (!loc) throw new InventoryError("Select a valid location.");
-      if (cmd.date > ctx.today) throw new InventoryError("Sale date cannot be in the future.");
+      const existingSale = cmd.id ? next.sales.find((s) => s.id === cmd.id) : undefined;
+      const saleId = existingSale ? existingSale.id : (cmd.id || ctx.id());
+      const loc = next.locations.find((l) => l.id === cmd.locationId && !l.archived) || next.locations.find((l) => !l.archived);
+      if (cmd.date && cmd.date > ctx.today) throw new InventoryError("Sale date cannot be in the future.");
 
-      let net = 0;
-      const lines = cmd.lines.map((l) => {
-        const balance = next.balances.find((b) => b.id === l.balanceId);
-        if (!balance || balance.locationId !== loc.id) throw new InventoryError("Selected stock batch is not available at this location.");
-        if (balance.quarantined) throw new InventoryError("Quarantined stock cannot be sold.");
-        if (balance.quantity < l.quantity) throw new InventoryError("Insufficient stock in selected batch.");
+      let net = cmd.salesPrice || existingSale?.net || 0;
+      let lines = existingSale?.lines || [];
 
-        const lot = next.lots.find((lot) => lot.id === balance.lotId)!;
-        if (lot.expiry < ctx.today) throw new InventoryError(`Expired batch ${lot.batch} cannot be sold.`);
+      if (cmd.lines && cmd.lines.length > 0) {
+        lines = cmd.lines.map((l) => {
+          const balance = next.balances.find((b) => b.id === l.balanceId);
+          if (!balance || (loc && balance.locationId !== loc.id)) throw new InventoryError("Selected stock batch is not available at this location.");
+          if (balance.quarantined) throw new InventoryError("Quarantined stock cannot be sold.");
+          if (balance.quantity < l.quantity) throw new InventoryError("Insufficient stock in selected batch.");
 
-        const product = next.products.find((p) => p.id === lot.productId)!;
-        const beforeBalance = structuredClone(balance);
-        balance.quantity -= l.quantity;
-        changes.push({ collection: "balances", id: balance.id, before: beforeBalance, after: balance });
+          const lot = next.lots.find((lot) => lot.id === balance.lotId)!;
+          if (lot.expiry < ctx.today) throw new InventoryError(`Expired batch ${lot.batch} cannot be sold.`);
 
-        net += l.quantity * l.unitPrice;
-        return {
-          balanceId: l.balanceId,
-          lotId: lot.id,
-          productId: product.id,
-          productName: product.name,
-          size: lot.size,
-          batch: lot.batch,
-          quantity: l.quantity,
-          unitCost: lot.unitCost,
-          unitPrice: l.unitPrice,
-        };
-      });
+          const product = next.products.find((p) => p.id === lot.productId)!;
+          const beforeBalance = structuredClone(balance);
+          balance.quantity -= l.quantity;
+          changes.push({ collection: "balances", id: balance.id, before: beforeBalance, after: balance });
 
-      const total = net + (cmd.gstMode === "WITH_GST" ? cmd.tax : 0);
-      if (cmd.paidNow > total) throw new InventoryError("Initial collection cannot exceed invoice total.");
+          net += l.quantity * l.unitPrice;
+          return {
+            balanceId: l.balanceId,
+            lotId: lot.id,
+            productId: product.id,
+            productName: product.name,
+            size: lot.size,
+            batch: lot.batch,
+            quantity: l.quantity,
+            unitCost: lot.unitCost,
+            unitPrice: l.unitPrice,
+          };
+        });
+      }
 
-      const saleId = ctx.id();
+      const total = cmd.salesPriceWithGst || (net + (cmd.gstMode === "WITH_GST" ? (cmd.gstAmount || cmd.tax) : 0));
+      if (cmd.paidNow > total && total > 0) throw new InventoryError("Initial collection cannot exceed invoice total.");
+
       const saleRow = {
         id: saleId,
-        date: cmd.date,
-        locationId: cmd.locationId,
-        billedTo: cmd.billedTo,
-        caseReference: cmd.caseReference,
-        gstMode: cmd.gstMode,
-        documentType: cmd.documentType,
-        reference: cmd.reference,
+        date: cmd.date || existingSale?.date || ctx.today,
+        locationId: loc?.id || cmd.locationId || existingSale?.locationId || "",
+        billedTo: cmd.patientName || cmd.billedTo || existingSale?.billedTo || "Patient",
+        caseReference: cmd.remark || cmd.caseReference || existingSale?.caseReference || "",
+        gstMode: cmd.gstMode || existingSale?.gstMode || "WITH_GST",
+        documentType: cmd.documentType || existingSale?.documentType || "TAX_INVOICE",
+        reference: cmd.reference || existingSale?.reference || "",
         net,
-        tax: cmd.gstMode === "WITH_GST" ? cmd.tax : 0,
+        tax: cmd.gstAmount || (cmd.gstMode === "WITH_GST" ? cmd.tax : 0) || existingSale?.tax || 0,
         total,
-        handledBy: cmd.handledBy,
-        proofId: cmd.proofId,
+        handledBy: cmd.bdmName || cmd.handledBy || existingSale?.handledBy || "",
+        proofId: cmd.proofId || existingSale?.proofId || "",
         status: "POSTED" as const,
         lines,
+        bdmName: cmd.bdmName || existingSale?.bdmName,
+        patientName: cmd.patientName || cmd.billedTo || existingSale?.patientName,
+        treatment: cmd.treatment || existingSale?.treatment,
+        circle: cmd.circle || existingSale?.circle,
+        drName: cmd.drName || existingSale?.drName,
+        hospitalName: cmd.hospitalName || loc?.name || existingSale?.hospitalName,
+        surgeryDate: cmd.surgeryDate || cmd.date || existingSale?.surgeryDate,
+        mop: cmd.mop || existingSale?.mop,
+        sizeUsed: cmd.sizeUsed || existingSale?.sizeUsed,
+        remark: cmd.remark || existingSale?.remark,
+        stockUsedForm: cmd.stockUsedForm || existingSale?.stockUsedForm,
+        invoiceStatus: cmd.invoiceStatus || existingSale?.invoiceStatus,
+        mrp: cmd.mrp || existingSale?.mrp,
+        buyPrice: cmd.buyPrice || existingSale?.buyPrice,
+        salesPrice: cmd.salesPrice || net,
+        gstPercent: cmd.gstPercent || existingSale?.gstPercent,
+        gstAmount: cmd.gstAmount || (cmd.gstMode === "WITH_GST" ? cmd.tax : 0) || existingSale?.gstAmount,
+        salesPriceWithGst: cmd.salesPriceWithGst || total,
+        paymentReceivedStatus: cmd.paymentReceivedStatus || existingSale?.paymentReceivedStatus,
       };
-      next.sales.push(saleRow);
-      changes.push({ collection: "sales", id: saleId, before: null, after: saleRow });
+
+      if (existingSale) {
+        changes.push({ collection: "sales", id: saleId, before: structuredClone(existingSale), after: saleRow });
+        Object.assign(existingSale, saleRow);
+      } else {
+        next.sales.push(saleRow);
+        changes.push({ collection: "sales", id: saleId, before: null, after: saleRow });
+      }
 
       if (cmd.paidNow > 0) {
         const paymentRow = {

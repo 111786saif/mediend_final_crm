@@ -57,6 +57,9 @@ export function EntryForm({
     setValues((old) => {
       const next = { ...old, [key]: value };
       if (key === "gstMode" && value === "WITHOUT_GST") next.tax = "0";
+      if (key === "date") {
+        next.surgeryDate = value || todayIndia();
+      }
       return next;
     });
 
@@ -167,17 +170,39 @@ export function EntryForm({
           };
           break;
         case "sale":
+        case "saleProduct":
+        case "saleFinance":
           command = {
             type: "sale.post",
-            locationId: values.locationId,
-            billedTo: values.billedTo,
-            caseReference: values.caseReference,
+            id: request.id,
+            locationId: values.locationId || (state.locations.find((l) => !l.archived)?.id || "00000000-0000-0000-0000-000000000000"),
+            billedTo: values.patientName || values.billedTo || "Patient",
+            caseReference: values.remark || values.caseReference || "",
             ...common,
-            lines: lines.map((l) => ({
+            lines: (lines || []).filter((l) => l.balanceId).map((l) => ({
               balanceId: l.balanceId,
-              quantity: Number(l.quantity),
-              unitPrice: parseRupees(l.unitPrice),
+              quantity: Number(l.quantity || 1),
+              unitPrice: parseRupees(l.unitPrice || "0"),
             })),
+            bdmName: values.bdmName || "",
+            patientName: values.patientName || values.billedTo || "",
+            treatment: values.treatment || "",
+            circle: values.circle || "",
+            drName: values.drName || "",
+            hospitalName: values.hospitalName || "",
+            surgeryDate: values.surgeryDate || values.date || todayIndia(),
+            mop: values.mop || "",
+            sizeUsed: values.sizeUsed || "",
+            remark: values.remark || "",
+            stockUsedForm: values.stockUsedForm || "",
+            invoiceStatus: values.invoiceStatus || "",
+            mrp: parseRupees(values.mrp || "0"),
+            buyPrice: parseRupees(values.buyPrice || "0"),
+            salesPrice: parseRupees(values.salesPrice || "0"),
+            gstPercent: Number(values.gstPercent || 0),
+            gstAmount: parseRupees(values.gstAmount || "0"),
+            salesPriceWithGst: parseRupees(values.salesPriceWithGst || "0"),
+            paymentReceivedStatus: values.paymentReceivedStatus || "",
           };
           break;
         case "transfer":

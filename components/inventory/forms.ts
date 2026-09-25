@@ -6,6 +6,8 @@ export type FormKind =
   | "location"
   | "purchase"
   | "sale"
+  | "saleProduct"
+  | "saleFinance"
   | "transfer"
   | "receive"
   | "cancel"
@@ -38,6 +40,8 @@ export const titles: Record<FormKind, string> = {
   location: "Add / Update Hospital / Warehouse Location",
   purchase: "Receive Implant Purchase (Stock IN)",
   sale: "Record Implant Usage / Sale (Stock OUT)",
+  saleProduct: "Record Sales Product Entry",
+  saleFinance: "Record Sales Finance Entry",
   transfer: "Dispatch Implant Transfer / Kit",
   receive: "Acknowledge Full Transfer Receipt",
   cancel: "Cancel In-Transit Transfer",
@@ -135,6 +139,42 @@ export function initialValues(
           }
         : defaults;
     }
+    case "sale":
+    case "saleProduct":
+    case "saleFinance": {
+      const sale = state.sales.find((x) => x.id === request.id);
+      if (sale) {
+        return {
+          ...defaults,
+          date: sale.date || defaults.date,
+          locationId: sale.locationId || defaults.locationId,
+          billedTo: sale.billedTo || defaults.billedTo,
+          caseReference: sale.caseReference || defaults.caseReference,
+          reference: sale.reference || defaults.reference,
+          bdmName: sale.bdmName || "",
+          patientName: sale.patientName || sale.billedTo || "",
+          treatment: sale.treatment || "",
+          circle: sale.circle || "",
+          drName: sale.drName || "",
+          hospitalName: sale.hospitalName || "",
+          surgeryDate: sale.surgeryDate || sale.date || defaults.date,
+          mop: sale.mop || "",
+          sizeUsed: sale.sizeUsed || "",
+          remark: sale.remark || sale.caseReference || "",
+          stockUsedForm: sale.stockUsedForm || "",
+          invoiceStatus: sale.invoiceStatus || (sale.reference ? "Invoice Raised" : "Invoice Needed"),
+          mrp: sale.mrp !== undefined ? (sale.mrp / 100).toFixed(2) : "0",
+          buyPrice: sale.buyPrice !== undefined ? (sale.buyPrice / 100).toFixed(2) : "0",
+          salesPrice: sale.salesPrice !== undefined ? (sale.salesPrice / 100).toFixed(2) : "0",
+          gstPercent: String(sale.gstPercent || 0),
+          gstAmount: sale.gstAmount !== undefined ? (sale.gstAmount / 100).toFixed(2) : "0",
+          salesPriceWithGst: sale.salesPriceWithGst !== undefined ? (sale.salesPriceWithGst / 100).toFixed(2) : "0",
+          paymentReceivedStatus: sale.paymentReceivedStatus || (sale.total > 0 ? "Payment Received" : "Payment Not Received"),
+          ...(request.defaults ?? {}),
+        };
+      }
+      return defaults;
+    }
   }
 
   return defaults;
@@ -198,6 +238,44 @@ export function formFields(kind: FormKind, state: InventoryState): FieldDef[] {
         { name: "method", label: "Collection Method", type: "select", options: [{ value: "UPI", label: "UPI / QR" }, { value: "BANK_TRANSFER", label: "Bank Transfer" }, { value: "CHEQUE", label: "Cheque" }, { value: "CASH", label: "Cash" }, { value: "CREDIT", label: "Credit (Pending)" }] },
         { name: "handledBy", label: "Handled By (Staff)" },
         { name: "proofId", label: "Proof / Slip Copy", type: "file", required: false },
+      ];
+    case "saleProduct":
+      return [
+        { name: "date", label: "Date", type: "date" },
+        { name: "bdmName", label: "BDM Name" },
+        { name: "patientName", label: "Patient Name" },
+        { name: "treatment", label: "Treatment" },
+        { name: "circle", label: "Circle" },
+        { name: "drName", label: "Dr. Name" },
+        { name: "hospitalName", label: "Hospital Name" },
+        { name: "surgeryDate", label: "Surgery Date", type: "date", hint: "Auto-fills with Date when Date is entered" },
+        { name: "mop", label: "MOP (Mode of Payment)", type: "select", options: [
+          { value: "UPI", label: "UPI / QR" },
+          { value: "BANK_TRANSFER", label: "Bank Transfer" },
+          { value: "CHEQUE", label: "Cheque" },
+          { value: "CASH", label: "Cash" },
+          { value: "CREDIT", label: "Credit" }
+        ] },
+        { name: "sizeUsed", label: "Size Used", hint: "e.g. S, M, L, 10mm" },
+        { name: "remark", label: "Remark", type: "textarea", required: false },
+        { name: "stockUsedForm", label: "Stock Used Form", required: false, hint: "Implant / Stock item details" },
+      ];
+    case "saleFinance":
+      return [
+        { name: "invoiceStatus", label: "Invoice Raised/Need", type: "select", options: [
+          { value: "Invoice Raised", label: "Invoice Raised" },
+          { value: "Invoice Needed", label: "Invoice Needed" }
+        ] },
+        { name: "mrp", label: "MRP (₹)", type: "money" },
+        { name: "buyPrice", label: "Buy Price (₹)", type: "money" },
+        { name: "salesPrice", label: "Sales Price (₹)", type: "money" },
+        { name: "gstPercent", label: "GST %", type: "number", hint: "e.g. 5, 12, 18" },
+        { name: "gstAmount", label: "GST Amount (₹)", type: "money" },
+        { name: "salesPriceWithGst", label: "Sales Price with GST (₹)", type: "money" },
+        { name: "paymentReceivedStatus", label: "Payment Received/Not", type: "select", options: [
+          { value: "Payment Received", label: "Payment Received" },
+          { value: "Payment Not Received", label: "Payment Not Received" }
+        ] },
       ];
     case "transfer":
       return [

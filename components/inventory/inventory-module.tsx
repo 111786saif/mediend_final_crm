@@ -24,7 +24,9 @@ import {
   Info,
   LayoutDashboard,
   MapPin,
+  Package,
   Plus,
+  Receipt,
   RefreshCw,
   RotateCcw,
   Search,
@@ -148,6 +150,30 @@ function Table({
       Outstanding: "outstanding",
       "Handled by": "handledBy",
       Actions: "actions",
+
+      // Sales Product
+      Date: "date",
+      "BDM Name": "bdmName",
+      "Patient Name": "patientName",
+      Treatment: "treatment",
+      Circle: "circle",
+      "Dr. Name": "drName",
+      "Hospital Name": "hospitalName",
+      "Surgery Date": "surgeryDate",
+      MOP: "mop",
+      "Size Used": "sizeUsed",
+      Remark: "remark",
+      "Stock Used Form": "stockUsedForm",
+
+      // Sales Finance
+      "Invoice Raised/Need": "invoiceStatus",
+      MRP: "mrp",
+      "Buy Price": "buyPrice",
+      "Sales Price": "salesPrice",
+      "GST %": "gstPercent",
+      "GST Amount": "gstAmount",
+      "Sales Price with GST": "salesPriceWithGst",
+      "Payment Received/Not": "paymentReceivedStatus",
 
       // Transfers
       Transfer: "transfer",
@@ -299,6 +325,10 @@ export default function InventoryModule({
   const { hasAccess, permissionsReady } = usePermissions();
   const searchParams = useSearchParams();
   const tabParam = searchParams?.get("tab");
+  const subTabParam = searchParams?.get("subTab");
+  const [salesSubTab, setSalesSubTab] = useState<"product" | "finance">(
+    subTabParam === "finance" ? "finance" : "product"
+  );
   const [snapshot, setSnapshot] = useState<Snapshot>(),
     [tab, setTab] = useState<Tab>(initialTab),
     [loading, setLoading] = useState(true),
@@ -336,6 +366,12 @@ export default function InventoryModule({
       }
     }
   }, [tabParam]);
+
+  useEffect(() => {
+    if (subTabParam === "finance" || subTabParam === "product") {
+      setSalesSubTab(subTabParam);
+    }
+  }, [subTabParam]);
 
   const fetchJSON = useCallback(async (path: string, init?: RequestInit) => {
     const r = await fetch(path, {
@@ -498,6 +534,7 @@ export default function InventoryModule({
   }
 
   const s: InventoryState = snapshot.state,
+    actorName = snapshot.actor.name,
     write = snapshot.actor.permissions.includes("write"),
     admin = snapshot.actor.permissions.includes("admin"),
     totals = dashboard(s),
@@ -958,6 +995,161 @@ export default function InventoryModule({
     );
   }
 
+  function salesProductTable() {
+    const sales = s.sales;
+    return (
+      <Table
+        tabKey="Sales"
+        heads={[
+          "Date",
+          "BDM Name",
+          "Patient Name",
+          "Treatment",
+          "Circle",
+          "Dr. Name",
+          "Hospital Name",
+          "Surgery Date",
+          "MOP",
+          "Size Used",
+          "Remark",
+          "Stock Used Form",
+          "Actions",
+        ]}
+        rows={sales
+          .filter(
+            (d) =>
+              matches(
+                d.id,
+                d.date,
+                d.reference,
+                d.billedTo,
+                d.caseReference,
+                d.handledBy,
+                d.bdmName,
+                d.patientName,
+                d.treatment,
+                d.circle,
+                d.drName,
+                d.hospitalName,
+                d.surgeryDate,
+                d.mop,
+                d.sizeUsed,
+                d.remark,
+                d.stockUsedForm,
+                ...d.lines.map((l) => `${l.productName || name("products", l.productId)} ${l.batch}`),
+              ),
+          )
+          .slice()
+          .reverse()
+          .map((d) => [
+            <div key="date">
+              <strong className="font-semibold text-slate-900 dark:text-slate-100">{d.date}</strong>
+            </div>,
+            d.bdmName || d.handledBy || "—",
+            d.patientName || d.billedTo || "—",
+            d.treatment || "—",
+            d.circle || "—",
+            d.drName || "—",
+            d.hospitalName || name("locations", d.locationId) || "—",
+            d.surgeryDate || d.date || "—",
+            d.mop || String(s.payments.find((p) => p.documentId === d.id)?.method || "—").replace(/_/g, " "),
+            d.sizeUsed || d.lines.map((l) => l.size).filter(Boolean).join(", ") || "—",
+            d.remark || d.caseReference || "—",
+            d.stockUsedForm || (d.lines.length > 0 ? d.lines.map((l) => `${l.productName || name("products", l.productId)}${l.batch ? ` (${l.batch})` : ''}`).join(", ") : "—"),
+            <div key="actions" className="flex gap-2 items-center flex-wrap">
+              {link("Details", () => docDetail(d, "SALE"))}
+              {paymentButton(d, "SALE")}
+              {admin &&
+                d.status === "POSTED" &&
+                paid(s, d.id) === 0 &&
+                button(
+                  "Void",
+                  { kind: "void", id: d.id, defaults: { documentKind: "SALE" } },
+                  true,
+                )}
+            </div>,
+          ])}
+      />
+    );
+  }
+
+  function salesFinanceTable() {
+    const sales = s.sales;
+    return (
+      <Table
+        tabKey="Sales"
+        heads={[
+          "Invoice Raised/Need",
+          "MRP",
+          "Buy Price",
+          "Sales Price",
+          "GST %",
+          "GST Amount",
+          "Sales Price with GST",
+          "Payment Received/Not",
+          "Actions",
+        ]}
+        rows={sales
+          .filter(
+            (d) =>
+              matches(
+                d.id,
+                d.reference,
+                d.billedTo,
+                d.invoiceStatus,
+                d.paymentReceivedStatus,
+                d.handledBy,
+                ...d.lines.map((l) => `${l.productName || name("products", l.productId)} ${l.batch}`),
+              ),
+          )
+          .slice()
+          .reverse()
+          .map((d) => {
+            const mrpVal = d.mrp ?? d.lines.reduce((sum, l) => sum + (s.products.find((p) => p.id === l.productId)?.mrp || 0) * l.quantity, 0);
+            const buyPriceVal = d.buyPrice ?? d.lines.reduce((sum, l) => sum + l.unitCost * l.quantity, 0);
+            const salesPriceVal = d.salesPrice ?? d.net;
+            const gstPercentVal = d.gstPercent ? `${d.gstPercent}%` : d.net > 0 && d.tax > 0 ? `${Math.round((d.tax / d.net) * 100)}%` : "0%";
+            const gstAmountVal = d.gstAmount ?? d.tax;
+            const salesPriceWithGstVal = d.salesPriceWithGst ?? d.total;
+            const isPaid = paid(s, d.id) >= d.total && d.total > 0;
+            const isPartPaid = paid(s, d.id) > 0;
+
+            return [
+              <div key="inv" className="space-y-1">
+                <strong className="font-semibold text-slate-900 dark:text-slate-100 block">{d.patientName || d.billedTo || "Patient"}</strong>
+                <small className="text-[11px] text-slate-500 dark:text-slate-400 block">{d.date}</small>
+                <Badge tone={d.invoiceStatus === "Invoice Raised" || d.reference ? "green" : "amber"}>
+                  {d.invoiceStatus || (d.reference ? "Invoice Raised" : "Invoice Needed")}
+                </Badge>
+              </div>,
+              money(mrpVal),
+              money(buyPriceVal),
+              money(salesPriceVal),
+              gstPercentVal,
+              money(gstAmountVal),
+              money(salesPriceWithGstVal),
+              <Badge key="pay" tone={d.paymentReceivedStatus === "Payment Received" || isPaid ? "green" : isPartPaid ? "amber" : "red"}>
+                {d.paymentReceivedStatus || (isPaid ? "Payment Received" : isPartPaid ? "Part Paid" : "Payment Not Received")}
+              </Badge>,
+              <div key="actions" className="flex gap-2 items-center flex-wrap">
+                {button("Update Finance", { kind: "saleFinance", id: d.id })}
+                {link("Details", () => docDetail(d, "SALE"))}
+                {paymentButton(d, "SALE")}
+                {admin &&
+                  d.status === "POSTED" &&
+                  paid(s, d.id) === 0 &&
+                  button(
+                    "Void",
+                    { kind: "void", id: d.id, defaults: { documentKind: "SALE" } },
+                    true,
+                  )}
+              </div>,
+            ];
+          })}
+      />
+    );
+  }
+
   const stockRows = s.balances.map((b) => {
     const l = s.lots.find((x) => x.id === b.lotId)!,
       p = s.products.find((p) => p.id === l.productId)!;
@@ -1323,14 +1515,43 @@ export default function InventoryModule({
         </div>
       );
       case "Purchases":
-      case "Sales":
         return (
           <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
             <div className="flex items-center flex-wrap gap-3 p-4 border-b border-slate-200 dark:border-slate-800">
-              <SearchBox query={query} set={setQuery} placeholder="Search document, vendor or billed-to name…" />
+              <SearchBox query={query} set={setQuery} placeholder="Search document or vendor name…" />
             </div>
-            {documentTable(tab === "Purchases" ? "PURCHASE" : "SALE")}
+            {documentTable("PURCHASE")}
           </section>
+        );
+      case "Sales":
+        return (
+          <div className="space-y-4">
+            <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+              <div className="flex items-center flex-wrap gap-3 p-4 border-b border-slate-200 dark:border-slate-800 justify-between">
+                <SearchBox
+                  query={query}
+                  set={setQuery}
+                  placeholder={`Search ${salesSubTab === "product" ? "Sales Product" : "Sales Finance"} records…`}
+                />
+                {write && (
+                  <Button
+                    size="sm"
+                    onClick={() =>
+                      open(
+                        salesSubTab === "finance"
+                          ? { kind: "saleFinance", defaults: { handledBy: actorName } }
+                          : { kind: "saleProduct", defaults: { handledBy: actorName } }
+                      )
+                    }
+                  >
+                    <Plus className="h-4 w-4 mr-1.5" />
+                    {salesSubTab === "finance" ? "Add Sales Finance" : "Add Sales Product"}
+                  </Button>
+                )}
+              </div>
+              {salesSubTab === "product" ? salesProductTable() : salesFinanceTable()}
+            </section>
+          </div>
         );
       case "Transfers & kits": {
         const inTransitCount = s.transfers.filter((t) => t.status === "IN_TRANSIT").length;
@@ -1966,7 +2187,9 @@ export default function InventoryModule({
     tab === "Overview" || tab === "Stock" || tab === "Purchases"
       ? { kind: "purchase" }
       : tab === "Sales"
-        ? { kind: "sale", defaults: { handledBy: snapshot.actor.name } }
+        ? salesSubTab === "finance"
+          ? { kind: "saleFinance", defaults: { handledBy: actorName } }
+          : { kind: "saleProduct", defaults: { handledBy: actorName } }
         : tab === "Transfers & kits"
           ? { kind: "transfer" }
           : tab === "Vendors"
@@ -2068,11 +2291,15 @@ export default function InventoryModule({
                 <Plus className="mr-1.5 h-4 w-4" />
                 {mainAction.kind === "purchase"
                   ? "Receive purchase"
-                  : mainAction.kind === "sale"
-                    ? "Record sale"
-                    : mainAction.kind === "transfer"
-                      ? "Transfer stock"
-                      : `Add ${mainAction.kind}`}
+                  : mainAction.kind === "saleProduct"
+                    ? "Add Sales Product"
+                    : mainAction.kind === "saleFinance"
+                      ? "Add Sales Finance"
+                      : mainAction.kind === "sale"
+                        ? "Record sale"
+                        : mainAction.kind === "transfer"
+                          ? "Transfer stock"
+                          : `Add ${mainAction.kind}`}
               </Button>
             )}
           </div>
