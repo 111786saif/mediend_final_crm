@@ -14,7 +14,6 @@ type TelephonyAgentIdentity = {
   userId: string
   role: string
   name: string | null
-  notificationsEnabled: boolean
   agentPhones: string[]
   primaryAgentPhone: string | null
 }
@@ -299,8 +298,6 @@ async function resolveTelephonyAgentIdentity(userId: string): Promise<TelephonyA
       employee: {
         select: {
           knowlarityPhoneNumber: true,
-          knowlarityCallerId: true,
-          knowlarityNotificationsEnabled: true,
         },
       },
     },
@@ -308,10 +305,7 @@ async function resolveTelephonyAgentIdentity(userId: string): Promise<TelephonyA
 
   if (!user) return null
 
-  const phoneCandidates = [
-    normalizePhone(user.employee?.knowlarityPhoneNumber),
-    normalizePhone(user.employee?.knowlarityCallerId),
-  ].filter(isMeaningfulPhone)
+  const phoneCandidates = [normalizePhone(user.employee?.knowlarityPhoneNumber)].filter(isMeaningfulPhone)
 
   const agentPhones = Array.from(new Set(phoneCandidates))
 
@@ -319,7 +313,6 @@ async function resolveTelephonyAgentIdentity(userId: string): Promise<TelephonyA
     userId: user.id,
     role: user.role,
     name: user.name,
-    notificationsEnabled: user.employee?.knowlarityNotificationsEnabled ?? false,
     agentPhones,
     primaryAgentPhone: agentPhones[0] ?? null,
   }
@@ -353,21 +346,17 @@ export async function GET(request: NextRequest) {
       return buildDisabledTelephonyResponse('Telephony is not available for this user.')
     }
 
-    if (agentIdentity.role !== 'BD') {
-      return buildDisabledTelephonyResponse('Knowlarity call cards are only enabled for BD users.')
-    }
-
-    if (!agentIdentity.notificationsEnabled || agentIdentity.agentPhones.length === 0) {
-      return buildDisabledTelephonyResponse('Knowlarity is not configured for this BD account.')
+    if (agentIdentity.agentPhones.length === 0) {
+      return buildDisabledTelephonyResponse('A Knowlarity notification number is required for this account.')
     }
 
     const agentPhoneSet = new Set(agentIdentity.agentPhones)
 
     console.log(`\n=================== [TELEPHONY STREAM INIT] ===================`)
     console.log(
-      `[TELEPHONY STREAM INIT] User connected: ID="${currentUser.id}" | Role="${currentUser.role}" | AgentPhones="${agentIdentity.agentPhones.join(',')}" | NotificationsEnabled=${agentIdentity.notificationsEnabled}`
+      `[TELEPHONY STREAM INIT] User connected: ID="${currentUser.id}" | Role="${currentUser.role}" | AgentPhones="${agentIdentity.agentPhones.join(',')}"`
     )
-
+  
     const authKey = process.env.KNOWLARITY_AUTH_KEY?.trim()
     const apiKey = process.env.KNOWLARITY_X_API_KEY?.trim()
     const channel = process.env.KNOWLARITY_NOTIFICATION_CHANNEL?.trim() || 'Basic'
