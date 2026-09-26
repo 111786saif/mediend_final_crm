@@ -335,7 +335,7 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
   return (
     <ProtectedRoute>
       {user ? <LeadAssignedPopup /> : null}
-      {user?.role === 'BD' ? <KnowlarityCallListener /> : null}
+      {user ? <KnowlarityCallListener /> : null}
       <MeetReminderPopup />
       <WorkLogEnforcer />
       {shouldShowSidebar ? (
