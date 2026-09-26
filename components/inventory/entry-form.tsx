@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { X, Plus, Trash2 } from "lucide-react";
+import { X, Plus, Trash2, Search, Loader2, CheckCircle2 } from "lucide-react";
 import type { InventoryState, Transfer, Balance } from "@/lib/inventory/types";
 import type { Command } from "@/lib/inventory/commands";
 import { commandSchema } from "@/lib/inventory/commands";
@@ -9,6 +9,20 @@ import { todayIndia } from "@/lib/inventory/engine";
 import { formFields, initialValues, titles, type FormRequest } from "./forms";
 
 type Line = Record<string, string>;
+
+interface LeadSuggestion {
+  id: string;
+  leadRef: string;
+  patientName: string;
+  bdmName: string;
+  treatment: string;
+  circle: string;
+  hospitalName: string;
+  drName: string;
+  managerName?: string;
+  surgeryDate: string;
+  mop: string;
+}
 
 export function EntryForm({
   request,
@@ -27,6 +41,73 @@ export function EntryForm({
       initialValues(request, state, todayIndia()),
     ),
     [lines, setLines] = useState<Line[]>(() => {
+      if (request.id) {
+        const existingSale = state.sales.find((s) => s.id === request.id);
+        if (existingSale && existingSale.lines && existingSale.lines.length > 0) {
+          return existingSale.lines.map((l) => {
+            const product = state.products.find((p) => p.id === l.productId);
+            const lot = l.lotId
+              ? state.lots.find((lot) => lot.id === l.lotId)
+              : undefined;
+            const bal = l.balanceId
+              ? state.balances.find((b) => b.id === l.balanceId)
+              : undefined;
+            const lotFromBal = bal ? state.lots.find((lot) => lot.id === bal.lotId) : undefined;
+            const resolvedLot = lot || lotFromBal;
+
+            // Unit buy price auto-fetched from batch purchase (lot) or recorded unitCost:
+            const rawCost =
+              l.unitCost !== undefined && l.unitCost > 0
+                ? l.unitCost
+                : resolvedLot && resolvedLot.unitCost > 0
+                  ? resolvedLot.unitCost
+                  : 0;
+            const lineBuyCost = rawCost > 0 ? (rawCost / 100).toFixed(2) : "";
+
+            // MRP auto-fetched from implant catalog (product.mrp) or recorded mrp:
+            const rawMrp =
+              l.mrp !== undefined && l.mrp > 0
+                ? l.mrp
+                : product && product.mrp > 0
+                  ? product.mrp
+                  : 0;
+            const lineMrp = rawMrp > 0 ? (rawMrp / 100).toFixed(2) : "";
+
+            // Unit selling price (blank by default):
+            const lineUnitPrice =
+              l.unitPrice !== undefined && l.unitPrice > 0
+                ? (l.unitPrice / 100).toFixed(2)
+                : "";
+
+            // GST % (blank by default):
+            const lineGstPct =
+              l.gstPercent !== undefined && l.gstPercent > 0
+                ? String(l.gstPercent)
+                : "";
+
+            // GST Amount (blank by default):
+            const lineGstAmt =
+              l.gstAmount !== undefined && l.gstAmount > 0
+                ? (l.gstAmount / 100).toFixed(2)
+                : "";
+
+            return {
+              balanceId: l.balanceId || "",
+              productId: l.productId || "",
+              productName: l.productName || product?.name || "",
+              size: l.size || "",
+              batch: l.batch || resolvedLot?.batch || "",
+              quantity: String(l.quantity || 1),
+              mrp: lineMrp,
+              unitCost: lineBuyCost,
+              unitPrice: lineUnitPrice,
+              gstPercent: lineGstPct,
+              gstAmount: lineGstAmt,
+              expiry: nextYear(),
+            };
+          });
+        }
+      }
       const initialLocId = isTransfer
         ? (values.fromId || "")
         : (values.locationId || values.fromId || "");
@@ -35,14 +116,143 @@ export function EntryForm({
 
       const activeProducts = state.products.filter((p) => !p.archived);
       const defaultProductId = activeProducts.length > 0 ? activeProducts[0].id : "";
+      const defaultProd = activeProducts.find((p) => p.id === defaultProductId);
+      const defaultMrp = defaultProd?.mrp && defaultProd.mrp > 0 ? (defaultProd.mrp / 100).toFixed(2) : "";
       const defaultSize = activeProducts.length > 0 && activeProducts[0].sizes.length > 0 ? activeProducts[0].sizes[0] : "";
       return [
-        { balanceId: defaultBalanceId, productId: defaultProductId, size: defaultSize, quantity: "1", unitCost: "0", unitPrice: "0", expiry: nextYear() },
+        {
+          balanceId: defaultBalanceId,
+          productId: defaultProductId,
+          productName: defaultProd?.name || "",
+          size: defaultSize,
+          batch: "",
+          quantity: "1",
+          mrp: defaultMrp,
+          unitCost: "",
+          unitPrice: "",
+          gstPercent: "",
+          gstAmount: "",
+          expiry: nextYear(),
+        },
       ];
     }),
     [file, setFile] = useState<File>(),
     [busy, setBusy] = useState(false),
     [error, setError] = useState("");
+
+  const [leadLoading, setLeadLoading] = useState(false);
+  const [leadFound, setLeadFound] = useState<string | null>(null);
+  const [leadSuggestions, setLeadSuggestions] = useState<LeadSuggestion[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [masters, setMasters] = useState<{
+    treatments: string[];
+    hospitals: string[];
+    doctors: string[];
+  }>({ treatments: [], hospitals: [], doctors: [] });
+  const [customFields, setCustomFields] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    if (request.kind === "saleProduct") {
+      fetch("/api/masters/pipeline-options", { credentials: "same-origin" })
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.success && json.data) {
+            setMasters({
+              treatments: Array.isArray(json.data.treatments) ? json.data.treatments : [],
+              hospitals: Array.isArray(json.data.hospitals) ? json.data.hospitals : [],
+              doctors: Array.isArray(json.data.doctors) ? json.data.doctors : [],
+            });
+          }
+        })
+        .catch(() => {});
+    }
+  }, [request.kind]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const selectLeadSuggestion = (lead: LeadSuggestion) => {
+    setShowSuggestions(false);
+    setLeadFound(`${lead.patientName} (${lead.leadRef})`);
+    setValues((old) => {
+      const next: Record<string, string> = {
+        ...old,
+        caseReference: lead.leadRef,
+        patientName: lead.patientName || old.patientName,
+        billedTo: lead.patientName || old.billedTo,
+        bdmName: lead.bdmName || old.bdmName,
+        managerName: lead.managerName || old.managerName || "",
+        treatment: lead.treatment || old.treatment,
+        circle: lead.circle || old.circle,
+        hospitalName: lead.hospitalName || old.hospitalName,
+        drName: lead.drName || old.drName,
+        surgeryDate: lead.surgeryDate || old.surgeryDate,
+        mop: lead.mop || old.mop,
+      };
+      if (!old.locationId && lead.hospitalName) {
+        const matchedLoc = state.locations.find(
+          (l) =>
+            l.name.toLowerCase().includes(lead.hospitalName.toLowerCase()) ||
+            lead.hospitalName.toLowerCase().includes(l.name.toLowerCase()),
+        );
+        if (matchedLoc) next.locationId = matchedLoc.id;
+      }
+      return next;
+    });
+  };
+
+  const fetchLeadByRef = async (ref: string) => {
+    if (!ref.trim()) return;
+    setLeadLoading(true);
+    try {
+      const res = await fetch(`/api/inventory/leads?ref=${encodeURIComponent(ref.trim())}`);
+      const json = await res.json();
+      if (json.success && json.data) {
+        selectLeadSuggestion(json.data);
+      } else {
+        setLeadFound(null);
+      }
+    } catch (err) {
+      console.error("Failed to fetch lead by ref:", err);
+    } finally {
+      setLeadLoading(false);
+    }
+  };
+
+  const handleCaseRefChange = (val: string) => {
+    setLeadFound(null);
+    if (!val.trim()) {
+      setLeadSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    searchTimeoutRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/inventory/leads?search=${encodeURIComponent(val.trim())}`);
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data)) {
+          setLeadSuggestions(json.data);
+          setShowSuggestions(json.data.length > 0);
+        }
+      } catch {
+        // ignore
+      }
+    }, 300);
+  };
 
   useEffect(() => {
     dialog.current?.showModal();
@@ -50,8 +260,58 @@ export function EntryForm({
   }, []);
 
   const fields = formFields(request.kind, state),
-    isLines = ["purchase", "sale", "transfer"].includes(request.kind),
+    isLines = ["purchase", "sale", "saleProduct", "transfer"].includes(request.kind),
     purchase = request.kind === "purchase";
+
+  const recalcFinanceTotals = (updatedLines: Line[]) => {
+    let totalSales = 0;
+    let totalBuy = 0;
+    let totalMrp = 0;
+    let totalGst = 0;
+
+    for (const l of updatedLines) {
+      const qty = Number(l.quantity || 1);
+      const price = parseRupees(l.unitPrice || "0") / 100;
+      const cost = parseRupees(l.unitCost || "0") / 100;
+      const mrp = parseRupees(l.mrp || "0") / 100;
+      const gstPct = Number(l.gstPercent || 0);
+
+      const itemSelling = price * qty;
+      const itemGst = itemSelling * (gstPct / 100);
+
+      totalSales += itemSelling;
+      totalBuy += cost * qty;
+      totalMrp += mrp * qty;
+      totalGst += itemGst;
+    }
+
+    const totalWithGst = totalSales + totalGst;
+
+    setValues((prev) => {
+      const nextTotalWithGst = totalWithGst > 0 ? totalWithGst.toFixed(2) : "";
+      const updatedStatus =
+        prev.receivedPayment !== undefined && prev.receivedPayment !== ""
+          ? computePaymentStatus(prev.receivedPayment, nextTotalWithGst)
+          : prev.paymentReceivedStatus;
+      return {
+        ...prev,
+        salesPrice: totalSales > 0 ? totalSales.toFixed(2) : "",
+        buyPrice: totalBuy > 0 ? totalBuy.toFixed(2) : "",
+        mrp: totalMrp > 0 ? totalMrp.toFixed(2) : "",
+        gstAmount: totalGst > 0 ? totalGst.toFixed(2) : "",
+        salesPriceWithGst: nextTotalWithGst,
+        ...(updatedStatus ? { paymentReceivedStatus: updatedStatus } : {}),
+      };
+    });
+  };
+
+  function computePaymentStatus(receivedStr: string, totalWithGstStr: string): string {
+    const received = parseRupees(receivedStr || "0");
+    const total = parseRupees(totalWithGstStr || "0");
+    if (received <= 0) return "Not Received";
+    if (total > 0 && received >= total) return "Received";
+    return "Part Paid";
+  }
 
   const set = (key: string, value: string) =>
     setValues((old) => {
@@ -60,16 +320,68 @@ export function EntryForm({
       if (key === "date") {
         next.surgeryDate = value || todayIndia();
       }
+      if (key === "salesPrice") {
+        const salesVal = parseRupees(value || "0") / 100;
+        const gstVal = parseRupees(next.gstAmount || "0") / 100;
+        next.salesPriceWithGst = (salesVal + gstVal).toFixed(2);
+        if (next.receivedPayment !== undefined && next.receivedPayment !== "") {
+          next.paymentReceivedStatus = computePaymentStatus(next.receivedPayment, next.salesPriceWithGst);
+        }
+      }
+      if (key === "gstAmount") {
+        const salesVal = parseRupees(next.salesPrice || "0") / 100;
+        const gstVal = parseRupees(value || "0") / 100;
+        next.salesPriceWithGst = (salesVal + gstVal).toFixed(2);
+        if (next.receivedPayment !== undefined && next.receivedPayment !== "") {
+          next.paymentReceivedStatus = computePaymentStatus(next.receivedPayment, next.salesPriceWithGst);
+        }
+      }
+      if (key === "salesPriceWithGst") {
+        if (next.receivedPayment !== undefined && next.receivedPayment !== "") {
+          next.paymentReceivedStatus = computePaymentStatus(next.receivedPayment, value);
+        }
+      }
+      if (key === "receivedPayment") {
+        next.paymentReceivedStatus = computePaymentStatus(value, next.salesPriceWithGst || "");
+      }
       return next;
     });
 
   const lineSet = (index: number, key: string, value: string) =>
     setLines((old) =>
-      old.map((l, i) =>
-        i === index
-          ? { ...l, [key]: value, ...(key === "productId" ? { size: "" } : {}) }
-          : l,
-      ),
+      old.map((l, i) => {
+        if (i !== index) return l;
+        const updated: Line = { ...l, [key]: value, ...(key === "productId" ? { size: "" } : {}) };
+        if (key === "balanceId" && value) {
+          const chosenBal = state.balances.find((b) => b.id === value);
+          if (chosenBal) {
+            const info = getBalanceItemInfo(chosenBal, state);
+            const lot = state.lots.find((lt) => lt.id === chosenBal.lotId);
+            updated.productId = info.product?.id || updated.productId || "";
+            updated.productName = info.productName || "";
+            updated.size = info.size || "";
+            updated.batch = info.batch || "";
+            if (lot && lot.unitCost > 0) {
+              updated.unitCost = (lot.unitCost / 100).toFixed(2);
+            }
+            if (info.product && info.product.mrp > 0) {
+              updated.mrp = (info.product.mrp / 100).toFixed(2);
+            }
+            setValues((prev) => ({
+              ...prev,
+              sizeUsed: prev.sizeUsed || info.size || "",
+              stockUsedForm:
+                prev.stockUsedForm ||
+                `${info.productName}${info.size ? ` (Size: ${info.size})` : ""}${info.batch ? ` [Batch: ${info.batch}]` : ""}`,
+              locationId:
+                request.kind === "saleProduct" || request.kind === "saleFinance"
+                  ? chosenBal.locationId
+                  : (prev.locationId || chosenBal.locationId),
+            }));
+          }
+        }
+        return updated;
+      }),
     );
 
   const p = (key: string) => parseRupees(values[key] || "0"),
@@ -171,20 +483,62 @@ export function EntryForm({
           break;
         case "sale":
         case "saleProduct":
-        case "saleFinance":
+        case "saleFinance": {
+          const derivedSizes = lines
+            .map((l) => {
+              if (l.size) return l.size;
+              const bal = state.balances.find((b) => b.id === l.balanceId);
+              if (bal) return getBalanceItemInfo(bal, state).size;
+              return "";
+            })
+            .filter(Boolean);
+
+          const derivedStockItems = lines
+            .map((l) => {
+              const bal = state.balances.find((b) => b.id === l.balanceId);
+              if (bal) {
+                const info = getBalanceItemInfo(bal, state);
+                return `${info.productName}${info.size ? ` (${info.size})` : ""}${info.batch ? ` [${info.batch}]` : ""}${Number(l.quantity) > 1 ? ` x ${l.quantity}` : ""}`;
+              }
+              const prod = state.products.find((p) => p.id === l.productId);
+              if (prod) {
+                return `${prod.name}${l.size ? ` (${l.size})` : ""}${Number(l.quantity) > 1 ? ` x ${l.quantity}` : ""}`;
+              }
+              return l.productName || "";
+            })
+            .filter(Boolean);
+
+          const finalSizeUsed = values.sizeUsed || derivedSizes.join(", ");
+          const finalStockUsedForm = values.stockUsedForm || derivedStockItems.join(", ");
+
+          const firstSelectedBal = lines
+            .map((l) => state.balances.find((b) => b.id === l.balanceId))
+            .find(Boolean);
+          const resolvedLocationId =
+            (request.kind === "saleProduct" || request.kind === "saleFinance") && firstSelectedBal?.locationId
+              ? firstSelectedBal.locationId
+              : (values.locationId || firstSelectedBal?.locationId || (state.locations.find((l) => !l.archived)?.id || "00000000-0000-0000-0000-000000000000"));
+
           command = {
             type: "sale.post",
             id: request.id,
-            locationId: values.locationId || (state.locations.find((l) => !l.archived)?.id || "00000000-0000-0000-0000-000000000000"),
+            locationId: resolvedLocationId,
             billedTo: values.patientName || values.billedTo || "Patient",
-            caseReference: values.remark || values.caseReference || "",
+            caseReference: values.caseReference || values.remark || "",
             ...common,
-            lines: (lines || []).filter((l) => l.balanceId).map((l) => ({
-              balanceId: l.balanceId,
-              quantity: Number(l.quantity || 1),
-              unitPrice: parseRupees(l.unitPrice || "0"),
-            })),
+            lines: (lines || [])
+              .filter((l) => l.balanceId || l.productId || l.productName)
+              .map((l) => ({
+                balanceId: l.balanceId || "",
+                quantity: Number(l.quantity || 1),
+                unitPrice: parseRupees(l.unitPrice || "0"),
+                unitCost: parseRupees(l.unitCost || "0"),
+                mrp: parseRupees(l.mrp || "0"),
+                gstPercent: Number(l.gstPercent || 0),
+                gstAmount: parseRupees(l.gstAmount || "0"),
+              })),
             bdmName: values.bdmName || "",
+            managerName: values.managerName || "",
             patientName: values.patientName || values.billedTo || "",
             treatment: values.treatment || "",
             circle: values.circle || "",
@@ -192,9 +546,9 @@ export function EntryForm({
             hospitalName: values.hospitalName || "",
             surgeryDate: values.surgeryDate || values.date || todayIndia(),
             mop: values.mop || "",
-            sizeUsed: values.sizeUsed || "",
+            sizeUsed: finalSizeUsed,
             remark: values.remark || "",
-            stockUsedForm: values.stockUsedForm || "",
+            stockUsedForm: finalStockUsedForm,
             invoiceStatus: values.invoiceStatus || "",
             mrp: parseRupees(values.mrp || "0"),
             buyPrice: parseRupees(values.buyPrice || "0"),
@@ -202,9 +556,13 @@ export function EntryForm({
             gstPercent: Number(values.gstPercent || 0),
             gstAmount: parseRupees(values.gstAmount || "0"),
             salesPriceWithGst: parseRupees(values.salesPriceWithGst || "0"),
-            paymentReceivedStatus: values.paymentReceivedStatus || "",
+            receivedPayment: parseRupees(values.receivedPayment || "0"),
+            paymentReceivedStatus:
+              values.paymentReceivedStatus ||
+              computePaymentStatus(values.receivedPayment || "0", values.salesPriceWithGst || "0"),
           };
           break;
+        }
         case "transfer":
           if (values.fromId && values.toId && values.fromId === values.toId) {
             throw Error("Source and destination locations must be different.");
@@ -396,6 +754,156 @@ export function EntryForm({
             </p>
           )}
           {transfer && <ReceiptLines transfer={transfer} state={state} />}
+          {request.kind === "saleFinance" && lines.length > 0 && (
+            <div className="border border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50/80 dark:bg-slate-950/80 p-4 space-y-3 mb-4 shadow-sm">
+              <div className="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-2.5">
+                <div>
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400">
+                    Items in this Sale & Price Breakdown ({lines.length})
+                  </h3>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                    Fill individual selling and buy prices for each item. Sales and buy prices below will auto-calculate.
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                {lines.map((line, idx) => {
+                  const prod = state.products.find((p) => p.id === line.productId);
+                  const itemName = line.productName || prod?.name || "Item " + (idx + 1);
+                  const qty = Number(line.quantity || 1);
+                  const itemSellingTotal = (parseRupees(line.unitPrice || "0") / 100) * qty;
+                  const itemBuyTotal = (parseRupees(line.unitCost || "0") / 100) * qty;
+                  const itemMrpTotal = (parseRupees(line.mrp || "0") / 100) * qty;
+                  const itemGstPct = Number(line.gstPercent || 0);
+                  const itemGstAmt = itemSellingTotal * (itemGstPct / 100);
+
+                  return (
+                    <div key={idx} className="p-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg space-y-2.5 shadow-xs">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
+                        <div className="flex items-center gap-2">
+                          <span className="w-5 h-5 rounded-full bg-teal-100 dark:bg-teal-900/50 text-teal-800 dark:text-teal-300 font-bold text-[11px] flex items-center justify-center">
+                            {idx + 1}
+                          </span>
+                          <span className="font-semibold text-xs text-slate-900 dark:text-slate-100">
+                            {itemName}
+                          </span>
+                          {line.size && (
+                            <span className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-1.5 py-0.5 rounded font-medium">
+                              Size: {line.size}
+                            </span>
+                          )}
+                          {line.batch && (
+                            <span className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-1.5 py-0.5 rounded">
+                              Batch: {line.batch}
+                            </span>
+                          )}
+                        </div>
+                        <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
+                          Qty: {qty}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
+                        <label className="flex flex-col gap-1 text-xs font-medium text-slate-600 dark:text-slate-400">
+                          <span>MRP (₹)</span>
+                          <input
+                            type="text"
+                            inputMode="decimal"
+                            placeholder="0.00"
+                            className="w-full px-3 py-1.5 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
+                            value={line.mrp ?? ""}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              const nextLines = lines.map((l, i) => (i === idx ? { ...l, mrp: val } : l));
+                              setLines(nextLines);
+                              recalcFinanceTotals(nextLines);
+                            }}
+                          />
+                          <span className="text-[10px] text-slate-400">
+                            Total MRP: ₹{itemMrpTotal.toFixed(2)}
+                          </span>
+                        </label>
+
+                        <label className="flex flex-col gap-1 text-xs font-medium text-slate-600 dark:text-slate-400">
+                          <span>Unit Buy Cost (₹)</span>
+                          <input
+                            type="text"
+                            inputMode="decimal"
+                            placeholder="0.00"
+                            className="w-full px-3 py-1.5 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
+                            value={line.unitCost ?? ""}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              const nextLines = lines.map((l, i) => (i === idx ? { ...l, unitCost: val } : l));
+                              setLines(nextLines);
+                              recalcFinanceTotals(nextLines);
+                            }}
+                          />
+                          <span className="text-[10px] text-slate-400">
+                            Buy Subtotal: ₹{itemBuyTotal.toFixed(2)}
+                          </span>
+                        </label>
+
+                        <label className="flex flex-col gap-1 text-xs font-medium text-slate-600 dark:text-slate-400">
+                          <span>Unit Selling Price (₹)</span>
+                          <input
+                            type="text"
+                            inputMode="decimal"
+                            placeholder="0.00"
+                            className="w-full px-3 py-1.5 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
+                            value={line.unitPrice ?? ""}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              const nextLines = lines.map((l, i) => (i === idx ? { ...l, unitPrice: val } : l));
+                              setLines(nextLines);
+                              recalcFinanceTotals(nextLines);
+                            }}
+                          />
+                          <span className="text-[10px] text-slate-400">
+                            Selling Subtotal: ₹{itemSellingTotal.toFixed(2)}
+                          </span>
+                        </label>
+
+                        <label className="flex flex-col gap-1 text-xs font-medium text-slate-600 dark:text-slate-400">
+                          <span>GST %</span>
+                          <input
+                            type="number"
+                            min="0"
+                            max="100"
+                            step="1"
+                            placeholder="e.g. 18"
+                            className="w-full px-3 py-1.5 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
+                            value={line.gstPercent ?? ""}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              const nextLines = lines.map((l, i) => (i === idx ? { ...l, gstPercent: val } : l));
+                              setLines(nextLines);
+                              recalcFinanceTotals(nextLines);
+                            }}
+                          />
+                          <span className="text-[10px] text-teal-600 dark:text-teal-400 font-medium">
+                            GST Amount: ₹{itemGstAmt.toFixed(2)}
+                          </span>
+                        </label>
+                      </div>
+
+                      <div className="flex items-center justify-between text-[11px] bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-lg border border-slate-100 dark:border-slate-800 text-slate-600 dark:text-slate-300 flex-wrap gap-2">
+                        <span>Subtotal: <strong>₹{itemSellingTotal.toFixed(2)}</strong></span>
+                        <span>GST ({itemGstPct}%): <strong className="text-teal-600 dark:text-teal-400">+₹{itemGstAmt.toFixed(2)}</strong></span>
+                        <span>Item Total with GST: <strong className="text-slate-900 dark:text-slate-100">₹{(itemSellingTotal + itemGstAmt).toFixed(2)}</strong></span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+          {request.kind === "saleFinance" && lines.length === 0 && values.stockUsedForm && (
+            <div className="border border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50/80 dark:bg-slate-950/80 p-3.5 mb-4 text-xs text-slate-600 dark:text-slate-300">
+              <span className="font-semibold text-slate-800 dark:text-slate-200 mr-1.5">Stock Items Used:</span>
+              {values.stockUsedForm}
+            </div>
+          )}
           <fieldset disabled={busy} className="border-0 p-0 m-0 grid grid-cols-1 sm:grid-cols-2 gap-4">
             {fields.map((f) => (
               <label
@@ -404,15 +912,95 @@ export function EntryForm({
                   f.type === "textarea" || f.type === "file" ? "sm:col-span-2" : ""
                 }`}
               >
-                <span>
-                  {f.label}
-                  {f.required !== false && f.type !== "file" ? " *" : ""}
-                </span>
-                {f.type === "select" ? (
+                <div className="flex items-center justify-between">
+                  <span>
+                    {f.label}
+                    {f.required !== false && f.type !== "file" ? " *" : ""}
+                  </span>
+                  {request.kind === "saleProduct" && (f.name === "treatment" || f.name === "drName" || f.name === "hospitalName") && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setCustomFields((p) => ({ ...p, [f.name]: !p[f.name] }))
+                      }
+                      className="text-[11px] text-teal-600 dark:text-teal-400 hover:underline cursor-pointer"
+                    >
+                      {customFields[f.name] ? "Select from master" : "Enter custom"}
+                    </button>
+                  )}
+                </div>
+                {f.name === "caseReference" ? (
+                  <div ref={wrapperRef} className="relative">
+                    <div className="relative flex items-center">
+                      <input
+                        required={f.required !== false}
+                        type="text"
+                        placeholder="Enter or search Lead Ref (e.g. MED-...)"
+                        className="w-full px-3 py-2 pr-10 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all uppercase"
+                        value={values.caseReference ?? ""}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          set("caseReference", val);
+                          handleCaseRefChange(val);
+                        }}
+                        onFocus={() => {
+                          if (leadSuggestions.length > 0) setShowSuggestions(true);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            if (values.caseReference) fetchLeadByRef(values.caseReference);
+                          }
+                        }}
+                      />
+                      <div className="absolute right-2 flex items-center gap-1">
+                        {leadLoading ? (
+                          <Loader2 className="h-4 w-4 animate-spin text-teal-600" />
+                        ) : (
+                          <button
+                            type="button"
+                            title="Fetch Lead Details"
+                            onClick={() => {
+                              if (values.caseReference) fetchLeadByRef(values.caseReference);
+                            }}
+                            className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-400 hover:text-teal-600 transition-colors"
+                          >
+                            <Search className="h-3.5 w-3.5" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    {showSuggestions && leadSuggestions.length > 0 && (
+                      <ul className="absolute z-50 mt-1 max-h-52 w-full overflow-auto rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-1 text-xs shadow-lg">
+                        {leadSuggestions.map((sug) => (
+                          <li
+                            key={sug.leadRef}
+                            className="cursor-pointer px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 flex flex-col gap-0.5 border-b border-slate-100 dark:border-slate-800/50 last:border-0"
+                            onMouseDown={() => selectLeadSuggestion(sug)}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="font-semibold text-teal-600 dark:text-teal-400">{sug.leadRef}</span>
+                              <span className="text-[11px] text-slate-500">{sug.hospitalName || sug.circle}</span>
+                            </div>
+                            <div className="text-slate-800 dark:text-slate-200">
+                              {sug.patientName} {sug.treatment ? `· ${sug.treatment}` : ""} {sug.drName ? `· Dr. ${sug.drName}` : ""}
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    {leadFound && (
+                      <div className="mt-1 flex items-center gap-1.5 text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
+                        <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
+                        <span>Loaded: {leadFound}</span>
+                      </div>
+                    )}
+                  </div>
+                ) : f.type === "select" ? (
                   <select
                     required={f.required !== false}
                     value={values[f.name] ?? ""}
-                    className="w-full px-3 py-2 pr-8 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_0.75rem_center] disabled:opacity-50 disabled:bg-slate-50 dark:disabled:bg-slate-950"
+                    className="w-full px-3 py-2 pr-10 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_1rem_center] disabled:opacity-50 disabled:bg-slate-50 dark:disabled:bg-slate-950"
                     onChange={(e) => {
                       const newLocId = e.target.value;
                       set(f.name, newLocId);
@@ -458,6 +1046,40 @@ export function EntryForm({
                     onChange={(e) => set(f.name, e.target.value)}
                     rows={3}
                   />
+                ) : request.kind === "saleProduct" &&
+                  (f.name === "treatment" || f.name === "drName" || f.name === "hospitalName") &&
+                  !customFields[f.name] ? (
+                  <select
+                    required={f.required !== false}
+                    value={values[f.name] ?? ""}
+                    className="w-full px-3 py-2 pr-10 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_1rem_center]"
+                    onChange={(e) => set(f.name, e.target.value)}
+                  >
+                    <option value="">Select {f.label}...</option>
+                    {values[f.name] &&
+                      !(
+                        f.name === "treatment"
+                          ? masters.treatments
+                          : f.name === "drName"
+                            ? masters.doctors
+                            : masters.hospitals
+                      ).includes(values[f.name]) && (
+                        <option value={values[f.name]}>
+                          {values[f.name]} (current)
+                        </option>
+                      )}
+                    {(
+                      f.name === "treatment"
+                        ? masters.treatments
+                        : f.name === "drName"
+                          ? masters.doctors
+                          : masters.hospitals
+                    ).map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </select>
                 ) : f.type === "file" ? (
                   <input
                     type="file"
@@ -503,8 +1125,8 @@ export function EntryForm({
                 <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
                   {purchase
                     ? "Implants / instruments to receive"
-                    : "Implants to " +
-                      (request.kind === "sale" ? "sell" : "send")}
+                    : "Implants / Stock items to " +
+                      (request.kind === "sale" || request.kind === "saleProduct" ? "record / sell" : "send")}
                 </h3>
                 <span className="text-xs text-slate-500 dark:text-slate-400">{lines.length} line(s)</span>
               </div>
@@ -618,7 +1240,7 @@ export function EntryForm({
                                     : "Select item at this location")}
                             </option>
                             {eligible.map((b) => {
-                              const { productName, size, batch } = getBalanceItemInfo(b, state);
+                              const { productName, size, batch, locationName } = getBalanceItemInfo(b, state);
 
                               if (isTransfer) {
                                 // For transfer: Show ONLY item name (and size if specified) and available quantity in stock, NOT batch
@@ -632,10 +1254,11 @@ export function EntryForm({
 
                               const sizeStr = size ? ` · Size: ${size}` : "";
                               const batchStr = batch ? ` · Batch: ${batch}` : "";
+                              const locStr = locationName ? ` · [${locationName}]` : "";
 
                               return (
                                 <option key={b.id} value={b.id}>
-                                  {productName}{sizeStr}{batchStr} · ({b.quantity} available)
+                                  {productName}{sizeStr}{batchStr} · ({b.quantity} available){locStr}
                                 </option>
                               );
                             })}
@@ -671,7 +1294,7 @@ export function EntryForm({
                           }
                         />
                       </label>
-                      {request.kind !== "transfer" && (
+                      {request.kind !== "transfer" && request.kind !== "saleProduct" && (
                         <label className="flex flex-col gap-1 text-xs font-medium text-slate-600 dark:text-slate-400">
                           {purchase
                             ? "Unit purchase cost"
@@ -716,7 +1339,7 @@ export function EntryForm({
               >
                 <Plus size={16} /> {isTransfer ? "Add item to transfer" : "Add item / size"}
               </button>
-              {request.kind !== "transfer" && (
+              {request.kind !== "transfer" && request.kind !== "saleProduct" && (
                 <div className="flex justify-between items-center p-3 bg-slate-100 dark:bg-slate-800/60 rounded-lg text-xs font-medium">
                   <span className="text-slate-600 dark:text-slate-400">Item subtotal (before tax)</span>
                   <strong className="text-sm font-bold text-slate-900 dark:text-slate-100">{formatMoney(subtotal)}</strong>
@@ -761,7 +1384,9 @@ function nextYear() {
 }
 
 function getEligibleBalances(locId: string, state: InventoryState): Balance[] {
-  if (!locId) return [];
+  if (!locId) {
+    return state.balances.filter((b) => b.quantity > 0 && !b.quarantined);
+  }
   const targetLoc = state.locations.find(
     (l) =>
       l.id === locId ||
@@ -771,7 +1396,7 @@ function getEligibleBalances(locId: string, state: InventoryState): Balance[] {
   const targetId = targetLoc ? targetLoc.id : locId;
   const targetName = targetLoc ? targetLoc.name.toLowerCase() : locId.toLowerCase();
 
-  return state.balances.filter((b) => {
+  const matched = state.balances.filter((b) => {
     if (b.quantity <= 0 || b.quarantined) return false;
 
     // Direct match against target location ID or target name
@@ -788,6 +1413,8 @@ function getEligibleBalances(locId: string, state: InventoryState): Balance[] {
 
     return false;
   });
+
+  return matched.length > 0 ? matched : state.balances.filter((b) => b.quantity > 0 && !b.quarantined);
 }
 
 function getBalanceItemInfo(b: Balance, state: InventoryState) {
@@ -801,11 +1428,13 @@ function getBalanceItemInfo(b: Balance, state: InventoryState) {
     );
   }
 
+  const loc = state.locations.find((l) => l.id === b.locationId);
+  const locationName = loc?.name || "";
   const productName = product?.name || `Implant Item (${b.id.slice(0, 8)})`;
   const size = lot?.size || "";
   const batch = lot?.batch || "";
 
-  return { product, productName, size, batch };
+  return { product, productName, size, batch, locationName };
 }
 
 function ReceiptLines({

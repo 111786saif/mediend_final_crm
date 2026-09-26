@@ -121,8 +121,12 @@ export interface Sale {
     quantity: number;
     unitCost: number;
     unitPrice: number;
+    mrp?: number;
+    gstPercent?: number;
+    gstAmount?: number;
   }>;
   bdmName?: string;
+  managerName?: string;
   patientName?: string;
   treatment?: string;
   circle?: string;
@@ -140,6 +144,7 @@ export interface Sale {
   gstPercent?: number;
   gstAmount?: number;
   salesPriceWithGst?: number;
+  receivedPayment?: number;
   paymentReceivedStatus?: string;
 }
 

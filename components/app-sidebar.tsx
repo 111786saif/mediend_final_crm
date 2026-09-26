@@ -338,9 +338,13 @@ export function AppSidebar() {
   const renderNavItem = (item: NavItemWithUrl) => {
     const Icon = item.icon
     const currentTab = searchParams?.get('tab')
-    const itemTab = item.url.includes('tab=') ? new URLSearchParams(item.url.split('?')[1] || '').get('tab') : null
+    const currentSubTab = searchParams?.get('subTab')
+    const itemParams = item.url.includes('?') ? new URLSearchParams(item.url.split('?')[1] || '') : null
+    const itemTab = itemParams?.get('tab')
+    const itemSubTab = itemParams?.get('subTab')
     const isActive = itemTab
-      ? currentTab === itemTab || (!currentTab && itemTab === 'Overview' && pathname === '/inventory')
+      ? (currentTab === itemTab || (!currentTab && itemTab === 'Overview' && pathname === '/inventory')) &&
+        (!itemSubTab || (currentSubTab || (currentTab === 'Sales' ? 'product' : null)) === itemSubTab)
       : pathname === item.url || (item.url !== '/' && pathname.startsWith(item.url + '/'))
     const label = displayLabel(item.title)
     const badgeCount =
@@ -470,10 +474,14 @@ export function AppSidebar() {
 
                   const currentFullUrl = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '')
                   const currentTab = searchParams?.get('tab')
-                  const itemTab = item.url.includes('tab=') ? new URLSearchParams(item.url.split('?')[1] || '').get('tab') : null
+                  const currentSubTab = searchParams?.get('subTab')
+                  const itemParams = item.url.includes('?') ? new URLSearchParams(item.url.split('?')[1] || '') : null
+                  const itemTab = itemParams?.get('tab')
+                  const itemSubTab = itemParams?.get('subTab')
 
                   const isActive = itemTab
-                    ? currentTab === itemTab || (!currentTab && itemTab === 'Overview' && pathname === '/inventory')
+                    ? (currentTab === itemTab || (!currentTab && itemTab === 'Overview' && pathname === '/inventory')) &&
+                      (!itemSubTab || (currentSubTab || (currentTab === 'Sales' ? 'product' : null)) === itemSubTab)
                     : pathname === item.url || (item.url !== '/' && pathname.startsWith(item.url + '/'))
 
                   return (

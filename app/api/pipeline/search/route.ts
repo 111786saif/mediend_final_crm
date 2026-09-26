@@ -5,6 +5,8 @@ import { hasPermission } from '@/lib/rbac'
 import { successResponse, unauthorizedResponse, errorResponse } from '@/lib/api-utils'
 import {
   isTypesenseConfigured,
+  isTypesenseUnavailableError,
+  recordTypesense502Error,
   searchSalesPipeline,
   parseSalesPipelineNaturalQuery,
   type SalesPipelineSearchOptions,
@@ -104,6 +106,9 @@ export async function GET(request: NextRequest) {
         })
       } catch (tsError) {
         console.warn('[Typesense Search] Server query failed, falling back to PostgreSQL search:', tsError)
+        if (isTypesenseUnavailableError(tsError)) {
+          recordTypesense502Error(tsError)
+        }
       }
     } else {
       console.info('[Typesense Search] Typesense is not configured or unavailable, defaulting to PostgreSQL search')

@@ -588,21 +588,14 @@ export const navItems: NavItem[] = [
     icon: ArrowLeftRight,
   },
   {
-    title: 'Inv Sales',
-    url: '/inventory?tab=Sales',
-    icon: ClipboardList,
-    children: [
-      {
-        title: 'Sales Product',
-        url: '/inventory?tab=Sales&subTab=product',
-        icon: Package,
-      },
-      {
-        title: 'Sales Finance',
-        url: '/inventory?tab=Sales&subTab=finance',
-        icon: Receipt,
-      },
-    ],
+    title: 'Sales Product',
+    url: '/inventory?tab=Sales&subTab=product',
+    icon: Package,
+  },
+  {
+    title: 'Sales Finance',
+    url: '/inventory?tab=Sales&subTab=finance',
+    icon: Receipt,
   },
   {
     title: 'Inv Payments',

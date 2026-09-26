@@ -185,16 +185,64 @@ export function execute(
     case "sale.post": {
       const existingSale = cmd.id ? next.sales.find((s) => s.id === cmd.id) : undefined;
       const saleId = existingSale ? existingSale.id : (cmd.id || ctx.id());
-      const loc = next.locations.find((l) => l.id === cmd.locationId && !l.archived) || next.locations.find((l) => !l.archived);
+      const firstLineBalance = cmd.lines?.map((l) => next.balances.find((b) => b.id === l.balanceId)).find(Boolean);
+      const loc =
+        (cmd.locationId && cmd.locationId !== "00000000-0000-0000-0000-000000000000"
+          ? next.locations.find((l) => l.id === cmd.locationId && !l.archived)
+          : undefined) ||
+        (firstLineBalance ? next.locations.find((l) => l.id === firstLineBalance.locationId && !l.archived) : undefined) ||
+        next.locations.find((l) => !l.archived);
       if (cmd.date && cmd.date > ctx.today) throw new InventoryError("Sale date cannot be in the future.");
 
-      let net = cmd.salesPrice || existingSale?.net || 0;
+      let net = 0;
       let lines = existingSale?.lines || [];
 
-      if (cmd.lines && cmd.lines.length > 0) {
+      if (existingSale) {
+        if (cmd.lines && cmd.lines.length > 0) {
+          lines = existingSale.lines.map((existingLine, idx) => {
+            const updatedLine =
+              cmd.lines?.find((l) => l.balanceId && l.balanceId === existingLine.balanceId) ||
+              cmd.lines?.[idx];
+            return {
+              ...existingLine,
+              unitPrice:
+                updatedLine && updatedLine.unitPrice !== undefined
+                  ? updatedLine.unitPrice
+                  : existingLine.unitPrice,
+              unitCost:
+                updatedLine && updatedLine.unitCost !== undefined
+                  ? updatedLine.unitCost
+                  : existingLine.unitCost,
+              mrp:
+                updatedLine && updatedLine.mrp !== undefined
+                  ? updatedLine.mrp
+                  : existingLine.mrp,
+              gstPercent:
+                updatedLine && updatedLine.gstPercent !== undefined
+                  ? updatedLine.gstPercent
+                  : existingLine.gstPercent,
+              gstAmount:
+                updatedLine && updatedLine.gstAmount !== undefined
+                  ? updatedLine.gstAmount
+                  : existingLine.gstAmount,
+            };
+          });
+        }
+        const totalLinePrice = lines.reduce((sum, l) => sum + l.quantity * l.unitPrice, 0);
+        net =
+          cmd.salesPrice !== undefined
+            ? cmd.salesPrice
+            : (totalLinePrice || existingSale.net || 0);
+      } else if (cmd.lines && cmd.lines.length > 0) {
+        let computedNet = 0;
         lines = cmd.lines.map((l) => {
           const balance = next.balances.find((b) => b.id === l.balanceId);
-          if (!balance || (loc && balance.locationId !== loc.id)) throw new InventoryError("Selected stock batch is not available at this location.");
+          if (!balance) throw new InventoryError("Selected stock batch was not found.");
+          const balanceLoc = next.locations.find((bl) => bl.id === balance.locationId && !bl.archived);
+          if (!balanceLoc) throw new InventoryError("Selected stock batch is not available at this location.");
+          if (cmd.locationId && cmd.locationId !== "00000000-0000-0000-0000-000000000000" && !cmd.patientName && loc && balance.locationId !== loc.id) {
+            throw new InventoryError("Selected stock batch is not available at this location.");
+          }
           if (balance.quarantined) throw new InventoryError("Quarantined stock cannot be sold.");
           if (balance.quantity < l.quantity) throw new InventoryError("Insufficient stock in selected batch.");
 
@@ -206,7 +254,7 @@ export function execute(
           balance.quantity -= l.quantity;
           changes.push({ collection: "balances", id: balance.id, before: beforeBalance, after: balance });
 
-          net += l.quantity * l.unitPrice;
+          computedNet += l.quantity * (l.unitPrice || 0);
           return {
             balanceId: l.balanceId,
             lotId: lot.id,
@@ -215,13 +263,19 @@ export function execute(
             size: lot.size,
             batch: lot.batch,
             quantity: l.quantity,
-            unitCost: lot.unitCost,
-            unitPrice: l.unitPrice,
+            unitCost: l.unitCost !== undefined ? l.unitCost : lot.unitCost,
+            unitPrice: l.unitPrice || 0,
+            mrp: l.mrp !== undefined ? l.mrp : product.mrp,
+            gstPercent: l.gstPercent,
+            gstAmount: l.gstAmount,
           };
         });
+        net = cmd.salesPrice !== undefined ? cmd.salesPrice : computedNet;
       }
 
-      const total = cmd.salesPriceWithGst || (net + (cmd.gstMode === "WITH_GST" ? (cmd.gstAmount || cmd.tax) : 0));
+      const totalLineGst = lines.reduce((sum, l) => sum + (l.gstAmount || 0), 0);
+      const computedGst = cmd.gstAmount !== undefined ? cmd.gstAmount : totalLineGst;
+      const total = cmd.salesPriceWithGst !== undefined ? cmd.salesPriceWithGst : (net + (cmd.gstMode === "WITH_GST" ? (computedGst || cmd.tax) : 0));
       if (cmd.paidNow > total && total > 0) throw new InventoryError("Initial collection cannot exceed invoice total.");
 
       const saleRow = {
@@ -229,18 +283,19 @@ export function execute(
         date: cmd.date || existingSale?.date || ctx.today,
         locationId: loc?.id || cmd.locationId || existingSale?.locationId || "",
         billedTo: cmd.patientName || cmd.billedTo || existingSale?.billedTo || "Patient",
-        caseReference: cmd.remark || cmd.caseReference || existingSale?.caseReference || "",
+        caseReference: cmd.caseReference || cmd.remark || existingSale?.caseReference || "",
         gstMode: cmd.gstMode || existingSale?.gstMode || "WITH_GST",
         documentType: cmd.documentType || existingSale?.documentType || "TAX_INVOICE",
         reference: cmd.reference || existingSale?.reference || "",
         net,
-        tax: cmd.gstAmount || (cmd.gstMode === "WITH_GST" ? cmd.tax : 0) || existingSale?.tax || 0,
+        tax: cmd.gstAmount !== undefined ? cmd.gstAmount : (computedGst || (cmd.gstMode === "WITH_GST" ? cmd.tax : 0) || existingSale?.tax || 0),
         total,
         handledBy: cmd.bdmName || cmd.handledBy || existingSale?.handledBy || "",
         proofId: cmd.proofId || existingSale?.proofId || "",
         status: "POSTED" as const,
         lines,
         bdmName: cmd.bdmName || existingSale?.bdmName,
+        managerName: cmd.managerName || existingSale?.managerName,
         patientName: cmd.patientName || cmd.billedTo || existingSale?.patientName,
         treatment: cmd.treatment || existingSale?.treatment,
         circle: cmd.circle || existingSale?.circle,
@@ -252,12 +307,13 @@ export function execute(
         remark: cmd.remark || existingSale?.remark,
         stockUsedForm: cmd.stockUsedForm || existingSale?.stockUsedForm,
         invoiceStatus: cmd.invoiceStatus || existingSale?.invoiceStatus,
-        mrp: cmd.mrp || existingSale?.mrp,
-        buyPrice: cmd.buyPrice || existingSale?.buyPrice,
-        salesPrice: cmd.salesPrice || net,
-        gstPercent: cmd.gstPercent || existingSale?.gstPercent,
-        gstAmount: cmd.gstAmount || (cmd.gstMode === "WITH_GST" ? cmd.tax : 0) || existingSale?.gstAmount,
-        salesPriceWithGst: cmd.salesPriceWithGst || total,
+        mrp: cmd.mrp !== undefined ? cmd.mrp : existingSale?.mrp,
+        buyPrice: cmd.buyPrice !== undefined ? cmd.buyPrice : existingSale?.buyPrice,
+        salesPrice: cmd.salesPrice !== undefined ? cmd.salesPrice : net,
+        gstPercent: cmd.gstPercent !== undefined ? cmd.gstPercent : existingSale?.gstPercent,
+        gstAmount: cmd.gstAmount !== undefined ? cmd.gstAmount : (computedGst || existingSale?.gstAmount || 0),
+        salesPriceWithGst: cmd.salesPriceWithGst !== undefined ? cmd.salesPriceWithGst : total,
+        receivedPayment: cmd.receivedPayment !== undefined ? cmd.receivedPayment : existingSale?.receivedPayment,
         paymentReceivedStatus: cmd.paymentReceivedStatus || existingSale?.paymentReceivedStatus,
       };
 

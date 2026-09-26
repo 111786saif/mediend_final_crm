@@ -82,13 +82,18 @@ export const commandSchema = z.discriminatedUnion("type", [
     lines: z
       .array(
         z.object({
-          balanceId: z.string().uuid(),
+          balanceId: z.string().default(""),
           quantity: z.number().int().positive(),
-          unitPrice: z.number().int().nonnegative(),
+          unitPrice: z.number().int().nonnegative().default(0),
+          unitCost: z.number().int().nonnegative().optional(),
+          mrp: z.number().int().nonnegative().optional(),
+          gstPercent: z.number().nonnegative().optional(),
+          gstAmount: z.number().int().nonnegative().optional(),
         }),
       )
       .default([]),
     bdmName: z.string().default(""),
+    managerName: z.string().default(""),
     patientName: z.string().default(""),
     treatment: z.string().default(""),
     circle: z.string().default(""),
@@ -106,6 +111,7 @@ export const commandSchema = z.discriminatedUnion("type", [
     gstPercent: z.number().nonnegative().default(0),
     gstAmount: z.number().nonnegative().default(0),
     salesPriceWithGst: z.number().nonnegative().default(0),
+    receivedPayment: z.number().nonnegative().default(0),
     paymentReceivedStatus: z.string().default(""),
   }),
   z.object({

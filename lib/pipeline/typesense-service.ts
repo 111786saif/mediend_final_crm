@@ -3,6 +3,8 @@
 // all methods return null, allowing API routes to transparently fall back to PostgreSQL.
 import {
   isTypesenseConfigured,
+  isTypesenseUnavailableError,
+  recordTypesense502Error,
   searchSalesPipeline,
   parseSalesPipelineNaturalQuery,
   mapPipelineSortToTypesense,
@@ -65,6 +67,9 @@ export async function fetchPipelineLeadsFromTypesense(
     }
   } catch (err) {
     console.warn('[Typesense] Search error in fetchPipelineLeadsFromTypesense, falling back to PostgreSQL:', err)
+    if (isTypesenseUnavailableError(err)) {
+      recordTypesense502Error(err)
+    }
     return null
   }
 }
@@ -100,6 +105,9 @@ export async function fetchPipelineMatchedLeadIdsFromTypesense(
     }
   } catch (err) {
     console.warn('[Typesense] Error in fetchPipelineMatchedLeadIdsFromTypesense, falling back to PostgreSQL:', err)
+    if (isTypesenseUnavailableError(err)) {
+      recordTypesense502Error(err)
+    }
     return null
   }
 }
