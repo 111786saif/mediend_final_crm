@@ -24,6 +24,10 @@ import { apiPost } from '@/lib/api-client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import {
+  WORKSPACE_MAKE_CALL_POPUP_EVENT,
+  type WorkspaceMakeCallPopup,
+} from '@/lib/knowlarity-call-popup'
 
 type CallState = 'receiving_call' | 'on_call' | 'call_finished' | 'update'
 
@@ -43,6 +47,7 @@ type StreamCallEvent = {
   state: CallState
   label: string
   eventType: string
+  callId?: string | null
   agentPhone?: string | null
   telephonyEnabled?: boolean
   patientInfo?: PatientLookup | null
@@ -55,7 +60,34 @@ type CallQueueItem = {
   key: string
   event: StreamCallEvent
   remarkText: string
+  isWorkspaceCall?: boolean
   isSavingRemark?: boolean
+}
+
+const WORKSPACE_CALL_DEDUP_WINDOW_MS = 2 * 60 * 1000
+const DISMISSED_CALL_WINDOW_MS = 2 * 60 * 1000
+const DISMISSED_CALLS_STORAGE_KEY = 'knowlarity-dismissed-call-popups'
+
+function readDismissedCallKeys() {
+  try {
+    const stored = window.sessionStorage.getItem(DISMISSED_CALLS_STORAGE_KEY)
+    const entries = stored ? (JSON.parse(stored) as Array<[string, number]>) : []
+    const now = Date.now()
+    return new Map(entries.filter(([, expiresAt]) => Number.isFinite(expiresAt) && expiresAt > now))
+  } catch {
+    return new Map<string, number>()
+  }
+}
+
+function persistDismissedCallKeys(dismissedCallKeys: Map<string, number>) {
+  try {
+    window.sessionStorage.setItem(
+      DISMISSED_CALLS_STORAGE_KEY,
+      JSON.stringify([...dismissedCallKeys.entries()])
+    )
+  } catch {
+    // Session storage is optional; the in-memory dismissal still prevents immediate replays.
+  }
 }
 
 const stateStyles: Record<CallState, { icon: typeof Phone; badge: string; tone: string }> = {
@@ -98,102 +130,134 @@ function formatTimestamp(value?: string) {
 export function KnowlarityCallListener() {
   const [callQueue, setCallQueue] = useState<CallQueueItem[]>([])
   const [selectedIndex, setSelectedIndex] = useState<number>(0)
-  const [connected, setConnected] = useState(false)
   const [isCollapsed, setIsCollapsed] = useState(false)
   const autoHideTimersRef = useRef<Map<string, number>>(new Map())
+  const dismissedCallKeysRef = useRef<Map<string, number>>(new Map())
   const sessionStartTimeRef = useRef<number>(0)
 
   useEffect(() => {
     sessionStartTimeRef.current = Date.now() - 5000
     const timersRef = autoHideTimersRef.current
+    dismissedCallKeysRef.current = readDismissedCallKeys()
     const source = new EventSource('/api/telephony/stream')
 
-    source.addEventListener('open', () => {
-      setConnected(true)
-    })
+    const enqueueCall = (payload: StreamCallEvent) => {
+      const rawObj = (payload.payload as Record<string, unknown>) ?? {}
+      const callKey =
+        payload.callId ||
+        (typeof rawObj.uuid === 'string' && rawObj.uuid) ||
+        (typeof rawObj.unique_id === 'string' && rawObj.unique_id) ||
+        (typeof rawObj.call_id === 'string' && rawObj.call_id) ||
+        `call_${payload.receivedAt || Date.now()}`
+      const dismissedUntil = dismissedCallKeysRef.current.get(callKey)
+      const dismissedLeadUntil = payload.patientInfo?.leadId
+        ? dismissedCallKeysRef.current.get(`lead:${payload.patientInfo.leadId}`)
+        : undefined
 
-    source.addEventListener('ready', () => {
-      setConnected(true)
-    })
+      if ((dismissedUntil && dismissedUntil > Date.now()) || (dismissedLeadUntil && dismissedLeadUntil > Date.now())) {
+        return
+      }
+
+      // Ignore stale events received before the current browser session started.
+      const eventTime = payload.receivedAt ? new Date(payload.receivedAt).getTime() : Date.now()
+      if (eventTime < sessionStartTimeRef.current && payload.state === 'call_finished') {
+        return
+      }
+
+      const existingTimer = autoHideTimersRef.current.get(callKey)
+      if (existingTimer != null) {
+        window.clearTimeout(existingTimer)
+        autoHideTimersRef.current.delete(callKey)
+      }
+
+      setCallQueue((prev) => {
+        const isWorkspaceCall = payload.eventType === 'workspace_make_call'
+        const receivedAt = payload.receivedAt ? new Date(payload.receivedAt).getTime() : Date.now()
+        const hasRecentWorkspaceCall = prev.some(
+          (item) =>
+            item.isWorkspaceCall &&
+            Math.abs(receivedAt - new Date(item.event.receivedAt ?? 0).getTime()) <=
+              WORKSPACE_CALL_DEDUP_WINDOW_MS
+        )
+        const workspaceLeadIds = new Set(
+          prev
+            .filter((item) => item.isWorkspaceCall)
+            .map((item) => item.event.patientInfo?.leadId)
+            .filter((leadId): leadId is string => Boolean(leadId))
+        )
+
+        // The workspace popup identifies the call the user initiated. During that
+        // call, only accept its matching lead from the stream, not unrelated or
+        // unidentified bridge events from Knowlarity.
+        if (
+          hasRecentWorkspaceCall &&
+          (!payload.patientInfo?.leadId || !workspaceLeadIds.has(payload.patientInfo.leadId))
+        ) {
+          return prev
+        }
+
+        const existingIdx = prev.findIndex(
+          (item) =>
+            item.key === callKey ||
+            (Boolean(payload.patientInfo?.leadId) &&
+              item.event.patientInfo?.leadId === payload.patientInfo?.leadId)
+        )
+        if (existingIdx >= 0) {
+          const next = [...prev]
+          next[existingIdx] = {
+            ...next[existingIdx],
+            event: payload,
+            isWorkspaceCall: next[existingIdx].isWorkspaceCall || isWorkspaceCall,
+          }
+          return next
+        }
+
+        return [{ key: callKey, event: payload, remarkText: '', isWorkspaceCall }, ...prev].slice(0, 3)
+      })
+
+      setSelectedIndex(0)
+
+      if (payload.state === 'call_finished') {
+        const timerId = window.setTimeout(() => {
+          setCallQueue((prev) => prev.filter((item) => item.key !== callKey))
+          autoHideTimersRef.current.delete(callKey)
+        }, 8000)
+        autoHideTimersRef.current.set(callKey, timerId)
+      }
+    }
 
     source.addEventListener('ready', (message) => {
       try {
         const payload = JSON.parse((message as MessageEvent<string>).data) as StreamCallEvent
         if (payload.telephonyEnabled === false) {
-          setConnected(false)
           setCallQueue([])
           source.close()
-          return
         }
-        setConnected(true)
       } catch {
-        setConnected(true)
+        // Ignore malformed ready events and keep waiting for call events.
       }
-    })
-
-    source.addEventListener('error', () => {
-      setConnected(false)
     })
 
     source.addEventListener('call', (message) => {
       try {
         const payload = JSON.parse((message as MessageEvent<string>).data) as StreamCallEvent
-        const rawObj = (payload.payload as Record<string, unknown>) ?? {}
-        const callKey =
-          (typeof rawObj.uuid === 'string' && rawObj.uuid) ||
-          (typeof rawObj.unique_id === 'string' && rawObj.unique_id) ||
-          (typeof rawObj.call_id === 'string' && rawObj.call_id) ||
-          `call_${payload.receivedAt || Date.now()}`
-
-        // Ignore stale events received before the current browser session started
-        const eventTime = payload.receivedAt ? new Date(payload.receivedAt).getTime() : Date.now()
-        if (eventTime < sessionStartTimeRef.current && payload.state === 'call_finished') {
-          return
-        }
-
-        // Clear existing auto-hide timer for this specific call if active
-        const existingTimer = autoHideTimersRef.current.get(callKey)
-        if (existingTimer != null) {
-          window.clearTimeout(existingTimer)
-          autoHideTimersRef.current.delete(callKey)
-        }
-
-        setCallQueue((prev) => {
-          const existingIdx = prev.findIndex((item) => item.key === callKey)
-          if (existingIdx >= 0) {
-            const next = [...prev]
-            next[existingIdx] = {
-              ...next[existingIdx],
-              event: payload,
-            }
-            return next
-          }
-
-          // Add active running call to queue (only keep up to 3 active/concurrent calls)
-          const newQueue = [{ key: callKey, event: payload, remarkText: '' }, ...prev].slice(0, 3)
-          return newQueue
-        })
-
-        // Auto-focus the newly arrived call
-        setSelectedIndex(0)
-
-        // Schedule 8s auto-hide timer when a call finishes so completed calls leave the queue automatically
-        if (payload.state === 'call_finished') {
-          const timerId = window.setTimeout(() => {
-            setCallQueue((prev) => prev.filter((item) => item.key !== callKey))
-            autoHideTimersRef.current.delete(callKey)
-          }, 8000)
-          autoHideTimersRef.current.set(callKey, timerId)
-        }
+        enqueueCall(payload)
       } catch {
         // ignore malformed stream events
       }
     })
 
+    const handleWorkspaceMakeCall = (event: Event) => {
+      const popup = (event as CustomEvent<WorkspaceMakeCallPopup>).detail
+      if (popup) enqueueCall(popup)
+    }
+    window.addEventListener(WORKSPACE_MAKE_CALL_POPUP_EVENT, handleWorkspaceMakeCall)
+
     return () => {
       timersRef.forEach((t) => window.clearTimeout(t))
       timersRef.clear()
       source.close()
+      window.removeEventListener(WORKSPACE_MAKE_CALL_POPUP_EVENT, handleWorkspaceMakeCall)
     }
   }, [])
 
@@ -257,10 +321,16 @@ export function KnowlarityCallListener() {
       window.clearTimeout(timer)
       autoHideTimersRef.current.delete(key)
     }
+    const dismissedUntil = Date.now() + DISMISSED_CALL_WINDOW_MS
+    dismissedCallKeysRef.current.set(key, dismissedUntil)
+    if (currentItem?.event.patientInfo?.leadId) {
+      dismissedCallKeysRef.current.set(`lead:${currentItem.event.patientInfo.leadId}`, dismissedUntil)
+    }
+    persistDismissedCallKeys(dismissedCallKeysRef.current)
     setCallQueue((prev) => prev.filter((item) => item.key !== key))
   }
 
-  if (!currentItem || !display || !connected) return null
+  if (!currentItem || !display) return null
 
   const patientInfo = currentItem.event.patientInfo
   const totalCalls = callQueue.length
@@ -323,21 +393,23 @@ export function KnowlarityCallListener() {
               type="button"
               variant="ghost"
               size="icon"
-              className="h-7 w-7 text-current hover:bg-white/10"
+              className="h-8 w-8 rounded-lg bg-white text-slate-950 shadow-sm hover:bg-slate-100 hover:text-slate-950"
               onClick={() => setIsCollapsed(!isCollapsed)}
               title={isCollapsed ? 'Expand notification' : 'Collapse notification'}
+              aria-label={isCollapsed ? 'Expand notification' : 'Collapse notification'}
             >
-              {isCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+              {isCollapsed ? <ChevronDown className="h-5 w-5" /> : <ChevronUp className="h-5 w-5" />}
             </Button>
             <Button
               type="button"
               variant="ghost"
               size="icon"
-              className="h-7 w-7 text-current hover:bg-white/10"
+              className="h-8 w-8 rounded-lg bg-rose-600 text-white shadow-sm hover:bg-rose-700 hover:text-white"
               onClick={() => handleCloseCall(currentItem.key)}
               title="Close notification"
+              aria-label="Close notification"
             >
-              <X className="h-4 w-4" />
+              <X className="h-5 w-5" />
             </Button>
           </div>
         </div>

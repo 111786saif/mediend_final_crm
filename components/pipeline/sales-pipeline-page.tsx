@@ -35,6 +35,10 @@ import { useAuth } from '@/hooks/use-auth'
 import { usePipelinePage, usePipelineUrlState } from '@/hooks/use-pipeline'
 import type { Lead } from '@/hooks/use-leads'
 import { apiGet, apiPost } from '@/lib/api-client'
+import {
+  showWorkspaceMakeCallPopup,
+  type WorkspaceMakeCallResult,
+} from '@/lib/knowlarity-call-popup'
 import { CASE_STAGE_CONFIG, getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
 import { resolveLeadCity, resolveLeadHospitalDoctor, resolveLeadSourceDisplay } from '@/lib/lead-display'
 import { resolveSurgerySchedule } from '@/lib/surgery-schedule'
@@ -976,7 +980,8 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     try {
       setCallingLeadId(targetLead.id)
       toast.info(`Initiating Knowlarity call for ${patientName}...`)
-      await apiPost(`/api/leads/${targetLead.id}/make-call`, {})
+      const result = await apiPost<WorkspaceMakeCallResult>(`/api/leads/${targetLead.id}/make-call`, {})
+      showWorkspaceMakeCallPopup(result.popup)
       toast.success(`Knowlarity call initiated for ${patientName}`)
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to initiate call via Knowlarity')
