@@ -16,6 +16,10 @@ import { Input } from '@/components/ui/input'
 import { useAuth } from '@/hooks/use-auth'
 import { usePermissions } from '@/hooks/use-permissions'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
+import {
+  showWorkspaceMakeCallPopup,
+  type WorkspaceMakeCallResult,
+} from '@/lib/knowlarity-call-popup'
 import { hrefWithReturnTo, resolveReturnTo } from '@/lib/navigation/return-to'
 import { normalizeModeOfPaymentKey, normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import { resolveSurgerySchedule } from '@/lib/surgery-schedule'
@@ -681,7 +685,8 @@ export default function PatientDetailsPage() {
   const handleBackendMakeCall = async () => {
     try {
       setMakeCallLoading(true)
-      await apiPost(`/api/leads/${leadId}/make-call`, {})
+      const result = await apiPost<WorkspaceMakeCallResult>(`/api/leads/${leadId}/make-call`, {})
+      showWorkspaceMakeCallPopup(result.popup)
       toast.success('Call initiated')
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to initiate call')
