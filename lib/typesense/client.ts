@@ -30,9 +30,11 @@ export interface TypesenseServerConfig {
 
 // Parses environment variables to build the Typesense connection configuration
 export function getTypesenseConfig(): TypesenseServerConfig {
-  const apiKey = process.env.TYPESENSE_API_KEY || ''
-  const fullUrl = process.env.TYPESENSE_URL || process.env.TYPESENSE_ENDPOINT || ''
-  const timeoutSeconds = Number(process.env.TYPESENSE_CONNECTION_TIMEOUT_SECONDS) || 5
+  const apiKey = (process.env.TYPESENSE_API_KEY || '').trim()
+  const fullUrl = (process.env.TYPESENSE_URL || process.env.TYPESENSE_ENDPOINT || '').trim()
+  const timeoutSeconds = Number(process.env.TYPESENSE_CONNECTION_TIMEOUT_SECONDS) || 3
+
+  const hasValidApiKey = Boolean(apiKey && apiKey !== 'xyz_typesense_api_key')
 
   if (fullUrl) {
     try {
@@ -46,14 +48,16 @@ export function getTypesenseConfig(): TypesenseServerConfig {
         nodes: [{ host, port, protocol, path }],
         apiKey,
         connectionTimeoutSeconds: timeoutSeconds,
-        isConfigured: Boolean(apiKey && host && apiKey !== 'xyz_typesense_api_key'),
+        isConfigured: Boolean(hasValidApiKey && host),
       }
     } catch (e) {
       console.warn('[Typesense] Invalid TYPESENSE_URL provided, falling back to host/port variables:', e)
     }
   }
 
-  const host = process.env.TYPESENSE_HOST || 'localhost'
+  const explicitHost = (process.env.TYPESENSE_HOST || '').trim()
+  const hasExplicitHost = Boolean(explicitHost)
+  const host = explicitHost || 'localhost'
   const port = Number(process.env.TYPESENSE_PORT) || 8108
   const protocol = process.env.TYPESENSE_PROTOCOL || 'http'
 
@@ -61,13 +65,113 @@ export function getTypesenseConfig(): TypesenseServerConfig {
     nodes: [{ host, port, protocol, path: '' }],
     apiKey,
     connectionTimeoutSeconds: timeoutSeconds,
-    isConfigured: Boolean(apiKey && apiKey !== 'xyz_typesense_api_key' && host),
+    // Only configured if both an explicit valid API key and explicit host/URL are in .env
+    isConfigured: Boolean(hasValidApiKey && hasExplicitHost),
   }
 }
 
-// Checks if Typesense is properly configured with an API key and host
-export function isTypesenseConfigured(): boolean {
+// Threshold of consecutive 502 Bad Gateway / connectivity errors before circuit trips
+export const TYPESENSE_502_FAILURE_THRESHOLD = 3
+
+interface TypesenseCircuitState {
+  count502: number
+  isCircuitBroken: boolean
+  lastFailureAt: number | null
+  lastFailureMessage: string | null
+}
+
+const globalForTypesense = globalThis as unknown as {
+  __typesenseCircuitState?: TypesenseCircuitState
+}
+
+function getCircuitState(): TypesenseCircuitState {
+  if (!globalForTypesense.__typesenseCircuitState) {
+    globalForTypesense.__typesenseCircuitState = {
+      count502: 0,
+      isCircuitBroken: false,
+      lastFailureAt: null,
+      lastFailureMessage: null,
+    }
+  }
+  return globalForTypesense.__typesenseCircuitState
+}
+
+// In-memory counter for 502 / connectivity errors
+export function getTypesense502Count(): number {
+  return getCircuitState().count502
+}
+
+// Checks if the 502 circuit breaker has tripped (multiple 502 errors detected)
+export function isTypesenseCircuitBroken(): boolean {
+  return getCircuitState().isCircuitBroken
+}
+
+// Determines if an error represents 502 Bad Gateway, 503, 504, or network connection failure
+export function isTypesenseUnavailableError(err: any): boolean {
+  if (!err) return false
+
+  const status = err.httpStatus ?? err.status ?? err.statusCode ?? err.response?.status
+  if (status === 502 || status === 503 || status === 504) return true
+
+  const msg = String(err.message || err.toString() || '').toLowerCase()
+  return (
+    msg.includes('502') ||
+    msg.includes('bad gateway') ||
+    msg.includes('503') ||
+    msg.includes('service unavailable') ||
+    msg.includes('504') ||
+    msg.includes('gateway timeout') ||
+    msg.includes('econnrefused') ||
+    msg.includes('etimedout') ||
+    msg.includes('connection refused') ||
+    msg.includes('connect timeout') ||
+    msg.includes('fetch failed')
+  )
+}
+
+// Records a 502 Bad Gateway / connectivity error. When count reaches threshold (2-3 times),
+// trips the circuit and disables Typesense until server restart.
+export function recordTypesense502Error(err?: any): void {
+  const state = getCircuitState()
+  state.count502 += 1
+  state.lastFailureAt = Date.now()
+  state.lastFailureMessage = err?.message || String(err || '502 Bad Gateway')
+
+  console.warn(
+    `[Typesense] 502 / unreachable error count: ${state.count502}/${TYPESENSE_502_FAILURE_THRESHOLD}. Details:`,
+    state.lastFailureMessage
+  )
+
+  if (state.count502 >= TYPESENSE_502_FAILURE_THRESHOLD) {
+    state.isCircuitBroken = true
+    console.error(
+      `[Typesense Circuit Breaker] Typesense encountered 502 / unavailable ${state.count502} times. Circuit tripped! Stopping all Typesense queries and falling back directly to PostgreSQL until server restart.`
+    )
+  }
+}
+
+// Resets the circuit breaker and 502 error counter (e.g. on server restart or manual re-enable)
+export function resetTypesenseCircuit(): void {
+  const state = getCircuitState()
+  state.count502 = 0
+  state.isCircuitBroken = false
+  state.lastFailureAt = null
+  state.lastFailureMessage = null
+}
+
+// Checks if Typesense is properly configured with an API key and host in .env,
+// and that the in-memory 502 circuit breaker has not tripped
+export function isTypesenseConfigured(options?: { checkCircuit?: boolean }): boolean {
+  const checkCircuit = options?.checkCircuit ?? true
+  if (checkCircuit && isTypesenseCircuitBroken()) {
+    return false
+  }
   return getTypesenseConfig().isConfigured
+}
+
+// Convenience helper to explicitly check if Typesense is both configured and available
+export function isTypesenseAvailable(): boolean {
+  return isTypesenseConfigured({ checkCircuit: true })
 }
 
 let cachedClient: Client | null = null
@@ -78,12 +182,15 @@ export function getTypesenseClient(): Client {
 
   const config = getTypesenseConfig()
 
+  // Use a fast timeout (max 2 seconds) and 1 retry to fail fast on 502s rather than hanging requests
+  const timeout = Math.min(2, Math.max(1, config.connectionTimeoutSeconds))
+
   cachedClient = new Client({
     nodes: config.nodes,
     apiKey: config.apiKey,
-    connectionTimeoutSeconds: config.connectionTimeoutSeconds,
-    retryIntervalSeconds: 0.5,
-    numRetries: 3,
+    connectionTimeoutSeconds: timeout,
+    retryIntervalSeconds: 0.2,
+    numRetries: 1,
   })
 
   return cachedClient
@@ -98,12 +205,21 @@ export function resetTypesenseClient(): void {
 export async function checkTypesenseHealth(): Promise<{ ok: boolean; message: string }> {
   try {
     if (!isTypesenseConfigured()) {
+      if (isTypesenseCircuitBroken()) {
+        return {
+          ok: false,
+          message: `Typesense is temporarily disabled in-memory after ${getTypesense502Count()} 502 errors. Database fallback active.`,
+        }
+      }
       return { ok: false, message: 'Typesense is not configured in .env' }
     }
     const client = getTypesenseClient()
     const health = await client.health.retrieve()
     return { ok: health.ok, message: health.ok ? 'Typesense server is healthy' : 'Typesense returned unhealthy' }
   } catch (error: any) {
+    if (isTypesenseUnavailableError(error)) {
+      recordTypesense502Error(error)
+    }
     return { ok: false, message: error?.message || 'Failed to connect to Typesense server' }
   }
 }
@@ -140,8 +256,19 @@ export async function upsertDocuments<T extends Record<string, any>>(
   documents: T[]
 ): Promise<any> {
   if (documents.length === 0) return []
+  if (isTypesenseCircuitBroken()) {
+    console.warn('[Typesense] Skipping upsertDocuments because 502 circuit breaker is active')
+    return []
+  }
   const client = getTypesenseClient()
-  return await client.collections(collectionName).documents().import(documents, { action: 'upsert' })
+  try {
+    return await client.collections(collectionName).documents().import(documents, { action: 'upsert' })
+  } catch (err: any) {
+    if (isTypesenseUnavailableError(err)) {
+      recordTypesense502Error(err)
+    }
+    throw err
+  }
 }
 
 // Executes a search query on a given collection
@@ -149,8 +276,18 @@ export async function searchCollection<T extends Record<string, any>>(
   collectionName: string,
   searchParameters: SearchParams<any>
 ) {
+  if (isTypesenseCircuitBroken()) {
+    throw new Error('Typesense unavailable: 502 circuit breaker is active')
+  }
   const client = getTypesenseClient()
-  return await client.collections<T>(collectionName).documents().search(searchParameters)
+  try {
+    return await client.collections<T>(collectionName).documents().search(searchParameters)
+  } catch (err: any) {
+    if (isTypesenseUnavailableError(err)) {
+      recordTypesense502Error(err)
+    }
+    throw err
+  }
 }
 
 // Parameters for searching the sales pipeline collection
@@ -288,6 +425,9 @@ export async function getEmployeeHierarchyFromTypesense(
       .retrieve()
     return (doc as unknown) as EmployeeHierarchyDocument
   } catch (err: any) {
+    if (isTypesenseUnavailableError(err)) {
+      recordTypesense502Error(err)
+    }
     return null
   }
 }
@@ -379,6 +519,7 @@ export function mapTypesenseDocToPipelineLead(
     sex: doc.sex ?? null,
     treatment: doc.treatment ?? null,
     diseaseDetails: doc.planningTreatment ?? null,
+    planningTreatment: doc.planningTreatment ?? null,
     category: doc.category ?? null,
     status: doc.status || '',
     caseStage: doc.caseStage ?? null,
@@ -386,6 +527,9 @@ export function mapTypesenseDocToPipelineLead(
     subStatus: doc.subStatus ?? null,
     bdId: doc.bdId ?? null,
     circle: doc.circle ?? null,
+    city: doc.city ?? null,
+    preferredLocation: doc.preferredLocation ?? null,
+    flowType: doc.flowType ?? null,
     campaignName: doc.campaignName ?? null,
     month: doc.month ?? null,
     assignedDate: doc.assignedDateStr ?? null,
@@ -400,6 +544,7 @@ export function mapTypesenseDocToPipelineLead(
     source: doc.source ?? null,
     leadSource: doc.campaignSourceDisplay ?? null,
     insuranceName: doc.insuranceName ?? null,
+    healthInsurance: doc.insuranceName ?? null,
     modeOfPayment: doc.mop ?? null,
     hospitalName: doc.hospitalName ?? null,
     doctorName: doc.doctorName ?? null,
@@ -414,9 +559,22 @@ export function mapTypesenseDocToPipelineLead(
     remarksClearedAt: null,
     removeFollowUpDate: false,
     followUpDateClearedAt: null,
-    plRecord: doc.managerName ? { managerName: doc.managerName } : null,
-    dischargeSheet: null,
-    kypSubmission: null,
+    plRecord: {
+      bdmName: doc.bdName || null,
+      managerName: doc.managerName || null,
+      doctorName: doc.doctorName || null,
+      hospitalName: doc.hospitalName || null,
+    },
+    dischargeSheet: {
+      doctorName: doc.doctorName || null,
+      hospitalName: doc.hospitalName || null,
+    },
+    kypSubmission: doc.preferredLocation || doc.city
+      ? {
+          location: doc.preferredLocation || doc.city || null,
+          preAuthData: null,
+        }
+      : null,
     bd: doc.bdName
       ? {
           id: doc.bdId || '',
@@ -437,7 +595,7 @@ export function mapTypesenseDocToPipelineLead(
   }
 }
 
-// Synchronizes a single lead from PostgreSQL to Typesense by ID (for instant real-time updates on lead edit)
+// Synchronizes a single lead from PostgreSQL to Typesense by ID (for instant real-time updates on lead edit/create)
 export async function syncSingleLeadToTypesense(leadId: string): Promise<boolean> {
   if (!isTypesenseConfigured() || !leadId) return false
   try {
@@ -452,6 +610,25 @@ export async function syncSingleLeadToTypesense(leadId: string): Promise<boolean
     return true
   } catch (err) {
     console.warn('[Typesense] Failed to sync single lead to Typesense:', err)
+    return false
+  }
+}
+
+// Synchronizes multiple leads from PostgreSQL to Typesense by IDs (for batch updates e.g. bulk reassignment)
+export async function syncMultipleLeadsToTypesense(leadIds: string[]): Promise<boolean> {
+  if (!isTypesenseConfigured() || !leadIds || leadIds.length === 0) return false
+  try {
+    const { prisma } = await import('@/lib/prisma')
+    const { pipelineTableSelect } = await import('@/lib/pipeline/server-query')
+    const leads = await prisma.lead.findMany({
+      where: { id: { in: leadIds } },
+      select: pipelineTableSelect,
+    })
+    if (!leads || leads.length === 0) return false
+    await upsertSalesPipelineLeads(leads)
+    return true
+  } catch (err) {
+    console.warn('[Typesense] Failed to sync multiple leads to Typesense:', err)
     return false
   }
 }

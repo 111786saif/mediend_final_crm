@@ -121,7 +121,7 @@ export function ColumnFilter({
   const getQuickRange = (range: 'current' | '3months' | '6months') => {
     const now = new Date()
     let from: Date
-    let to: Date = now
+    const to: Date = now
 
     if (range === 'current') {
       from = new Date(now.getFullYear(), now.getMonth(), 1)
@@ -222,6 +222,21 @@ export function ColumnFilter({
   const filteredOptions = normalizedOptions.filter((option) =>
     option.label.toLowerCase().includes(searchQuery.toLowerCase())
   )
+
+  const orderedFilteredOptions = useMemo(() => {
+    const selectedList: FilterOption[] = []
+    const unselectedList: FilterOption[] = []
+
+    filteredOptions.forEach((option) => {
+      if (selected.includes(option.value)) {
+        selectedList.push(option)
+      } else {
+        unselectedList.push(option)
+      }
+    })
+
+    return { selectedList, unselectedList }
+  }, [filteredOptions, selected])
 
   const isAllSelected = useMemo(() => {
     const targetOptions = searchQuery ? filteredOptions : normalizedOptions
@@ -432,16 +447,33 @@ export function ColumnFilter({
                   No options found
                 </div>
               ) : (
-                filteredOptions.map((option) => (
-                  <DropdownMenuCheckboxItem
-                    key={option.value}
-                    checked={tempSelected.includes(option.value)}
-                    onCheckedChange={(checked) => handleCheckedChange(option.value, checked)}
-                    onSelect={(e) => e.preventDefault()}
-                  >
-                    {option.label}
-                  </DropdownMenuCheckboxItem>
-                ))
+                <>
+                  {orderedFilteredOptions.selectedList.map((option) => (
+                    <DropdownMenuCheckboxItem
+                      key={option.value}
+                      checked={tempSelected.includes(option.value)}
+                      onCheckedChange={(checked) => handleCheckedChange(option.value, checked)}
+                      onSelect={(e) => e.preventDefault()}
+                      className="font-medium"
+                    >
+                      {option.label}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                  {orderedFilteredOptions.selectedList.length > 0 &&
+                    orderedFilteredOptions.unselectedList.length > 0 && (
+                      <div className="h-px bg-muted my-0.5" />
+                    )}
+                  {orderedFilteredOptions.unselectedList.map((option) => (
+                    <DropdownMenuCheckboxItem
+                      key={option.value}
+                      checked={tempSelected.includes(option.value)}
+                      onCheckedChange={(checked) => handleCheckedChange(option.value, checked)}
+                      onSelect={(e) => e.preventDefault()}
+                    >
+                      {option.label}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </>
               )}
             </div>
           </div>

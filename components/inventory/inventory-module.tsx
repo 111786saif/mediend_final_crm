@@ -24,7 +24,9 @@ import {
   Info,
   LayoutDashboard,
   MapPin,
+  Package,
   Plus,
+  Receipt,
   RefreshCw,
   RotateCcw,
   Search,
@@ -149,6 +151,32 @@ function Table({
       "Handled by": "handledBy",
       Actions: "actions",
 
+      // Sales Product
+      Date: "date",
+      "BDM Name": "bdmName",
+      "Patient Name": "patientName",
+      Treatment: "treatment",
+      Circle: "circle",
+      "Dr. Name": "drName",
+      "Hospital Name": "hospitalName",
+      "Surgery Date": "surgeryDate",
+      MOP: "mop",
+      "Size Used": "sizeUsed",
+      Remark: "remark",
+      "Stock Used Form": "stockUsedForm",
+
+      // Sales Finance
+      "Invoice Raised/Need": "invoiceStatus",
+      "Invoice Status": "invoiceStatus",
+      MRP: "mrp",
+      "Buy Price": "buyPrice",
+      "Sales Price": "salesPrice",
+      "GST %": "gstPercent",
+      "GST Amount": "gstAmount",
+      "Sales Price with GST": "salesPriceWithGst",
+      "Payment Received/Not": "paymentReceivedStatus",
+      "Payment Status": "paymentReceivedStatus",
+
       // Transfers
       Transfer: "transfer",
       Route: "route",
@@ -185,17 +213,22 @@ function Table({
   const columns = useMemo<ColumnDef<ReactNode[]>[]>(() => {
     return heads.map((head, idx) => {
       // Determine filter options for string cells
-      const uniqueValues = Array.from(
+      const rawValues = Array.from(
         new Set(
           rows
             .map((r) => {
               const val = r[idx];
-              if (typeof val === "string" || typeof val === "number") return String(val);
+              if (typeof val === "string" || typeof val === "number") return String(val).trim();
               return "";
             })
             .filter((v) => v !== "" && v !== "—")
         )
       );
+
+      const uniqueValues =
+        head === "Circle"
+          ? Array.from(new Set([...rawValues, "Bangalore", "Delhi", "Hyderabad", "Mumbai", "Pune"])).sort()
+          : rawValues;
 
       return {
         id: `col_${idx}`,
@@ -241,13 +274,17 @@ function Table({
         if (!filterVal || (Array.isArray(filterVal) && filterVal.length === 0)) return true;
         const colIdx = parseInt(colId.replace("col_", ""), 10);
         const cellVal = row[colIdx];
-        const cellStr = typeof cellVal === "string" || typeof cellVal === "number" ? String(cellVal).toLowerCase() : "";
+        const cellStr = typeof cellVal === "string" || typeof cellVal === "number" ? String(cellVal).trim().toLowerCase() : "";
 
         if (Array.isArray(filterVal)) {
-          return filterVal.some((fv) => cellStr.includes(String(fv).toLowerCase()));
+          return filterVal.some((fv) => {
+            const fvStr = String(fv).trim().toLowerCase();
+            return cellStr === fvStr || cellStr.includes(fvStr);
+          });
         }
         if (typeof filterVal === "string") {
-          return cellStr.includes(filterVal.toLowerCase());
+          const fvStr = filterVal.trim().toLowerCase();
+          return cellStr === fvStr || cellStr.includes(fvStr);
         }
         return true;
       });
@@ -299,6 +336,10 @@ export default function InventoryModule({
   const { hasAccess, permissionsReady } = usePermissions();
   const searchParams = useSearchParams();
   const tabParam = searchParams?.get("tab");
+  const subTabParam = searchParams?.get("subTab");
+  const [salesSubTab, setSalesSubTab] = useState<"product" | "finance">(
+    subTabParam === "finance" ? "finance" : "product"
+  );
   const [snapshot, setSnapshot] = useState<Snapshot>(),
     [tab, setTab] = useState<Tab>(initialTab),
     [loading, setLoading] = useState(true),
@@ -316,8 +357,40 @@ export default function InventoryModule({
     [paymentView, setPaymentView] = useState<"SALE" | "PURCHASE" | "HISTORY">(
       "SALE",
     ),
+    [circleFilter, setCircleFilter] = useState(""),
+    [invoiceFilter, setInvoiceFilter] = useState(""),
+    [paymentFilter, setPaymentFilter] = useState(""),
     [audit, setAudit] = useState<Audit[]>([]),
     [moreAudit, setMoreAudit] = useState(true);
+
+  const getSaleCircle = useCallback((sale: Sale): string => {
+    if (sale.circle?.trim()) return sale.circle.trim();
+    const locName = snapshot?.state?.locations?.find((l) => l.id === sale.locationId)?.name || "";
+    const locAddress = snapshot?.state?.locations?.find((l) => l.id === sale.locationId)?.address || "";
+    const textToSearch = `${sale.hospitalName || ""} ${sale.billedTo || ""} ${locName} ${locAddress}`.toLowerCase();
+    for (const c of ["Pune", "Mumbai", "Delhi", "Bangalore", "Hyderabad"]) {
+      if (textToSearch.includes(c.toLowerCase())) return c;
+    }
+    return "";
+  }, [snapshot?.state?.locations]);
+
+  const circleOptions = useMemo(() => {
+    const map = new Map<string, string>();
+    ["Pune", "Mumbai", "Delhi", "Bangalore", "Hyderabad"].forEach((c) => {
+      map.set(c.toLowerCase(), c);
+    });
+    (snapshot?.state?.sales || []).forEach((sale) => {
+      const c = getSaleCircle(sale);
+      if (c) {
+        const key = c.toLowerCase();
+        if (!map.has(key)) {
+          const formatted = c.charAt(0).toUpperCase() + c.slice(1);
+          map.set(key, formatted);
+        }
+      }
+    });
+    return Array.from(map.values()).sort();
+  }, [snapshot?.state?.sales, getSaleCircle]);
 
   const pending = useRef<{ key: string; requestId: string } | undefined>(
       undefined,
@@ -336,6 +409,12 @@ export default function InventoryModule({
       }
     }
   }, [tabParam]);
+
+  useEffect(() => {
+    if (subTabParam === "finance" || subTabParam === "product") {
+      setSalesSubTab(subTabParam);
+    }
+  }, [subTabParam]);
 
   const fetchJSON = useCallback(async (path: string, init?: RequestInit) => {
     const r = await fetch(path, {
@@ -498,6 +577,7 @@ export default function InventoryModule({
   }
 
   const s: InventoryState = snapshot.state,
+    actorName = snapshot.actor.name,
     write = snapshot.actor.permissions.includes("write"),
     admin = snapshot.actor.permissions.includes("admin"),
     totals = dashboard(s),
@@ -557,26 +637,221 @@ export default function InventoryModule({
       <span className="text-slate-400 dark:text-slate-500">—</span>
     );
 
-  function docDetail(doc: Purchase | Sale, kind: "PURCHASE" | "SALE") {
+  function docDetail(
+    doc: Purchase | Sale,
+    kind: "PURCHASE" | "SALE" | "SALE_PRODUCT" | "SALE_FINANCE",
+  ) {
+    if (kind === "SALE_PRODUCT") {
+      const sDoc = doc as Sale;
+      setDetail({
+        title: `Sales Product Details (${short(doc.id)})`,
+        body: (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-800">
+              {Object.entries({
+                "Case / IPD Ref": sDoc.caseReference || "—",
+                Date: sDoc.date,
+                "Surgery Date": sDoc.surgeryDate || sDoc.date || "—",
+                "Patient Name": sDoc.patientName || sDoc.billedTo || "—",
+                "BDM Name": sDoc.bdmName || "—",
+                "Manager Name": sDoc.managerName || "—",
+                Treatment: sDoc.treatment || "—",
+                Circle: sDoc.circle || "—",
+                "Hospital Name": sDoc.hospitalName || name("locations", sDoc.locationId) || "—",
+                "Dr. Name": sDoc.drName || "—",
+                MOP: sDoc.mop || "—",
+                Remark: sDoc.remark || "—",
+                "Handled by": sDoc.handledBy || "—",
+              }).map(([k, v]) => (
+                <div key={k}>
+                  <small className="text-[11px] text-slate-500 dark:text-slate-400 block">{k}</small>
+                  <strong className="text-xs font-semibold text-slate-900 dark:text-slate-100">{v}</strong>
+                </div>
+              ))}
+            </div>
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 pt-2">
+              Implants / Stock items ({sDoc.lines?.length || 0})
+            </h3>
+            <Table
+              heads={["Item / Product", "Size", "Batch", "Quantity"]}
+              rows={
+                sDoc.lines && sDoc.lines.length > 0
+                  ? sDoc.lines.map((l) => [
+                      <strong key="prod" className="font-semibold block text-slate-900 dark:text-slate-100">
+                        {l.productName || name("products", l.productId) || "Item"}
+                      </strong>,
+                      l.size || "—",
+                      l.batch || "—",
+                      l.quantity,
+                    ])
+                  : [
+                      [
+                        sDoc.stockUsedForm || "—",
+                        sDoc.sizeUsed || "—",
+                        "—",
+                        1,
+                      ],
+                    ]
+              }
+            />
+            {sDoc.proofId && (
+              <p className="text-xs text-slate-600 dark:text-slate-400 pt-2">
+                Attachment / Proof: {attachment(sDoc.proofId)}
+              </p>
+            )}
+          </div>
+        ),
+      });
+      return;
+    }
+
+    if (kind === "SALE_FINANCE") {
+      const sDoc = doc as Sale;
+      const totalVal = sDoc.salesPriceWithGst || sDoc.total;
+      const paidVal = (sDoc.receivedPayment !== undefined && sDoc.receivedPayment > 0) ? sDoc.receivedPayment : paid(s, sDoc.id);
+      const outstandingVal = Math.max(0, totalVal - paidVal);
+
+      setDetail({
+        title: `Sales Finance Details (${short(doc.id)})`,
+        body: (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-800">
+              {Object.entries({
+                "Patient / Billed to": sDoc.patientName || sDoc.billedTo || "—",
+                Date: sDoc.date,
+                "Invoice Status": (sDoc.invoiceStatus === "Raised" || sDoc.invoiceStatus === "Invoice Raised" || Boolean(sDoc.reference)) ? "Raised" : "Pending",
+                "Total Price": money(sDoc.salesPrice || sDoc.net),
+                "GST Amount": money(sDoc.gstAmount ?? sDoc.tax),
+                "Total Price with GST": money(totalVal),
+                "Received Payment": money(paidVal),
+                "Payment Status": (sDoc.paymentReceivedStatus === "Received" || sDoc.paymentReceivedStatus === "Payment Received" || (paidVal >= totalVal && totalVal > 0)) ? "Received" : (sDoc.paymentReceivedStatus === "Part Paid" || paidVal > 0) ? "Part Paid" : "Not Received",
+                Outstanding: money(outstandingVal),
+                "Handled by": sDoc.handledBy || "—",
+              }).map(([k, v]) => (
+                <div key={k}>
+                  <small className="text-[11px] text-slate-500 dark:text-slate-400 block">{k}</small>
+                  <strong className="text-xs font-semibold text-slate-900 dark:text-slate-100">{v}</strong>
+                </div>
+              ))}
+            </div>
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 pt-2">
+              Items in this Sale & Price Breakdown ({sDoc.lines?.length || 0})
+            </h3>
+            <Table
+              heads={[
+                "Item / batch",
+                "Size",
+                "Qty",
+                "MRP",
+                "Buy Price",
+                "Sales Price",
+                "GST %",
+                "GST Amount",
+                "Total with GST",
+              ]}
+              rows={sDoc.lines.map((l) => {
+                const saleLine = l as any;
+                const prod = s.products.find((p) => p.id === saleLine.productId);
+                const mrpVal = saleLine.mrp || prod?.mrp || 0;
+                const gstPct = saleLine.gstPercent ?? 0;
+                const gstAmt =
+                  saleLine.gstAmount ??
+                  ((saleLine.unitPrice || 0) * (saleLine.quantity || 1) * (gstPct / 100));
+                const lineNet = (saleLine.unitPrice || 0) * (saleLine.quantity || 1);
+                const lineTotal = lineNet + gstAmt;
+
+                return [
+                  <div key="item">
+                    <strong className="font-semibold block text-slate-900 dark:text-slate-100">
+                      {saleLine.productName || prod?.name || "Item"}
+                    </strong>
+                    {saleLine.batch && (
+                      <small className="text-[11px] text-slate-500 dark:text-slate-400 block">
+                        Batch: {saleLine.batch}
+                      </small>
+                    )}
+                  </div>,
+                  saleLine.size || "—",
+                  saleLine.quantity,
+                  mrpVal > 0 ? money(mrpVal) : "—",
+                  saleLine.unitCost > 0 ? money(saleLine.unitCost) : "—",
+                  saleLine.unitPrice > 0 ? money(saleLine.unitPrice) : "—",
+                  gstPct > 0 ? `${gstPct}%` : "0%",
+                  gstAmt > 0 ? money(gstAmt) : "₹0.00",
+                  lineTotal > 0 ? money(lineTotal) : "₹0.00",
+                ];
+              })}
+            />
+            {s.payments.some((p) => p.documentId === doc.id) && (
+              <>
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 pt-2">Payments</h3>
+                <Table
+                  heads={["Date", "Amount", "Method", "Handled by", "Proof"]}
+                  rows={s.payments
+                    .filter((p) => p.documentId === doc.id)
+                    .map((p) => [
+                      p.date,
+                      money(p.amount),
+                      p.method.replaceAll("_", " "),
+                      p.handledBy,
+                      attachment(p.proofId),
+                    ])}
+                />
+              </>
+            )}
+            {sDoc.proofId && (
+              <p className="text-xs text-slate-600 dark:text-slate-400 pt-2">
+                Attachment / Proof: {attachment(sDoc.proofId)}
+              </p>
+            )}
+          </div>
+        ),
+      });
+      return;
+    }
+
     setDetail({
       title: `${kind === "SALE" ? "Sale" : "Purchase"} ${short(doc.id)}`,
       body: (
         <div className="space-y-4">
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-800">
-            {Object.entries({
-              Date: doc.date,
-              Location: name("locations", doc.locationId),
-              "GST treatment": doc.gstMode.replaceAll("_", " "),
-              "Document type": doc.documentType,
-              Reference: doc.reference || "—",
-              "Handled by": doc.handledBy,
-              "Net amount": money(doc.net),
-              Tax: money(doc.tax),
-              Total: money(doc.total),
-              Paid: money(paid(s, doc.id)),
-              Outstanding: money(doc.total - paid(s, doc.id)),
-              Status: doc.status,
-            }).map(([k, v]) => (
+            {Object.entries(
+              kind === "SALE"
+                ? {
+                    Date: doc.date,
+                    Location: name("locations", doc.locationId),
+                    "Patient / Billed to": (doc as Sale).patientName || (doc as Sale).billedTo,
+                    "Case Ref": (doc as Sale).caseReference || "—",
+                    Hospital: (doc as Sale).hospitalName || "—",
+                    Doctor: (doc as Sale).drName || "—",
+                    BDM: (doc as Sale).bdmName || "—",
+                    "Invoice Status": (doc as Sale).invoiceStatus === "Raised" || (doc as Sale).invoiceStatus === "Invoice Raised" || Boolean(doc.reference) ? "Raised" : "Pending",
+                    MRP: money((doc as Sale).mrp || 0),
+                    "Buy Price": money((doc as Sale).buyPrice || 0),
+                    "Sales Price (Total)": money((doc as Sale).salesPrice || doc.net),
+                    "GST %": (doc as Sale).gstPercent ? `${(doc as Sale).gstPercent}%` : doc.net > 0 && doc.tax > 0 ? `${Math.round((doc.tax / doc.net) * 100)}%` : "0%",
+                    "GST Amount": money((doc as Sale).gstAmount ?? doc.tax),
+                    "Total with GST": money((doc as Sale).salesPriceWithGst || doc.total),
+                    "Payment Status": (doc as Sale).paymentReceivedStatus === "Received" || (doc as Sale).paymentReceivedStatus === "Payment Received" || (doc.total > 0 && paid(s, doc.id) >= doc.total) ? "Received" : (doc as Sale).paymentReceivedStatus === "Part Paid" || paid(s, doc.id) > 0 ? "Part Paid" : "Not Received",
+                    Paid: money(paid(s, doc.id)),
+                    Outstanding: money(doc.total - paid(s, doc.id)),
+                    Status: doc.status,
+                  }
+                : {
+                    Date: doc.date,
+                    Location: name("locations", doc.locationId),
+                    "GST treatment": doc.gstMode.replaceAll("_", " "),
+                    "Document type": doc.documentType,
+                    Reference: doc.reference || "—",
+                    "Handled by": doc.handledBy,
+                    "Net amount": money(doc.net),
+                    Tax: money(doc.tax),
+                    Total: money(doc.total),
+                    Paid: money(paid(s, doc.id)),
+                    Outstanding: money(doc.total - paid(s, doc.id)),
+                    Status: doc.status,
+                  },
+            ).map(([k, v]) => (
               <div key={k}>
                 <small className="text-[11px] text-slate-500 dark:text-slate-400 block">{k}</small>
                 <strong className="text-xs font-semibold text-slate-900 dark:text-slate-100">{v}</strong>
@@ -585,23 +860,72 @@ export default function InventoryModule({
           </div>
           <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 pt-2">Items</h3>
           <Table
-            heads={[
-              "Item / batch",
-              "Size",
-              "Qty",
-              "Cost / unit",
-              "Sale / unit",
-            ]}
-            rows={doc.lines.map((l) => [
-              <>
-                <strong className="font-semibold">{l.productName}</strong>
-                <small className="text-[11px] text-slate-500 dark:text-slate-400 block">{l.batch}</small>
-              </>,
-              l.size,
-              l.quantity,
-              money(l.unitCost),
-              kind === "SALE" && "unitPrice" in l ? money(l.unitPrice) : "—",
-            ])}
+            heads={
+              kind === "SALE"
+                ? [
+                    "Item / batch",
+                    "Size",
+                    "Qty",
+                    "MRP",
+                    "Buy Price",
+                    "Sales Price",
+                    "GST %",
+                    "GST Amount",
+                    "Total with GST",
+                  ]
+                : [
+                    "Item / batch",
+                    "Size",
+                    "Qty",
+                    "Cost / unit",
+                    "Sale / unit",
+                  ]
+            }
+            rows={doc.lines.map((l) => {
+              if (kind === "SALE") {
+                const saleLine = l as any;
+                const prod = s.products.find((p) => p.id === saleLine.productId);
+                const mrpVal = saleLine.mrp || prod?.mrp || 0;
+                const gstPct = saleLine.gstPercent ?? 0;
+                const gstAmt =
+                  saleLine.gstAmount ??
+                  ((saleLine.unitPrice || 0) * (saleLine.quantity || 1) * (gstPct / 100));
+                const lineNet = (saleLine.unitPrice || 0) * (saleLine.quantity || 1);
+                const lineTotal = lineNet + gstAmt;
+
+                return [
+                  <div key="item">
+                    <strong className="font-semibold block text-slate-900 dark:text-slate-100">
+                      {saleLine.productName || prod?.name || "Item"}
+                    </strong>
+                    {saleLine.batch && (
+                      <small className="text-[11px] text-slate-500 dark:text-slate-400 block">
+                        Batch: {saleLine.batch}
+                      </small>
+                    )}
+                  </div>,
+                  saleLine.size || "—",
+                  saleLine.quantity,
+                  mrpVal > 0 ? money(mrpVal) : "—",
+                  saleLine.unitCost > 0 ? money(saleLine.unitCost) : "—",
+                  saleLine.unitPrice > 0 ? money(saleLine.unitPrice) : "—",
+                  gstPct > 0 ? `${gstPct}%` : "0%",
+                  gstAmt > 0 ? money(gstAmt) : "₹0.00",
+                  lineTotal > 0 ? money(lineTotal) : "₹0.00",
+                ];
+              }
+
+              return [
+                <>
+                  <strong className="font-semibold">{l.productName}</strong>
+                  <small className="text-[11px] text-slate-500 dark:text-slate-400 block">{l.batch}</small>
+                </>,
+                l.size,
+                l.quantity,
+                money(l.unitCost),
+                "salePrice" in l ? money((l as any).salePrice) : "—",
+              ];
+            })}
           />
           <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 pt-2">Payments</h3>
           <Table
@@ -954,6 +1278,238 @@ export default function InventoryModule({
                 )}
             </div>,
           ])}
+      />
+    );
+  }
+
+  function salesProductTable() {
+    const sales = s.sales;
+    return (
+      <Table
+        tabKey="Sales"
+        heads={[
+          "Date",
+          "Patient Name",
+          "BDM Name",
+          "Manager Name",
+          "Treatment",
+          "Circle",
+          "Dr. Name",
+          "Hospital Name",
+          "Surgery Date",
+          "MOP",
+          "Items",
+          "Remark",
+          "Actions",
+        ]}
+        rows={sales
+          .filter((d) => {
+            if (circleFilter) {
+              const rowCircle = getSaleCircle(d);
+              if (!rowCircle || rowCircle.toLowerCase() !== circleFilter.trim().toLowerCase()) {
+                return false;
+              }
+            }
+            return matches(
+              d.id,
+              d.date,
+              d.reference,
+              d.billedTo,
+              d.caseReference,
+              d.handledBy,
+              d.bdmName,
+              d.managerName,
+              d.patientName,
+              d.treatment,
+              d.circle,
+              getSaleCircle(d),
+              d.drName,
+              d.hospitalName,
+              d.surgeryDate,
+              d.mop,
+              d.sizeUsed,
+              d.remark,
+              d.stockUsedForm,
+              ...d.lines.map((l) => `${l.productName || name("products", l.productId)} ${l.batch}`),
+            );
+          })
+          .slice()
+          .reverse()
+          .map((d) => [
+            <div key="date">
+              <strong className="font-semibold text-slate-900 dark:text-slate-100">{d.date}</strong>
+              {d.caseReference && (
+                <span className="block text-[11px] text-teal-600 dark:text-teal-400 font-mono mt-0.5">
+                  Ref: {d.caseReference}
+                </span>
+              )}
+            </div>,
+            d.patientName || d.billedTo || "—",
+            d.bdmName || d.handledBy || "—",
+            d.managerName || "—",
+            d.treatment || "—",
+            getSaleCircle(d) || "—",
+            d.drName || "—",
+            d.hospitalName || name("locations", d.locationId) || "—",
+            d.surgeryDate || d.date || "—",
+            d.mop || String(s.payments.find((p) => p.documentId === d.id)?.method || "—").replace(/_/g, " "),
+            <div key="items" className="text-xs space-y-1.5 min-w-[150px] max-w-[220px]">
+              {d.lines && d.lines.length > 0 ? (
+                d.lines.map((l, idx) => (
+                  <div key={idx} className="border-b border-slate-100 dark:border-slate-800/60 pb-1 last:border-0 last:pb-0">
+                    <div className="font-medium text-slate-900 dark:text-slate-100 truncate" title={l.productName || name("products", l.productId) || "Item"}>
+                      {l.productName || name("products", l.productId) || "Item"}
+                    </div>
+                    <div className="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400 flex-wrap">
+                      {l.size && <span>Size: {l.size}</span>}
+                      {l.batch && <span>Batch: {l.batch}</span>}
+                      <span>Qty: {l.quantity}</span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <span className="text-slate-600 dark:text-slate-300">
+                  {d.stockUsedForm || d.sizeUsed || "—"}
+                </span>
+              )}
+            </div>,
+            d.remark || d.caseReference || "—",
+            <div key="actions" className="flex flex-row items-center gap-1.5 flex-nowrap whitespace-nowrap">
+              {paymentButton(d, "SALE")}
+              {link("Details", () => docDetail(d, "SALE_PRODUCT"))}
+              {button("Edit", { kind: "saleProduct", id: d.id })}
+              {admin &&
+                d.status === "POSTED" &&
+                paid(s, d.id) === 0 &&
+                button(
+                  "Void",
+                  { kind: "void", id: d.id, defaults: { documentKind: "SALE" } },
+                  true,
+                )}
+            </div>,
+          ])}
+      />
+    );
+  }
+
+  function salesFinanceTable() {
+    const sales = s.sales;
+    return (
+      <Table
+        tabKey="Sales"
+        heads={[
+          "Patient Name",
+          "Items",
+          "MRP",
+          "Buy Price",
+          "Sales Price",
+          "Sales Price with GST",
+          "Invoice Status",
+          "Payment Status",
+          "Actions",
+        ]}
+        rows={sales
+          .filter((d) => {
+            const isInvoiceRaised = d.invoiceStatus === "Raised" || d.invoiceStatus === "Invoice Raised" || Boolean(d.reference);
+            const invStatus = isInvoiceRaised ? "Raised" : "Pending";
+            if (invoiceFilter && invStatus.toLowerCase() !== invoiceFilter.toLowerCase()) {
+              return false;
+            }
+
+            const totalAmt = d.salesPriceWithGst || d.total;
+            const paidAmt = d.receivedPayment !== undefined && d.receivedPayment > 0 ? d.receivedPayment : paid(s, d.id);
+            const isPaid = d.paymentReceivedStatus === "Received" || d.paymentReceivedStatus === "Payment Received" || (paidAmt >= totalAmt && totalAmt > 0);
+            const isPartPaid = !isPaid && (d.paymentReceivedStatus === "Part Paid" || paidAmt > 0);
+            const payStatus = isPaid ? "Received" : isPartPaid ? "Part Paid" : "Not Received";
+            if (paymentFilter && payStatus.toLowerCase() !== paymentFilter.toLowerCase()) {
+              return false;
+            }
+            return true;
+          })
+          .filter(
+            (d) =>
+              matches(
+                d.id,
+                d.reference,
+                d.billedTo,
+                d.patientName,
+                d.invoiceStatus,
+                d.paymentReceivedStatus,
+                d.handledBy,
+                d.stockUsedForm,
+                d.sizeUsed,
+                ...d.lines.map((l) => `${l.productName || name("products", l.productId)} ${l.batch}`),
+              ),
+          )
+          .slice()
+          .reverse()
+          .map((d) => {
+            const mrpVal = d.mrp ?? d.lines.reduce((sum, l) => sum + (s.products.find((p) => p.id === l.productId)?.mrp || 0) * l.quantity, 0);
+            const buyPriceVal = d.buyPrice ?? d.lines.reduce((sum, l) => sum + l.unitCost * l.quantity, 0);
+            const salesPriceVal = d.salesPrice ?? d.net;
+            const salesPriceWithGstVal = d.salesPriceWithGst ?? d.total;
+
+            const isInvoiceRaised = d.invoiceStatus === "Raised" || d.invoiceStatus === "Invoice Raised" || Boolean(d.reference);
+            const invoiceStatusText = isInvoiceRaised ? "Raised" : "Pending";
+
+            const totalAmt = d.salesPriceWithGst || d.total;
+            const paidAmt = d.receivedPayment !== undefined && d.receivedPayment > 0 ? d.receivedPayment : paid(s, d.id);
+            const isPaid = d.paymentReceivedStatus === "Received" || d.paymentReceivedStatus === "Payment Received" || (paidAmt >= totalAmt && totalAmt > 0);
+            const isPartPaid = !isPaid && (d.paymentReceivedStatus === "Part Paid" || paidAmt > 0);
+            const paymentStatusText = isPaid ? "Received" : isPartPaid ? "Part Paid" : "Not Received";
+
+            return [
+              <div key="pat" className="space-y-1">
+                <strong className="font-semibold text-slate-900 dark:text-slate-100 block">{d.patientName || d.billedTo || "Patient"}</strong>
+                <div className="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400">
+                  <span>{d.date}</span>
+                  {d.reference && <span>• Ref: {d.reference}</span>}
+                </div>
+              </div>,
+              <div key="items" className="text-xs space-y-1.5 min-w-[150px] max-w-[220px]">
+                {d.lines && d.lines.length > 0 ? (
+                  d.lines.map((l, idx) => (
+                    <div key={idx} className="border-b border-slate-100 dark:border-slate-800/60 pb-1 last:border-0 last:pb-0">
+                      <div className="font-medium text-slate-900 dark:text-slate-100 truncate" title={l.productName || name("products", l.productId) || "Item"}>
+                        {l.productName || name("products", l.productId) || "Item"}
+                      </div>
+                      <div className="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400 flex-wrap">
+                        {l.size && <span>Size: {l.size}</span>}
+                        <span>Qty: {l.quantity}</span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <span className="text-slate-600 dark:text-slate-300">
+                    {d.stockUsedForm || d.sizeUsed || "—"}
+                  </span>
+                )}
+              </div>,
+              money(mrpVal),
+              money(buyPriceVal),
+              money(salesPriceVal),
+              money(salesPriceWithGstVal),
+              <Badge key="inv" tone={isInvoiceRaised ? "green" : "amber"}>
+                {invoiceStatusText}
+              </Badge>,
+              <Badge key="pay" tone={isPaid ? "green" : isPartPaid ? "amber" : "red"}>
+                {paymentStatusText}
+              </Badge>,
+              <div key="actions" className="flex flex-row items-center gap-1.5 flex-nowrap whitespace-nowrap">
+                {paymentButton(d, "SALE")}
+                {link("Details", () => docDetail(d, "SALE_FINANCE"))}
+                {button("Edit", { kind: "saleFinance", id: d.id })}
+                {admin &&
+                  d.status === "POSTED" &&
+                  paid(s, d.id) === 0 &&
+                  button(
+                    "Void",
+                    { kind: "void", id: d.id, defaults: { documentKind: "SALE" } },
+                    true,
+                  )}
+              </div>,
+            ];
+          })}
       />
     );
   }
@@ -1323,14 +1879,65 @@ export default function InventoryModule({
         </div>
       );
       case "Purchases":
-      case "Sales":
         return (
           <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
             <div className="flex items-center flex-wrap gap-3 p-4 border-b border-slate-200 dark:border-slate-800">
-              <SearchBox query={query} set={setQuery} placeholder="Search document, vendor or billed-to name…" />
+              <SearchBox query={query} set={setQuery} placeholder="Search document or vendor name…" />
             </div>
-            {documentTable(tab === "Purchases" ? "PURCHASE" : "SALE")}
+            {documentTable("PURCHASE")}
           </section>
+        );
+      case "Sales":
+        return (
+          <div className="space-y-4">
+            <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+              <div className="flex items-center flex-wrap gap-3 p-4 border-b border-slate-200 dark:border-slate-800">
+                <SearchBox
+                  query={query}
+                  set={setQuery}
+                  placeholder={`Search ${salesSubTab === "product" ? "Sales Product" : "Sales Finance"} records…`}
+                />
+                {salesSubTab === "product" && (
+                  <select
+                    value={circleFilter}
+                    onChange={(e) => setCircleFilter(e.target.value)}
+                    className="px-3.5 py-2 pr-9 text-xs rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-no-repeat bg-[right_1rem_center] cursor-pointer shadow-xs"
+                  >
+                    <option value="">All Circles</option>
+                    {circleOptions.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                )}
+                {salesSubTab === "finance" && (
+                  <>
+                    <select
+                      value={invoiceFilter}
+                      onChange={(e) => setInvoiceFilter(e.target.value)}
+                      className="px-3.5 py-2 pr-9 text-xs rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-no-repeat bg-[right_1rem_center] cursor-pointer shadow-xs"
+                    >
+                      <option value="">All Invoices</option>
+                      <option value="Raised">Raised</option>
+                      <option value="Pending">Pending</option>
+                    </select>
+                    <select
+                      value={paymentFilter}
+                      onChange={(e) => setPaymentFilter(e.target.value)}
+                      className="px-3.5 py-2 pr-9 text-xs rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-no-repeat bg-[right_1rem_center] cursor-pointer shadow-xs"
+                    >
+                      <option value="">All Payment Status</option>
+                      <option value="Received">Received</option>
+                      <option value="Part Paid">Part Paid</option>
+                      <option value="Not Received">Not Received</option>
+                    </select>
+                  </>
+                )}
+              </div>
+              {salesSubTab === "product" ? salesProductTable() : salesFinanceTable()}
+            </section>
+          </div>
         );
       case "Transfers & kits": {
         const inTransitCount = s.transfers.filter((t) => t.status === "IN_TRANSIT").length;
@@ -1966,7 +2573,9 @@ export default function InventoryModule({
     tab === "Overview" || tab === "Stock" || tab === "Purchases"
       ? { kind: "purchase" }
       : tab === "Sales"
-        ? { kind: "sale", defaults: { handledBy: snapshot.actor.name } }
+        ? salesSubTab === "finance"
+          ? { kind: "saleFinance", defaults: { handledBy: actorName } }
+          : { kind: "saleProduct", defaults: { handledBy: actorName } }
         : tab === "Transfers & kits"
           ? { kind: "transfer" }
           : tab === "Vendors"
@@ -1983,12 +2592,22 @@ export default function InventoryModule({
         <div className="flex items-center justify-between gap-4 w-full min-w-0">
           <div>
             <h1 className="text-xl font-bold tracking-tight md:text-2xl text-foreground">
-              {tab === "Overview" ? "Inventory overview" : tab}
+              {tab === "Overview"
+                ? "Inventory overview"
+                : tab === "Sales"
+                  ? salesSubTab === "finance"
+                    ? "Sales Finance"
+                    : "Sales Product"
+                  : tab}
             </h1>
             <p className="text-xs text-muted-foreground hidden sm:block">
               {tab === "Overview"
                 ? "Every implant. Every location. One clear picture."
-                : "Manage your implant inventory with a complete record of every change."}
+                : tab === "Sales"
+                  ? salesSubTab === "finance"
+                    ? "Track and manage pricing, invoices, GST, and payment collections for recorded sales."
+                    : "Record surgeries, patient case references, and implants or stock items consumed."
+                  : "Manage your implant inventory with a complete record of every change."}
             </p>
           </div>
           <div className="flex items-center gap-2.5 flex-wrap">
@@ -2041,7 +2660,7 @@ export default function InventoryModule({
             >
               <RefreshCw className={loading ? "animate-spin mr-1.5 h-4 w-4" : "mr-1.5 h-4 w-4"} /> Refresh
             </Button>
-            {(tab === "Implant P&L" || tab === "Delivery expenses" || from || to || productFilter) && (
+            {(tab === "Implant P&L" || tab === "Delivery expenses" || from || to || productFilter || circleFilter || invoiceFilter || paymentFilter) && (
               <Button
                 variant="outline"
                 className="px-4 py-2 text-xs font-semibold"
@@ -2049,6 +2668,9 @@ export default function InventoryModule({
                   setFrom("");
                   setTo("");
                   setProductFilter("");
+                  setCircleFilter("");
+                  setInvoiceFilter("");
+                  setPaymentFilter("");
                 }}
               >
                 <RotateCcw className="mr-1.5 h-4 w-4" /> Reset
@@ -2068,11 +2690,15 @@ export default function InventoryModule({
                 <Plus className="mr-1.5 h-4 w-4" />
                 {mainAction.kind === "purchase"
                   ? "Receive purchase"
-                  : mainAction.kind === "sale"
-                    ? "Record sale"
-                    : mainAction.kind === "transfer"
-                      ? "Transfer stock"
-                      : `Add ${mainAction.kind}`}
+                  : mainAction.kind === "saleProduct"
+                    ? "Add Sales Product"
+                    : mainAction.kind === "saleFinance"
+                      ? "Add Sales Finance"
+                      : mainAction.kind === "sale"
+                        ? "Record sale"
+                        : mainAction.kind === "transfer"
+                          ? "Transfer stock"
+                          : `Add ${mainAction.kind}`}
               </Button>
             )}
           </div>

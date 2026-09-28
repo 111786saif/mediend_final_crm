@@ -150,16 +150,22 @@ export function AppSidebar() {
     sales: false,
     insurancePl: false,
   })
+  const [openSubSections, setOpenSubSections] = React.useState<Record<string, boolean>>({
+    'Inv Sales': (pathname?.startsWith('/inventory') && searchParams?.get('tab') === 'Sales') ?? true,
+  })
   const { hasAccess, permissionsReady } = usePermissions()
 
   React.useEffect(() => {
     if (pathname?.startsWith('/inventory')) {
       setOpenSections((prev) => ({ ...prev, inventory: true }))
+      if (searchParams?.get('tab') === 'Sales') {
+        setOpenSubSections((prev) => ({ ...prev, 'Inv Sales': true }))
+      }
     }
     if (pathname?.startsWith('/crm')) {
       setOpenSections((prev) => ({ ...prev, crm: true }))
     }
-  }, [pathname])
+  }, [pathname, searchParams])
 
   const toggleSection = (section: string) => {
     setOpenSections((prev) => ({
@@ -332,9 +338,13 @@ export function AppSidebar() {
   const renderNavItem = (item: NavItemWithUrl) => {
     const Icon = item.icon
     const currentTab = searchParams?.get('tab')
-    const itemTab = item.url.includes('tab=') ? new URLSearchParams(item.url.split('?')[1] || '').get('tab') : null
+    const currentSubTab = searchParams?.get('subTab')
+    const itemParams = item.url.includes('?') ? new URLSearchParams(item.url.split('?')[1] || '') : null
+    const itemTab = itemParams?.get('tab')
+    const itemSubTab = itemParams?.get('subTab')
     const isActive = itemTab
-      ? currentTab === itemTab || (!currentTab && itemTab === 'Overview' && pathname === '/inventory')
+      ? (currentTab === itemTab || (!currentTab && itemTab === 'Overview' && pathname === '/inventory')) &&
+        (!itemSubTab || (currentSubTab || (currentTab === 'Sales' ? 'product' : null)) === itemSubTab)
       : pathname === item.url || (item.url !== '/' && pathname.startsWith(item.url + '/'))
     const label = displayLabel(item.title)
     const badgeCount =
@@ -395,12 +405,83 @@ export function AppSidebar() {
             {useSub ? (
               <SidebarMenuSub className="mx-0 mt-1">
                 {items.map((item) => {
+                  if (item.children && item.children.length > 0) {
+                    const isSubOpen = openSubSections[item.title] ?? (searchParams?.get('tab') === 'Sales')
+                    const isParentActive = searchParams?.get('tab') === 'Sales'
+                    const ItemIcon = item.icon
+
+                    return (
+                      <SidebarMenuSubItem key={item.title} className="flex flex-col w-full">
+                        <div className="flex items-center justify-between h-7 w-full rounded-md px-2 text-xs font-medium hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
+                          <Link
+                            href={item.url}
+                            onClick={closeSidebarOnMobile}
+                            className={`flex items-center gap-2 flex-1 text-xs font-medium ${
+                              isParentActive ? 'text-sidebar-accent-foreground font-semibold' : 'text-sidebar-foreground/70'
+                            }`}
+                          >
+                            {ItemIcon && <ItemIcon className="h-3.5 w-3.5 shrink-0" />}
+                            <span>{displayLabel(item.title)}</span>
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              setOpenSubSections((prev) => ({
+                                ...prev,
+                                [item.title]: !isSubOpen,
+                              }))
+                            }}
+                            className="p-1 hover:bg-sidebar-accent/50 rounded transition-colors text-sidebar-foreground/70 cursor-pointer"
+                          >
+                            <ChevronDown
+                              className={`h-3.5 w-3.5 transition-transform duration-200 ${
+                                isSubOpen ? 'rotate-180' : ''
+                              }`}
+                            />
+                          </button>
+                        </div>
+                        {isSubOpen && (
+                          <SidebarMenuSub className="mx-0 mt-1 ml-3 border-l border-sidebar-border pl-2">
+                            {item.children.map((child) => {
+                              const currentSubTab = searchParams?.get('subTab') || 'product'
+                              const childSubTab = child.url.includes('subTab=')
+                                ? new URLSearchParams(child.url.split('?')[1] || '').get('subTab')
+                                : null
+                              const isChildActive =
+                                searchParams?.get('tab') === 'Sales' &&
+                                (currentSubTab === childSubTab || (!searchParams?.get('subTab') && childSubTab === 'product'))
+
+                              const ChildIcon = child.icon
+
+                              return (
+                                <SidebarMenuSubItem key={child.url}>
+                                  <SidebarMenuSubButton asChild isActive={isChildActive}>
+                                    <Link href={child.url} onClick={closeSidebarOnMobile} className="flex items-center gap-2">
+                                      {ChildIcon && <ChildIcon className="h-3.5 w-3.5 shrink-0" />}
+                                      <span>{child.title}</span>
+                                    </Link>
+                                  </SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                              )
+                            })}
+                          </SidebarMenuSub>
+                        )}
+                      </SidebarMenuSubItem>
+                    )
+                  }
+
                   const currentFullUrl = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '')
                   const currentTab = searchParams?.get('tab')
-                  const itemTab = item.url.includes('tab=') ? new URLSearchParams(item.url.split('?')[1] || '').get('tab') : null
+                  const currentSubTab = searchParams?.get('subTab')
+                  const itemParams = item.url.includes('?') ? new URLSearchParams(item.url.split('?')[1] || '') : null
+                  const itemTab = itemParams?.get('tab')
+                  const itemSubTab = itemParams?.get('subTab')
 
                   const isActive = itemTab
-                    ? currentTab === itemTab || (!currentTab && itemTab === 'Overview' && pathname === '/inventory')
+                    ? (currentTab === itemTab || (!currentTab && itemTab === 'Overview' && pathname === '/inventory')) &&
+                      (!itemSubTab || (currentSubTab || (currentTab === 'Sales' ? 'product' : null)) === itemSubTab)
                     : pathname === item.url || (item.url !== '/' && pathname.startsWith(item.url + '/'))
 
                   return (
