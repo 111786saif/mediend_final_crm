@@ -8,7 +8,6 @@ import type { BadgeCounts } from '@/app/api/badge-counts/route'
 import { format } from 'date-fns'
 import {
   Calendar,
-  DollarSign,
   Download,
   TrendingUp,
   Clock,
@@ -41,31 +40,18 @@ const FINANCIAL_TAB_VALUES = [
   { value: 'increment', label: 'Increment' },
 ] as const
 
-interface PayrollComponent {
-  id: string
-  componentType: 'ALLOWANCE' | 'DEDUCTION'
-  name: string
-  amount: number
-}
-
 interface PayrollRecord {
   id: string
   month: number
   year: number
   disbursedAt?: Date
-  basicSalary?: number
-  grossSalary: number
-  netSalary: number
   status: string
-  components?: PayrollComponent[]
 }
 
 interface MonthlyPayrollRecord {
   id: string
   month: number
   year: number
-  adjustedGross: number
-  netPayable: number
   status: string
 }
 
@@ -192,8 +178,6 @@ function PayrollTab() {
                 <TableHead>Month</TableHead>
                 <TableHead>Year</TableHead>
                 <TableHead>Disbursed</TableHead>
-                <TableHead>Gross</TableHead>
-                <TableHead>Net Pay</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -209,13 +193,6 @@ function PayrollTab() {
                   </TableCell>
                   <TableCell>{record.year}</TableCell>
                   <TableCell>—</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <DollarSign className="h-4 w-4 text-muted-foreground" />
-                      {formatCurrency(record.adjustedGross)}
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-medium">{formatCurrency(record.netPayable)}</TableCell>
                   <TableCell>
                     <Badge variant={record.status === 'PAID' ? 'default' : record.status === 'APPROVED' ? 'secondary' : 'outline'}>
                       {record.status}
@@ -241,8 +218,6 @@ function PayrollTab() {
                   <TableCell>
                     {record.disbursedAt ? format(new Date(record.disbursedAt), 'PPP') : '—'}
                   </TableCell>
-                  <TableCell>{formatCurrency(record.grossSalary)}</TableCell>
-                  <TableCell className="font-medium">{formatCurrency(record.netSalary)}</TableCell>
                   <TableCell>
                     <Badge variant="outline">{record.status}</Badge>
                   </TableCell>
@@ -256,7 +231,7 @@ function PayrollTab() {
               ))}
               {!hasAny && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                  <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
                     No payroll records found
                   </TableCell>
                 </TableRow>

@@ -27,6 +27,7 @@ import { apiGet, apiPatch } from '@/lib/api-client'
 import { Badge } from '@/components/ui/badge'
 import { Loader2, Target } from 'lucide-react'
 import { toast } from 'sonner'
+import { calculatePlFinancials } from '@/lib/pl/calculate-pl-financials'
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
 import Link from 'next/link'
@@ -329,6 +330,8 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
     }, 0)
   }, [dcChecked, dsBillAmounts])
 
+  const effectiveDcCharges = computedDcTotal || parseFloat(formData.dcCharges) || 0
+
   const [hasManualOverrides, setHasManualOverrides] = useState({
     hospitalAmount: false,
     mediendAmount: false,
@@ -346,26 +349,13 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
   }, [leadId, open])
 
   const computedHospitalShare = useMemo(() => {
-    const actualFinal = parseFloat(formData.actualFinalAmount) || 0
-    const dc = computedDcTotal
-    const implant = parseFloat(formData.implantCost) || 0
-    const instruments = parseFloat(formData.instrumentsCost) || 0
     const hospPct = parseFloat(formData.hospitalSharePct) || 0
     const medPct = parseFloat(formData.mediendSharePct) || 0
 
     if (hospPct === 0 && medPct === 0) return null
 
-    const base = actualFinal - dc - implant - instruments
-
-    const hospitalShare = (base * hospPct) / 100 +
-      (formData.implantPaidBy === 'HOSPITAL' ? implant : 0) +
-      (formData.instrumentsPaidBy === 'HOSPITAL' ? instruments : 0)
-
-    const mediendShare = (base * medPct) / 100 +
-      (formData.implantPaidBy !== 'HOSPITAL' ? implant : 0) +
-      (formData.instrumentsPaidBy !== 'HOSPITAL' ? instruments : 0)
-
-    return { base, hospitalShare, mediendShare, hospPct, medPct }
+    const financials = calculatePlFinancials({ ...formData, dcCharges: effectiveDcCharges })
+    return { base: financials.revenueBase, hospitalShare: financials.hospitalShare, mediendShare: financials.mediendShare, hospPct, medPct }
   }, [
     formData.actualFinalAmount,
     formData.hospitalSharePct,
@@ -374,25 +364,13 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
     formData.instrumentsCost,
     formData.implantPaidBy,
     formData.instrumentsPaidBy,
-    computedDcTotal,
+    effectiveDcCharges,
   ])
 
   const computedMediendNetProfit = useMemo(() => {
     if (!computedHospitalShare) return null
-    const { mediendShare } = computedHospitalShare
-    const doctor = parseFloat(formData.doctorCharges) || 0
-    const actualImplant = parseFloat(formData.actualImplantCost) || 0
-    const actualInstruments = parseFloat(formData.actualInstrumentCost) || 0
-    const referral = parseFloat(formData.referralAmount) || 0
-    const cab = parseFloat(formData.cabCharges) || 0
-    const hospitalRecover = parseFloat(formData.hospitalRecoverAmount) || 0
-
-    let costs = doctor + referral + cab
-    if (formData.implantPaidBy !== 'HOSPITAL') costs += actualImplant
-    if (formData.instrumentsPaidBy !== 'HOSPITAL') costs += actualInstruments
-
-    return mediendShare - costs - hospitalRecover
-  }, [computedHospitalShare, formData])
+    return calculatePlFinancials({ ...formData, dcCharges: effectiveDcCharges }).mediendNetProfit
+  }, [computedHospitalShare, formData, effectiveDcCharges])
 
   const computedMediendProfit = useMemo(() => {
     if (!computedHospitalShare || computedMediendNetProfit === null) return null
@@ -457,9 +435,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
   const handleSubmit = (e: React.FormEvent, status: 'DRAFT' | 'OUTSTANDING') => {
     e.preventDefault()
     const actualFinal = parseFloat(formData.actualFinalAmount) || 0
-    const hospPct = parseFloat(formData.hospitalSharePct) || 0
-    const medPct = parseFloat(formData.mediendSharePct) || 0
-    const dc = computedDcTotal || parseFloat(formData.dcCharges) || 0
+    const dc = effectiveDcCharges
     const doctor = parseFloat(formData.doctorCharges) || 0
     const implant = parseFloat(formData.implantCost) || 0
     const instruments = parseFloat(formData.instrumentsCost) || 0
@@ -469,23 +445,12 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
     const referral = parseFloat(formData.referralAmount) || 0
     const cab = parseFloat(formData.cabCharges) || 0
 
-    const base = actualFinal - dc - implant - instruments
-
-    const hospAmount =
-      (hospPct > 0 ? (base * hospPct) / 100 : parseFloat(formData.hospitalShareAmount) || 0) +
-      (formData.implantPaidBy === 'HOSPITAL' ? implant : 0) +
-      (formData.instrumentsPaidBy === 'HOSPITAL' ? instruments : 0)
-
-    const medAmount =
-      (medPct > 0 ? (base * medPct) / 100 : parseFloat(formData.mediendShareAmount) || 0) +
-      (formData.implantPaidBy !== 'HOSPITAL' ? implant : 0) +
-      (formData.instrumentsPaidBy !== 'HOSPITAL' ? instruments : 0)
-
-    let costs = doctor + referral + cab
-    if (formData.implantPaidBy !== 'HOSPITAL') costs += actualImplant
-    if (formData.instrumentsPaidBy !== 'HOSPITAL') costs += actualInstruments
-
-    const computedNetProfit = medAmount - costs - hospitalRecover
+    const calculated = calculatePlFinancials({ ...formData, dcCharges: dc })
+    const hospAmount = parseFloat(formData.hospitalSharePct) > 0 ? calculated.hospitalShare : parseFloat(formData.hospitalShareAmount) || 0
+    const medAmount = parseFloat(formData.mediendSharePct) > 0 ? calculated.mediendShare : parseFloat(formData.mediendShareAmount) || 0
+    const computedNetProfit = medAmount === calculated.mediendShare
+      ? calculated.mediendNetProfit
+      : medAmount - doctor - referral - cab - hospitalRecover - (formData.implantPaidBy !== 'HOSPITAL' ? actualImplant : 0) - (formData.instrumentsPaidBy !== 'HOSPITAL' ? actualInstruments : 0)
     const mediendNet = parseFloat(formData.mediendNetProfit) || computedNetProfit
     const computedMediendProfit = mediendNet - (0.1 * medAmount)
     const mediendProfit = parseFloat(formData.mediendProfit) || computedMediendProfit

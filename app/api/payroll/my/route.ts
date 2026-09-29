@@ -21,13 +21,27 @@ export async function GET(request: NextRequest) {
     const [payrollRecords, monthlyPayrolls] = await Promise.all([
       prisma.payrollRecord.findMany({
         where: { employeeId: employee.id },
-        include: { components: true },
+        // This endpoint drives the employee's payroll list. Amounts remain
+        // available only in the individually authorized payslip download.
+        select: {
+          id: true,
+          month: true,
+          year: true,
+          disbursedAt: true,
+          status: true,
+        },
         orderBy: [{ year: 'desc' }, { month: 'desc' }],
       }),
       prisma.monthlyPayroll.findMany({
         where: {
           employeeId: employee.id,
           status: { in: ['APPROVED', 'PAID'] },
+        },
+        select: {
+          id: true,
+          month: true,
+          year: true,
+          status: true,
         },
         orderBy: [{ year: 'desc' }, { month: 'desc' }],
       }),

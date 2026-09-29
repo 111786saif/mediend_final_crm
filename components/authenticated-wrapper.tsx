@@ -30,6 +30,8 @@ import { MeetReminderPopup } from '@/components/meets/meet-reminder-popup'
 import { BMICalculator } from '@/components/bmi-calculator'
 import { KnowlarityCallListener } from '@/components/telephony/knowlarity-call-listener'
 import { LeadAssignedPopup } from '@/components/notifications/lead-assigned-popup'
+import { FollowUpReminderPopup } from '@/components/pipeline/follow-up-reminder-popup'
+import { ChatMessagePopup } from '@/components/notifications/chat-message-popup'
 
 
 function NavbarThemeToggle() {
@@ -337,6 +339,8 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
       {user ? <LeadAssignedPopup /> : null}
       {user?.role === 'BD' ? <KnowlarityCallListener /> : null}
       <MeetReminderPopup />
+      <FollowUpReminderPopup />
+      <ChatMessagePopup />
       <WorkLogEnforcer />
       {shouldShowSidebar ? (
         <SidebarProvider defaultOpen={true}>

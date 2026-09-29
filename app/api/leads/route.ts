@@ -224,6 +224,30 @@ export async function GET(request: NextRequest) {
                   ],
                 })
               }
+            } else if (field === 'commonSearch') {
+              if (typeof value === 'string' && value.trim()) {
+                const query = value.trim()
+                filterConditions.push({
+                  OR: [
+                    { leadRef: { contains: query, mode: 'insensitive' } },
+                    { patientName: { contains: query, mode: 'insensitive' } },
+                    { hospitalName: { contains: query, mode: 'insensitive' } },
+                    { treatment: { contains: query, mode: 'insensitive' } },
+                    { plRecord: { patientName: { contains: query, mode: 'insensitive' } } },
+                    { plRecord: { hospitalName: { contains: query, mode: 'insensitive' } } },
+                    { plRecord: { doctorName: { contains: query, mode: 'insensitive' } } },
+                    { plRecord: { managerName: { contains: query, mode: 'insensitive' } } },
+                    { plRecord: { bdmName: { contains: query, mode: 'insensitive' } } },
+                    { plRecord: { treatment: { contains: query, mode: 'insensitive' } } },
+                    { dischargeSheet: { patientName: { contains: query, mode: 'insensitive' } } },
+                    { dischargeSheet: { hospitalName: { contains: query, mode: 'insensitive' } } },
+                    { dischargeSheet: { doctorName: { contains: query, mode: 'insensitive' } } },
+                    { dischargeSheet: { managerName: { contains: query, mode: 'insensitive' } } },
+                    { dischargeSheet: { bdmName: { contains: query, mode: 'insensitive' } } },
+                    { dischargeSheet: { treatment: { contains: query, mode: 'insensitive' } } },
+                  ],
+                })
+              }
             } else if (field === 'leadRef') {
               if (Array.isArray(value) && value.length > 0) {
                 filterConditions.push({ leadRef: { in: value } })

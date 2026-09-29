@@ -169,6 +169,10 @@ export default function PLLedgerPage() {
   const [monthsSearchQuery, setMonthsSearchQuery] = useState('')
   const [tableMonthFilter, setTableMonthFilter] = useState<string[]>([])
   const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' })
+  const [commonSearchDraft, setCommonSearchDraft] = useState('')
+  const [commonSearch, setCommonSearch] = useState('')
+  const [customDateRangeDraft, setCustomDateRangeDraft] = useState({ startDate: '', endDate: '' })
+  const [customDateRange, setCustomDateRange] = useState({ startDate: '', endDate: '' })
   const [visibleCols, setVisibleCols] = useState<Record<string, boolean>>(DEFAULT_COLS)
 
   useEffect(() => {
@@ -187,6 +191,28 @@ export default function PLLedgerPage() {
     const end = endTemp.toISOString().split('T')[0]
     setDateRange({ startDate: start, endDate: end })
   }, [selectedMonths])
+
+  // A custom range is deliberately applied only through the Search button.
+  // Until then the ledger continues to use the selected month range.
+  const effectiveDateRange = useMemo(
+    () => customDateRange.startDate && customDateRange.endDate ? customDateRange : dateRange,
+    [customDateRange, dateRange]
+  )
+
+  const applyCommonSearch = () => {
+    const startDate = customDateRangeDraft.startDate
+    const endDate = customDateRangeDraft.endDate
+    if ((startDate && !endDate) || (!startDate && endDate)) {
+      toast.error('Choose both From and To dates, or clear both dates.')
+      return
+    }
+    if (startDate && endDate && startDate > endDate) {
+      toast.error('From date must be before To date.')
+      return
+    }
+    setCommonSearch(commonSearchDraft.trim())
+    setCustomDateRange({ startDate, endDate })
+  }
 
   const handleMonthsMenuOpenChange = (open: boolean) => {
     setMonthsMenuOpen(open)
@@ -379,7 +405,7 @@ export default function PLLedgerPage() {
 
   const { data: records, isLoading } = useQuery<Lead[]>({
     queryKey: [
-      'pl', 'records', dateRange,
+      'pl', 'records', effectiveDateRange, commonSearch,
       bdFilter, managerFilter, statusFilter, hospitalFilter, doctorFilter, outstandingFilter,
       categoryFilter, circleFilter, paymentTypeFilter, implantPaidByFilter,
       hospPayoutFilter, docPayoutFilter, invoiceFilter,
@@ -411,6 +437,7 @@ export default function PLLedgerPage() {
       if (treatmentFilter.trim()) filters.push({ field: 'treatment', operator: 'contains', value: treatmentFilter })
       if (patientFilter.trim()) filters.push({ field: 'patient', operator: 'contains', value: patientFilter })
       if (leadRefFilter.trim()) filters.push({ field: 'leadRef', operator: 'contains', value: leadRefFilter })
+      if (commonSearch) filters.push({ field: 'commonSearch', operator: 'contains', value: commonSearch })
 
       // dateRange filters
       if (leadReceivedDateFilter.length === 2 && leadReceivedDateFilter[0])
@@ -439,8 +466,8 @@ export default function PLLedgerPage() {
         filters.push({ field: 'netProfit', operator: 'between', value: netProfitFilter })
 
       const params = new URLSearchParams({
-        startDate: dateRange.startDate,
-        endDate: dateRange.endDate,
+        startDate: effectiveDateRange.startDate,
+        endDate: effectiveDateRange.endDate,
         caseStage: 'IPD_DONE,CASH_IPD_DONE,DISCHARGED,CASH_DISCHARGED,PL_PENDING,OUTSTANDING',
         dateField: 'surgery',
       })
@@ -458,7 +485,7 @@ export default function PLLedgerPage() {
         },
       }))
     },
-    enabled: hydrated && !!dateRange.startDate && !!dateRange.endDate,
+    enabled: hydrated && !!effectiveDateRange.startDate && !!effectiveDateRange.endDate,
   })
 
   const filterOptions = useMemo(() => {
@@ -527,12 +554,12 @@ export default function PLLedgerPage() {
   }, [filterConfig, records])
 
   const { data: pipelineStats } = useQuery<PipelineStats>({
-    queryKey: ['pl', 'pipeline-stats', dateRange],
+    queryKey: ['pl', 'pipeline-stats', effectiveDateRange],
     queryFn: () =>
       apiGet<PipelineStats>(
-        `/api/analytics/pl-pipeline-stats?startDate=${dateRange.startDate}&endDate=${dateRange.endDate}`
+        `/api/analytics/pl-pipeline-stats?startDate=${effectiveDateRange.startDate}&endDate=${effectiveDateRange.endDate}`
       ),
-    enabled: hydrated && !!dateRange.startDate && !!dateRange.endDate,
+    enabled: hydrated && !!effectiveDateRange.startDate && !!effectiveDateRange.endDate,
   })
 
   const totalProfit =
@@ -558,7 +585,8 @@ export default function PLLedgerPage() {
     categoryFilter.length + circleFilter.length + paymentTypeFilter.length + implantPaidByFilter.length +
     hospPayoutFilter.length + docPayoutFilter.length + invoiceFilter.length +
     tableMonthFilter.length +
-    (treatmentFilter.trim() ? 1 : 0) + (patientFilter.trim() ? 1 : 0) + (leadRefFilter.trim() ? 1 : 0) +
+    (treatmentFilter.trim() ? 1 : 0) + (patientFilter.trim() ? 1 : 0) + (leadRefFilter.trim() ? 1 : 0) + (commonSearch ? 1 : 0) +
+    (customDateRange.startDate ? 1 : 0) +
     (leadReceivedDateFilter.length > 0 ? 1 : 0) + (admissionDateFilter.length > 0 ? 1 : 0) + (surgeryDateFilter.length > 0 ? 1 : 0) +
     (totalBillFilter ? 1 : 0) + (approvedAmountFilter ? 1 : 0) + (amountPaidFilter ? 1 : 0) +
     (hospitalSharePctFilter ? 1 : 0) + (hospitalShareAmtFilter ? 1 : 0) + (doctorChargesFilter ? 1 : 0) + (implantFilter ? 1 : 0) + (netProfitFilter ? 1 : 0) +
@@ -582,6 +610,10 @@ export default function PLLedgerPage() {
     setTreatmentFilter('')
     setPatientFilter('')
     setLeadRefFilter('')
+    setCommonSearchDraft('')
+    setCommonSearch('')
+    setCustomDateRangeDraft({ startDate: '', endDate: '' })
+    setCustomDateRange({ startDate: '', endDate: '' })
     setLeadReceivedDateFilter([])
     setAdmissionDateFilter([])
     setSurgeryDateFilter([])
@@ -1656,6 +1688,59 @@ export default function PLLedgerPage() {
               </div>
             </div>
           </div>
+
+          <form
+            className="flex flex-wrap items-end gap-2 rounded-xl border border-slate-200 bg-white/80 p-3 shadow-sm dark:border-slate-800 dark:bg-slate-950/60"
+            onSubmit={(event) => {
+              event.preventDefault()
+              applyCommonSearch()
+            }}
+          >
+            <div className="min-w-[240px] flex-1">
+              <label htmlFor="pl-common-search" className="mb-1 block text-xs font-medium text-muted-foreground">
+                Search P&amp;L records
+              </label>
+              <Input
+                id="pl-common-search"
+                value={commonSearchDraft}
+                onChange={(event) => setCommonSearchDraft(event.target.value)}
+                placeholder="Lead ref, patient, hospital, doctor, treatment, BDM..."
+              />
+            </div>
+            <div>
+              <label htmlFor="pl-date-from" className="mb-1 block text-xs font-medium text-muted-foreground">From (surgery date)</label>
+              <Input
+                id="pl-date-from"
+                type="date"
+                value={customDateRangeDraft.startDate}
+                onChange={(event) => setCustomDateRangeDraft((range) => ({ ...range, startDate: event.target.value }))}
+              />
+            </div>
+            <div>
+              <label htmlFor="pl-date-to" className="mb-1 block text-xs font-medium text-muted-foreground">To (surgery date)</label>
+              <Input
+                id="pl-date-to"
+                type="date"
+                value={customDateRangeDraft.endDate}
+                onChange={(event) => setCustomDateRangeDraft((range) => ({ ...range, endDate: event.target.value }))}
+              />
+            </div>
+            <Button type="submit">Search</Button>
+            {(commonSearch || customDateRange.startDate) && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setCommonSearchDraft('')
+                  setCommonSearch('')
+                  setCustomDateRangeDraft({ startDate: '', endDate: '' })
+                  setCustomDateRange({ startDate: '', endDate: '' })
+                }}
+              >
+                Clear search
+              </Button>
+            )}
+          </form>
 
           <div className="flex flex-wrap items-center justify-end gap-2">
             <span className="text-xs text-muted-foreground ml-auto">

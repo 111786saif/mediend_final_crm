@@ -5,41 +5,30 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Button } from '@/components/ui/button'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
-import { Download, Calendar, DollarSign } from 'lucide-react'
+import { Download, Calendar } from 'lucide-react'
 import { format } from 'date-fns'
-
-interface PayrollComponent {
-  id: string
-  componentType: 'ALLOWANCE' | 'DEDUCTION'
-  name: string
-  amount: number
-}
 
 interface PayrollRecord {
   id: string
   month: number
   year: number
-  disbursedAt: Date
-  basicSalary: number
-  grossSalary: number
-  netSalary: number
+  disbursedAt?: Date
   status: string
-  components: PayrollComponent[]
+}
+
+interface PayrollMyResponse {
+  monthlyPayrolls: PayrollRecord[]
+  payrollRecords: PayrollRecord[]
 }
 
 export default function EmployeePayrollPage() {
-  const { data: payrollRecords, isLoading } = useQuery<PayrollRecord[]>({
+  const { data: payrollData, isLoading } = useQuery<PayrollMyResponse>({
     queryKey: ['payroll', 'my'],
-    queryFn: () => apiGet<PayrollRecord[]>('/api/payroll/my'),
+    queryFn: () => apiGet<PayrollMyResponse>('/api/payroll/my'),
   })
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      minimumFractionDigits: 2,
-    }).format(amount)
-  }
+  const monthlyPayrolls = payrollData?.monthlyPayrolls ?? []
+  const payrollRecords = payrollData?.payrollRecords ?? []
+  const hasAny = monthlyPayrolls.length > 0 || payrollRecords.length > 0
 
   const getMonthName = (month: number) => {
     const months = [
@@ -75,14 +64,12 @@ export default function EmployeePayrollPage() {
                   <TableHead>Month</TableHead>
                   <TableHead>Year</TableHead>
                   <TableHead>Disbursed Date</TableHead>
-                  <TableHead>Basic Salary</TableHead>
-                  <TableHead>Gross Salary</TableHead>
-                  <TableHead>Net Salary</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {payrollRecords?.map((record) => (
+                {monthlyPayrolls.map((record) => (
                   <TableRow key={record.id}>
                     <TableCell>
                       <div className="flex items-center gap-2">
@@ -91,19 +78,8 @@ export default function EmployeePayrollPage() {
                       </div>
                     </TableCell>
                     <TableCell>{record.year}</TableCell>
-                    <TableCell>
-                      {format(new Date(record.disbursedAt), 'PPP')}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <DollarSign className="h-4 w-4 text-muted-foreground" />
-                        {formatCurrency(record.basicSalary)}
-                      </div>
-                    </TableCell>
-                    <TableCell>{formatCurrency(record.grossSalary)}</TableCell>
-                    <TableCell className="font-medium">
-                      {formatCurrency(record.netSalary)}
-                    </TableCell>
+                    <TableCell>—</TableCell>
+                    <TableCell>{record.status}</TableCell>
                     <TableCell>
                       <Button
                         variant="outline"
@@ -116,9 +92,28 @@ export default function EmployeePayrollPage() {
                     </TableCell>
                   </TableRow>
                 ))}
-                {(!payrollRecords || payrollRecords.length === 0) && (
+                {payrollRecords.map((record) => (
+                  <TableRow key={record.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                        {getMonthName(record.month)}
+                      </div>
+                    </TableCell>
+                    <TableCell>{record.year}</TableCell>
+                    <TableCell>{record.disbursedAt ? format(new Date(record.disbursedAt), 'PPP') : '—'}</TableCell>
+                    <TableCell>{record.status}</TableCell>
+                    <TableCell>
+                      <Button variant="outline" size="sm" onClick={() => handleDownloadSlip(record.id)}>
+                        <Download className="h-4 w-4 mr-2" />
+                        Download Slip
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {!hasAny && (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                    <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
                       No payroll records found
                     </TableCell>
                   </TableRow>
