@@ -310,10 +310,12 @@ export async function POST(
       },
     })
 
-    // Asynchronously synchronize updated lead remark to Typesense
-    syncSingleLeadToTypesense(lead.id).catch((err) => {
-      console.warn('[Typesense] Background sync failed for remark add:', err)
-    })
+    // Synchronize updated lead remark to Typesense
+    try {
+      await syncSingleLeadToTypesense(lead.id)
+    } catch (err) {
+      console.warn('[Typesense] Sync failed for remark add:', err)
+    }
 
     return successResponse(remark, 'Remark added')
   } catch (error) {

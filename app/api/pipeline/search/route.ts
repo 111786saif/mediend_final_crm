@@ -9,9 +9,9 @@ import {
   recordTypesense502Error,
   searchSalesPipeline,
   parseSalesPipelineNaturalQuery,
+  buildTypesenseRoleFilter,
   type SalesPipelineSearchOptions,
 } from '@/lib/typesense/client'
-import { getEmployeeByUserId, getSubordinates } from '@/lib/hierarchy'
 import {
   buildPipelineFiltersWhere,
   buildPipelineRoleWhere,
@@ -43,27 +43,8 @@ export async function GET(request: NextRequest) {
     const queryBy = searchParams.get('queryBy') || undefined
 
     // Build role-based filter conditions for Typesense
-    const filterClauses: string[] = []
-
-    if (user.role === 'BD') {
-      filterClauses.push(`bdId:=${user.id}`)
-    } else if (
-      user.role === 'TEAM_LEAD' ||
-      user.role === 'ASSISTANT_CATEGORY_MANAGER' ||
-      user.role === 'CATEGORY_MANAGER' ||
-      user.role === 'SALES_HEAD'
-    ) {
-      const employee = await getEmployeeByUserId(user.id)
-      const subordinates = employee ? await getSubordinates(employee.id, true) : []
-      const visibleUserIds = [user.id, ...subordinates.map((s) => s.userId)]
-
-      const bdFilter = `bdId:[${visibleUserIds.join(',')}]`
-      if (employee?.bdNumber) {
-        filterClauses.push(`(${bdFilter} || teamLeadId:=${employee.bdNumber})`)
-      } else {
-        filterClauses.push(bdFilter)
-      }
-    }
+    const roleFilter = await buildTypesenseRoleFilter(user)
+    const filterClauses: string[] = roleFilter ? [roleFilter] : []
 
     // Additional query filters if provided
     const status = searchParams.get('status')

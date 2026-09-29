@@ -26,6 +26,7 @@ export interface PipelineTypesenseLeadsResult {
 
 export interface PipelineTypesenseMatchedIdsResult {
   matchedLeadIds: string[]
+  matchedLeadRefs: string[]
   found: number
 }
 
@@ -101,6 +102,7 @@ export async function fetchPipelineMatchedLeadIdsFromTypesense(
 
     return {
       matchedLeadIds: tsResult.matchedLeadIds,
+      matchedLeadRefs: tsResult.matchedLeadRefs,
       found: tsResult.found,
     }
   } catch (err) {
@@ -111,3 +113,74 @@ export async function fetchPipelineMatchedLeadIdsFromTypesense(
     return null
   }
 }
+
+export interface PipelineTypesenseMetaResult {
+  statusCounts: Record<string, number>
+  facetTotal: number
+  categories: string[]
+  circles: string[]
+}
+
+// Queries metadata facets (status counts, facet total, categories, circles) directly from Typesense
+// Returns null if Typesense is unconfigured or encounters an error (enabling transparent fallback to PostgreSQL)
+export async function fetchPipelineMetaFromTypesense(
+  params: PipelineQueryParams,
+  user: { id: string; role: string },
+  scope?: { subordinateUserIds?: string[]; teamLeadId?: string | number | null }
+): Promise<PipelineTypesenseMetaResult | null> {
+  if (!isTypesenseConfigured()) return null
+
+  try {
+    const queryText = params.search ? parseSalesPipelineNaturalQuery(params.search).cleanQuery : '*'
+    const roleFilter = await buildTypesenseRoleFilter(user, scope)
+    const filterParams = {
+      ...params,
+      statusBucket: 'all' as const, // Status card counts ignore selected status bucket to stay stable
+    }
+    const filterBy = buildPipelineTypesenseFilterBy(filterParams, { roleFilter })
+
+    const tsResult = await searchSalesPipeline(queryText, {
+      page: 1,
+      perPage: 0,
+      facetBy: 'status,category,circle',
+      maxFacetValues: 100,
+      filterBy,
+    })
+
+    const statusFacet = tsResult.facetCounts?.find((f) => f.field_name === 'status')
+    const categoryFacet = tsResult.facetCounts?.find((f) => f.field_name === 'category')
+    const circleFacet = tsResult.facetCounts?.find((f) => f.field_name === 'circle')
+
+    const rows = (statusFacet?.counts ?? []).map((c) => ({
+      status: c.value,
+      _count: { _all: c.count },
+    }))
+
+    const { bucketsFromStatusGroups } = await import('@/lib/pipeline/server-query')
+    const statusCounts = bucketsFromStatusGroups(rows)
+
+    const categories = (categoryFacet?.counts ?? [])
+      .map((c) => c.value?.trim())
+      .filter((v): v is string => Boolean(v))
+      .sort((a, b) => a.localeCompare(b))
+
+    const circles = (circleFacet?.counts ?? [])
+      .map((c) => c.value?.trim())
+      .filter((v): v is string => Boolean(v))
+      .sort((a, b) => a.localeCompare(b))
+
+    return {
+      statusCounts,
+      facetTotal: tsResult.found,
+      categories,
+      circles,
+    }
+  } catch (err) {
+    console.warn('[Typesense] Error in fetchPipelineMetaFromTypesense, falling back to PostgreSQL:', err)
+    if (isTypesenseUnavailableError(err)) {
+      recordTypesense502Error(err)
+    }
+    return null
+  }
+}
+

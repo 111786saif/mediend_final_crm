@@ -272,7 +272,13 @@ function emptyToNull(v: string | null): string | null {
 export async function buildPipelineRoleWhere(
   user: SessionUser,
 ): Promise<{ where: Prisma.LeadWhereInput; subordinateUserIds?: string[]; teamLeadId?: number | null }> {
-  if (user.role === 'EXECUTIVE_ASSISTANT') {
+  if (
+    user.role === 'EXECUTIVE_ASSISTANT' ||
+    user.role === 'SUPER_ADMIN' ||
+    user.role === 'ADMIN' ||
+    user.role === 'SALES_HEAD' ||
+    user.role === 'MD'
+  ) {
     return { where: {} }
   }
 
@@ -283,8 +289,7 @@ export async function buildPipelineRoleWhere(
   if (
     user.role === 'TEAM_LEAD' ||
     user.role === 'ASSISTANT_CATEGORY_MANAGER' ||
-    user.role === 'CATEGORY_MANAGER' ||
-    user.role === 'SALES_HEAD'
+    user.role === 'CATEGORY_MANAGER'
   ) {
     let visibleUserIds: string[] | undefined = undefined
     let teamLeadId: number | null = null

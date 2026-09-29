@@ -53,6 +53,19 @@ import { formatMoney as money, moneyInput } from "@/lib/inventory/money";
 import { paid, todayIndia } from "@/lib/inventory/engine";
 import { EntryForm } from "./entry-form";
 import type { FormRequest } from "./forms";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarPicker } from "@/components/ui/calendar";
+import {
+  format,
+  parseISO,
+  isValid,
+  startOfMonth,
+  endOfMonth,
+  subDays,
+  subMonths,
+} from "date-fns";
+import type { DateRange } from "react-day-picker";
+import { cn } from "@/lib/utils";
 
 const tabs = [
   ["Overview", LayoutDashboard],
@@ -113,11 +126,17 @@ function Table({
   rows,
   empty = "No records found.",
   tabKey,
+  enablePagination = true,
+  initialPageSize = 10,
+  pageSizeOptions = [10, 20, 50, 100],
 }: {
   heads: string[];
   rows: ReactNode[][];
   empty?: string;
   tabKey?: Tab;
+  enablePagination?: boolean;
+  initialPageSize?: number;
+  pageSizeOptions?: number[];
 }) {
   const { hasAccess, permissions } = usePermissions();
   const [columnFilters, setColumnFilters] = useState<Record<string, any>>({});
@@ -297,8 +316,9 @@ function Table({
         columns={columns}
         data={filteredRows}
         emptyMessage={empty}
-        enablePagination={filteredRows.length > 25}
-        initialPageSize={25}
+        enablePagination={enablePagination}
+        initialPageSize={initialPageSize}
+        pageSizeOptions={pageSizeOptions}
         columnVisibility={rbacColumnVisibility}
         tableContainerClassName="border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 shadow-xs overflow-x-auto w-full max-w-full"
       />
@@ -321,6 +341,190 @@ function Stat({
       <strong className="block text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 my-0.5 break-words">{value}</strong>
       <small className="text-[10px] text-slate-500 dark:text-slate-400 block truncate">{caption}</small>
     </article>
+  );
+}
+
+function InventoryDateRangePicker({
+  from,
+  to,
+  onChange,
+}: {
+  from: string;
+  to: string;
+  onChange: (from: string, to: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+
+  const initialRange = useMemo<DateRange | undefined>(() => {
+    if (!from) return undefined;
+    const parsedFrom = parseISO(from);
+    if (!isValid(parsedFrom)) return undefined;
+    const parsedTo = to ? parseISO(to) : parsedFrom;
+    return {
+      from: parsedFrom,
+      to: isValid(parsedTo) ? parsedTo : parsedFrom,
+    };
+  }, [from, to]);
+
+  const [tempRange, setTempRange] = useState<DateRange | undefined>(initialRange);
+
+  useEffect(() => {
+    setTempRange(initialRange);
+  }, [initialRange, open]);
+
+  const hasRange = Boolean(from || to);
+
+  const label = useMemo(() => {
+    if (from && to) {
+      const pFrom = parseISO(from);
+      const pTo = parseISO(to);
+      if (isValid(pFrom) && isValid(pTo)) {
+        if (from === to) return format(pFrom, "dd MMM yy");
+        return `${format(pFrom, "dd MMM")} – ${format(pTo, "dd MMM yy")}`;
+      }
+    } else if (from) {
+      const pFrom = parseISO(from);
+      if (isValid(pFrom)) return `From ${format(pFrom, "dd MMM")}`;
+    } else if (to) {
+      const pTo = parseISO(to);
+      if (isValid(pTo)) return `Until ${format(pTo, "dd MMM")}`;
+    }
+    return "Date range";
+  }, [from, to]);
+
+  const applyRange = (range: DateRange | undefined) => {
+    if (range?.from) {
+      const f = format(range.from, "yyyy-MM-dd");
+      const t = range.to ? format(range.to, "yyyy-MM-dd") : f;
+      onChange(f, t);
+    } else {
+      onChange("", "");
+    }
+    setOpen(false);
+  };
+
+  const handleClear = () => {
+    setTempRange(undefined);
+    onChange("", "");
+    setOpen(false);
+  };
+
+  const setPreset = (preset: "thisMonth" | "last30Days" | "3months") => {
+    const now = new Date();
+    let nFrom: Date;
+    let nTo: Date = now;
+    if (preset === "thisMonth") {
+      nFrom = startOfMonth(now);
+      nTo = endOfMonth(now);
+    } else if (preset === "last30Days") {
+      nFrom = subDays(now, 30);
+    } else {
+      nFrom = subMonths(now, 3);
+    }
+    setTempRange({ from: nFrom, to: nTo });
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className={cn(
+            "h-8 px-2.5 inline-flex items-center gap-1.5 text-xs font-medium rounded-lg border transition-all cursor-pointer select-none",
+            hasRange
+              ? "border-teal-500/60 bg-teal-50/60 dark:bg-teal-950/30 text-teal-950 dark:text-teal-100 font-semibold shadow-2xs"
+              : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700 shadow-2xs"
+          )}
+        >
+          <Calendar className={cn("h-3.5 w-3.5 shrink-0", hasRange ? "text-teal-600 dark:text-teal-400" : "text-slate-400")} />
+          <span className="truncate max-w-[140px]">{label}</span>
+          {hasRange ? (
+            <span
+              role="button"
+              tabIndex={0}
+              aria-label="Clear date range"
+              className="ml-0.5 p-0.5 rounded-full hover:bg-teal-100 dark:hover:bg-teal-900 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClear();
+              }}
+            >
+              <X className="h-3 w-3" />
+            </span>
+          ) : (
+            <span className="text-[9px] text-slate-400">▼</span>
+          )}
+        </button>
+      </PopoverTrigger>
+      <PopoverContent align="start" sideOffset={6} className="w-[300px] p-0 z-50 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl rounded-xl overflow-hidden">
+        <div className="flex flex-col w-full">
+          <div className="grid grid-cols-3 gap-1.5 p-2.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50">
+            <button
+              type="button"
+              className="h-7 text-[11px] px-2 rounded-lg font-medium border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors shadow-2xs text-center cursor-pointer"
+              onClick={() => setPreset("thisMonth")}
+            >
+              This Month
+            </button>
+            <button
+              type="button"
+              className="h-7 text-[11px] px-2 rounded-lg font-medium border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors shadow-2xs text-center cursor-pointer"
+              onClick={() => setPreset("last30Days")}
+            >
+              Last 30 Days
+            </button>
+            <button
+              type="button"
+              className="h-7 text-[11px] px-2 rounded-lg font-medium border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors shadow-2xs text-center cursor-pointer"
+              onClick={() => setPreset("3months")}
+            >
+              3 Months
+            </button>
+          </div>
+          <div className="p-3 w-full">
+            <CalendarPicker
+              mode="range"
+              selected={tempRange}
+              onSelect={setTempRange}
+              numberOfMonths={1}
+              className="p-0 w-full"
+              classNames={{
+                root: "w-full",
+                months: "w-full",
+                month: "w-full space-y-2",
+                table: "w-full border-collapse space-y-1",
+                weekdays: "flex w-full justify-between mb-1",
+                weekday: "text-muted-foreground w-8 text-center font-normal text-[0.8rem] select-none",
+                week: "flex w-full mt-1 justify-between",
+                day: "h-8 w-8 text-center text-xs p-0 relative focus-within:relative focus-within:z-20 data-[range-middle=true]:bg-teal-500/15 data-[range-middle=true]:text-teal-800 dark:data-[range-middle=true]:text-teal-200 data-[range-start=true]:bg-teal-600 data-[range-start=true]:text-white data-[range-end=true]:bg-teal-600 data-[range-end=true]:text-white data-[selected-single=true]:bg-teal-600 data-[selected-single=true]:text-white rounded-lg flex items-center justify-center font-medium",
+                today: "bg-accent text-accent-foreground font-bold rounded-lg",
+                outside: "text-muted-foreground opacity-40",
+                disabled: "text-muted-foreground opacity-40",
+              }}
+            />
+          </div>
+          <div className="flex items-center justify-between gap-2 p-2.5 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50">
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              onClick={handleClear}
+              className="h-7 px-2.5 text-xs text-muted-foreground hover:text-foreground rounded-lg"
+            >
+              Clear
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => applyRange(tempRange)}
+              className="h-7 px-3.5 text-xs font-semibold bg-teal-600 hover:bg-teal-700 text-white rounded-lg shadow-2xs"
+            >
+              Apply
+            </Button>
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }
 
@@ -391,6 +595,20 @@ export default function InventoryModule({
     });
     return Array.from(map.values()).sort();
   }, [snapshot?.state?.sales, getSaleCircle]);
+
+  const matchesDateRange = useCallback(
+    (item: { date?: string; createdAt?: string } | null | undefined): boolean => {
+      if (!from && !to) return true;
+      if (!item) return true;
+      const rawDate = item.date || item.createdAt || "";
+      if (!rawDate) return true;
+      const itemDate = rawDate.slice(0, 10);
+      if (from && itemDate < from) return false;
+      if (to && itemDate > to) return false;
+      return true;
+    },
+    [from, to]
+  );
 
   const pending = useRef<{ key: string; requestId: string } | undefined>(
       undefined,
@@ -1071,6 +1289,7 @@ export default function InventoryModule({
               (d) =>
                 (!onlyOutstanding ||
                   (d.status === "POSTED" && paid(s, d.id) < d.total)) &&
+                matchesDateRange(d) &&
                 matches(
                   d.id,
                   d.reference,
@@ -1183,6 +1402,7 @@ export default function InventoryModule({
             (d) =>
               (!onlyOutstanding ||
                 (d.status === "POSTED" && paid(s, d.id) < d.total)) &&
+              matchesDateRange(d) &&
               matches(
                 d.id,
                 d.reference,
@@ -1304,6 +1524,7 @@ export default function InventoryModule({
         ]}
         rows={sales
           .filter((d) => {
+            if (!matchesDateRange(d)) return false;
             if (circleFilter) {
               const rowCircle = getSaleCircle(d);
               if (!rowCircle || rowCircle.toLowerCase() !== circleFilter.trim().toLowerCase()) {
@@ -1410,6 +1631,7 @@ export default function InventoryModule({
         ]}
         rows={sales
           .filter((d) => {
+            if (!matchesDateRange(d)) return false;
             const isInvoiceRaised = d.invoiceStatus === "Raised" || d.invoiceStatus === "Invoice Raised" || Boolean(d.reference);
             const invStatus = isInvoiceRaised ? "Raised" : "Pending";
             if (invoiceFilter && invStatus.toLowerCase() !== invoiceFilter.toLowerCase()) {
@@ -2092,11 +2314,12 @@ export default function InventoryModule({
         );
       }
       case "Payments": {
-        const collectedAmount = s.payments
+        const filteredPayments = s.payments.filter(matchesDateRange);
+        const collectedAmount = filteredPayments
           .filter((p) => p.documentKind === "SALE")
           .reduce((acc, p) => acc + p.amount, 0);
 
-        const paidToVendorsAmount = s.payments
+        const paidToVendorsAmount = filteredPayments
           .filter((p) => p.documentKind === "PURCHASE")
           .reduce((acc, p) => acc + p.amount, 0);
 
@@ -2158,7 +2381,7 @@ export default function InventoryModule({
                     "Reference",
                     "Proof",
                   ]}
-                  rows={s.payments
+                  rows={filteredPayments
                     .slice()
                     .reverse()
                     .map((p) => [
@@ -2574,7 +2797,7 @@ export default function InventoryModule({
       ? { kind: "purchase" }
       : tab === "Sales"
         ? salesSubTab === "finance"
-          ? { kind: "saleFinance", defaults: { handledBy: actorName } }
+          ? undefined
           : { kind: "saleProduct", defaults: { handledBy: actorName } }
         : tab === "Transfers & kits"
           ? { kind: "transfer" }
@@ -2611,46 +2834,19 @@ export default function InventoryModule({
             </p>
           </div>
           <div className="flex items-center gap-2.5 flex-wrap">
-            {(tab === "Implant P&L" || tab === "Delivery expenses") && (
-              <div className="flex items-center gap-2 mr-1">
-                <div className="relative flex items-center border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 px-2.5 py-1.5 focus-within:ring-2 focus-within:ring-teal-500">
-                  <Calendar size={14} className="text-slate-400 shrink-0 mr-1.5 pointer-events-none" />
-                  <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-1 select-none">From:</span>
-                  <input
-                    type="date"
-                    aria-label="From date"
-                    className="bg-transparent text-slate-900 dark:text-slate-100 text-xs focus:outline-none font-medium cursor-pointer"
-                    value={from}
-                    max={to || undefined}
-                    onChange={(e) => {
-                      if (to && e.target.value > to) {
-                        setNotice("From must be before To.");
-                        return;
-                      }
-                      setFrom(e.target.value);
-                    }}
-                  />
-                </div>
-                <span className="text-xs text-slate-400 font-medium">to</span>
-                <div className="relative flex items-center border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 px-2.5 py-1.5 focus-within:ring-2 focus-within:ring-teal-500">
-                  <Calendar size={14} className="text-slate-400 shrink-0 mr-1.5 pointer-events-none" />
-                  <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-1 select-none">To:</span>
-                  <input
-                    type="date"
-                    aria-label="To date"
-                    className="bg-transparent text-slate-900 dark:text-slate-100 text-xs focus:outline-none font-medium cursor-pointer"
-                    value={to}
-                    min={from || undefined}
-                    onChange={(e) => {
-                      if (from && e.target.value < from) {
-                        setNotice("To must be after From.");
-                        return;
-                      }
-                      setTo(e.target.value);
-                    }}
-                  />
-                </div>
-              </div>
+            {(tab === "Purchases" ||
+              tab === "Sales" ||
+              tab === "Payments" ||
+              tab === "Implant P&L" ||
+              tab === "Delivery expenses") && (
+              <InventoryDateRangePicker
+                from={from}
+                to={to}
+                onChange={(nextFrom, nextTo) => {
+                  setFrom(nextFrom);
+                  setTo(nextTo);
+                }}
+              />
             )}
             <Button
               variant="outline"
@@ -2660,7 +2856,17 @@ export default function InventoryModule({
             >
               <RefreshCw className={loading ? "animate-spin mr-1.5 h-4 w-4" : "mr-1.5 h-4 w-4"} /> Refresh
             </Button>
-            {(tab === "Implant P&L" || tab === "Delivery expenses" || from || to || productFilter || circleFilter || invoiceFilter || paymentFilter) && (
+            {(tab === "Purchases" ||
+              tab === "Sales" ||
+              tab === "Payments" ||
+              tab === "Implant P&L" ||
+              tab === "Delivery expenses" ||
+              from ||
+              to ||
+              productFilter ||
+              circleFilter ||
+              invoiceFilter ||
+              paymentFilter) && (
               <Button
                 variant="outline"
                 className="px-4 py-2 text-xs font-semibold"
@@ -2692,13 +2898,11 @@ export default function InventoryModule({
                   ? "Receive purchase"
                   : mainAction.kind === "saleProduct"
                     ? "Add Sales Product"
-                    : mainAction.kind === "saleFinance"
-                      ? "Add Sales Finance"
-                      : mainAction.kind === "sale"
-                        ? "Record sale"
-                        : mainAction.kind === "transfer"
-                          ? "Transfer stock"
-                          : `Add ${mainAction.kind}`}
+                    : mainAction.kind === "sale"
+                      ? "Record sale"
+                      : mainAction.kind === "transfer"
+                        ? "Transfer stock"
+                        : `Add ${mainAction.kind}`}
               </Button>
             )}
           </div>

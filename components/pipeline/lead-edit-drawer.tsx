@@ -788,6 +788,34 @@ export function LeadEditDrawer({
     }
 
     setSaving(true)
+
+    // 1. Instant Optimistic UI Update on Frontend (0ms — Instant)
+    queryClient.setQueriesData({ queryKey: ['pipeline', 'table'] }, (oldData: any) => {
+      if (!oldData || !Array.isArray(oldData.leads)) return oldData
+      return {
+        ...oldData,
+        leads: oldData.leads.map((item: any) => {
+          if (item.id !== leadId) return item
+          return {
+            ...item,
+            ...payload,
+            ...(payload.modeOfPayment !== undefined ? { modeOfPayment: payload.modeOfPayment } : {}),
+            ...(payload.status !== undefined ? { status: payload.status } : {}),
+            ...(payload.category !== undefined ? { category: payload.category } : {}),
+            ...(payload.circle !== undefined ? { circle: payload.circle } : {}),
+            ...(payload.treatment !== undefined ? { treatment: payload.treatment } : {}),
+            ...(payload.hospitalName !== undefined ? { hospitalName: payload.hospitalName } : {}),
+            ...(payload.surgeonName !== undefined ? { surgeonName: payload.surgeonName } : {}),
+          }
+        }),
+      }
+    })
+
+    queryClient.setQueryData(['lead', leadId], (oldLead: any) => {
+      if (!oldLead) return oldLead
+      return { ...oldLead, ...payload }
+    })
+
     try {
       await apiPatch(`/api/leads/${leadId}`, payload)
       toast.success('Lead updated')
@@ -801,6 +829,9 @@ export function LeadEditDrawer({
       onOpenChange(false)
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to update lead')
+      // Rollback optimistic update on error by refetching server state
+      queryClient.invalidateQueries({ queryKey: ['pipeline'] })
+      queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
     } finally {
       setSaving(false)
     }
