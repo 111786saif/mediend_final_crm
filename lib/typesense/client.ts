@@ -298,6 +298,7 @@ export interface SalesPipelineSearchOptions {
   sortBy?: string
   queryBy?: string
   facetBy?: string
+  maxFacetValues?: number
   highlightFullFields?: string
 }
 
@@ -309,10 +310,16 @@ export interface SalesPipelineSearchResult {
     textMatch?: number
   }>
   matchedLeadIds: string[]
+  matchedLeadRefs: string[]
   found: number
   page: number
   totalPages: number
   searchTimeMs: number
+  facetCounts?: Array<{
+    counts: Array<{ count: number; highlighted: string; value: string }>
+    field_name: string
+    stats?: Record<string, any>
+  }>
 }
 
 // Ensures the sales pipeline collection exists in Typesense
@@ -339,6 +346,7 @@ export async function searchSalesPipeline(
     sortBy,
     queryBy = SALES_PIPELINE_QUERY_BY_FIELDS,
     facetBy,
+    maxFacetValues = 100,
   } = options
 
   const cleanQuery = query.trim() || '*'
@@ -355,7 +363,10 @@ export async function searchSalesPipeline(
 
   if (filterBy) searchParams.filter_by = filterBy
   if (sortBy) searchParams.sort_by = sortBy
-  if (facetBy) searchParams.facet_by = facetBy
+  if (facetBy) {
+    searchParams.facet_by = facetBy
+    searchParams.max_facet_values = maxFacetValues
+  }
 
   const response = await searchCollection<SalesPipelineDocument>(
     SALES_PIPELINE_COLLECTION_NAME,
@@ -369,15 +380,18 @@ export async function searchSalesPipeline(
   }))
 
   const matchedLeadIds = hits.map((h) => h.document.id).filter(Boolean)
+  const matchedLeadRefs = hits.map((h) => h.document.leadRef).filter(Boolean)
   const found = response.found || 0
 
   return {
     hits,
     matchedLeadIds,
+    matchedLeadRefs,
     found,
     page: response.page || page,
     totalPages: Math.ceil(found / perPage),
     searchTimeMs: response.search_time_ms || 0,
+    facetCounts: (response as any).facet_counts,
   }
 }
 
@@ -440,19 +454,25 @@ export async function buildTypesenseRoleFilter(
   user: { id: string; role: string },
   cachedScope?: { subordinateUserIds?: string[]; teamLeadId?: number | string | null }
 ): Promise<string | undefined> {
-  if (user.role === 'ADMIN' || user.role === 'EXECUTIVE_ASSISTANT') {
+  const role = user.role
+  if (
+    role === 'ADMIN' ||
+    role === 'SUPER_ADMIN' ||
+    role === 'EXECUTIVE_ASSISTANT' ||
+    role === 'SALES_HEAD' ||
+    role === 'MD'
+  ) {
     return undefined
   }
 
-  if (user.role === 'BD') {
+  if (role === 'BD') {
     return `bdId:=${user.id}`
   }
 
   if (
-    user.role === 'TEAM_LEAD' ||
-    user.role === 'ASSISTANT_CATEGORY_MANAGER' ||
-    user.role === 'CATEGORY_MANAGER' ||
-    user.role === 'SALES_HEAD'
+    role === 'TEAM_LEAD' ||
+    role === 'ASSISTANT_CATEGORY_MANAGER' ||
+    role === 'CATEGORY_MANAGER'
   ) {
     let visibleUserIds = cachedScope?.subordinateUserIds
     let teamLeadId = cachedScope?.teamLeadId
@@ -595,16 +615,22 @@ export function mapTypesenseDocToPipelineLead(
   }
 }
 
-// Synchronizes a single lead from PostgreSQL to Typesense by ID (for instant real-time updates on lead edit/create)
-export async function syncSingleLeadToTypesense(leadId: string): Promise<boolean> {
-  if (!isTypesenseConfigured() || !leadId) return false
+// Synchronizes a single lead from PostgreSQL to Typesense by ID or in-memory lead object (for instant real-time updates on lead edit/create)
+export async function syncSingleLeadToTypesense(leadOrId: string | Record<string, any>): Promise<boolean> {
+  if (!isTypesenseConfigured() || !leadOrId) return false
   try {
-    const { prisma } = await import('@/lib/prisma')
-    const { pipelineTableSelect } = await import('@/lib/pipeline/server-query')
-    const lead = await prisma.lead.findUnique({
-      where: { id: leadId },
-      select: pipelineTableSelect,
-    })
+    let lead: any = null
+    if (typeof leadOrId === 'object' && leadOrId !== null && leadOrId.id) {
+      // In-memory lead object provided directly — eliminates extra PostgreSQL query roundtrip
+      lead = leadOrId
+    } else {
+      const { prisma } = await import('@/lib/prisma')
+      const { pipelineTableSelect } = await import('@/lib/pipeline/server-query')
+      lead = await prisma.lead.findUnique({
+        where: { id: String(leadOrId) },
+        select: pipelineTableSelect,
+      })
+    }
     if (!lead) return false
     await upsertSalesPipelineLeads([lead])
     return true

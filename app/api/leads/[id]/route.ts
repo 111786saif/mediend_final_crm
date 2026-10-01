@@ -1432,6 +1432,21 @@ export async function PATCH(
       include: {
         bd: { select: prismaBdEmployeeTeamSelect },
         plRecord: true,
+        leadRemarkEntries: {
+          select: {
+            id: true,
+            content: true,
+            createdAt: true,
+            createdBy: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+        },
       },
     })
 
@@ -1470,10 +1485,12 @@ export async function PATCH(
         }
       : mapped
 
-    // Asynchronously synchronize updated lead record to Typesense
-    syncSingleLeadToTypesense(id).catch((err) => {
-      console.warn('[Typesense] Background sync failed for lead update:', err)
-    })
+    // Synchronize updated lead record to Typesense directly without redundant database query
+    try {
+      await syncSingleLeadToTypesense(leadWithPl || id)
+    } catch (err) {
+      console.warn('[Typesense] Sync failed for lead update:', err)
+    }
 
     return successResponse(responsePayload, 'Lead updated successfully')
   } catch (error) {

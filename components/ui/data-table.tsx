@@ -505,14 +505,14 @@ export function DataTable<TData, TValue>({
       </div>
 
       {/* Pagination Controls Footer */}
-      {enablePagination && !isLoading && table.getPageCount() > 1 && (
+      {enablePagination && !isLoading && (table.getPageCount() > 1 || table.getFilteredRowModel().rows.length > 0) && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-4 py-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <span>Show</span>
             <select
               value={table.getState().pagination.pageSize}
               onChange={(e) => table.setPageSize(Number(e.target.value))}
-              className="h-8 rounded border border-border bg-background text-foreground px-2 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
+              className="h-8 rounded-lg border border-border bg-background text-foreground px-2.5 text-xs font-medium shadow-2xs hover:border-border/80 focus:outline-none focus:ring-2 focus:ring-ring/40 transition-all cursor-pointer"
             >
               {pageSizeOptions.map((size) => (
                 <option key={size} value={size}>
@@ -532,7 +532,7 @@ export function DataTable<TData, TValue>({
               <Button
                 variant="outline"
                 size="icon"
-                className="h-8 w-8 text-foreground"
+                className="h-8 w-8 rounded-lg text-foreground"
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
               >
@@ -541,7 +541,7 @@ export function DataTable<TData, TValue>({
               <Button
                 variant="outline"
                 size="icon"
-                className="h-8 w-8 text-foreground"
+                className="h-8 w-8 rounded-lg text-foreground"
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
               >
