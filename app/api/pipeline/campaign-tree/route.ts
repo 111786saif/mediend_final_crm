@@ -75,21 +75,27 @@ export async function GET(request: NextRequest) {
 
     let facetWhere = buildPipelineFiltersWhere(params, roleWhere, { includeStatusBucket: false })
 
-    // Accelerate with Typesense when configured (transparent fallback if offline or unconfigured)
-    const tsMatched = await fetchPipelineMatchedLeadIdsFromTypesense(
-      params,
-      user,
-      { subordinateUserIds, teamLeadId },
-      { includeStatusBucket: false, perPage: 250 }
-    )
+    // Accelerate with Typesense when search query is provided (transparent fallback if offline or unconfigured)
+    const hasSearchQuery = Boolean(params.search && params.search.trim().length > 0)
+    const tsMatched = hasSearchQuery
+      ? await fetchPipelineMatchedLeadIdsFromTypesense(
+          params,
+          user,
+          { subordinateUserIds, teamLeadId },
+          { includeStatusBucket: false, perPage: 250 }
+        )
+      : null
 
-    if (tsMatched && tsMatched.matchedLeadIds.length > 0) {
+    if (tsMatched && (tsMatched.matchedLeadIds.length > 0 || (tsMatched.matchedLeadRefs && tsMatched.matchedLeadRefs.length > 0))) {
       const paramsWithoutSearch = { ...params, search: '' }
       const baseWhere = buildPipelineFiltersWhere(paramsWithoutSearch, roleWhere, { includeStatusBucket: false })
+      const matchConditions: Array<Record<string, unknown>> = []
+      if (tsMatched.matchedLeadIds.length > 0) matchConditions.push({ id: { in: tsMatched.matchedLeadIds } })
+      if (tsMatched.matchedLeadRefs && tsMatched.matchedLeadRefs.length > 0) matchConditions.push({ leadRef: { in: tsMatched.matchedLeadRefs } })
       facetWhere = {
         AND: [
           baseWhere,
-          { id: { in: tsMatched.matchedLeadIds } },
+          matchConditions.length === 1 ? matchConditions[0]! : { OR: matchConditions },
         ],
       }
     }
