@@ -55,6 +55,17 @@ export const salesPipelineSchema: CollectionCreateSchema = {
     { name: 'createdDateStr', type: 'string', optional: true },
     { name: 'followUpDateStr', type: 'string', optional: true },
     { name: 'surgeryDateStr', type: 'string', optional: true },
+    { name: 'openedInCrmAt', type: 'int64', optional: true, sort: true },
+    { name: 'openedInCrmAtStr', type: 'string', optional: true },
+    { name: 'ipdPotentialDate', type: 'int64', optional: true, sort: true },
+    { name: 'ipdPotentialDateStr', type: 'string', optional: true },
+    { name: 'ipdDrName', type: 'string', optional: true },
+    { name: 'removeRemarks', type: 'bool', optional: true },
+    { name: 'remarksClearedAt', type: 'int64', optional: true },
+    { name: 'remarksClearedAtStr', type: 'string', optional: true },
+    { name: 'removeFollowUpDate', type: 'bool', optional: true },
+    { name: 'followUpDateClearedAt', type: 'int64', optional: true },
+    { name: 'followUpDateClearedAtStr', type: 'string', optional: true },
     { name: 'modifyBy', type: 'string', facet: true, optional: true },
     { name: 'duplCount', type: 'int32', optional: true },
     { name: 'remarks', type: 'string', optional: true },
@@ -152,6 +163,17 @@ export interface SalesPipelineDocument {
   createdDateStr?: string
   followUpDateStr?: string
   surgeryDateStr?: string
+  openedInCrmAt?: number | null
+  openedInCrmAtStr?: string
+  ipdPotentialDate?: number | null
+  ipdPotentialDateStr?: string
+  ipdDrName?: string
+  removeRemarks?: boolean
+  remarksClearedAt?: number | null
+  remarksClearedAtStr?: string
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: number | null
+  followUpDateClearedAtStr?: string
   modifyBy?: string
   duplCount?: number
   remarks?: string
@@ -165,6 +187,13 @@ export function toUnixSeconds(dateVal: Date | string | null | undefined): number
   const d = typeof dateVal === 'string' ? new Date(dateVal) : dateVal
   const time = d.getTime()
   return Number.isNaN(time) ? null : Math.floor(time / 1000)
+}
+
+// Helper to format date to full ISO 8601 string (preserving time)
+export function toFullIsoStr(dateVal: Date | string | null | undefined): string | undefined {
+  if (!dateVal) return undefined
+  const d = typeof dateVal === 'string' ? new Date(dateVal) : dateVal
+  return Number.isNaN(d.getTime()) ? undefined : d.toISOString()
 }
 
 // Helper to format date to ISO YYYY-MM-DD string
@@ -233,11 +262,22 @@ export function mapLeadToSalesPipelineDocument(lead: any): SalesPipelineDocument
     updatedDate: toUnixSeconds(lead.updatedDate),
     followUpDate: toUnixSeconds(lead.followUpDate),
     surgeryDate: toUnixSeconds(lead.surgeryDate || lead.admissionRecord?.surgeryDate),
-    assignedDateStr: toIsoDateStr(lead.assignedDate),
-    leadEntryDateStr: toIsoDateStr(lead.leadEntryDate),
-    createdDateStr: toIsoDateStr(lead.createdDate),
-    followUpDateStr: toIsoDateStr(lead.followUpDate),
-    surgeryDateStr: toIsoDateStr(lead.surgeryDate || lead.admissionRecord?.surgeryDate),
+    openedInCrmAt: toUnixSeconds(lead.openedInCrmAt),
+    ipdPotentialDate: toUnixSeconds(lead.ipdPotentialDate),
+    remarksClearedAt: toUnixSeconds(lead.remarksClearedAt),
+    followUpDateClearedAt: toUnixSeconds(lead.followUpDateClearedAt),
+    assignedDateStr: toFullIsoStr(lead.assignedDate),
+    leadEntryDateStr: toFullIsoStr(lead.leadEntryDate),
+    createdDateStr: toFullIsoStr(lead.createdDate),
+    followUpDateStr: toFullIsoStr(lead.followUpDate),
+    surgeryDateStr: toFullIsoStr(lead.surgeryDate || lead.admissionRecord?.surgeryDate),
+    openedInCrmAtStr: toFullIsoStr(lead.openedInCrmAt),
+    ipdPotentialDateStr: toFullIsoStr(lead.ipdPotentialDate),
+    remarksClearedAtStr: toFullIsoStr(lead.remarksClearedAt),
+    followUpDateClearedAtStr: toFullIsoStr(lead.followUpDateClearedAt),
+    ipdDrName: lead.ipdDrName || undefined,
+    removeRemarks: Boolean(lead.removeRemarks),
+    removeFollowUpDate: Boolean(lead.removeFollowUpDate),
     modifyBy: lead.updatedBy?.name || undefined,
     duplCount: typeof lead.duplCount === 'number' ? lead.duplCount : undefined,
     remarks: typeof lead.remarks === 'string' ? lead.remarks : undefined,
