@@ -224,11 +224,15 @@ export async function checkTypesenseHealth(): Promise<{ ok: boolean; message: st
   }
 }
 
-// Creates a collection if it does not already exist
+// Creates a collection if it does not already exist, or updates fields if schema changed
 export async function ensureCollection(schema: CollectionCreateSchema): Promise<void> {
   const client = getTypesenseClient()
   try {
     await client.collections(schema.name).retrieve()
+    // Auto-patch schema fields if new fields were added to schema definition
+    if (schema.fields) {
+      await client.collections(schema.name).update({ fields: schema.fields as any }).catch(() => {})
+    }
   } catch (err: any) {
     if (err?.httpStatus === 404) {
       await client.collections().create(schema)
@@ -512,12 +516,19 @@ export function mapTypesenseDocToPipelineLead(
   userRole?: string | null
 ) {
   const canViewPhone = userRole === 'ADMIN'
-  const updatedDateIso = doc.updatedDate ? new Date(doc.updatedDate * 1000).toISOString() : null
+  const resolveIsoDate = (isoStr?: string | null, unixSecs?: number | null) => {
+    if (isoStr && isoStr.includes('T')) return isoStr
+    if (unixSecs) return new Date(unixSecs * 1000).toISOString()
+    if (isoStr) return isoStr
+    return null
+  }
+
+  const updatedDateIso = resolveIsoDate(null, doc.updatedDate)
   const latestRemarkObj = doc.latestRemark
     ? {
         id: doc.id,
         content: doc.latestRemark,
-        createdAt: updatedDateIso || doc.createdDateStr || null,
+        createdAt: updatedDateIso || resolveIsoDate(doc.createdDateStr, doc.createdDate) || null,
         createdBy: null,
       }
     : null
@@ -552,12 +563,12 @@ export function mapTypesenseDocToPipelineLead(
     flowType: doc.flowType ?? null,
     campaignName: doc.campaignName ?? null,
     month: doc.month ?? null,
-    assignedDate: doc.assignedDateStr ?? null,
-    leadEntryDate: doc.leadEntryDateStr ?? null,
-    createdDate: doc.createdDateStr ?? null,
+    assignedDate: resolveIsoDate(doc.assignedDateStr, doc.assignedDate),
+    leadEntryDate: resolveIsoDate(doc.leadEntryDateStr, doc.leadEntryDate),
+    createdDate: resolveIsoDate(doc.createdDateStr, doc.createdDate),
     updatedDate: updatedDateIso ?? null,
-    followUpDate: doc.followUpDateStr ?? null,
-    surgeryDate: doc.surgeryDateStr ?? null,
+    followUpDate: resolveIsoDate(doc.followUpDateStr, doc.followUpDate),
+    surgeryDate: resolveIsoDate(doc.surgeryDateStr, doc.surgeryDate),
     profession: doc.profession ?? null,
     teamLeadId: doc.teamLeadId ? Number(doc.teamLeadId) || null : null,
     duplCount: doc.duplCount ?? 0,
@@ -570,15 +581,15 @@ export function mapTypesenseDocToPipelineLead(
     doctorName: doc.doctorName ?? null,
     remarks: doc.remarks ?? null,
     latestRemark: latestRemarkObj,
-    ipdPotentialDate: null,
-    ipdDrName: null,
+    ipdPotentialDate: resolveIsoDate(doc.ipdPotentialDateStr, doc.ipdPotentialDate),
+    ipdDrName: doc.ipdDrName ?? null,
     surgeonName: doc.doctorName ?? null,
     updatedBy: doc.modifyBy ? { id: '', name: doc.modifyBy } : null,
-    openedInCrmAt: null,
-    removeRemarks: false,
-    remarksClearedAt: null,
-    removeFollowUpDate: false,
-    followUpDateClearedAt: null,
+    openedInCrmAt: resolveIsoDate(doc.openedInCrmAtStr, doc.openedInCrmAt),
+    removeRemarks: doc.removeRemarks ?? false,
+    remarksClearedAt: resolveIsoDate(doc.remarksClearedAtStr, doc.remarksClearedAt),
+    removeFollowUpDate: doc.removeFollowUpDate ?? false,
+    followUpDateClearedAt: resolveIsoDate(doc.followUpDateClearedAtStr, doc.followUpDateClearedAt),
     plRecord: {
       bdmName: doc.bdName || null,
       managerName: doc.managerName || null,
@@ -615,6 +626,20 @@ export function mapTypesenseDocToPipelineLead(
   }
 }
 
+// Deletes a single lead document from Typesense by ID
+export async function deleteSingleLeadFromTypesense(leadId: string | number): Promise<boolean> {
+  if (!isTypesenseConfigured() || !leadId) return false
+  try {
+    const client = getTypesenseClient()
+    await client.collections(SALES_PIPELINE_COLLECTION_NAME).documents(String(leadId)).delete()
+    return true
+  } catch (err: any) {
+    if (err?.httpStatus === 404) return true // Already deleted
+    console.warn('[Typesense] Failed to delete lead from Typesense:', err)
+    return false
+  }
+}
+
 // Synchronizes a single lead from PostgreSQL to Typesense by ID or in-memory lead object (for instant real-time updates on lead edit/create)
 export async function syncSingleLeadToTypesense(leadOrId: string | Record<string, any>): Promise<boolean> {
   if (!isTypesenseConfigured() || !leadOrId) return false
@@ -631,7 +656,13 @@ export async function syncSingleLeadToTypesense(leadOrId: string | Record<string
         select: pipelineTableSelect,
       })
     }
-    if (!lead) return false
+    if (!lead) {
+      // If lead was deleted from PostgreSQL, remove it from Typesense as well
+      if (typeof leadOrId === 'string' || typeof leadOrId === 'number') {
+        await deleteSingleLeadFromTypesense(String(leadOrId))
+      }
+      return false
+    }
     await upsertSalesPipelineLeads([lead])
     return true
   } catch (err) {

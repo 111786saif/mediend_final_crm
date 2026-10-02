@@ -3,11 +3,14 @@ import {
   getTypesenseClient,
   isTypesenseConfigured,
   ensureSalesPipelineCollection,
+  upsertEmployeeHierarchy,
 } from '@/lib/typesense/client'
 import {
   SALES_PIPELINE_COLLECTION_NAME,
   mapLeadToSalesPipelineDocument,
+  type EmployeeHierarchyDocument,
 } from '@/lib/typesense/schema'
+import { getSubordinates } from '@/lib/hierarchy'
 import { pipelineTableSelect } from '@/lib/pipeline/server-query'
 
 export const TYPESENSE_LEADS_SYNC_SOURCE = 'typesense_sales_pipeline'
@@ -32,10 +35,59 @@ export interface TypesenseSyncResult {
   durationMs: number
   since?: string
   error?: string
+  hierarchySynced?: number
 }
 
 /**
- * Incrementally syncs updated leads from PostgreSQL to Typesense.
+ * Syncs the entire employee hierarchy (team leads & subordinates) to Typesense
+ */
+export async function syncEmployeeHierarchyToTypesense(): Promise<number> {
+  if (!isTypesenseConfigured()) return 0
+  try {
+    const employees = await prisma.employee.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+          },
+        },
+      },
+    })
+
+    const hierarchyDocs: EmployeeHierarchyDocument[] = []
+    const nowUnix = Math.floor(Date.now() / 1000)
+
+    for (const emp of employees) {
+      if (!emp.user) continue
+      const subordinates = await getSubordinates(emp.id, true)
+      const subordinateUserIds = Array.from(
+        new Set([emp.userId, ...subordinates.map((s) => s.userId).filter(Boolean)])
+      )
+
+      hierarchyDocs.push({
+        id: emp.userId,
+        userId: emp.userId,
+        employeeId: emp.id,
+        name: emp.user.name || '',
+        role: emp.user.role || '',
+        teamLeadNumber: emp.bdNumber ? String(emp.bdNumber) : undefined,
+        subordinateUserIds,
+        updatedAt: nowUnix,
+      })
+    }
+
+    return await upsertEmployeeHierarchy(hierarchyDocs)
+  } catch (err) {
+    console.warn('[Typesense Sync] Non-blocking error syncing employee hierarchy:', err)
+    return 0
+  }
+}
+
+/**
+ * Incrementally syncs updated leads and employee hierarchy from PostgreSQL to Typesense.
  * Uses SyncState to track last sync timestamp and records execution to CronJobLog.
  */
 export async function syncLeadsToTypesense(
@@ -61,6 +113,9 @@ export async function syncLeadsToTypesense(
   try {
     await ensureSalesPipelineCollection()
     const client = getTypesenseClient()
+
+    // Sync employee hierarchy alongside leads to ensure permission scoping stays up to date
+    const hierarchySynced = await syncEmployeeHierarchyToTypesense()
 
     // Determine the cutoff timestamp
     let syncSince: Date | undefined
@@ -90,6 +145,7 @@ export async function syncLeadsToTypesense(
     const totalFound = await prisma.lead.count({ where: whereClause })
 
     if (totalFound === 0) {
+      await cleanupOrphanedTypesenseLeads(client)
       const durationMs = Date.now() - startTime
       // Update lastRunAt on sync state even if no records changed
       await prisma.syncState.upsert({
@@ -175,12 +231,16 @@ export async function syncLeadsToTypesense(
       console.warn('[Typesense Sync] Failed to write CronJobLog entry:', err)
     })
 
+    // Clean up deleted/orphaned leads from Typesense if Typesense document count exceeds Database count
+    await cleanupOrphanedTypesenseLeads(client)
+
     return {
       success: true,
       synced: totalSynced,
       totalFound,
       durationMs,
       since: syncSince?.toISOString(),
+      hierarchySynced,
     }
   } catch (error: any) {
     const durationMs = Date.now() - startTime
@@ -206,4 +266,58 @@ export async function syncLeadsToTypesense(
       error: errorMessage,
     }
   }
+}
+
+/**
+ * Checks if document count in Typesense exceeds database lead count.
+ * If orphaned/deleted leads are found in Typesense, deletes them in batches.
+ * Runs with 0ms overhead when Typesense document count <= Database count.
+ */
+async function cleanupOrphanedTypesenseLeads(client: any): Promise<number> {
+  try {
+    const tsCollection = await client.collections(SALES_PIPELINE_COLLECTION_NAME).retrieve()
+    const tsTotal = tsCollection.num_documents ?? 0
+    const dbTotal = await prisma.lead.count()
+
+    if (tsTotal <= dbTotal) {
+      return 0
+    }
+
+    const dbLeads = await prisma.lead.findMany({ select: { id: true } })
+    const dbLeadIds = new Set(dbLeads.map((l) => String(l.id)))
+
+    let searchPage = 1
+    const perPage = 250
+    const orphanIds: string[] = []
+
+    while ((searchPage - 1) * perPage < tsTotal) {
+      const res = await client.collections(SALES_PIPELINE_COLLECTION_NAME).documents().search({
+        q: '*',
+        query_by: 'id',
+        include_fields: 'id',
+        page: searchPage,
+        per_page: perPage,
+      })
+
+      for (const hit of res.hits || []) {
+        if (hit.document?.id && !dbLeadIds.has(String(hit.document.id))) {
+          orphanIds.push(String(hit.document.id))
+        }
+      }
+
+      if ((res.hits || []).length < perPage) break
+      searchPage++
+    }
+
+    if (orphanIds.length > 0) {
+      console.log(`[Typesense Sync] Cleaning up ${orphanIds.length} deleted/orphaned leads from Typesense...`)
+      for (const orphanId of orphanIds) {
+        await client.collections(SALES_PIPELINE_COLLECTION_NAME).documents(orphanId).delete().catch(() => {})
+      }
+      return orphanIds.length
+    }
+  } catch (cleanErr) {
+    console.warn('[Typesense Sync] Non-blocking error during orphan deletion check:', cleanErr)
+  }
+  return 0
 }
