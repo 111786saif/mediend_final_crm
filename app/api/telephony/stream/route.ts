@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server'
+import { extractKnowlarityCallId } from '@/lib/knowlarity-call-popup'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, unauthorizedResponse } from '@/lib/api-utils'
@@ -283,31 +284,6 @@ function extractKnowlarityEventTimestamp(payload: KnowlarityRawPayload): Date | 
   return null
 }
 
-function extractKnowlarityCallId(payload: KnowlarityRawPayload): string | null {
-  if (!payload || typeof payload !== 'object') return null
-
-  const root = payload as Record<string, unknown>
-  const dataObj = root.data as Record<string, unknown> | undefined
-  const candidates = [
-    root.uuid,
-    root.unique_id,
-    root.call_id,
-    root.callId,
-    dataObj?.uuid,
-    dataObj?.unique_id,
-    dataObj?.call_id,
-    dataObj?.callId,
-  ]
-
-  for (const candidate of candidates) {
-    if ((typeof candidate === 'string' || typeof candidate === 'number') && String(candidate).trim()) {
-      return String(candidate).trim().slice(0, 200)
-    }
-  }
-
-  return null
-}
-
 function extractEventType(payload: KnowlarityRawPayload, fallbackEventName: string | null): string {
   if (payload && typeof payload === 'object' && !Array.isArray(payload)) {
     const obj = payload as Record<string, unknown>
@@ -337,6 +313,17 @@ function mapCallState(eventType: string): {
 } {
   const normalized = eventType.trim().toUpperCase()
 
+  // Terminal events can also contain CONNECTED, BRIDGE, or DIAL (for example,
+  // DISCONNECTED and BRIDGE_END), so check them before active-call events.
+  if (
+    normalized.includes('HANGUP') ||
+    normalized.includes('END') ||
+    normalized.includes('DISCONNECT') ||
+    normalized.includes('COMPLETED')
+  ) {
+    return { state: 'call_finished', label: titleCase(eventType) }
+  }
+
   if (
     normalized.includes('DIAL') ||
     normalized.includes('RINGING') ||
@@ -354,15 +341,6 @@ function mapCallState(eventType: string): {
     normalized.includes('TALKING')
   ) {
     return { state: 'on_call', label: titleCase(eventType) }
-  }
-
-  if (
-    normalized.includes('HANGUP') ||
-    normalized.includes('END') ||
-    normalized.includes('DISCONNECT') ||
-    normalized.includes('COMPLETED')
-  ) {
-    return { state: 'call_finished', label: titleCase(eventType) }
   }
 
   return { state: 'update', label: titleCase(eventType) }
@@ -614,6 +592,7 @@ export async function GET(request: NextRequest) {
           const eventTimestamp = extractKnowlarityEventTimestamp(payload)
           const eventAge = eventTimestamp ? Date.now() - eventTimestamp.getTime() : null
           const shouldSuppressStalePopup =
+            mapped.state !== 'call_finished' &&
             eventAge != null && eventAge > MAX_KNOWLARITY_EVENT_AGE_MS
 
           if (shouldSuppressStalePopup) {

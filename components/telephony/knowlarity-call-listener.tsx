@@ -26,45 +26,16 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import {
   WORKSPACE_MAKE_CALL_POPUP_EVENT,
+  extractKnowlarityCallId,
   type WorkspaceMakeCallPopup,
 } from '@/lib/knowlarity-call-popup'
+import {
+  updateKnowlarityCallQueue,
+  type CallState,
+  type CallQueueItem,
+  type StreamCallEvent,
+} from '@/lib/knowlarity-call-queue'
 
-type CallState = 'receiving_call' | 'on_call' | 'call_finished' | 'update'
-
-type PatientLookup = {
-  found: boolean
-  type?: 'lead' | 'incoming_lead'
-  leadId?: string | null
-  leadRef?: string | null
-  patientName?: string | null
-  treatment?: string | null
-  category?: string | null
-  status?: string | null
-  bdName?: string | null
-}
-
-type StreamCallEvent = {
-  state: CallState
-  label: string
-  eventType: string
-  callId?: string | null
-  agentPhone?: string | null
-  telephonyEnabled?: boolean
-  patientInfo?: PatientLookup | null
-  recordingUrl?: string | null
-  payload?: unknown
-  receivedAt?: string
-}
-
-type CallQueueItem = {
-  key: string
-  event: StreamCallEvent
-  remarkText: string
-  isWorkspaceCall?: boolean
-  isSavingRemark?: boolean
-}
-
-const WORKSPACE_CALL_DEDUP_WINDOW_MS = 2 * 60 * 1000
 const DISMISSED_CALL_WINDOW_MS = 2 * 60 * 1000
 const DISMISSED_CALLS_STORAGE_KEY = 'knowlarity-dismissed-call-popups'
 
@@ -131,99 +102,30 @@ export function KnowlarityCallListener() {
   const [callQueue, setCallQueue] = useState<CallQueueItem[]>([])
   const [selectedIndex, setSelectedIndex] = useState<number>(0)
   const [isCollapsed, setIsCollapsed] = useState(false)
-  const autoHideTimersRef = useRef<Map<string, number>>(new Map())
   const dismissedCallKeysRef = useRef<Map<string, number>>(new Map())
-  const sessionStartTimeRef = useRef<number>(0)
 
   useEffect(() => {
-    sessionStartTimeRef.current = Date.now() - 5000
-    const timersRef = autoHideTimersRef.current
     dismissedCallKeysRef.current = readDismissedCallKeys()
     const source = new EventSource('/api/telephony/stream')
 
     const enqueueCall = (payload: StreamCallEvent) => {
-      const rawObj = (payload.payload as Record<string, unknown>) ?? {}
-      const callKey =
-        payload.callId ||
-        (typeof rawObj.uuid === 'string' && rawObj.uuid) ||
-        (typeof rawObj.unique_id === 'string' && rawObj.unique_id) ||
-        (typeof rawObj.call_id === 'string' && rawObj.call_id) ||
-        `call_${payload.receivedAt || Date.now()}`
-      const dismissedUntil = dismissedCallKeysRef.current.get(callKey)
-      const dismissedLeadUntil = payload.patientInfo?.leadId
-        ? dismissedCallKeysRef.current.get(`lead:${payload.patientInfo.leadId}`)
-        : undefined
-
-      if ((dismissedUntil && dismissedUntil > Date.now()) || (dismissedLeadUntil && dismissedLeadUntil > Date.now())) {
-        return
-      }
-
-      // Ignore stale events received before the current browser session started.
-      const eventTime = payload.receivedAt ? new Date(payload.receivedAt).getTime() : Date.now()
-      if (eventTime < sessionStartTimeRef.current && payload.state === 'call_finished') {
-        return
-      }
-
-      const existingTimer = autoHideTimersRef.current.get(callKey)
-      if (existingTimer != null) {
-        window.clearTimeout(existingTimer)
-        autoHideTimersRef.current.delete(callKey)
-      }
-
-      setCallQueue((prev) => {
-        const isWorkspaceCall = payload.eventType === 'workspace_make_call'
-        const receivedAt = payload.receivedAt ? new Date(payload.receivedAt).getTime() : Date.now()
-        const hasRecentWorkspaceCall = prev.some(
-          (item) =>
-            item.isWorkspaceCall &&
-            Math.abs(receivedAt - new Date(item.event.receivedAt ?? 0).getTime()) <=
-              WORKSPACE_CALL_DEDUP_WINDOW_MS
-        )
-        const workspaceLeadIds = new Set(
-          prev
-            .filter((item) => item.isWorkspaceCall)
-            .map((item) => item.event.patientInfo?.leadId)
-            .filter((leadId): leadId is string => Boolean(leadId))
-        )
-
-        // The workspace popup identifies the call the user initiated. During that
-        // call, only accept its matching lead from the stream, not unrelated or
-        // unidentified bridge events from Knowlarity.
-        if (
-          hasRecentWorkspaceCall &&
-          (!payload.patientInfo?.leadId || !workspaceLeadIds.has(payload.patientInfo.leadId))
-        ) {
-          return prev
-        }
-
-        const existingIdx = prev.findIndex(
-          (item) =>
-            item.key === callKey ||
-            (Boolean(payload.patientInfo?.leadId) &&
-              item.event.patientInfo?.leadId === payload.patientInfo?.leadId)
-        )
-        if (existingIdx >= 0) {
-          const next = [...prev]
-          next[existingIdx] = {
-            ...next[existingIdx],
-            event: payload,
-            isWorkspaceCall: next[existingIdx].isWorkspaceCall || isWorkspaceCall,
-          }
-          return next
-        }
-
-        return [{ key: callKey, event: payload, remarkText: '', isWorkspaceCall }, ...prev].slice(0, 3)
-      })
-
-      setSelectedIndex(0)
+      const callId = payload.callId || extractKnowlarityCallId(payload.payload)
+      payload = { ...payload, callId }
+      const callKey = callId || `call_${window.crypto.randomUUID()}`
 
       if (payload.state === 'call_finished') {
-        const timerId = window.setTimeout(() => {
-          setCallQueue((prev) => prev.filter((item) => item.key !== callKey))
-          autoHideTimersRef.current.delete(callKey)
-        }, 8000)
-        autoHideTimersRef.current.set(callKey, timerId)
+        dismissedCallKeysRef.current.set(callKey, Date.now() + DISMISSED_CALL_WINDOW_MS)
+        persistDismissedCallKeys(dismissedCallKeysRef.current)
+        setCallQueue((prev) => updateKnowlarityCallQueue(prev, payload, callKey))
+        return
       }
+
+      const dismissedUntil = dismissedCallKeysRef.current.get(callKey)
+      if (dismissedUntil && dismissedUntil > Date.now()) return
+
+      setCallQueue((prev) => updateKnowlarityCallQueue(prev, payload, callKey))
+
+      setSelectedIndex(0)
     }
 
     source.addEventListener('ready', (message) => {
@@ -254,8 +156,6 @@ export function KnowlarityCallListener() {
     window.addEventListener(WORKSPACE_MAKE_CALL_POPUP_EVENT, handleWorkspaceMakeCall)
 
     return () => {
-      timersRef.forEach((t) => window.clearTimeout(t))
-      timersRef.clear()
       source.close()
       window.removeEventListener(WORKSPACE_MAKE_CALL_POPUP_EVENT, handleWorkspaceMakeCall)
     }
@@ -316,15 +216,10 @@ export function KnowlarityCallListener() {
   }
 
   const handleCloseCall = (key: string) => {
-    const timer = autoHideTimersRef.current.get(key)
-    if (timer != null) {
-      window.clearTimeout(timer)
-      autoHideTimersRef.current.delete(key)
-    }
     const dismissedUntil = Date.now() + DISMISSED_CALL_WINDOW_MS
     dismissedCallKeysRef.current.set(key, dismissedUntil)
-    if (currentItem?.event.patientInfo?.leadId) {
-      dismissedCallKeysRef.current.set(`lead:${currentItem.event.patientInfo.leadId}`, dismissedUntil)
+    if (currentItem?.event.callId) {
+      dismissedCallKeysRef.current.set(currentItem.event.callId, dismissedUntil)
     }
     persistDismissedCallKeys(dismissedCallKeysRef.current)
     setCallQueue((prev) => prev.filter((item) => item.key !== key))

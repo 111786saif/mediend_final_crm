@@ -10,7 +10,7 @@ import {
 } from '@/lib/lead-qr'
 import { prisma } from '@/lib/prisma'
 import { getSessionWithFreshUser } from '@/lib/session'
-import type { WorkspaceMakeCallPopup } from '@/lib/knowlarity-call-popup'
+import { extractKnowlarityCallId, type WorkspaceMakeCallPopup } from '@/lib/knowlarity-call-popup'
 
 const KNOWLARITY_URL =
   process.env.KNOWLARITY_MAKECALL_URL ||
@@ -364,6 +364,7 @@ export async function POST(
       state: 'on_call',
       label: 'Call initiated',
       eventType: 'workspace_make_call',
+      callId: extractKnowlarityCallId(responseBody),
       agentPhone: agentNumber,
       patientInfo: {
         found: true,
