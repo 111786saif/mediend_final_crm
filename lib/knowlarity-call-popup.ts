@@ -4,6 +4,7 @@ export type WorkspaceMakeCallPopup = {
   state: 'on_call'
   label: 'Call initiated'
   eventType: 'workspace_make_call'
+  callId?: string | null
   agentPhone: string
   patientInfo: {
     found: true
@@ -29,4 +30,34 @@ export function showWorkspaceMakeCallPopup(popup: WorkspaceMakeCallPopup) {
       detail: popup,
     })
   )
+}
+
+export function extractKnowlarityCallId(payload: unknown): string | null {
+  if (!payload || typeof payload !== 'object') return null
+
+  const root = payload as Record<string, unknown>
+  const dataObj = root.data as Record<string, unknown> | undefined
+  const successObj = root.success as Record<string, unknown> | undefined
+  const candidates = [
+    root.uuid,
+    root.unique_id,
+    root.call_id,
+    root.callId,
+    dataObj?.uuid,
+    dataObj?.unique_id,
+    dataObj?.call_id,
+    dataObj?.callId,
+    successObj?.uuid,
+    successObj?.unique_id,
+    successObj?.call_id,
+    successObj?.callId,
+  ]
+
+  for (const candidate of candidates) {
+    if ((typeof candidate === 'string' || typeof candidate === 'number') && String(candidate).trim()) {
+      return String(candidate).trim().slice(0, 200)
+    }
+  }
+
+  return null
 }

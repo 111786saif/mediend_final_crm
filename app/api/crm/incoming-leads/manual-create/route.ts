@@ -9,7 +9,10 @@ import { getSessionWithFreshUser } from '@/lib/session'
 
 const formSchema = z.object({
   mode: z.literal('form'),
-  row: z.record(z.string(), z.unknown()),
+  row: z.record(z.string(), z.unknown()).refine(
+    (row) => typeof row.campaign_id === 'string' && row.campaign_id.trim().length > 0,
+    { message: 'Campaign ID is required', path: ['campaign_id'] }
+  ),
 })
 
 const csvSchema = z.object({
