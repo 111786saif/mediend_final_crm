@@ -837,7 +837,7 @@ function buildLeadSourceFilterWhere(values: string[]): Prisma.LeadWhereInput | u
   }
 }
 
-const PIPELINE_STATUS_FILTER_VARIANTS: Record<string, string[]> = {
+export const PIPELINE_STATUS_FILTER_VARIANTS: Record<string, string[]> = {
   'New Lead': ['27', 'New Lead'],
   'Hot Lead': ['28', 'Hot Lead'],
   Interested: ['39', 'Interested'],

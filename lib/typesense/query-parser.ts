@@ -1,5 +1,8 @@
 // Natural language and structured filter parser for Typesense Sales Pipeline queries
 import { toUnixSeconds } from './schema/sales-pipeline'
+import { normalizeLeadStatus } from '@/lib/pipeline-lead-buckets'
+import { mapStatusCode } from '@/lib/mysql-code-mappings'
+import { PIPELINE_STATUS_FILTER_VARIANTS } from '@/lib/pipeline/server-query'
 
 export interface ExtractedDateFilter {
   field: string
@@ -412,11 +415,27 @@ export function buildPipelineColumnFilterClauses(
     if (f.operator === 'in') {
       const tsField = PIPELINE_COLUMN_TO_TYPESENSE_FIELD[f.field]
       if (tsField && Array.isArray(f.value) && f.value.length > 0) {
-        const escaped = f.value
+        let valuesToMatch = f.value
+        if (f.field === 'status') {
+          const expanded = new Set<string>()
+          for (const v of f.value) {
+            if (typeof v === 'string') {
+              const norm = normalizeLeadStatus(v)
+              const variants = PIPELINE_STATUS_FILTER_VARIANTS[norm] || [v]
+              for (const variant of variants) {
+                const mapped = mapStatusCode(variant)
+                if (mapped) expanded.add(mapped)
+                expanded.add(variant)
+              }
+            }
+          }
+          valuesToMatch = [...expanded]
+        }
+        const escaped = valuesToMatch
           .filter((v): v is string => typeof v === 'string' && v.trim().length > 0)
           .map((v) => escapeTypesenseFacetValue(v))
         if (escaped.length > 0) {
-          clauses.push(`${tsField}:[${escaped.join(',')}]`)
+          clauses.push(`${tsField}:=[${escaped.join(',')}]`)
         }
       }
     } else if (f.operator === 'between') {
@@ -438,9 +457,9 @@ export function buildPipelineColumnFilterClauses(
 export function mapStatusBucketToTypesenseStatuses(bucket: string): string[] | null {
   switch (bucket) {
     case 'new_hot':
-      return ['New Lead', 'Hot Lead', 'New', 'Interested']
+      return ['New Lead', 'New']
     case 'nurture':
-      return ['Nurture', 'Nurture 1', 'Nurture 2', 'Nurture 3', 'Nurture 4', 'Nurture 5']
+      return ['Nurture', 'Nurture 1', 'Nurture 2', 'Nurture 3', 'Nurture 4', 'Nurture 5', 'Nuture 1', 'Nuture 2', 'Nuture 3', 'Nuture 4', 'Nuture 5']
     case 'follow_up':
       return [
         'Follow-up',
@@ -449,7 +468,6 @@ export function mapStatusBucketToTypesenseStatuses(bucket: string): string[] | n
         'Follow-up 3',
         'Follow-up 4',
         'Follow-up 5',
-        'Follow-up (1-3)',
       ]
     case 'callback':
       return ['Call Back (SD)', 'Call Back (T)', 'Call Back Next Week', 'Call Back Next Month']
@@ -464,7 +482,7 @@ export function mapStatusBucketToTypesenseStatuses(bucket: string): string[] | n
     case 'dnp':
       return ['DNP', 'DNP-1', 'DNP-2', 'DNP-3', 'DNP-4', 'DNP-5']
     case 'dnp_exh':
-      return ['DNP Exhausted', 'DNP (1-5, Exhausted)']
+      return ['DNP Exhausted']
     case 'junk':
       return ['Junk']
     case 'outstation':
@@ -476,7 +494,7 @@ export function mapStatusBucketToTypesenseStatuses(bucket: string): string[] | n
     case 'fund_issues':
       return ['Fund Issues', 'Fund Issue']
     case 'lost':
-      return ['Lost', 'IPD Lost', 'Closed', 'Junk', 'Not Interested', 'Invalid Number']
+      return ['Lost', 'Not Interested', 'Already Insured', 'Language Barrier', 'SX Not Suggested', 'Invalid Number', 'Supply Gap', 'Churned']
     case 'closed':
       return ['Closed']
     default:
@@ -534,7 +552,7 @@ export function buildPipelineTypesenseFilterBy(
     const statuses = mapStatusBucketToTypesenseStatuses(params.statusBucket)
     if (statuses && statuses.length > 0) {
       const escaped = statuses.map((s) => escapeTypesenseFacetValue(s))
-      clauses.push(`status:[${escaped.join(',')}]`)
+      clauses.push(`status:=[${escaped.join(',')}]`)
     }
   }
 

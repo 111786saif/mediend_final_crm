@@ -25,6 +25,7 @@ import {
 } from '@/lib/lead-status-rules'
 import { createLeadAssignedNotification } from '@/lib/lead-notifications'
 import { prisma } from '@/lib/prisma'
+import { syncMultipleLeadsToTypesense } from '@/lib/typesense/client'
 
 export class BulkLeadReassignError extends Error {
   status: number
@@ -753,6 +754,12 @@ export async function processBulkLeadReassignCycle(
           },
         })
       }
+    }
+
+    if (cycleLeadIds.length > 0) {
+      await syncMultipleLeadsToTypesense(cycleLeadIds).catch((err) => {
+        console.warn('[Bulk Reassign] Non-blocking error syncing reassigned leads to Typesense:', err)
+      })
     }
 
     const updatedRun = await prisma.bulkLeadReassignmentRun.findUnique({
