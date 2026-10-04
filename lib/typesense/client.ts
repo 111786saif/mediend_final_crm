@@ -360,8 +360,8 @@ export async function searchSalesPipeline(
     query_by: queryBy,
     page,
     per_page: perPage,
-    prefix: true,
-    num_typos: 2,
+    prefix: cleanQuery !== '*',
+    num_typos: cleanQuery !== '*' ? 2 : 0,
     typo_tokens_threshold: 1,
   }
 
