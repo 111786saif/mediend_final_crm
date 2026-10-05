@@ -29,6 +29,7 @@ import { WorkLogEnforcer } from '@/components/calendar/work-log-enforcer'
 import { MeetReminderPopup } from '@/components/meets/meet-reminder-popup'
 import { BMICalculator } from '@/components/bmi-calculator'
 import { KnowlarityCallListener } from '@/components/telephony/knowlarity-call-listener'
+import { LeadAssignedPopup } from '@/components/notifications/lead-assigned-popup'
 
 
 function NavbarThemeToggle() {
@@ -231,9 +232,9 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
               : '/bd/pipeline',
         label:
           u.role === 'SALES_HEAD' ||
-          u.role === 'CATEGORY_MANAGER' ||
-          u.role === 'TEAM_LEAD' ||
-          u.role === 'ASSISTANT_CATEGORY_MANAGER'
+            u.role === 'CATEGORY_MANAGER' ||
+            u.role === 'TEAM_LEAD' ||
+            u.role === 'ASSISTANT_CATEGORY_MANAGER'
             ? 'Dashboard'
             : 'Pipeline',
         icon: LayoutDashboard,
@@ -297,18 +298,18 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
     const profileOrMdApprovalsItem: BottomNavItem =
       u.role === 'MD'
         ? {
-            href: '/md/md-approvals',
-            label: 'MD Approvals',
-            icon: UserCheck,
-            badge: badgeCounts?.pendingMDApprovals ?? 0,
-            matchPrefixes: ['/md/md-approvals'],
-          }
+          href: '/md/md-approvals',
+          label: 'MD Approvals',
+          icon: UserCheck,
+          badge: badgeCounts?.pendingMDApprovals ?? 0,
+          matchPrefixes: ['/md/md-approvals'],
+        }
         : {
-            href: '/profile',
-            label: 'Profile',
-            icon: UserCircle,
-            matchPrefixes: ['/profile'],
-          }
+          href: '/profile',
+          label: 'Profile',
+          icon: UserCircle,
+          matchPrefixes: ['/profile'],
+        }
 
     const leftItems = left.map(({ show, ...item }) => item)
     const rightItems = [...right.map(({ show, ...item }) => item), profileOrMdApprovalsItem]
@@ -334,7 +335,8 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
 
   return (
     <ProtectedRoute>
-      {user?.role === 'BD' ? <KnowlarityCallListener /> : null}
+      {user ? <LeadAssignedPopup /> : null}
+      {user ? <KnowlarityCallListener /> : null}
       <MeetReminderPopup />
       <WorkLogEnforcer />
       {shouldShowSidebar ? (
@@ -369,8 +371,8 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
                   user?.role === 'TEAM_LEAD' ||
                   user?.role === 'ASSISTANT_CATEGORY_MANAGER' ||
                   user?.role === 'CATEGORY_MANAGER') && (
-                  <BMICalculator />
-                )}
+                    <BMICalculator />
+                  )}
                 <NotificationBell />
               </div>
             </header>

@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
 import { apiPost, apiPatch } from '@/lib/api-client'
+import { localDateInputValue, localDateTimeToUtcIso } from '@/lib/local-date-time'
 import { toast } from 'sonner'
 import { User, MapPin, Stethoscope, Building2, Shield, Calendar, Package, ChevronDown, ChevronUp } from 'lucide-react'
 import { MasterCombobox } from '@/components/ui/master-combobox'
@@ -35,9 +36,7 @@ function normalizeGenderValue(value: string | null | undefined) {
 }
 
 function formatIsoDateForInput(value: unknown) {
-  if (!value) return ''
-  const parsed = new Date(value as string)
-  return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString().split('T')[0]
+  return localDateInputValue(typeof value === 'string' || value instanceof Date ? value : null)
 }
 
 export interface IPDDetailsFormProps {
@@ -285,12 +284,12 @@ export function IPDDetailsForm({
       ].filter(Boolean).join('\n') || undefined
 
       const payload = {
-        admissionDate: formData.admissionDate,
+        admissionDate: localDateTimeToUtcIso(formData.admissionDate, formData.admissionTime),
         admissionTime: formData.admissionTime.trim(),
         admittingHospital: formData.hospitalName.trim() || undefined,
         hospitalAddress: formData.hospitalAddress.trim() || 'N/A',
         googleMapLocation: formData.googleMapLocation.trim() || undefined,
-        surgeryDate: formData.surgeryDate,
+        surgeryDate: localDateTimeToUtcIso(formData.surgeryDate, formData.surgeryTime),
         surgeryTime: formData.surgeryTime.trim(),
         tpa: formData.tpa.toString().trim(),
         instrument,

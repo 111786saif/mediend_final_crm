@@ -481,6 +481,7 @@ async function processManualAssignedMySQLLead(
     patientName: String(leadData.patientName || 'Patient'),
     leadRef: createdLead.leadRef,
     leadId: createdLead.id,
+    actorUserId: actor.id,
   })
 
   await prisma.incomingLead.update({
@@ -663,6 +664,7 @@ async function processManualAssignedSaveMyLeadsLead(
     patientName: extracted.patientName || 'Patient',
     leadRef: lead.leadRef,
     leadId: lead.id,
+    actorUserId: actor.id,
   })
 
   await prisma.incomingLead.update({

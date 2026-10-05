@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server'
+import { extractKnowlarityCallId } from '@/lib/knowlarity-call-popup'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, unauthorizedResponse } from '@/lib/api-utils'
@@ -10,11 +11,12 @@ type KnowlarityRawPayload = unknown
 
 type NormalizedCallState = 'receiving_call' | 'on_call' | 'call_finished' | 'update'
 
+const MAX_KNOWLARITY_EVENT_AGE_MS = 2 * 60 * 1000
+
 type TelephonyAgentIdentity = {
   userId: string
   role: string
   name: string | null
-  notificationsEnabled: boolean
   agentPhones: string[]
   primaryAgentPhone: string | null
 }
@@ -188,11 +190,98 @@ function extractCustomerPhone(payload: KnowlarityRawPayload, agentPhones: Set<st
   return null
 }
 
+function extractAgentPhones(payload: KnowlarityRawPayload): Set<string> {
+  const phones = new Set<string>()
+  if (!payload || typeof payload !== 'object') return phones
+
+  const root = payload as Record<string, unknown>
+  const dataObj = root.data as Record<string, unknown> | undefined
+  const candidates = [
+    root.agent_number,
+    root.agent_phone,
+    root.agent_mobile,
+    root.sticky_number,
+    root.stickyNumber,
+    root.destination,
+    root.destination_number,
+    root.forwarded_to,
+    dataObj?.agent_number,
+    dataObj?.agent_phone,
+    dataObj?.agent_mobile,
+    dataObj?.sticky_number,
+    dataObj?.stickyNumber,
+    dataObj?.destination,
+    dataObj?.destination_number,
+    dataObj?.forwarded_to,
+  ]
+
+  for (const candidate of candidates) {
+    if (typeof candidate === 'string' || typeof candidate === 'number') {
+      const phone = normalizePhone(String(candidate))
+      if (isMeaningfulPhone(phone)) phones.add(phone)
+    }
+  }
+
+  return phones
+}
+
 function matchesAgentPhone(payload: KnowlarityRawPayload, agentPhones: Set<string>): boolean {
   if (agentPhones.size === 0) return false
-  const phones = new Set<string>()
-  extractPossiblePhones(payload, phones)
-  return Array.from(agentPhones).some((agentPhone) => phones.has(agentPhone))
+  const eventAgentPhones = extractAgentPhones(payload)
+  return Array.from(agentPhones).some((agentPhone) => eventAgentPhones.has(agentPhone))
+}
+
+function parseKnowlarityTimestamp(value: unknown): Date | null {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    const timestamp = value < 1_000_000_000_000 ? value * 1000 : value
+    const date = new Date(timestamp)
+    return Number.isNaN(date.getTime()) ? null : date
+  }
+
+  if (typeof value !== 'string' || !value.trim()) return null
+  const normalized = value.trim()
+  if (/^\d{10,13}$/.test(normalized)) {
+    return parseKnowlarityTimestamp(Number(normalized))
+  }
+  const withTimezone = /^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}(?:\.\d+)?$/.test(normalized)
+    ? `${normalized.replace(' ', 'T')}+05:30`
+    : normalized
+  const date = new Date(withTimezone)
+  return Number.isNaN(date.getTime()) ? null : date
+}
+
+function extractKnowlarityEventTimestamp(payload: KnowlarityRawPayload): Date | null {
+  if (!payload || typeof payload !== 'object') return null
+
+  const root = payload as Record<string, unknown>
+  const dataObj = root.data as Record<string, unknown> | undefined
+  const candidates = [
+    root.event_time,
+    root.eventTime,
+    root.start_time,
+    root.startTime,
+    root.call_time,
+    root.callTime,
+    root.timestamp,
+    root.created_at,
+    root.createdAt,
+    dataObj?.event_time,
+    dataObj?.eventTime,
+    dataObj?.start_time,
+    dataObj?.startTime,
+    dataObj?.call_time,
+    dataObj?.callTime,
+    dataObj?.timestamp,
+    dataObj?.created_at,
+    dataObj?.createdAt,
+  ]
+
+  for (const candidate of candidates) {
+    const timestamp = parseKnowlarityTimestamp(candidate)
+    if (timestamp) return timestamp
+  }
+
+  return null
 }
 
 function extractEventType(payload: KnowlarityRawPayload, fallbackEventName: string | null): string {
@@ -224,6 +313,17 @@ function mapCallState(eventType: string): {
 } {
   const normalized = eventType.trim().toUpperCase()
 
+  // Terminal events can also contain CONNECTED, BRIDGE, or DIAL (for example,
+  // DISCONNECTED and BRIDGE_END), so check them before active-call events.
+  if (
+    normalized.includes('HANGUP') ||
+    normalized.includes('END') ||
+    normalized.includes('DISCONNECT') ||
+    normalized.includes('COMPLETED')
+  ) {
+    return { state: 'call_finished', label: titleCase(eventType) }
+  }
+
   if (
     normalized.includes('DIAL') ||
     normalized.includes('RINGING') ||
@@ -241,15 +341,6 @@ function mapCallState(eventType: string): {
     normalized.includes('TALKING')
   ) {
     return { state: 'on_call', label: titleCase(eventType) }
-  }
-
-  if (
-    normalized.includes('HANGUP') ||
-    normalized.includes('END') ||
-    normalized.includes('DISCONNECT') ||
-    normalized.includes('COMPLETED')
-  ) {
-    return { state: 'call_finished', label: titleCase(eventType) }
   }
 
   return { state: 'update', label: titleCase(eventType) }
@@ -299,8 +390,6 @@ async function resolveTelephonyAgentIdentity(userId: string): Promise<TelephonyA
       employee: {
         select: {
           knowlarityPhoneNumber: true,
-          knowlarityCallerId: true,
-          knowlarityNotificationsEnabled: true,
         },
       },
     },
@@ -308,10 +397,7 @@ async function resolveTelephonyAgentIdentity(userId: string): Promise<TelephonyA
 
   if (!user) return null
 
-  const phoneCandidates = [
-    normalizePhone(user.employee?.knowlarityPhoneNumber),
-    normalizePhone(user.employee?.knowlarityCallerId),
-  ].filter(isMeaningfulPhone)
+  const phoneCandidates = [normalizePhone(user.employee?.knowlarityPhoneNumber)].filter(isMeaningfulPhone)
 
   const agentPhones = Array.from(new Set(phoneCandidates))
 
@@ -319,7 +405,6 @@ async function resolveTelephonyAgentIdentity(userId: string): Promise<TelephonyA
     userId: user.id,
     role: user.role,
     name: user.name,
-    notificationsEnabled: user.employee?.knowlarityNotificationsEnabled ?? false,
     agentPhones,
     primaryAgentPhone: agentPhones[0] ?? null,
   }
@@ -353,21 +438,17 @@ export async function GET(request: NextRequest) {
       return buildDisabledTelephonyResponse('Telephony is not available for this user.')
     }
 
-    if (agentIdentity.role !== 'BD') {
-      return buildDisabledTelephonyResponse('Knowlarity call cards are only enabled for BD users.')
-    }
-
-    if (!agentIdentity.notificationsEnabled || agentIdentity.agentPhones.length === 0) {
-      return buildDisabledTelephonyResponse('Knowlarity is not configured for this BD account.')
+    if (agentIdentity.agentPhones.length === 0) {
+      return buildDisabledTelephonyResponse('A Knowlarity notification number is required for this account.')
     }
 
     const agentPhoneSet = new Set(agentIdentity.agentPhones)
 
     console.log(`\n=================== [TELEPHONY STREAM INIT] ===================`)
     console.log(
-      `[TELEPHONY STREAM INIT] User connected: ID="${currentUser.id}" | Role="${currentUser.role}" | AgentPhones="${agentIdentity.agentPhones.join(',')}" | NotificationsEnabled=${agentIdentity.notificationsEnabled}`
+      `[TELEPHONY STREAM INIT] User connected: ID="${currentUser.id}" | Role="${currentUser.role}" | AgentPhones="${agentIdentity.agentPhones.join(',')}"`
     )
-
+  
     const authKey = process.env.KNOWLARITY_AUTH_KEY?.trim()
     const apiKey = process.env.KNOWLARITY_X_API_KEY?.trim()
     const channel = process.env.KNOWLARITY_NOTIFICATION_CHANNEL?.trim() || 'Basic'
@@ -507,6 +588,19 @@ export async function GET(request: NextRequest) {
 
           const rawEventType = extractEventType(payload, eventName)
           const mapped = mapCallState(rawEventType)
+          const callId = extractKnowlarityCallId(payload)
+          const eventTimestamp = extractKnowlarityEventTimestamp(payload)
+          const eventAge = eventTimestamp ? Date.now() - eventTimestamp.getTime() : null
+          const shouldSuppressStalePopup =
+            mapped.state !== 'call_finished' &&
+            eventAge != null && eventAge > MAX_KNOWLARITY_EVENT_AGE_MS
+
+          if (shouldSuppressStalePopup) {
+            console.log(
+              `[KNOWLARITY SSE POPUP SUPPRESSED]: Ignoring replayed event from ${eventTimestamp?.toISOString()} (${Math.round(eventAge / 1000)} seconds old).`
+            )
+          }
+
           const customerPhone = extractCustomerPhone(payload, agentPhoneSet)
           const recordingUrl = extractCallRecordingUrl(payload)
 
@@ -583,15 +677,18 @@ export async function GET(request: NextRequest) {
           }
 
           // Do NOT send customerPhone to the frontend browser!
-          safeEnqueue('call', {
-            state: mapped.state,
-            label: mapped.label,
-            eventType: rawEventType,
-            agentPhone: agentIdentity.primaryAgentPhone,
-            patientInfo,
-            recordingUrl,
-            receivedAt: new Date().toISOString(),
-          })
+          if (!shouldSuppressStalePopup) {
+            safeEnqueue('call', {
+              state: mapped.state,
+              label: mapped.label,
+              eventType: rawEventType,
+              callId,
+              agentPhone: agentIdentity.primaryAgentPhone,
+              patientInfo,
+              recordingUrl,
+              receivedAt: eventTimestamp?.toISOString() ?? new Date().toISOString(),
+            })
+          }
         }
 
         const pump = async () => {

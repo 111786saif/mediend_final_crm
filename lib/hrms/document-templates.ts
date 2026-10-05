@@ -110,7 +110,7 @@ export function getSignatureHtml(referenceDate?: Date): string {
   const stampUrl = `${baseUrl}${sig.imagePath}`
   return `
   <div class="signature">
-    <img src="${stampUrl}" alt="Authorized Signature" style="max-width: 180px; height: auto; display: block; margin-bottom: 8px;" />
+    <img src="${stampUrl}" alt="Authorized Signature" style="width: 120px; max-width: 120px; height: auto; display: block; margin-bottom: 8px;" />
     <p><strong>${sig.name}</strong></p>
     <p>${sig.designation}</p>
   </div>`

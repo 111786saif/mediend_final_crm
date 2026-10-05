@@ -717,7 +717,7 @@ export async function GET(request: NextRequest) {
       ipdPotentialDate: true,
       ipdPotentialMarkedAt: true,
       insuranceInitiateForm: { select: { updatedAt: true } },
-      admissionRecord: { select: { ipdStatus: true, ipdStatusReason: true, ipdStatusUpdatedAt: true, initiatedAt: true, surgeryDate: true } },
+      admissionRecord: { select: { ipdStatus: true, ipdStatusReason: true, ipdStatusUpdatedAt: true, initiatedAt: true, surgeryDate: true, surgeryTime: true, newSurgeryDate: true } },
       dischargeSheet: { select: { updatedAt: true } },
       plRecord: { select: { bdmName: true, updatedAt: true } },
       caseStageHistory: {
@@ -1118,6 +1118,7 @@ export async function POST(request: NextRequest) {
         patientName: lead.patientName,
         leadRef: lead.leadRef,
         leadId: lead.id,
+        actorUserId: user.id,
       })
     }
 

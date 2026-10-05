@@ -10,6 +10,7 @@ import {
 } from '@/lib/lead-qr'
 import { prisma } from '@/lib/prisma'
 import { getSessionWithFreshUser } from '@/lib/session'
+import { extractKnowlarityCallId, type WorkspaceMakeCallPopup } from '@/lib/knowlarity-call-popup'
 
 const KNOWLARITY_URL =
   process.env.KNOWLARITY_MAKECALL_URL ||
@@ -359,12 +360,30 @@ export async function POST(
       },
     })
 
+    const popup: WorkspaceMakeCallPopup = {
+      state: 'on_call',
+      label: 'Call initiated',
+      eventType: 'workspace_make_call',
+      callId: extractKnowlarityCallId(responseBody),
+      agentPhone: agentNumber,
+      patientInfo: {
+        found: true,
+        type: 'lead',
+        leadId: auth.lead.id,
+        leadRef: auth.lead.leadRef,
+        patientName: auth.lead.patientName,
+        category: auth.lead.category,
+      },
+      receivedAt: new Date().toISOString(),
+    }
+
     return NextResponse.json({
       success: true,
       data: {
         customerNumber,
         agentNumber,
         knowlarity: responseBody,
+        popup,
       },
     })
   } catch (error) {

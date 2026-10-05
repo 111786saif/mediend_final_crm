@@ -1,6 +1,7 @@
 import { Prisma } from '@/generated/prisma/client'
 import { getLeadTeamLeadIdForAssigneeManager } from '@/lib/lead-ownership'
 import { withGeneratedManualLeadRef } from '@/lib/manual-lead-ref'
+import { createLeadAssignedNotification } from '@/lib/lead-notifications'
 import { prisma } from '@/lib/prisma'
 import {
   getCampaignCircleNames,
@@ -234,6 +235,13 @@ export async function createImportedLeadWithCrmAssignment(
   const lead = input.generateManualLeadRef
     ? await withGeneratedManualLeadRef(createLead)
     : await createLead(leadDataWithoutOwner.leadRef)
+
+  await createLeadAssignedNotification({
+    userId: assignmentResult.assignment.bd.userId,
+    patientName: String(leadDataWithoutOwner.patientName || 'Patient'),
+    leadRef: lead.leadRef,
+    leadId: lead.id,
+  })
 
   return {
     created: true,

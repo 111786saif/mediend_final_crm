@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { CaseStage, FlowType, LeadOpdPhase } from '@/generated/prisma/enums'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
+import { localDateInputValue, localDateTimeToUtcIso, localTimeInputValue, localTodayInputValue } from '@/lib/local-date-time'
 import { normalizeLeadSexValue } from '@/lib/lead-sex'
 import { cn } from '@/lib/utils'
 
@@ -54,26 +55,19 @@ type FormErrors = Partial<Record<
 >>
 
 function toDateInputValue(value: string | null | undefined) {
-  if (!value) return ''
-  const parsed = new Date(value)
-  if (Number.isNaN(parsed.getTime())) return ''
-  return parsed.toISOString().slice(0, 10)
+  return localDateInputValue(value)
 }
 
 function toTimeInputValue(value: string | null | undefined) {
-  if (!value) return ''
-  const parsed = new Date(value)
-  if (Number.isNaN(parsed.getTime())) return ''
-  return parsed.toTimeString().slice(0, 5)
+  return localTimeInputValue(value)
 }
 
 function todayInputValue() {
-  return new Date().toISOString().slice(0, 10)
+  return localTodayInputValue()
 }
 
 function composeScheduleDateTime(date: string, time: string) {
-  if (!date) return null
-  return `${date}T${time || '00:00'}:00`
+  return date ? localDateTimeToUtcIso(date, time) : null
 }
 
 function normalizeStatus(value: string | null | undefined) {

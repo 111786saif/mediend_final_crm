@@ -192,6 +192,7 @@ export default function EmployeeDocumentViewPage() {
       <div className="min-h-screen bg-gray-50 p-8 print:p-0 print:bg-white">
         <div className="max-w-4xl mx-auto">
           <div className="bg-white shadow-lg rounded-lg overflow-hidden print:shadow-none print:rounded-none">
+            <style>{`.signature img { width: 120px !important; max-width: 120px !important; height: auto !important; }`}</style>
             {data.htmlContent && (
               <div
                 className="p-8 print:p-0"

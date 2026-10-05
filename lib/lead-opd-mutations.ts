@@ -146,9 +146,7 @@ function parseOptionalDate(value: string | Date | null | undefined, fieldName: s
   if (value instanceof Date) return value
   const trimmed = value.trim()
   if (!trimmed) return null
-  const parsed = /^\d{4}-\d{2}-\d{2}$/.test(trimmed)
-    ? new Date(`${trimmed}T00:00:00`)
-    : new Date(trimmed)
+  const parsed = new Date(trimmed)
   if (Number.isNaN(parsed.getTime())) {
     throw new LeadOpdMutationError(`${fieldName} must be a valid date`, 400)
   }

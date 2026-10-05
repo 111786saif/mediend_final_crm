@@ -18,6 +18,11 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
+import {
+  showWorkspaceMakeCallPopup,
+  type WorkspaceMakeCallResult,
+} from '@/lib/knowlarity-call-popup'
+import { localDateInputValue, localDateTimeToUtcIso } from '@/lib/local-date-time'
 import { useAuth } from '@/hooks/use-auth'
 import {
   formatLeadAssigneeName,
@@ -74,9 +79,7 @@ function formatMaskedPhone(value: unknown, fallback = '—') {
 }
 
 function toDateInputValue(value: string | null | undefined) {
-  if (!value) return ''
-  const parsed = new Date(value)
-  return Number.isNaN(parsed.getTime()) ? '' : format(parsed, 'yyyy-MM-dd')
+  return localDateInputValue(value)
 }
 
 function toTimeInputValue(value: string | null | undefined) {
@@ -348,7 +351,8 @@ export function LeadEditDrawer({
     try {
       setMakeCallLoading(true)
       toast.info(`Initiating Knowlarity call for ${patientName}...`)
-      await apiPost(`/api/leads/${lead.id}/make-call`, {})
+      const result = await apiPost<WorkspaceMakeCallResult>(`/api/leads/${lead.id}/make-call`, {})
+      showWorkspaceMakeCallPopup(result.popup)
       toast.success(`Knowlarity call initiated for ${patientName}`)
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to initiate call via Knowlarity')
@@ -730,7 +734,9 @@ export function LeadEditDrawer({
     }
 
     if (effectiveSurgeryDate !== toDateInputValue(currentSurgeryDate)) {
-      payload.surgeryDate = effectiveSurgeryDate || null
+      payload.surgeryDate = effectiveSurgeryDate
+        ? localDateTimeToUtcIso(effectiveSurgeryDate)
+        : null
     }
 
     if (ageChanged) {
