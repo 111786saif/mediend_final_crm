@@ -39,6 +39,7 @@ export const LEAD_STATUS_OPTIONS = [
   'Call Back Next Month',
   'Invalid Number',
   'Order Booked',
+  'N/A',
 ] as const
 
 export const CRM_LEAD_STATUS_OPTIONS = Array.from(

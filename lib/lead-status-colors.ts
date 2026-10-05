@@ -322,6 +322,11 @@ const STATUS_COLORS: Record<string, StatusColor> = {
     borderColor: '#b10202',
     textColor: '#ffcfc9',
   },
+  'N/A': {
+    backgroundColor: '#e0e7ff',
+    borderColor: '#c7d2fe',
+    textColor: '#3730a3',
+  },
 }
 
 const DEFAULT_STATUS_COLOR: StatusColor = {

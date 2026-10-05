@@ -6,20 +6,20 @@ export const PL_FALLBACK_STAGES = ['PL_PENDING', 'OUTSTANDING'] as const
 export const ALL_CONVERTED_STAGES = [...CANONICAL_STAGES, ...PL_FALLBACK_STAGES] as const
 
 // Checks if a lead object represents a converted / IPD-done lead.
-// Matches pipelineStage === 'COMPLETED'
+// Matches caseStage in CANONICAL_STAGES
 export function isLeadConverted(lead: {
   caseStage?: string | null
   pipelineStage?: string | null
   surgeryDate?: Date | null
 }): boolean {
-  if (lead.pipelineStage === 'COMPLETED') return true
+  if (lead.caseStage && (CANONICAL_STAGES as readonly string[]).includes(lead.caseStage)) return true
   return false
 }
 
-// Prisma WHERE filter for converted leads matching pipelineStage = 'COMPLETED'
+// Prisma WHERE filter for converted leads matching caseStage in CANONICAL_STAGES
 export function leadConvertedWhere(): Prisma.LeadWhereInput {
   return {
-    pipelineStage: 'COMPLETED',
+    caseStage: { in: Array.from(CANONICAL_STAGES) },
   }
 }
 
@@ -65,7 +65,7 @@ export function normalizeCircleName(raw: string | null | undefined): string {
 }
 
 // Org-wide truth for "IPD done / surgery / converted":
-// pipelineStage = 'COMPLETED'
+// caseStage in ['IPD_DONE', 'CASH_IPD_DONE', 'DISCHARGED', 'CASH_DISCHARGED']
 // If a dateFilter is provided, filters by surgery date (or lead entry/created date fallback).
 export function canonicalSalesCompletedWhere(
   dateFilter: Prisma.DateTimeFilter,
@@ -80,7 +80,7 @@ export function canonicalSalesCompletedWhere(
     : []
 
   const stageFilter: Prisma.LeadWhereInput = {
-    pipelineStage: 'COMPLETED',
+    caseStage: { in: Array.from(CANONICAL_STAGES) },
   }
 
   const where: Prisma.LeadWhereInput = hasDate

@@ -333,7 +333,10 @@ export async function getSalesTeamUnits(options: {
     options.level === 'cm' ? CATEGORY_MANAGER_ROLES : TEAM_UNIT_ROLES
 
   const managers = await prisma.employee.findMany({
-    where: { user: { role: { in: roles } } },
+    where: {
+      ...headcountEmployeeWhere,
+      user: { role: { in: roles } },
+    },
     select: {
       id: true,
       userId: true,
@@ -347,7 +350,10 @@ export async function getSalesTeamUnits(options: {
         },
       },
       subordinates: {
-        where: { user: { role: UserRole.BD } },
+        where: {
+          ...headcountEmployeeWhere,
+          user: { role: UserRole.BD },
+        },
         select: {
           id: true,
           userId: true,

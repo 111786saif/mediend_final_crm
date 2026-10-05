@@ -82,6 +82,7 @@ import {
   ExternalLink,
   GripVertical,
   HeartCrack,
+  HelpCircle,
   LayoutGrid,
   Loader2,
   MapPinOff,
@@ -260,6 +261,8 @@ function getStatusBadgeConfig(status: string | null | undefined): StatusBadgeCon
     'nuture 3': { bg: '#5a3286', text: '#e5cff2' },
     'nuture 4': { bg: '#5a3286', text: '#e5cff2' },
     'nuture 5': { bg: '#5a3286', text: '#e5cff2' },
+    'n/a': { bg: '#e0e7ff', text: '#3730a3' },
+    'na': { bg: '#e0e7ff', text: '#3730a3' },
   }
 
   const exact = EXACT_STATUS_COLORS[lower]
@@ -267,7 +270,9 @@ function getStatusBadgeConfig(status: string | null | undefined): StatusBadgeCon
   let text = exact?.text
 
   if (!bg || !text) {
-    if (lower.includes('nurture') || lower.includes('nuture')) {
+    if (lower === 'n/a' || lower === 'na' || lower.includes('n/a')) {
+      bg = '#e0e7ff'; text = '#3730a3'
+    } else if (lower.includes('nurture') || lower.includes('nuture')) {
       bg = '#5a3286'; text = '#e5cff2'
     } else if (lower.includes('call done')) {
       bg = '#0028b1'; text = '#ffec03'
@@ -327,6 +332,8 @@ function getStatusBadgeConfig(status: string | null | undefined): StatusBadgeCon
     icon = HeartCrack
   } else if (lower.includes('nurture') || lower.includes('nuture')) {
     icon = Sprout
+  } else if (lower === 'n/a' || lower === 'na' || lower.includes('n/a')) {
+    icon = HelpCircle
   }
 
   return {

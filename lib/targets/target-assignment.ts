@@ -1,6 +1,7 @@
 import { UserRole } from '@/generated/prisma/client'
 import { SessionUser } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { headcountEmployeeWhere } from '@/lib/hrms/headcount'
 
 const TEAM_TARGET_ROLES: UserRole[] = [
   UserRole.SALES_HEAD,
@@ -39,7 +40,7 @@ export async function validateTargetAssignment(
     where: { userId: user.id },
     select: {
       subordinates: {
-        where: { userId: targetForId },
+        where: { userId: targetForId, ...headcountEmployeeWhere },
         select: { userId: true },
       },
     },
