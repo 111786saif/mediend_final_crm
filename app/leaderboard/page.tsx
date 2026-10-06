@@ -80,8 +80,8 @@ export const SteppedPodiumCard: React.FC<PodiumCardProps> = ({
     return (
         <div
             className={`rounded-xl border shadow-md backdrop-blur-xl transition-all duration-300 ${isDarkMode
-                ? "bg-slate-900/60 border-slate-800/80"
-                : "bg-white/95 border-slate-200/90 shadow-slate-200/60"
+                ? "bg-gradient-to-br from-slate-900/90 via-[#8091A1]/15 to-slate-950 border-[#8091A1]/30 shadow-lg shadow-slate-950/20"
+                : "bg-gradient-to-br from-[#8091A1]/15 via-[#8091A1]/10 to-white/90 border-[#8091A1]/30 shadow-md text-slate-900"
                 }`}
         >
             {/* Collapsible Accordion Header */}
@@ -165,9 +165,6 @@ export const SteppedPodiumCard: React.FC<PodiumCardProps> = ({
 
                                         <div className={`w-full pt-1 border-t ${isDarkMode ? "border-slate-800/80" : "border-slate-200"}`}>
                                             <div className="text-xs font-black text-cyan-500">{primary}</div>
-                                            <div className={`text-[9px] ${isDarkMode ? "text-slate-400" : "text-slate-600 font-medium"}`}>
-                                                {secondary}
-                                            </div>
                                         </div>
                                     </div>
                                 );
@@ -215,6 +212,37 @@ export function UnifiedLeaderboardView({
     // Track previous rankings to detect score updates & trigger celebration events
     const prevRankingsMap = useRef<Map<string, number>>(new Map());
     const [activeCelebration, setActiveCelebration] = useState<CelebrationEvent | null>(null);
+
+    // FIFO Queue for rocket celebration events so rockets launch sequentially (2 mins each)
+    const celebrationQueue = useRef<CelebrationEvent[]>([]);
+    const isRocketActiveRef = useRef<boolean>(false);
+
+    // Dynamic X-Position state for rocket spawn (varies between 15% and 85% horizontal offset)
+    const [rocketXPos, setRocketXPos] = useState<string>("50%");
+
+    const launchCelebrationEvent = (event: CelebrationEvent) => {
+        triggerConfettiEffect();
+        if (!isRocketActiveRef.current) {
+            isRocketActiveRef.current = true;
+            const randomX = Math.floor(Math.random() * 70) + 15;
+            setRocketXPos(`${randomX}%`);
+            setActiveCelebration(event);
+        } else {
+            celebrationQueue.current.push(event);
+        }
+    };
+
+    const handleRocketAnimationComplete = () => {
+        if (celebrationQueue.current.length > 0) {
+            const nextEvent = celebrationQueue.current.shift()!;
+            const randomX = Math.floor(Math.random() * 70) + 15;
+            setRocketXPos(`${randomX}%`);
+            setActiveCelebration(nextEvent);
+        } else {
+            isRocketActiveRef.current = false;
+            setActiveCelebration(null);
+        }
+    };
 
     // First session bomb explosion reveal state
     const [showBombExplosion, setShowBombExplosion] = useState<boolean>(false);
@@ -293,26 +321,6 @@ export function UnifiedLeaderboardView({
         });
     };
 
-    // Dynamic X-Position state for rocket spawn (varies between 15% and 85% horizontal offset)
-    const [rocketXPos, setRocketXPos] = useState<string>("50%");
-
-    const triggerDummyRocketBoost = () => {
-        triggerConfettiEffect();
-        const mockNames = ["Rahul Sharma", "Priya Verma", "Ankit Gupta", "Sneha Kapoor"];
-        const randomName = mockNames[Math.floor(Math.random() * mockNames.length)];
-
-        // Pick a random horizontal X position (e.g. 20%, 35%, 50%, 65%, 80%)
-        const randomX = Math.floor(Math.random() * 70) + 15;
-        setRocketXPos(`${randomX}%`);
-
-        setActiveCelebration({
-            id: `test-rocket-${Date.now()}`,
-            bdName: randomName,
-            category: selectedCategory === "ALL" ? "General Sales" : selectedCategory,
-            newActual: Math.floor(Math.random() * 5) + 12,
-            timestamp: new Date()
-        });
-    };
 
     const fetchData = async (isBackground = false) => {
         if (!isBackground) setLoading(true);
@@ -335,17 +343,15 @@ export function UnifiedLeaderboardView({
                     for (const item of newData.rankings) {
                         const prevActual = prevRankingsMap.current.get(item.userId);
                         if (prevActual !== undefined && item.actual > prevActual) {
-                            // Trigger Live Celebratory Event & Rocket Animation
-                            triggerConfettiEffect();
-                            const randomX = Math.floor(Math.random() * 70) + 15;
-                            setRocketXPos(`${randomX}%`);
-                            setActiveCelebration({
+                            // Enqueue Live Celebratory Event & Rocket Animation
+                            const event: CelebrationEvent = {
                                 id: `${item.userId}-${Date.now()}`,
                                 bdName: item.name,
                                 category: item.category,
                                 newActual: item.actual,
                                 timestamp: new Date()
-                            });
+                            };
+                            launchCelebrationEvent(event);
                             break;
                         }
                     }
@@ -498,7 +504,7 @@ export function UnifiedLeaderboardView({
                 header: "Category / Dept",
                 meta: {
                     headerClassName: "!py-2 !px-3",
-                    cellClassName: "!py-2.5 !px-3"
+                    cellClassName: "!py-1.5 !px-3"
                 },
                 cell: ({ row }) => {
                     const getCategoryPillStyle = (category: string, isDark: boolean) => {
@@ -576,7 +582,7 @@ export function UnifiedLeaderboardView({
             header: "Target Achieved %",
             meta: {
                 headerClassName: "min-w-[200px] !py-2 !px-3",
-                cellClassName: "!py-1.5 !px-3"
+                cellClassName: "!py-1 !px-3"
             },
             cell: ({ row }) => {
                 const item = row.original;
@@ -689,46 +695,61 @@ export function UnifiedLeaderboardView({
                 />
             </div>
 
-            {/* Floating Rocket Energy Boost Overlay: Single Rocket with Trailing Fire Fumes + Compact Attached Card */}
+            {/* Floating Rocket Energy Boost Overlay: Step-by-Step Orthogonal (Up then Sideways) 2-minute Motion */}
             <AnimatePresence>
                 {enableAnimations && activeCelebration && (
                     <motion.div
                         key={activeCelebration.id}
-                        initial={{ y: "115vh", opacity: 0, scale: 0.85 }}
-                        animate={{ y: "-30vh", opacity: [0, 1, 1, 1, 0.9, 0], scale: [0.85, 1.2, 1.1, 1, 0.95, 0.7] }}
+                        initial={{ y: "115vh", x: "0vw", opacity: 0, scale: 0.9 }}
+                        animate={{
+                            // Step 1: Up, Step 2: Sideways, Step 3: Up, Step 4: Sideways... strictly orthogonal!
+                            y: [
+                                "115vh", "75vh", "75vh", "55vh", "55vh", "35vh", "35vh", "20vh", "20vh", "40vh", "40vh", "15vh", "15vh", "-30vh"
+                            ],
+                            x: [
+                                "0vw",   "0vw",  "-20vw", "-20vw", "25vw",  "25vw",  "-15vw", "-15vw", "20vw",  "20vw",  "-10vw", "-10vw", "10vw",  "10vw"
+                            ],
+                            opacity: [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+                            scale: [0.9, 1.1, 1.05, 1, 1.05, 1, 1.05, 1, 1.05, 1, 1.05, 1, 1, 0.8]
+                        }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 8.5, ease: "linear" }}
+                        transition={{
+                            duration: 120,
+                            ease: "easeInOut",
+                            times: [0, 0.02, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.88, 0.94, 0.97, 1]
+                        }}
                         style={{ left: rocketXPos }}
-                        onAnimationComplete={() => setActiveCelebration(null)}
-                        className="fixed -translate-x-1/2 z-50 pointer-events-none flex items-center gap-3"
+                        onAnimationComplete={handleRocketAnimationComplete}
+                        className="fixed -translate-x-1/2 z-[9999] pointer-events-none flex items-center gap-3 opacity-100"
                     >
                         {/* Single Large Rocket Unit with Rear Fumes Trailing Below */}
-                        <div className="flex flex-col items-center relative">
+                        <div className="flex flex-col items-center relative drop-shadow-[0_10px_25px_rgba(0,0,0,0.5)]">
                             {/* Rocket Body */}
-                            <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-rose-600 via-red-500 to-amber-500 border-2 border-white shadow-[0_0_40px_rgba(239,68,68,1)] flex items-center justify-center animate-bounce z-10">
-                                <Rocket className="w-10 h-10 text-white fill-white transform -rotate-45 drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]" />
+                            <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-rose-600 via-red-500 to-amber-500 border-2 border-white shadow-[0_0_45px_rgba(239,68,68,1)] flex items-center justify-center animate-bounce z-10">
+                                <Rocket className="w-10 h-10 text-white fill-white transform -rotate-45 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]" />
                             </div>
                             {/* Trailing Fire & Fumes Particle Stream */}
-                            <div className="w-5 h-28 -mt-2 bg-gradient-to-t from-transparent via-amber-500 via-orange-500 to-yellow-300 blur-xs rounded-full animate-pulse border-x border-orange-500/80 shadow-[0_0_20px_rgba(245,158,11,0.8)]" />
+                            <div className="w-5 h-28 -mt-2 bg-gradient-to-t from-transparent via-amber-500 via-orange-500 to-yellow-300 blur-xs rounded-full animate-pulse border-x border-orange-500/80 shadow-[0_0_25px_rgba(245,158,11,0.9)]" />
                         </div>
 
-                        {/* Small Compact BD Info Card (No 'NEW IPD DONE' text header, compact size) */}
-                        <div className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-100 via-yellow-100 to-amber-50 text-slate-900 shadow-[0_8px_25px_rgba(245,158,11,0.6)] border border-amber-300/80 flex flex-col gap-0.5 backdrop-blur-md">
+                        {/* Small Compact BD Info Card (Solid background, z-[9999] high visibility) */}
+                        <div className="px-4 py-2.5 rounded-xl bg-[#FFFBEB] text-slate-900 shadow-[0_12px_30px_rgba(0,0,0,0.5)] border-2 border-amber-400 flex flex-col gap-0.5 opacity-100">
                             <div className="text-xs font-black text-slate-950 tracking-tight leading-tight">
                                 {activeCelebration.bdName}
                             </div>
                             <div className="text-[10px] font-bold text-slate-700 leading-tight">
                                 {activeCelebration.category}
                             </div>
-                            <div className="text-[11px] font-extrabold text-emerald-800 bg-emerald-100/90 px-1.5 py-0.5 rounded border border-emerald-300/60 w-fit mt-0.5">
-                                🎯 {activeCelebration.newActual} IPD Done
+                            <div className="text-[11px] font-extrabold text-emerald-900 bg-emerald-200/90 px-2 py-0.5 rounded border border-emerald-400 w-fit mt-0.5 flex items-center gap-1 shadow-xs">
+                                <span>🚀</span>
+                                <span>has done more IPDs</span>
                             </div>
                         </div>
                     </motion.div>
                 )}
             </AnimatePresence>
 
-            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 space-y-2">
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 space-y-1">
                 {/* Header Bar */}
                 <header
                     className={`flex flex-col md:flex-row md:items-center justify-between gap-3 px-4 py-3 rounded-2xl border shadow-xl backdrop-blur-xl ${isDarkMode
@@ -737,7 +758,7 @@ export function UnifiedLeaderboardView({
                         }`}
                 >
                     <div className="flex items-center gap-3">
-                        <div className="relative w-24 h-10 sm:w-36 sm:h-12 shrink-0">
+                        <div className="relative w-20 h-10 sm:w-36 sm:h-12 shrink-0">
                             <Image
                                 src={logo}
                                 alt="Mediend Logo"
@@ -746,7 +767,7 @@ export function UnifiedLeaderboardView({
                                 priority
                             />
                         </div>
-                        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
+                        <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
                             Leaderboard
                         </h1>
                     </div>
@@ -761,7 +782,6 @@ export function UnifiedLeaderboardView({
                                 : "bg-white border-slate-300 text-slate-900 shadow-sm focus-within:border-cyan-600 focus-within:ring-1 focus-within:ring-cyan-500/30"
                                 }`}
                         >
-                            <Calendar className={`w-4 h-4 mr-2 shrink-0 ${isDarkMode ? "text-cyan-300" : "text-slate-700"}`} />
                             <input
                                 type="month"
                                 value={month}
@@ -807,7 +827,6 @@ export function UnifiedLeaderboardView({
                                 : "bg-white border-slate-300 text-slate-900 shadow-sm"
                                 }`}
                         >
-                            <Clock className={`w-3.5 h-3.5 mr-1.5 shrink-0 ${isDarkMode ? "text-cyan-400" : "text-cyan-600"}`} />
                             <select
                                 value={pollIntervalSeconds}
                                 onChange={(e) => setPollIntervalSeconds(Number(e.target.value))}
@@ -874,13 +893,13 @@ export function UnifiedLeaderboardView({
                 {/* Main Rankings Table Container using Generic DataTable */}
                 <div
                     className={`rounded-2xl border shadow-xl overflow-hidden backdrop-blur-xl ${isDarkMode
-                        ? "bg-slate-900/60 border-slate-800/80 shadow-2xl"
-                        : "bg-white border-slate-200/90 shadow-slate-300/40"
+                        ? "bg-gradient-to-br from-slate-900/90 via-[#8091A1]/15 to-slate-950 border-[#8091A1]/30 shadow-2xl shadow-slate-950/30"
+                        : "bg-gradient-to-br from-[#8091A1]/15 via-[#8091A1]/10 to-white/95 border-[#8091A1]/30 shadow-lg text-slate-900"
                         }`}
                 >
                     {/* Table Header Controls */}
                     <div
-                        className={`px-4 py-2.5 border-b flex flex-col md:flex-row items-center justify-between gap-3 ${isDarkMode ? "border-slate-800/80" : "border-slate-200"
+                        className={`px-4 py-2.5 border-b flex flex-col md:flex-row items-center justify-between gap-3 ${isDarkMode ? "border-[#8091A1]/30 bg-[#8091A1]/10" : "border-[#8091A1]/20 bg-[#8091A1]/10"
                             }`}
                     >
                         <div className="flex items-center gap-2">
@@ -906,7 +925,7 @@ export function UnifiedLeaderboardView({
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className={`w-full rounded-xl border pl-9 pr-4 py-1.5 text-xs transition-all outline-none ${isDarkMode
                                     ? "bg-slate-950/80 border-slate-800 text-slate-200 placeholder-slate-500 focus:border-cyan-500"
-                                    : "bg-slate-100 border-slate-300 text-slate-900 placeholder-slate-400 focus:border-cyan-600"
+                                    : "bg-white/90 border-[#8091A1]/30 text-slate-900 placeholder-slate-400 focus:border-[#8091A1] shadow-xs"
                                     }`}
                             />
                         </div>
@@ -925,8 +944,8 @@ export function UnifiedLeaderboardView({
                             getRowId={(row) => row.userId}
                             tableHeaderClassName={
                                 isDarkMode
-                                    ? "bg-slate-950/70 border-slate-800/80 text-slate-400"
-                                    : "bg-slate-100/80 border-slate-200 text-slate-600"
+                                    ? "bg-slate-950/90 border-slate-800/80 text-slate-300 font-bold"
+                                    : "bg-[#062D4C] border-[#062D4C] text-white font-bold [&_th]:text-white [&_th]:font-bold shadow-md"
                             }
                             tableContainerClassName="border-0 shadow-none bg-transparent"
                             rowClassName={(row) => {
