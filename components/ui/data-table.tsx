@@ -518,7 +518,7 @@ export function DataTable<TData, TValue>({
             <select
               value={table.getState().pagination.pageSize}
               onChange={(e) => table.setPageSize(Number(e.target.value))}
-              className="h-8 rounded-lg border border-border bg-background text-foreground px-2.5 text-xs font-medium shadow-2xs hover:border-border/80 focus:outline-none focus:ring-2 focus:ring-ring/40 transition-all cursor-pointer"
+              className="h-8 rounded-lg border border-border bg-background text-foreground pl-2.5 pr-8 py-1 text-xs font-medium shadow-2xs hover:border-border/80 focus:outline-none focus:ring-2 focus:ring-ring/40 transition-all cursor-pointer"
             >
               {pageSizeOptions.map((size) => (
                 <option key={size} value={size}>
