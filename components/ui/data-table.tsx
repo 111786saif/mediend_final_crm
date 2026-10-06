@@ -33,6 +33,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Download, ChevronLeft, ChevronRight, Settings2, GripVertical } from 'lucide-react'
+import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
 interface DataTableProps<TData, TValue> {
@@ -58,6 +59,7 @@ interface DataTableProps<TData, TValue> {
   pageCount?: number
   paginationState?: { pageIndex: number; pageSize: number }
   onPaginationChange?: OnChangeFn<{ pageIndex: number; pageSize: number }>
+  getRowId?: (row: TData, index: number, parent?: any) => string
   tableHeaderClassName?: string
   tableContainerClassName?: string
   rowClassName?: (row: TData) => string | undefined
@@ -85,6 +87,7 @@ export function DataTable<TData, TValue>({
   pageCount,
   paginationState,
   onPaginationChange,
+  getRowId,
   tableHeaderClassName,
   tableContainerClassName,
   rowClassName,
@@ -118,6 +121,7 @@ export function DataTable<TData, TValue>({
   const table = useReactTable({
     data,
     columns,
+    getRowId,
     pageCount: pageCount,
     manualPagination: pageCount !== undefined,
     state: {
@@ -412,96 +416,98 @@ export function DataTable<TData, TValue>({
       <div className={cn("rounded-md border border-border bg-card overflow-hidden", tableContainerClassName)}>
         <Table containerClassName="overflow-auto flex-1 min-h-0 h-full">
           <TableHeader className={cn("bg-muted/50 border-b border-border sticky top-0 z-20", tableHeaderClassName)}>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className="border-b border-border">
-                  {headerGroup.headers.map((header) => (
-                    <TableHead
-                      key={header.id}
-                      colSpan={header.colSpan}
-                      style={{ 
-                        width: header.column.columnDef.size, 
-                        ...((header.column.columnDef.meta as any)?.headerStyle) 
-                      }}
-                      className={cn(
-                        "text-muted-foreground font-semibold px-4 py-3 sticky top-0 z-10",
-                        header.colSpan > 1 && "text-center border-x border-border", // Grouped header centering
-                        (header.column.columnDef.meta as any)?.headerClassName
-                      )}
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                // Loading Skeleton Rows
-                Array.from({ length: 5 }).map((_, i) => (
-                  <TableRow key={i} className="border-b border-border">
-                    {columns.map((col, j) => (
-                      <TableCell key={j} className="h-12 px-4 py-3">
-                        <div className="h-4 bg-muted rounded animate-pulse w-full max-w-[85%]" />
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id} className="border-b border-border">
+                {headerGroup.headers.map((header) => (
+                  <TableHead
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    style={{
+                      width: header.column.columnDef.size,
+                      ...((header.column.columnDef.meta as any)?.headerStyle)
+                    }}
                     className={cn(
-                      "border-b border-border transition-colors",
-                      onRowClick && "cursor-pointer",
-                      rowClassName ? rowClassName(row.original) : (onRowClick ? "hover:bg-muted/50" : "hover:bg-muted/30")
+                      "text-muted-foreground font-semibold px-4 py-3 sticky top-0 z-10",
+                      header.colSpan > 1 && "text-center border-x border-border", // Grouped header centering
+                      (header.column.columnDef.meta as any)?.headerClassName
                     )}
-                    onClick={() => onRowClick?.(row.original)}
                   >
-                    {row.getVisibleCells().map((cell) => {
-                      const cellStyle = typeof (cell.column.columnDef.meta as any)?.cellStyle === 'function'
-                        ? (cell.column.columnDef.meta as any).cellStyle(row.original)
-                        : (cell.column.columnDef.meta as any)?.cellStyle
-
-                      const cellClassName = typeof (cell.column.columnDef.meta as any)?.cellClassName === 'function'
-                        ? (cell.column.columnDef.meta as any).cellClassName(row.original)
-                        : (cell.column.columnDef.meta as any)?.cellClassName
-
-                      return (
-                        <TableCell 
-                          key={cell.id} 
-                          className={cn(
-                            "px-4 py-3 text-sm font-normal text-foreground",
-                            cellClassName
-                          )}
-                          style={cellStyle}
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
-                      )
-                    })}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center text-muted-foreground px-4 py-8"
-                  >
-                    {emptyMessage}
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
+              // Clean Unified Single-Bar Skeleton per Row
+              Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i} className="border-b border-border">
+                  <TableCell colSpan={columns.length} className="h-14 px-4 py-3">
+                    <div className="h-6 bg-muted/60 rounded-xl animate-pulse w-full" />
                   </TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-            {footer}
-          </Table>
+              ))
+            ) : table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <motion.tr
+                  key={row.id}
+                  layout
+                  transition={{
+                    layout: { duration: 2.2, ease: [0.16, 1, 0.3, 1] }
+                  }}
+                  className={cn(
+                    "border-b border-border transition-colors",
+                    onRowClick && "cursor-pointer",
+                    rowClassName ? rowClassName(row.original) : (onRowClick ? "hover:bg-muted/50" : "hover:bg-muted/30")
+                  )}
+                  onClick={() => onRowClick?.(row.original)}
+                >
+                  {row.getVisibleCells().map((cell) => {
+                    const cellStyle = typeof (cell.column.columnDef.meta as any)?.cellStyle === 'function'
+                      ? (cell.column.columnDef.meta as any).cellStyle(row.original)
+                      : (cell.column.columnDef.meta as any)?.cellStyle
+
+                    const cellClassName = typeof (cell.column.columnDef.meta as any)?.cellClassName === 'function'
+                      ? (cell.column.columnDef.meta as any).cellClassName(row.original)
+                      : (cell.column.columnDef.meta as any)?.cellClassName
+
+                    return (
+                      <TableCell
+                        key={cell.id}
+                        className={cn(
+                          "px-4 py-3 text-sm font-normal text-foreground",
+                          cellClassName
+                        )}
+                        style={cellStyle}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    )
+                  })}
+                </motion.tr>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center text-muted-foreground px-4 py-8"
+                >
+                  {emptyMessage}
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+          {footer}
+        </Table>
       </div>
 
       {/* Pagination Controls Footer */}

@@ -150,18 +150,11 @@ export async function GET(request: NextRequest) {
       third: hasMonthlyProgress && (monthlyRankings[2]?.percentage > 0 || monthlyRankings[2]?.actual > 0) ? monthlyRankings[2] : null,
     }
 
-    // Only populate annual podium if there is actual YTD progress (>0 annualActual)
-    const hasAnnualProgress = sortedByAnnual.some((m) => m.annualActual > 0)
-    const annualTopThree = hasAnnualProgress
-      ? annualRankings.filter((m) => m.annualActual > 0).slice(0, 3)
-      : []
-
     return successResponse({
       month: monthStr,
       category: categoryParam,
       categories: categoriesList,
       monthlyTopThree,
-      annualTopThree,
       rankings: monthlyRankings,
     })
   } catch (error) {
