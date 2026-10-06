@@ -6,7 +6,6 @@ import {
     Trophy,
     Award,
     Medal,
-    Search,
     Calendar,
     Filter,
     RefreshCw,
@@ -233,7 +232,6 @@ export function UnifiedLeaderboardView({
         return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
     });
     const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
-    const [searchQuery, setSearchQuery] = useState<string>("");
     const [data, setData] = useState<ApiData | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -398,15 +396,8 @@ export function UnifiedLeaderboardView({
     };
 
     const filteredLeaderboard = useMemo(() => {
-        if (!data?.rankings) return [];
-        if (!searchQuery.trim()) return data.rankings;
-        const q = searchQuery.toLowerCase();
-        return data.rankings.filter(
-            (b) =>
-                b.name.toLowerCase().includes(q) ||
-                b.category.toLowerCase().includes(q)
-        );
-    }, [data?.rankings, searchQuery]);
+        return data?.rankings || [];
+    }, [data?.rankings]);
 
     // Top 3 ranked executives (Fixed at the top of the standings table)
     const topThreeStandings = useMemo(() => {
@@ -480,7 +471,7 @@ export function UnifiedLeaderboardView({
             },
             {
                 accessorKey: "name",
-                header: "BDE Executive",
+                header: "BDE",
                 meta: {
                     headerClassName: "!py-3 !px-4",
                     cellClassName: "!py-2.5 !px-4"
@@ -648,7 +639,7 @@ export function UnifiedLeaderboardView({
                                 "115vh", "75vh", "75vh", "55vh", "55vh", "35vh", "35vh", "20vh", "20vh", "40vh", "40vh", "15vh", "15vh", "-30vh"
                             ],
                             x: [
-                                "0vw",   "0vw",  "-20vw", "-20vw", "25vw",  "25vw",  "-15vw", "-15vw", "20vw",  "20vw",  "-10vw", "-10vw", "10vw",  "10vw"
+                                "0vw", "0vw", "-20vw", "-20vw", "25vw", "25vw", "-15vw", "-15vw", "20vw", "20vw", "-10vw", "-10vw", "10vw", "10vw"
                             ],
                             opacity: [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
                             scale: [0.9, 1.1, 1.05, 1, 1.05, 1, 1.05, 1, 1.05, 1, 1.05, 1, 1, 0.8]
@@ -818,34 +809,14 @@ export function UnifiedLeaderboardView({
                 >
                     {/* Table Header Controls */}
                     <div
-                        className={`px-5 py-3 border-b flex flex-col md:flex-row items-center justify-between gap-3 ${isDarkMode ? "border-slate-800 bg-slate-900/50" : "border-slate-100 bg-white"
+                        className={`px-5 py-1.5 border-b flex items-center justify-between gap-2 ${isDarkMode ? "border-slate-800 bg-slate-900/50" : "border-slate-100 bg-white"
                             }`}
                     >
                         <div className="flex items-center gap-2">
-                            <span className="text-lg">👥</span>
-                            <h2 className={`text-base font-extrabold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
-                                Full BDE Standings
+                            <span className="text-base">👥</span>
+                            <h2 className={`text-sm font-extrabold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                                MEDIEND SALES DEPARTMENT
                             </h2>
-                            <span className={`text-xs font-semibold ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
-                                ({filteredLeaderboard.length} Executives)
-                            </span>
-                        </div>
-
-                        {/* Search Input matching reference UI */}
-                        <div className="relative w-full md:w-80">
-                            <Search
-                                className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
-                            />
-                            <input
-                                type="text"
-                                placeholder="Search BDE or category..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className={`w-full rounded-xl border pl-10 pr-4 py-2 text-xs font-medium transition-all outline-none ${isDarkMode
-                                    ? "bg-slate-950 border-slate-800 text-slate-200 placeholder-slate-500 focus:border-cyan-500"
-                                    : "bg-[#F8FAFC] border-slate-200 text-slate-900 placeholder-slate-400 focus:border-cyan-600 focus:bg-white shadow-inner"
-                                    }`}
-                            />
                         </div>
                     </div>
 
@@ -870,7 +841,7 @@ export function UnifiedLeaderboardView({
                             <thead className={isDarkMode ? "bg-slate-950 text-slate-300 font-bold text-xs uppercase" : "bg-[#062D4C] text-white font-extrabold text-xs uppercase shadow-md"}>
                                 <tr>
                                     <th className="text-center py-3 px-3">Rank</th>
-                                    <th className="text-left py-3 px-4">BDE Executive</th>
+                                    <th className="text-left py-3 px-4">BDE</th>
                                     <th className="text-left py-3 px-4">Category / Dept</th>
                                     {showTargetsAndActuals && (
                                         <>
@@ -887,13 +858,12 @@ export function UnifiedLeaderboardView({
                                 {topThreeStandings.map((item) => (
                                     <tr
                                         key={item.userId}
-                                        className={`transition-colors ${
-                                            item.rank === 1
-                                                ? isDarkMode ? "bg-slate-800/80 hover:bg-slate-800" : "bg-amber-500/15 hover:bg-amber-500/25"
-                                                : item.rank === 2
+                                        className={`transition-colors ${item.rank === 1
+                                            ? isDarkMode ? "bg-slate-800/80 hover:bg-slate-800" : "bg-amber-500/15 hover:bg-amber-500/25"
+                                            : item.rank === 2
                                                 ? isDarkMode ? "bg-slate-800/40 hover:bg-slate-800/60" : "bg-slate-100/70 hover:bg-slate-200/60"
                                                 : isDarkMode ? "bg-slate-800/20 hover:bg-slate-800/40" : "bg-amber-100/50 hover:bg-amber-100/80"
-                                        }`}
+                                            }`}
                                     >
                                         <td className="text-center py-2.5 px-4">
                                             {item.rank === 1 ? (
@@ -983,14 +953,12 @@ export function UnifiedLeaderboardView({
                                             {[...scrollingStandings, ...scrollingStandings].map((item, idx) => (
                                                 <tr
                                                     key={`${item.userId}-${idx}`}
-                                                    className={`h-[52px] transition-colors ${
-                                                        isDarkMode ? "border-slate-800/60 hover:bg-slate-800/40 text-slate-200" : "border-slate-100 hover:bg-slate-50 text-slate-900"
-                                                    }`}
+                                                    className={`h-[52px] transition-colors ${isDarkMode ? "border-slate-800/60 hover:bg-slate-800/40 text-slate-200" : "border-slate-100 hover:bg-slate-50 text-slate-900"
+                                                        }`}
                                                 >
                                                     <td className="text-center py-2.5 px-3">
-                                                        <div className={`w-7 h-7 mx-auto rounded-full flex items-center justify-center font-bold text-xs ${
-                                                            isDarkMode ? "bg-slate-800 text-slate-300" : "bg-slate-100 text-slate-700 border border-slate-200"
-                                                        }`}>
+                                                        <div className={`w-7 h-7 mx-auto rounded-full flex items-center justify-center font-bold text-xs ${isDarkMode ? "bg-slate-800 text-slate-300" : "bg-slate-100 text-slate-700 border border-slate-200"
+                                                            }`}>
                                                             {item.rank}
                                                         </div>
                                                     </td>
@@ -1034,7 +1002,7 @@ export function UnifiedLeaderboardView({
                             </div>
                         ) : (
                             <div className="p-6 text-center text-xs font-semibold text-muted-foreground">
-                                No additional executives with at least 1 IPD done.
+                                No additional bde with at least 1 IPD done.
                             </div>
                         )}
                     </div>
