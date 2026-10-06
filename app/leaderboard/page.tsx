@@ -119,52 +119,58 @@ export const SteppedPodiumCard: React.FC<PodiumCardProps> = ({
                         transition={{ duration: 0.3, ease: "easeInOut" }}
                         className="overflow-hidden px-3.5 pb-3.5"
                     >
-                        <div className="flex items-end justify-center px-0 pt-2 pb-1 min-h-[130px] w-full gap-0.5">
+                        <div className="flex items-end justify-center px-0 pt-2 pb-1 min-h-[165px] w-full gap-1.5">
                             {podiumData.map((bd, idx) => {
                                 const rank = idx === 1 ? 1 : idx === 0 ? 2 : 3;
                                 const isGold = rank === 1;
                                 const isSilver = rank === 2;
                                 const isBronze = rank === 3;
-                                const { primary, secondary } = valueFormatter(bd);
+                                const { primary } = valueFormatter(bd);
 
                                 return (
                                     <div
                                         key={rank}
                                         className={`flex flex-col items-center justify-between w-1/3 max-w-[280px] p-2.5 text-center transition-all duration-300 ${isGold
                                             ? isDarkMode
-                                                ? "h-[130px] bg-gradient-to-b from-amber-500/25 via-slate-900 to-slate-950 border-t-2 border-x border-amber-500/60 shadow-lg shadow-amber-500/15 z-10 rounded-t-xl"
-                                                : "h-[130px] bg-gradient-to-b from-amber-500/15 via-amber-50/60 to-white border-t-2 border-x border-amber-400/90 shadow-lg shadow-amber-400/20 z-10 rounded-t-xl"
+                                                ? "h-[165px] bg-gradient-to-b from-amber-500/35 via-slate-900 to-slate-950 border-t-2 border-x border-amber-500/80 shadow-2xl shadow-amber-500/25 z-10 rounded-t-2xl"
+                                                : "h-[165px] bg-gradient-to-b from-amber-500/25 via-amber-50/80 to-white border-t-2 border-x border-amber-400 shadow-2xl shadow-amber-400/30 z-10 rounded-t-2xl"
                                             : isSilver
                                                 ? isDarkMode
-                                                    ? "h-[110px] bg-gradient-to-b from-slate-300/20 via-slate-900 to-slate-950 border-t border-l border-b border-slate-400/50 rounded-tl-xl"
-                                                    : "h-[110px] bg-gradient-to-b from-slate-200/70 via-slate-50 to-white border-t border-l border-b border-slate-300 rounded-tl-xl"
+                                                    ? "h-[138px] bg-gradient-to-b from-slate-300/30 via-slate-900 to-slate-950 border-t border-l border-b border-slate-400/70 rounded-tl-2xl shadow-lg"
+                                                    : "h-[138px] bg-gradient-to-b from-slate-200/90 via-slate-50 to-white border-t border-l border-b border-slate-300 rounded-tl-2xl shadow-md"
                                                 : isDarkMode
-                                                    ? "h-[96px] bg-gradient-to-b from-amber-700/20 via-slate-900 to-slate-950 border-t border-r border-b border-amber-700/50 rounded-tr-xl"
-                                                    : "h-[96px] bg-gradient-to-b from-amber-100/60 via-amber-50/30 to-white border-t border-r border-b border-amber-300/70 rounded-tr-xl"
+                                                    ? "h-[118px] bg-gradient-to-b from-amber-700/30 via-slate-900 to-slate-950 border-t border-r border-b border-amber-700/70 rounded-tr-2xl shadow-lg"
+                                                    : "h-[118px] bg-gradient-to-b from-amber-100/80 via-amber-50/50 to-white border-t border-r border-b border-amber-300/90 rounded-tr-2xl shadow-md"
                                             }`}
                                     >
-                                        <div className="flex flex-col items-center">
-                                            <div className="flex items-center gap-1 mb-0.5">
-                                                {isGold && <Trophy className="w-3.5 h-3.5 text-amber-500 drop-shadow-[0_0_6px_rgba(245,158,11,0.6)]" />}
-                                                {isSilver && <Medal className="w-3 h-3 text-slate-400" />}
-                                                {isBronze && <Award className="w-3 h-3 text-amber-600" />}
+                                        {/* Rank Header at top with increased height & prominent icon */}
+                                        <div className="pt-1 flex flex-col items-center justify-center">
+                                            <div className="flex items-center justify-center gap-1.5 mb-0.5">
+                                                {isGold && <Trophy className="w-5 h-5 text-amber-400 drop-shadow-[0_0_10px_rgba(245,158,11,0.9)] shrink-0 animate-bounce" />}
+                                                {isSilver && <Medal className="w-4 h-4 text-slate-300 shrink-0" />}
+                                                {isBronze && <Award className="w-4 h-4 text-amber-600 shrink-0" />}
                                                 <span
-                                                    className={`text-[10px] font-extrabold ${isGold ? "text-amber-500" : isSilver ? (isDarkMode ? "text-slate-300" : "text-slate-700") : "text-amber-600"
+                                                    className={`text-sm sm:text-base font-black tracking-tight ${isGold ? "text-amber-400 drop-shadow-xs" : isSilver ? (isDarkMode ? "text-slate-200" : "text-slate-800") : "text-amber-600"
                                                         }`}
                                                 >
-                                                    {rank}
+                                                    #{rank}
                                                 </span>
                                             </div>
+                                        </div>
+
+                                        {/* BD Name as Main Center Highlight */}
+                                        <div className="flex items-center justify-center w-full my-auto py-1">
                                             <h3
-                                                className={`text-[11px] font-bold line-clamp-1 max-w-[160px] ${isDarkMode ? "text-slate-100" : "text-slate-900"
+                                                className={`text-xs sm:text-sm md:text-base font-black tracking-tight leading-snug line-clamp-2 max-w-[200px] w-full text-center px-0.5 ${isDarkMode ? "text-white drop-shadow-xs" : "text-slate-950 font-black"
                                                     }`}
                                             >
                                                 {bd ? bd.name : "-"}
                                             </h3>
                                         </div>
 
-                                        <div className={`w-full pt-1 border-t ${isDarkMode ? "border-slate-800/80" : "border-slate-200"}`}>
-                                            <div className="text-xs font-black text-cyan-500">{primary}</div>
+                                        {/* Score / Percentage Badge */}
+                                        <div className={`w-full pt-1.5 pb-0.5 border-t ${isDarkMode ? "border-slate-800/80" : "border-slate-200/90"}`}>
+                                            <div className="text-sm sm:text-base font-black text-cyan-400 tracking-tight">{primary}</div>
                                         </div>
                                     </div>
                                 );
