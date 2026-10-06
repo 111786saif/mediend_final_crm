@@ -13,10 +13,11 @@ const targetSchema = z.object({
   periodStartDate: z.string(),
   periodEndDate: z.string(),
   metric: z.enum(['LEADS_CLOSED', 'NET_PROFIT', 'BILL_AMOUNT', 'SURGERIES_DONE', 'IPD_DONE']).default('IPD_DONE'),
-  targetValue: z.number(),
+  targetValue: z.number().min(0),
 })
 
 import { getSalesTeamUnits, getTeamScopeUserIds } from '@/lib/hierarchy'
+import { headcountEmployeeWhere } from '@/lib/hrms/headcount'
 import { isTeamLeadEquivalent } from '@/lib/sales-hierarchy-roles'
 
 export async function GET(request: NextRequest) {
@@ -171,7 +172,7 @@ export async function POST(request: NextRequest) {
           where: { userId: user.id },
           select: {
             subordinates: {
-              where: { userId: data.targetForId },
+              where: { userId: data.targetForId, ...headcountEmployeeWhere },
               select: { userId: true },
             },
           },
@@ -255,7 +256,7 @@ export async function POST(request: NextRequest) {
         })
         const totalTeamTarget = teamTargets.reduce((sum, t) => sum + t.targetValue, 0)
 
-        if (totalTeamTarget === 0) {
+        if (totalTeamTarget === 0 && newTargetValue > 0) {
           return errorResponse(
             `No TEAM target has been allocated to this Team Lead/ACM for this month yet. Please allocate a TEAM target first.`,
             400

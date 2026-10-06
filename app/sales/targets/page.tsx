@@ -354,7 +354,7 @@ function SetTargetDialog({
     e.preventDefault()
     if (!selectedTeamId) { toast.error('Please select a team'); return }
     const val = parseFloat(targetValue)
-    if (!targetValue || val <= 0) { toast.error('Enter a valid target'); return }
+    if (targetValue === '' || isNaN(val) || val < 0) { toast.error('Enter a valid target'); return }
     
     // Check allocation limits
     if (val > delegationRemaining) {
@@ -432,7 +432,7 @@ function SetTargetDialog({
               value={targetValue}
               onChange={(e) => setTargetValue(e.target.value)}
               placeholder="e.g. 25"
-              min={1}
+              min={0}
               required
             />
             <p className="text-xs text-muted-foreground mt-1">Number of IPDs expected this month</p>
@@ -474,7 +474,7 @@ function SetSelfTargetDialog({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!targetValue || Number(targetValue) <= 0) { toast.error('Enter a valid target'); return }
+    if (targetValue === '' || isNaN(Number(targetValue)) || Number(targetValue) < 0) { toast.error('Enter a valid target'); return }
     onSubmit({
       targetType: 'BD',
       periodType: 'MONTH',
@@ -503,7 +503,7 @@ function SetSelfTargetDialog({
               value={targetValue}
               onChange={(e) => setTargetValue(e.target.value)}
               placeholder="e.g. 10"
-              min={1}
+              min={0}
               required
             />
             <p className="text-xs text-muted-foreground mt-1">Your own target expected this month</p>

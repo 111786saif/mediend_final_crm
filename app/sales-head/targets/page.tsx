@@ -740,7 +740,7 @@ function SetCategoryTargetDialog({
     e.preventDefault()
     if (!selectedCmId) { toast.error('Please select a Category Manager'); return }
     const val = parseFloat(targetValue)
-    if (!targetValue || val <= 0) { toast.error('Enter a valid target'); return }
+    if (targetValue === '' || isNaN(val) || val < 0) { toast.error('Enter a valid target'); return }
     onSubmit({
       targetType: 'CATEGORY',
       targetForId: selectedCmId,
@@ -809,7 +809,7 @@ function SetCategoryTargetDialog({
               value={targetValue}
               onChange={(e) => setTargetValue(e.target.value)}
               placeholder="e.g. 50"
-              min={1}
+              min={0}
               required
             />
             <p className="text-xs text-muted-foreground mt-1">Number of IPDs expected this month</p>
@@ -850,7 +850,7 @@ function SetTeamTargetDialog({
     e.preventDefault()
     if (!selectedTeamId) { toast.error('Please select a team'); return }
     const val = parseFloat(targetValue)
-    if (!targetValue || val <= 0) { toast.error('Enter a valid target'); return }
+    if (targetValue === '' || isNaN(val) || val < 0) { toast.error('Enter a valid target'); return }
 
     onSubmit({
       targetType: 'TEAM',
@@ -920,7 +920,7 @@ function SetTeamTargetDialog({
               value={targetValue}
               onChange={(e) => setTargetValue(e.target.value)}
               placeholder="e.g. 25"
-              min={1}
+              min={0}
               required
             />
             <p className="text-xs text-muted-foreground mt-1">Number of IPDs expected this month</p>
@@ -961,7 +961,7 @@ function AssignBDTargetDialog({
     e.preventDefault()
     if (!selectedBdId) { toast.error('Please select a team member'); return }
     const val = parseFloat(targetValue)
-    if (!targetValue || val <= 0) { toast.error('Enter a valid target'); return }
+    if (targetValue === '' || isNaN(val) || val < 0) { toast.error('Enter a valid target'); return }
 
     onSubmit({
       targetType: 'BD',
@@ -1034,7 +1034,7 @@ function AssignBDTargetDialog({
               value={targetValue}
               onChange={(e) => setTargetValue(e.target.value)}
               placeholder="e.g. 8"
-              min={1}
+              min={0}
               required
             />
             <p className="text-xs text-muted-foreground mt-1">Number of IPDs expected this month</p>

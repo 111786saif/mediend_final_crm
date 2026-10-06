@@ -284,7 +284,7 @@ export function AssignBDTargetDialog({
     e.preventDefault()
     if (!selectedBdId) { toast.error('Please select a team member'); return }
     const val = parseFloat(targetValue)
-    if (!targetValue || val <= 0) { toast.error('Enter a valid target'); return }
+    if (targetValue === '' || isNaN(val) || val < 0) { toast.error('Enter a valid target'); return }
 
     if (val > delegationRemaining) {
       toast.error(`Value exceeds remaining team delegation budget (${delegationRemaining} IPDs)`)
@@ -360,7 +360,7 @@ export function AssignBDTargetDialog({
               value={targetValue}
               onChange={(e) => setTargetValue(e.target.value)}
               placeholder="e.g. 8"
-              min={1}
+              min={0}
               required
             />
             <p className="text-xs text-muted-foreground mt-1">Number of IPDs expected this month</p>

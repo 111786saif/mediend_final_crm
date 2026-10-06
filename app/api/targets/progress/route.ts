@@ -6,6 +6,7 @@ import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { calculateActual } from '@/lib/analytics/target-progress'
 import { getSalesTeamUnits, getTeamScopeUserIds } from '@/lib/hierarchy'
+import { headcountEmployeeWhere } from '@/lib/hrms/headcount'
 import { isTeamLeadEquivalent } from '@/lib/sales-hierarchy-roles'
 
 /**
@@ -55,7 +56,7 @@ export async function GET(request: NextRequest) {
           id: true,
           subordinates: {
             select: { userId: true },
-            where: { user: { role: UserRole.BD } },
+            where: { ...headcountEmployeeWhere, user: { role: UserRole.BD } },
           },
         },
       })
@@ -98,6 +99,7 @@ export async function GET(request: NextRequest) {
     // Fetch all team structures to map BD user IDs to their Team Lead employee IDs
     const allTeamLeads = await prisma.employee.findMany({
       where: {
+        ...headcountEmployeeWhere,
         user: { role: UserRole.TEAM_LEAD },
       },
       select: {
@@ -106,7 +108,7 @@ export async function GET(request: NextRequest) {
         user: { select: { name: true } },
         subordinates: {
           select: { userId: true },
-          where: { user: { role: UserRole.BD } },
+          where: { ...headcountEmployeeWhere, user: { role: UserRole.BD } },
         },
       },
     })
@@ -212,7 +214,7 @@ export async function GET(request: NextRequest) {
     // Resolve team leads and their subordinates
     const teamLeads = teamTargetIds.length > 0
       ? await prisma.employee.findMany({
-          where: { id: { in: teamTargetIds } },
+          where: { id: { in: teamTargetIds }, ...headcountEmployeeWhere },
           select: {
             id: true,
             userId: true,
@@ -223,7 +225,7 @@ export async function GET(request: NextRequest) {
                 userId: true,
                 user: { select: { id: true, name: true, profilePicture: true } },
               },
-              where: { user: { role: UserRole.BD } },
+              where: { ...headcountEmployeeWhere, user: { role: UserRole.BD } },
             },
           },
         })
@@ -284,6 +286,7 @@ export async function GET(request: NextRequest) {
             const categoryTeams = await prisma.employee.findMany({
               where: {
                 managerId: cm.id,
+                ...headcountEmployeeWhere,
                 user: { role: { in: [UserRole.TEAM_LEAD, UserRole.ASSISTANT_CATEGORY_MANAGER] } },
               },
               select: {
