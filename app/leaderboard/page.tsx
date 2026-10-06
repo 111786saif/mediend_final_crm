@@ -79,29 +79,29 @@ export const SteppedPodiumCard: React.FC<PodiumCardProps> = ({
 
     return (
         <div
-            className={`rounded-xl border shadow-md backdrop-blur-xl transition-all duration-300 ${isDarkMode
-                ? "bg-gradient-to-br from-slate-900/90 via-[#8091A1]/15 to-slate-950 border-[#8091A1]/30 shadow-lg shadow-slate-950/20"
-                : "bg-gradient-to-br from-[#8091A1]/15 via-[#8091A1]/10 to-white/90 border-[#8091A1]/30 shadow-md text-slate-900"
+            className={`rounded-2xl border transition-all duration-300 ${isDarkMode
+                ? "bg-slate-900/90 border-slate-800 shadow-xl"
+                : "bg-white border-slate-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.04)] text-slate-900"
                 }`}
         >
-            {/* Collapsible Accordion Header */}
+            {/* Header */}
             <button
                 type="button"
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="w-full p-3.5 flex items-center justify-between cursor-pointer select-none"
+                className="w-full px-5 py-3.5 flex items-center justify-between cursor-pointer select-none"
             >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2.5">
                     {icon}
-                    <h2 className={`text-xs font-bold uppercase tracking-wider ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                    <h2 className={`text-xs sm:text-sm font-black uppercase tracking-wider ${isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
                         {title}
                     </h2>
-                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${badgeColorClass}`}>
+                    <span className={`text-[11px] font-extrabold px-3 py-0.5 rounded-full border ${badgeColorClass}`}>
                         {categoryLabel}
                     </span>
                 </div>
                 <div className="flex items-center gap-1 text-slate-400 hover:text-slate-200 transition-colors">
-                    <span className="text-[10px] font-medium hidden sm:inline">
-                        {isCollapsed ? "Expand Podium" : "Collapse"}
+                    <span className="text-xs font-semibold hidden sm:inline">
+                        {isCollapsed ? "Expand" : "Collapse"}
                     </span>
                     <ChevronDown
                         className={`w-4 h-4 transition-transform duration-300 ${isCollapsed ? "-rotate-90" : "rotate-0"}`}
@@ -117,61 +117,89 @@ export const SteppedPodiumCard: React.FC<PodiumCardProps> = ({
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="overflow-hidden px-3.5 pb-3.5"
+                        className="overflow-hidden px-4 sm:px-6 pb-6 pt-2"
                     >
-                        <div className="flex items-end justify-center px-0 pt-2 pb-1 min-h-[165px] w-full gap-1.5">
+                        {/* Podium Container with Stepped Pedestals matching reference image */}
+                        <div className="relative flex items-end justify-center w-full max-w-4xl mx-auto min-h-[180px]">
                             {podiumData.map((bd, idx) => {
                                 const rank = idx === 1 ? 1 : idx === 0 ? 2 : 3;
                                 const isGold = rank === 1;
                                 const isSilver = rank === 2;
                                 const isBronze = rank === 3;
-                                const { primary } = valueFormatter(bd);
+                                const { primary, secondary } = valueFormatter(bd);
 
                                 return (
                                     <div
                                         key={rank}
-                                        className={`flex flex-col items-center justify-between w-1/3 max-w-[280px] p-2.5 text-center transition-all duration-300 ${isGold
-                                            ? isDarkMode
-                                                ? "h-[165px] bg-gradient-to-b from-amber-500/35 via-slate-900 to-slate-950 border-t-2 border-x border-amber-500/80 shadow-2xl shadow-amber-500/25 z-10 rounded-t-2xl"
-                                                : "h-[165px] bg-gradient-to-b from-amber-500/25 via-amber-50/80 to-white border-t-2 border-x border-amber-400 shadow-2xl shadow-amber-400/30 z-10 rounded-t-2xl"
-                                            : isSilver
-                                                ? isDarkMode
-                                                    ? "h-[138px] bg-gradient-to-b from-slate-300/30 via-slate-900 to-slate-950 border-t border-l border-b border-slate-400/70 rounded-tl-2xl shadow-lg"
-                                                    : "h-[138px] bg-gradient-to-b from-slate-200/90 via-slate-50 to-white border-t border-l border-b border-slate-300 rounded-tl-2xl shadow-md"
-                                                : isDarkMode
-                                                    ? "h-[118px] bg-gradient-to-b from-amber-700/30 via-slate-900 to-slate-950 border-t border-r border-b border-amber-700/70 rounded-tr-2xl shadow-lg"
-                                                    : "h-[118px] bg-gradient-to-b from-amber-100/80 via-amber-50/50 to-white border-t border-r border-b border-amber-300/90 rounded-tr-2xl shadow-md"
+                                        className={`relative flex flex-col items-center justify-between transition-all duration-300 ${isGold ? "w-[38%] z-20 -mx-1" : "w-[31%] z-10"
                                             }`}
                                     >
-                                        {/* Rank Header at top with increased height & prominent icon */}
-                                        <div className="pt-1 flex flex-col items-center justify-center">
-                                            <div className="flex items-center justify-center gap-1.5 mb-0.5">
-                                                {isGold && <Trophy className="w-5 h-5 text-amber-400 drop-shadow-[0_0_10px_rgba(245,158,11,0.9)] shrink-0 animate-bounce" />}
-                                                {isSilver && <Medal className="w-4 h-4 text-slate-300 shrink-0" />}
-                                                {isBronze && <Award className="w-4 h-4 text-amber-600 shrink-0" />}
-                                                <span
-                                                    className={`text-sm sm:text-base font-black tracking-tight ${isGold ? "text-amber-400 drop-shadow-xs" : isSilver ? (isDarkMode ? "text-slate-200" : "text-slate-800") : "text-amber-600"
-                                                        }`}
-                                                >
-                                                    #{rank}
-                                                </span>
-                                            </div>
-                                        </div>
+                                        {/* Floating Champion Card */}
+                                        <div
+                                            className={`w-full rounded-2xl p-1.5 sm:p-2 flex flex-col items-center justify-between text-center border transition-all duration-300 ${isGold
+                                                ? isDarkMode
+                                                    ? "bg-gradient-to-b from-amber-500/20 via-slate-900 to-slate-900 border-amber-400/80 shadow-amber-500/10 min-h-[120px]"
+                                                    : "bg-[#FFFDEB] border-[#FDE68A] shadow-[0_6px_16px_rgba(245,158,11,0.12)] min-h-[120px]"
+                                                : isSilver
+                                                    ? isDarkMode
+                                                        ? "bg-gradient-to-b from-slate-800/80 via-slate-900 to-slate-900 border-slate-700 shadow-slate-900/50 min-h-[105px]"
+                                                        : "bg-[#F1F5F9]/90 border-[#CBD5E1] shadow-[0_4px_12px_rgba(100,116,139,0.08)] min-h-[105px]"
+                                                    : isDarkMode
+                                                        ? "bg-gradient-to-b from-amber-950/30 via-slate-900 to-slate-900 border-amber-800/60 shadow-amber-950/30 min-h-[105px]"
+                                                        : "bg-[#FFF7ED]/90 border-[#FED7AA] shadow-[0_4px_12px_rgba(234,88,12,0.08)] min-h-[105px]"
+                                                }`}
+                                        >
+                                            {/* Circular Laurel Rank Badge with Laurel Leaf Emojis */}
+                                            <div className="relative flex items-center justify-center">
+                                                <div className="flex items-center justify-center gap-1">
+                                                    <span className="text-2xl sm:text-3xl select-none transform -scale-x-100 leading-none">🌿</span>
 
-                                        {/* BD Name as Main Center Highlight */}
-                                        <div className="flex items-center justify-center w-full my-auto py-1">
+                                                    <div
+                                                        className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-black text-lg sm:text-xl border-2 shadow-inner shrink-0 ${isGold
+                                                            ? "bg-gradient-to-b from-amber-300 to-amber-500 border-amber-200 text-slate-950 shadow-amber-500/40"
+                                                            : isSilver
+                                                                ? "bg-gradient-to-b from-slate-200 to-slate-400 border-slate-100 text-slate-950"
+                                                                : "bg-gradient-to-b from-amber-500 to-amber-700 border-amber-400 text-white"
+                                                            }`}
+                                                    >
+                                                        {rank}
+                                                    </div>
+
+                                                    <span className="text-2xl sm:text-3xl select-none leading-none">🌿</span>
+                                                </div>
+                                            </div>
+
+                                            {/* BD Executive Name */}
                                             <h3
-                                                className={`text-xs sm:text-sm md:text-base font-black tracking-tight leading-snug line-clamp-2 max-w-[200px] w-full text-center px-0.5 ${isDarkMode ? "text-white drop-shadow-xs" : "text-slate-950 font-black"
+                                                className={`text-base sm:text-lg font-black tracking-tight leading-tight line-clamp-1 max-w-full px-1 my-0.5 ${isDarkMode ? "text-slate-100" : "text-[#0F172A]"
                                                     }`}
                                             >
                                                 {bd ? bd.name : "-"}
                                             </h3>
+
+                                            {/* Target Percentage */}
+                                            <div className="flex flex-col items-center w-full pt-1 border-t border-slate-200/50 dark:border-slate-800">
+                                                <span className={`text-lg sm:text-2xl font-black tracking-tight leading-none ${isDarkMode ? "text-cyan-400" : "text-[#0284C7]"}`}>
+                                                    {primary}
+                                                </span>
+                                            </div>
                                         </div>
 
-                                        {/* Score / Percentage Badge */}
-                                        <div className={`w-full pt-1.5 pb-0.5 border-t ${isDarkMode ? "border-slate-800/80" : "border-slate-200/90"}`}>
-                                            <div className="text-sm sm:text-base font-black text-cyan-400 tracking-tight">{primary}</div>
-                                        </div>
+                                        {/* Stepped Pedestal Base */}
+                                        <div
+                                            className={`w-full rounded-b-xl transition-all ${isGold
+                                                ? isDarkMode
+                                                    ? "h-7 bg-gradient-to-b from-amber-500 to-amber-600 shadow-lg border-t border-amber-300/40"
+                                                    : "h-7 bg-gradient-to-b from-[#FCD34D] to-[#F59E0B] shadow-md border-t border-amber-200"
+                                                : isSilver
+                                                    ? isDarkMode
+                                                        ? "h-5 bg-gradient-to-b from-slate-700 to-slate-800 border-t border-slate-600"
+                                                        : "h-5 bg-gradient-to-b from-[#CBD5E1] to-[#94A3B8] shadow-sm border-t border-slate-200"
+                                                    : isDarkMode
+                                                        ? "h-4 bg-gradient-to-b from-amber-800 to-amber-900 border-t border-amber-700"
+                                                        : "h-4 bg-gradient-to-b from-[#FDBA74] to-[#EA580C] shadow-sm border-t border-amber-200"
+                                                }`}
+                                        />
                                     </div>
                                 );
                             })}
@@ -209,7 +237,7 @@ export function UnifiedLeaderboardView({
     const [data, setData] = useState<ApiData | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
+    const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
     // Polling state (default 5 minutes = 300s)
     const [pollIntervalSeconds, setPollIntervalSeconds] = useState<number>(300);
@@ -287,45 +315,6 @@ export function UnifiedLeaderboardView({
         }
     };
 
-    // Dummy action handler: Move 5th position to 1st position, shifting ranks 1-4 downward by 1
-    const triggerDummyRowShift = () => {
-        if (!data?.rankings || data.rankings.length < 5) {
-            if (data?.rankings && data.rankings.length >= 2) {
-                // Fallback swap if fewer than 5 rows available
-                const newRankings = [...data.rankings];
-                const temp = newRankings[0];
-                newRankings[0] = newRankings[1];
-                newRankings[1] = temp;
-                const tempRank = newRankings[0].rank;
-                newRankings[0].rank = newRankings[1].rank;
-                newRankings[1].rank = tempRank;
-                setData({ ...data, rankings: newRankings });
-            }
-            return;
-        }
-
-        const currentList = [...data.rankings];
-        // Remove 5th row (index 4)
-        const fifthItem = currentList.splice(4, 1)[0];
-        // Insert at 1st position (index 0)
-        currentList.unshift(fifthItem);
-
-        // Re-assign rank numbers 1 to N sequentially so Framer Motion / TanStack animate rank promotion cleanly
-        const reRankedList = currentList.map((item, idx) => ({
-            ...item,
-            rank: idx + 1
-        }));
-
-        setData({
-            ...data,
-            rankings: reRankedList,
-            monthlyTopThree: {
-                first: reRankedList[0] || null,
-                second: reRankedList[1] || null,
-                third: reRankedList[2] || null
-            }
-        });
-    };
 
 
     const fetchData = async (isBackground = false) => {
@@ -419,6 +408,16 @@ export function UnifiedLeaderboardView({
         );
     }, [data?.rankings, searchQuery]);
 
+    // Top 3 ranked executives (Fixed at the top of the standings table)
+    const topThreeStandings = useMemo(() => {
+        return filteredLeaderboard.filter((b) => b.rank <= 3);
+    }, [filteredLeaderboard]);
+
+    // Executives from Rank 4 onwards where IPD done (actual) >= 1 (Vertical Auto-Scrolling Carousel)
+    const scrollingStandings = useMemo(() => {
+        return filteredLeaderboard.filter((b) => b.rank > 3 && b.actual >= 1);
+    }, [filteredLeaderboard]);
+
     // Derive Monthly Top 3 in stepped order: [2nd (Left), 1st (Center), 3rd (Right)]
     const monthlyPodium = useMemo(() => {
         if (!data?.monthlyTopThree) return [null, null, null];
@@ -429,46 +428,53 @@ export function UnifiedLeaderboardView({
         ];
     }, [data?.monthlyTopThree]);
 
-    // Definition of DataTable columns using TanStack Table API
+    // Definition of DataTable columns matching reference design
     const columns = useMemo<ColumnDef<ApiLeaderboardEntry>[]>(() => {
         const cols: ColumnDef<ApiLeaderboardEntry>[] = [
             {
                 accessorKey: "rank",
                 header: "Rank",
                 meta: {
-                    headerClassName: "text-center w-20 !py-2 !px-3",
-                    cellClassName: "text-center font-bold !py-1.5 !px-3"
+                    headerClassName: "text-center w-24 !py-3 !px-4",
+                    cellClassName: "text-center !py-2.5 !px-4"
                 },
                 cell: ({ row }) => {
                     const rank = row.original.rank;
                     if (rank === 1) {
                         return (
-                            <span className="inline-flex items-center justify-center gap-1 font-black text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.8)]">
-                                <Trophy className="w-4 h-4 text-amber-400 shrink-0" />
-                                <span>1</span>
-                            </span>
+                            <div className="flex items-center justify-center gap-1">
+                                <span className="text-sm font-black text-amber-500">👑</span>
+                                <div className="w-7 h-7 rounded-full bg-gradient-to-b from-amber-300 to-amber-500 text-slate-950 font-black text-xs flex items-center justify-center shadow-sm border border-amber-200">
+                                    1
+                                </div>
+                            </div>
                         );
                     }
                     if (rank === 2) {
                         return (
-                            <span className={`inline-flex items-center justify-center gap-1 font-black ${isDarkMode ? "text-slate-200" : "text-slate-800"}`}>
-                                <Medal className="w-4 h-4 text-slate-300 shrink-0" />
-                                <span>2</span>
-                            </span>
+                            <div className="flex items-center justify-center">
+                                <div className="w-7 h-7 rounded-full bg-gradient-to-b from-slate-200 to-slate-400 text-slate-950 font-black text-xs flex items-center justify-center shadow-xs border border-slate-100">
+                                    2
+                                </div>
+                            </div>
                         );
                     }
                     if (rank === 3) {
                         return (
-                            <span className="inline-flex items-center justify-center gap-1 font-black text-amber-600">
-                                <Award className="w-4 h-4 text-amber-600 shrink-0" />
-                                <span>3</span>
-                            </span>
+                            <div className="flex items-center justify-center">
+                                <div className="w-7 h-7 rounded-full bg-gradient-to-b from-amber-500 to-amber-700 text-white font-black text-xs flex items-center justify-center shadow-xs border border-amber-400">
+                                    3
+                                </div>
+                            </div>
                         );
                     }
                     return (
-                        <span className={isDarkMode ? "text-slate-400 font-semibold" : "text-slate-600 font-semibold"}>
-                            {rank}
-                        </span>
+                        <div className="flex items-center justify-center">
+                            <div className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs ${isDarkMode ? "bg-slate-800 text-slate-300" : "bg-slate-100 text-slate-700 border border-slate-200"
+                                }`}>
+                                {rank}
+                            </div>
+                        </div>
                     );
                 }
             },
@@ -476,31 +482,14 @@ export function UnifiedLeaderboardView({
                 accessorKey: "name",
                 header: "BDE Executive",
                 meta: {
-                    headerClassName: "!py-2 !px-3",
-                    cellClassName: "!py-2 !px-3"
+                    headerClassName: "!py-3 !px-4",
+                    cellClassName: "!py-2.5 !px-4"
                 },
                 cell: ({ row }) => {
                     const item = row.original;
                     return (
-                        <div className="flex items-center gap-2.5">
-                            <div
-                                className={`w-7 h-7 rounded-full border flex items-center justify-center font-bold text-xs ${isDarkMode
-                                    ? "bg-slate-800 border-slate-700 text-slate-200 group-hover:border-cyan-500/50"
-                                    : "bg-slate-100 border-slate-300 text-slate-800 group-hover:border-cyan-600/50"
-                                    }`}
-                            >
-                                {item.name.charAt(0).toUpperCase()}
-                            </div>
-                            <div>
-                                <div
-                                    className={`font-semibold transition-colors ${isDarkMode
-                                        ? "text-white group-hover:text-cyan-300"
-                                        : "text-slate-900 group-hover:text-cyan-700"
-                                        }`}
-                                >
-                                    {item.name}
-                                </div>
-                            </div>
+                        <div className={`font-extrabold text-sm tracking-tight ${isDarkMode ? "text-slate-100" : "text-[#0F172A]"}`}>
+                            {item.name}
                         </div>
                     );
                 }
@@ -509,42 +498,13 @@ export function UnifiedLeaderboardView({
                 accessorKey: "category",
                 header: "Category / Dept",
                 meta: {
-                    headerClassName: "!py-2 !px-3",
-                    cellClassName: "!py-1.5 !px-3"
+                    headerClassName: "!py-3 !px-4",
+                    cellClassName: "!py-2.5 !px-4"
                 },
                 cell: ({ row }) => {
-                    const getCategoryPillStyle = (category: string, isDark: boolean) => {
-                        const lightPastelPalettes = [
-                            { light: "bg-emerald-100 text-emerald-800 border-emerald-300/80", dark: "bg-emerald-950/80 text-emerald-300 border-emerald-700/70" },
-                            { light: "bg-sky-100 text-sky-800 border-sky-300/80", dark: "bg-sky-950/80 text-sky-300 border-sky-700/70" },
-                            { light: "bg-purple-100 text-purple-800 border-purple-300/80", dark: "bg-purple-950/80 text-purple-300 border-purple-700/70" },
-                            { light: "bg-rose-100 text-rose-800 border-rose-300/80", dark: "bg-rose-950/80 text-rose-300 border-rose-700/70" },
-                            { light: "bg-amber-100 text-amber-900 border-amber-300/80", dark: "bg-amber-950/80 text-amber-300 border-amber-700/70" },
-                            { light: "bg-indigo-100 text-indigo-800 border-indigo-300/80", dark: "bg-indigo-950/80 text-indigo-300 border-indigo-700/70" },
-                            { light: "bg-teal-100 text-teal-800 border-teal-300/80", dark: "bg-teal-950/80 text-teal-300 border-teal-700/70" },
-                            { light: "bg-fuchsia-100 text-fuchsia-800 border-fuchsia-300/80", dark: "bg-fuchsia-950/80 text-fuchsia-300 border-fuchsia-700/70" },
-                            { light: "bg-orange-100 text-orange-900 border-orange-300/80", dark: "bg-orange-950/80 text-orange-300 border-orange-700/70" },
-                            { light: "bg-cyan-100 text-cyan-900 border-cyan-300/80", dark: "bg-cyan-950/80 text-cyan-300 border-cyan-700/70" },
-                            { light: "bg-blue-100 text-blue-900 border-blue-300/80", dark: "bg-blue-950/80 text-blue-300 border-blue-700/70" },
-                            { light: "bg-lime-100 text-lime-900 border-lime-300/80", dark: "bg-lime-950/80 text-lime-300 border-lime-700/70" },
-                        ];
-                        let hash = 0;
-                        for (let i = 0; i < (category || "").length; i++) {
-                            hash = category.charCodeAt(i) + ((hash << 5) - hash);
-                        }
-                        const index = Math.abs(hash) % lightPastelPalettes.length;
-                        const palette = lightPastelPalettes[index];
-                        return isDark ? palette.dark : palette.light;
-                    };
-
                     return (
-                        <span
-                            className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold border shadow-xs inline-flex items-center gap-1.5 ${getCategoryPillStyle(
-                                row.original.category,
-                                isDarkMode
-                            )}`}
-                        >
-                            <span className="w-1.5 h-1.5 rounded-full bg-current opacity-75 shrink-0" />
+                        <span className="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wide inline-flex items-center gap-1.5 bg-[#0891B2] text-white shadow-xs border border-cyan-400/40">
+                            <span className="w-1.5 h-1.5 rounded-full bg-cyan-200 shrink-0" />
                             <span>{row.original.category}</span>
                         </span>
                     );
@@ -558,8 +518,8 @@ export function UnifiedLeaderboardView({
                     accessorKey: "targetValue",
                     header: "IPD Target",
                     meta: {
-                        headerClassName: "text-right !py-2 !px-3",
-                        cellClassName: "text-right font-medium !py-1.5 !px-3"
+                        headerClassName: "text-right !py-3 !px-4",
+                        cellClassName: "text-right font-medium !py-2.5 !px-4"
                     },
                     cell: ({ row }) => (
                         <span className={isDarkMode ? "text-slate-300" : "text-slate-700"}>
@@ -571,8 +531,8 @@ export function UnifiedLeaderboardView({
                     accessorKey: "actual",
                     header: "IPD Done",
                     meta: {
-                        headerClassName: "text-right !py-2 !px-3",
-                        cellClassName: "text-right font-bold !py-1.5 !px-3"
+                        headerClassName: "text-right !py-3 !px-4",
+                        cellClassName: "text-right font-bold !py-2.5 !px-4"
                     },
                     cell: ({ row }) => (
                         <span className={isDarkMode ? "text-white" : "text-slate-900"}>
@@ -587,47 +547,22 @@ export function UnifiedLeaderboardView({
             accessorKey: "percentage",
             header: "Target Achieved %",
             meta: {
-                headerClassName: "min-w-[200px] !py-2 !px-3",
-                cellClassName: "!py-1 !px-3"
+                headerClassName: "min-w-[240px] !py-3 !px-4",
+                cellClassName: "!py-2 !px-4"
             },
             cell: ({ row }) => {
                 const item = row.original;
-                const percentColor =
-                    item.percentage >= 100
-                        ? "text-emerald-500"
-                        : item.percentage >= 75
-                            ? "text-cyan-500"
-                            : item.percentage >= 50
-                                ? "text-amber-500"
-                                : "text-rose-500";
-
-                const barBg =
-                    item.percentage >= 100
-                        ? "bg-gradient-to-r from-emerald-500 to-teal-400"
-                        : item.percentage >= 75
-                            ? "bg-gradient-to-r from-cyan-500 to-blue-500"
-                            : item.percentage >= 50
-                                ? "bg-gradient-to-r from-amber-500 to-orange-500"
-                                : "bg-gradient-to-r from-rose-500 to-red-500";
-
                 return (
-                    <div>
-                        <div className="flex items-center justify-between text-xs mb-1">
-                            <span className={`font-extrabold ${percentColor}`}>
-                                {item.percentage}%
-                            </span>
-                            {showTargetsAndActuals && (
-                                <span className={`text-[10px] ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
-                                    {item.actual} / {item.targetValue}
-                                </span>
-                            )}
-                        </div>
+                    <div className="flex items-center gap-4">
+                        <span className="font-extrabold text-sm sm:text-base text-[#0284C7] dark:text-cyan-400 min-w-[50px]">
+                            {item.percentage}%
+                        </span>
                         <div
-                            className={`w-full h-1.5 rounded-full overflow-hidden border ${isDarkMode ? "bg-slate-950 border-slate-800" : "bg-slate-200 border-slate-300"
+                            className={`w-full max-w-[220px] h-3 rounded-full overflow-hidden border ${isDarkMode ? "bg-slate-950 border-slate-800" : "bg-[#E2E8F0] border-slate-300/60"
                                 }`}
                         >
                             <div
-                                className={`h-full ${barBg} transition-all duration-500 rounded-full`}
+                                className="h-full bg-gradient-to-r from-[#06B6D4] to-[#0284C7] transition-all duration-500 rounded-full"
                                 style={{
                                     width: `${Math.min(item.percentage, 100)}%`
                                 }}
@@ -643,7 +578,7 @@ export function UnifiedLeaderboardView({
 
     return (
         <div
-            className={`min-h-screen font-sans selection:bg-cyan-500/30 selection:text-cyan-200 relative overflow-hidden pb-16 transition-colors duration-300 ${isDarkMode ? "bg-slate-950 text-slate-100" : "bg-slate-100 text-slate-900"
+            className={`min-h-screen font-sans selection:bg-cyan-500/30 selection:text-cyan-200 relative overflow-hidden pb-16 transition-colors duration-300 ${isDarkMode ? "dark bg-slate-950 text-slate-100" : "bg-slate-100 text-slate-900"
                 }`}
         >
             {/* First Session Bomb Explosion Reveal Overlay */}
@@ -755,139 +690,117 @@ export function UnifiedLeaderboardView({
                 )}
             </AnimatePresence>
 
-            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 space-y-1">
-                {/* Header Bar */}
-                <header
-                    className={`flex flex-col md:flex-row md:items-center justify-between gap-3 px-4 py-3 rounded-2xl border shadow-xl backdrop-blur-xl ${isDarkMode
-                        ? "bg-slate-900/60 border-slate-800/80 shadow-cyan-950/20"
-                        : "bg-[#062D4C] border-[#062D4C] shadow-slate-400/30 text-white"
-                        }`}
-                >
-                    <div className="flex items-center gap-3">
-                        <div className="relative w-20 h-10 sm:w-36 sm:h-12 shrink-0">
-                            <Image
-                                src={logo}
-                                alt="Mediend Logo"
-                                fill
-                                className="object-contain object-left"
-                                priority
-                            />
-                        </div>
-                        <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
-                            Leaderboard
-                        </h1>
+            {/* Fixed Full Width Reference Dark-Navy Header Bar */}
+            <header
+                className={`fixed top-0 inset-x-0 z-50 w-full flex flex-col md:flex-row md:items-center justify-between gap-3 px-6 py-3 border-b shadow-md transition-colors ${isDarkMode
+                    ? "bg-slate-900/95 border-slate-800 text-white backdrop-blur-md"
+                    : "bg-[#0B2545] border-[#0B2545] text-white shadow-slate-950/20"
+                    }`}
+            >
+                <div className="flex items-center gap-3">
+                    <div className="relative w-28 h-9 sm:w-32 sm:h-10 shrink-0">
+                        <Image
+                            src={logo}
+                            alt="Mediend Logo"
+                            fill
+                            className="object-contain object-left"
+                            priority
+                        />
+                    </div>
+                    <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white">
+                        Leaderboard
+                    </h1>
+                </div>
+
+                {/* Header Controls */}
+                <div className="flex flex-wrap items-center gap-2">
+                    {/* Month Filter */}
+                    <div className="relative flex items-center bg-white text-slate-900 rounded-xl border border-slate-200 px-3 py-1.5 text-xs font-extrabold shadow-sm">
+                        <Calendar className="w-4 h-4 mr-2 text-slate-600 shrink-0" />
+                        <input
+                            type="month"
+                            value={month}
+                            onChange={(e) => {
+                                if (e.target.value) {
+                                    setMonth(e.target.value);
+                                }
+                            }}
+                            className="bg-transparent outline-none cursor-pointer text-xs font-extrabold text-slate-900 [color-scheme:light]"
+                        />
                     </div>
 
-                    {/* Controls: Month + Category + Refresh Interval Config + Theme Toggle + Refresh */}
-                    <div className="flex flex-wrap items-center gap-3">
-
-                        {/* Month Filter */}
-                        <div
-                            className={`relative flex items-center rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all ${isDarkMode
-                                ? "bg-slate-900 border-slate-700 text-cyan-300 focus-within:border-cyan-400 focus-within:ring-1 focus-within:ring-cyan-500/50"
-                                : "bg-white border-slate-300 text-slate-900 shadow-sm focus-within:border-cyan-600 focus-within:ring-1 focus-within:ring-cyan-500/30"
-                                }`}
+                    {/* Category Filter */}
+                    <div className="relative flex items-center bg-white text-slate-900 rounded-xl border border-slate-200 px-3 py-1.5 text-xs font-extrabold shadow-sm max-w-[200px]">
+                        <Filter className="w-3.5 h-3.5 mr-2 text-cyan-600 shrink-0" />
+                        <select
+                            value={selectedCategory}
+                            onChange={(e) => setSelectedCategory(e.target.value)}
+                            className="bg-transparent outline-none cursor-pointer pr-1 text-xs font-extrabold truncate w-full text-slate-900"
                         >
-                            <input
-                                type="month"
-                                value={month}
-                                onChange={(e) => {
-                                    if (e.target.value) {
-                                        setMonth(e.target.value);
-                                    }
-                                }}
-                                className={`bg-transparent outline-none cursor-pointer text-xs font-bold w-full ${isDarkMode ? "text-cyan-300 [color-scheme:dark]" : "text-slate-900 [color-scheme:light]"
-                                    }`}
-                            />
-                        </div>
-
-                        {/* Category Filter */}
-                        <div
-                            className={`relative flex items-center rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all max-w-[200px] ${isDarkMode
-                                ? "bg-slate-900 border-slate-700 text-emerald-300 focus-within:border-emerald-400"
-                                : "bg-white border-slate-300 text-slate-900 shadow-sm focus-within:border-emerald-600"
-                                }`}
-                        >
-                            <Filter className={`w-3.5 h-3.5 mr-1.5 shrink-0 ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`} />
-                            <select
-                                value={selectedCategory}
-                                onChange={(e) => setSelectedCategory(e.target.value)}
-                                className={`bg-transparent outline-none cursor-pointer pr-1 text-xs font-bold truncate w-full ${isDarkMode ? "text-emerald-300" : "text-slate-900"
-                                    }`}
-                            >
-                                <option value="ALL" className={isDarkMode ? "bg-slate-900 text-slate-200" : "bg-white text-slate-900"}>
-                                    All Categories
+                            <option value="ALL" className="bg-white text-slate-900">
+                                All Categories
+                            </option>
+                            {data?.categories?.map((cat) => (
+                                <option key={cat} value={cat} className="bg-white text-slate-900">
+                                    {cat}
                                 </option>
-                                {data?.categories?.map((cat) => (
-                                    <option key={cat} value={cat} className={isDarkMode ? "bg-slate-900 text-slate-200" : "bg-white text-slate-900"}>
-                                        {cat}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* Refresh Interval Config Dropdown */}
-                        <div
-                            className={`relative flex items-center rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition-all ${isDarkMode
-                                ? "bg-slate-900 border-slate-700 text-cyan-300"
-                                : "bg-white border-slate-300 text-slate-900 shadow-sm"
-                                }`}
-                        >
-                            <select
-                                value={pollIntervalSeconds}
-                                onChange={(e) => setPollIntervalSeconds(Number(e.target.value))}
-                                className={`bg-transparent outline-none cursor-pointer pr-1 text-xs font-bold ${isDarkMode ? "text-cyan-300" : "text-slate-900"
-                                    }`}
-                            >
-                                {POLLING_OPTIONS.map((opt) => (
-                                    <option key={opt.value} value={opt.value} className={isDarkMode ? "bg-slate-900 text-slate-200" : "bg-white text-slate-900"}>
-                                        Refresh: {opt.label}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* Light / Dark Mode Toggle */}
-                        <button
-                            onClick={() => setIsDarkMode(!isDarkMode)}
-                            title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-                            className={`p-2 rounded-lg border transition-all active:scale-95 ${isDarkMode
-                                ? "bg-slate-900 hover:bg-slate-800 text-amber-400 border-slate-700"
-                                : "bg-white hover:bg-slate-100 text-amber-500 border-slate-300 shadow-sm"
-                                }`}
-                        >
-                            {isDarkMode ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
-                        </button>
-
-                        {/* Refresh Button + Live Timer Indicator */}
-                        <button
-                            onClick={() => fetchData(false)}
-                            title={`Click to refresh data now (Next auto-sync in ${formatCountdown(secondsUntilNextFetch)})`}
-                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold transition-all active:scale-95 ${isDarkMode
-                                ? "bg-slate-900 hover:bg-slate-800 text-slate-300 border-slate-700"
-                                : "bg-white hover:bg-slate-100 text-slate-700 border-slate-300 shadow-sm"
-                                }`}
-                        >
-                            <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin text-cyan-400" : ""}`} />
-                            <span className="text-[11px] font-mono text-cyan-400">
-                                {formatCountdown(secondsUntilNextFetch)}
-                            </span>
-                        </button>
+                            ))}
+                        </select>
                     </div>
-                </header>
 
-                {/* Top Stepped Podium Card: Single Monthly Champions View */}
+                    {/* Refresh Interval Dropdown */}
+                    <div className="relative flex items-center bg-white text-slate-900 rounded-xl border border-slate-200 px-3 py-1.5 text-xs font-extrabold shadow-sm">
+                        <Clock className="w-3.5 h-3.5 mr-2 text-cyan-600 shrink-0" />
+                        <select
+                            value={pollIntervalSeconds}
+                            onChange={(e) => setPollIntervalSeconds(Number(e.target.value))}
+                            className="bg-transparent outline-none cursor-pointer pr-1 text-xs font-extrabold text-slate-900"
+                        >
+                            {POLLING_OPTIONS.map((opt) => (
+                                <option key={opt.value} value={opt.value} className="bg-white text-slate-900">
+                                    Refresh: {opt.label}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Theme Toggle */}
+                    <button
+                        onClick={() => setIsDarkMode(!isDarkMode)}
+                        title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                        className="p-2 rounded-xl bg-white text-amber-500 border border-slate-200 shadow-sm transition-all active:scale-95 hover:bg-slate-50"
+                    >
+                        {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4 text-amber-600" />}
+                    </button>
+
+                    {/* Live Timer Pill */}
+                    <button
+                        onClick={() => fetchData(false)}
+                        title={`Click to refresh data now (Next auto-sync in ${formatCountdown(secondsUntilNextFetch)})`}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white text-cyan-700 border border-slate-200 text-xs font-extrabold shadow-sm transition-all active:scale-95 hover:bg-slate-50"
+                    >
+                        <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin text-cyan-600" : "text-cyan-600"}`} />
+                        <span className="text-xs font-mono font-bold text-cyan-700">
+                            {formatCountdown(secondsUntilNextFetch)}
+                        </span>
+                    </button>
+                </div>
+            </header>
+
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 space-y-3">
+
+                {/* Top Stepped Podium Card */}
                 <div className="w-full">
                     <SteppedPodiumCard
-                        title={`Monthly Champions (${month})`}
-                        icon={<Trophy className="w-4 h-4 text-cyan-500" />}
+                        title={`MONTHLY CHAMPIONS (${month})`}
+                        icon={<Trophy className="w-4 h-4 text-cyan-600" />}
                         categoryLabel={selectedCategory === "ALL" ? "All Categories" : selectedCategory}
                         podiumData={monthlyPodium}
                         isDarkMode={isDarkMode}
                         badgeColorClass={
                             isDarkMode
-                                ? "bg-cyan-950/80 text-cyan-300 border-cyan-800/60"
-                                : "bg-cyan-100/80 text-cyan-800 border-cyan-200"
+                                ? "bg-cyan-950 text-cyan-300 border-cyan-800"
+                                : "bg-[#E0F2FE] text-[#0284C7] border-[#BAE6FD]"
                         }
                         valueFormatter={(bd) => ({
                             primary: bd ? `${bd.percentage}%` : "-",
@@ -896,87 +809,234 @@ export function UnifiedLeaderboardView({
                     />
                 </div>
 
-                {/* Main Rankings Table Container using Generic DataTable */}
+                {/* Main Rankings Table Container */}
                 <div
-                    className={`rounded-2xl border shadow-xl overflow-hidden backdrop-blur-xl ${isDarkMode
-                        ? "bg-gradient-to-br from-slate-900/90 via-[#8091A1]/15 to-slate-950 border-[#8091A1]/30 shadow-2xl shadow-slate-950/30"
-                        : "bg-gradient-to-br from-[#8091A1]/15 via-[#8091A1]/10 to-white/95 border-[#8091A1]/30 shadow-lg text-slate-900"
+                    className={`rounded-2xl border shadow-md overflow-hidden transition-all ${isDarkMode
+                        ? "bg-slate-900 border-slate-800 shadow-xl"
+                        : "bg-white border-slate-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.03)] text-slate-900"
                         }`}
                 >
                     {/* Table Header Controls */}
                     <div
-                        className={`px-4 py-2.5 border-b flex flex-col md:flex-row items-center justify-between gap-3 ${isDarkMode ? "border-[#8091A1]/30 bg-[#8091A1]/10" : "border-[#8091A1]/20 bg-[#8091A1]/10"
+                        className={`px-5 py-3 border-b flex flex-col md:flex-row items-center justify-between gap-3 ${isDarkMode ? "border-slate-800 bg-slate-900/50" : "border-slate-100 bg-white"
                             }`}
                     >
                         <div className="flex items-center gap-2">
-                            <Trophy className="w-4 h-4 text-cyan-500" />
-                            <h2 className={`text-base font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                            <span className="text-lg">👥</span>
+                            <h2 className={`text-base font-extrabold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
                                 Full BDE Standings
                             </h2>
-                            <span className={`text-xs font-normal ml-1 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
+                            <span className={`text-xs font-semibold ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
                                 ({filteredLeaderboard.length} Executives)
                             </span>
                         </div>
 
-                        {/* Search Input */}
-                        <div className="relative w-full md:w-72">
+                        {/* Search Input matching reference UI */}
+                        <div className="relative w-full md:w-80">
                             <Search
-                                className={`w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 ${isDarkMode ? "text-slate-400" : "text-slate-500"
-                                    }`}
+                                className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
                             />
                             <input
                                 type="text"
                                 placeholder="Search BDE or category..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className={`w-full rounded-xl border pl-9 pr-4 py-1.5 text-xs transition-all outline-none ${isDarkMode
-                                    ? "bg-slate-950/80 border-slate-800 text-slate-200 placeholder-slate-500 focus:border-cyan-500"
-                                    : "bg-white/90 border-[#8091A1]/30 text-slate-900 placeholder-slate-400 focus:border-[#8091A1] shadow-xs"
+                                className={`w-full rounded-xl border pl-10 pr-4 py-2 text-xs font-medium transition-all outline-none ${isDarkMode
+                                    ? "bg-slate-950 border-slate-800 text-slate-200 placeholder-slate-500 focus:border-cyan-500"
+                                    : "bg-[#F8FAFC] border-slate-200 text-slate-900 placeholder-slate-400 focus:border-cyan-600 focus:bg-white shadow-inner"
                                     }`}
                             />
                         </div>
                     </div>
 
-                    {/* TanStack DataTable with Smooth Sliding Row Animations */}
-                    <div className="p-1.5">
-                        <DataTable
-                            columns={columns}
-                            data={filteredLeaderboard}
-                            isLoading={loading}
-                            emptyMessage="No business development executives found matching your criteria."
-                            enablePagination={true}
-                            initialPageSize={10}
-                            pageSizeOptions={[10, 25, 50]}
-                            getRowId={(row) => row.userId}
-                            tableHeaderClassName={
-                                isDarkMode
-                                    ? "bg-slate-950/90 border-slate-800/80 text-slate-300 font-bold"
-                                    : "bg-[#062D4C] border-[#062D4C] text-white font-bold [&_th]:text-white [&_th]:font-bold shadow-md"
-                            }
-                            tableContainerClassName="border-0 shadow-none bg-transparent"
-                            rowClassName={(row) => {
-                                const rank = row.rank;
-                                const transitionClass = enableAnimations ? "transition-all duration-500 ease-in-out" : "";
-                                if (rank === 1) {
-                                    return isDarkMode
-                                        ? `bg-gradient-to-r from-amber-500/35 via-amber-500/20 to-amber-500/10 border-amber-500/50 hover:bg-amber-500/40 shadow-md shadow-amber-500/15 ${transitionClass}`
-                                        : `bg-gradient-to-r from-amber-500/25 via-amber-200/50 to-amber-100/30 border-amber-400/80 hover:bg-amber-500/30 shadow-md shadow-amber-400/20 ${transitionClass}`;
-                                }
-                                if (rank === 2) {
-                                    return isDarkMode
-                                        ? `bg-gradient-to-r from-slate-300/30 via-slate-400/20 to-slate-400/10 border-slate-400/50 hover:bg-slate-300/35 ${transitionClass}`
-                                        : `bg-gradient-to-r from-slate-300/60 via-slate-200/50 to-slate-100/40 border-slate-300 hover:bg-slate-200/70 ${transitionClass}`;
-                                }
-                                if (rank === 3) {
-                                    return isDarkMode
-                                        ? `bg-gradient-to-r from-amber-700/30 via-amber-800/20 to-amber-800/10 border-amber-700/50 hover:bg-amber-700/35 ${transitionClass}`
-                                        : `bg-gradient-to-r from-amber-200/60 via-orange-100/40 to-orange-50/30 border-amber-300/80 hover:bg-amber-100/70 ${transitionClass}`;
-                                }
-                                return isDarkMode
-                                    ? `hover:bg-slate-800/40 border-slate-800/60 ${transitionClass}`
-                                    : `hover:bg-slate-100/60 border-slate-200 ${transitionClass}`;
-                            }}
-                        />
+                    {/* BDE Standings Table: Fixed Top 3 Rows + Vertical Auto-Scrolling Carousel for Ranks >= 4 (IPD Actual >= 1) */}
+                    <div className="overflow-hidden">
+                        <table className="w-full table-fixed caption-bottom text-sm border-collapse">
+                            {/* Column Width Definitions to Guarantee Exact Column Alignment */}
+                            <colgroup>
+                                <col className="w-20" />
+                                <col className="w-[30%]" />
+                                <col className="w-[20%]" />
+                                {showTargetsAndActuals && (
+                                    <>
+                                        <col className="w-[12%]" />
+                                        <col className="w-[12%]" />
+                                    </>
+                                )}
+                                <col className="w-auto" />
+                            </colgroup>
+
+                            {/* Dark Navy Table Header */}
+                            <thead className={isDarkMode ? "bg-slate-950 text-slate-300 font-bold text-xs uppercase" : "bg-[#062D4C] text-white font-extrabold text-xs uppercase shadow-md"}>
+                                <tr>
+                                    <th className="text-center py-3 px-3">Rank</th>
+                                    <th className="text-left py-3 px-4">BDE Executive</th>
+                                    <th className="text-left py-3 px-4">Category / Dept</th>
+                                    {showTargetsAndActuals && (
+                                        <>
+                                            <th className="text-right py-3 px-4">IPD Target</th>
+                                            <th className="text-right py-3 px-4">IPD Done</th>
+                                        </>
+                                    )}
+                                    <th className="text-left py-3 px-4">Target Achieved %</th>
+                                </tr>
+                            </thead>
+
+                            {/* Section 1: Top 3 Fixed Rows */}
+                            <tbody className="divide-y divide-border">
+                                {topThreeStandings.map((item) => (
+                                    <tr
+                                        key={item.userId}
+                                        className={`transition-colors ${
+                                            item.rank === 1
+                                                ? isDarkMode ? "bg-slate-800/80 hover:bg-slate-800" : "bg-amber-500/15 hover:bg-amber-500/25"
+                                                : item.rank === 2
+                                                ? isDarkMode ? "bg-slate-800/40 hover:bg-slate-800/60" : "bg-slate-100/70 hover:bg-slate-200/60"
+                                                : isDarkMode ? "bg-slate-800/20 hover:bg-slate-800/40" : "bg-amber-100/50 hover:bg-amber-100/80"
+                                        }`}
+                                    >
+                                        <td className="text-center py-2.5 px-4">
+                                            {item.rank === 1 ? (
+                                                <div className="flex items-center justify-center gap-1">
+                                                    <span className="text-sm font-black text-amber-500">👑</span>
+                                                    <div className="w-7 h-7 rounded-full bg-gradient-to-b from-amber-300 to-amber-500 text-slate-950 font-black text-xs flex items-center justify-center shadow-sm border border-amber-200">
+                                                        1
+                                                    </div>
+                                                </div>
+                                            ) : item.rank === 2 ? (
+                                                <div className="flex items-center justify-center">
+                                                    <div className="w-7 h-7 rounded-full bg-gradient-to-b from-slate-200 to-slate-400 text-slate-950 font-black text-xs flex items-center justify-center shadow-xs border border-slate-100">
+                                                        2
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className="flex items-center justify-center">
+                                                    <div className="w-7 h-7 rounded-full bg-gradient-to-b from-amber-500 to-amber-700 text-white font-black text-xs flex items-center justify-center shadow-xs border border-amber-400">
+                                                        3
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </td>
+                                        <td className="py-2.5 px-4 font-extrabold text-sm tracking-tight">
+                                            <span className={isDarkMode ? "text-slate-100" : "text-[#0F172A]"}>{item.name}</span>
+                                        </td>
+                                        <td className="py-2.5 px-4">
+                                            <span className="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wide inline-flex items-center gap-1.5 bg-[#0891B2] text-white shadow-xs border border-cyan-400/40">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-cyan-200 shrink-0" />
+                                                <span>{item.category}</span>
+                                            </span>
+                                        </td>
+                                        {showTargetsAndActuals && (
+                                            <>
+                                                <td className={`text-right py-2.5 px-4 font-medium ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>
+                                                    {item.targetValue}
+                                                </td>
+                                                <td className={`text-right py-2.5 px-4 font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                                                    {item.actual}
+                                                </td>
+                                            </>
+                                        )}
+                                        <td className="py-2 px-4">
+                                            <div className="flex items-center gap-4">
+                                                <span className="font-extrabold text-sm sm:text-base text-[#0284C7] dark:text-cyan-400 min-w-[50px]">
+                                                    {item.percentage}%
+                                                </span>
+                                                <div className={`w-full max-w-[220px] h-3 rounded-full overflow-hidden border ${isDarkMode ? "bg-slate-950 border-slate-800" : "bg-[#E2E8F0] border-slate-300/60"}`}>
+                                                    <div
+                                                        className="h-full bg-gradient-to-r from-[#06B6D4] to-[#0284C7] transition-all duration-500 rounded-full"
+                                                        style={{ width: `${Math.min(item.percentage, 100)}%` }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+
+                        {/* Section 2: Fixed Height Vertical Carousel Container for Ranks 4+ (364px = exactly 7 rows visible at once) */}
+                        {scrollingStandings.length > 0 ? (
+                            <div className="relative h-[364px] overflow-hidden border-t border-border">
+                                <motion.div
+                                    animate={{ y: [0, -scrollingStandings.length * 52] }}
+                                    transition={{
+                                        duration: Math.max(scrollingStandings.length * 3.5, 12),
+                                        ease: "linear",
+                                        repeat: Infinity,
+                                    }}
+                                    className="w-full"
+                                >
+                                    <table className="w-full table-fixed caption-bottom text-sm border-collapse">
+                                        <colgroup>
+                                            <col className="w-20" />
+                                            <col className="w-[30%]" />
+                                            <col className="w-[20%]" />
+                                            {showTargetsAndActuals && (
+                                                <>
+                                                    <col className="w-[12%]" />
+                                                    <col className="w-[12%]" />
+                                                </>
+                                            )}
+                                            <col className="w-auto" />
+                                        </colgroup>
+                                        <tbody className="divide-y divide-border">
+                                            {[...scrollingStandings, ...scrollingStandings].map((item, idx) => (
+                                                <tr
+                                                    key={`${item.userId}-${idx}`}
+                                                    className={`h-[52px] transition-colors ${
+                                                        isDarkMode ? "border-slate-800/60 hover:bg-slate-800/40 text-slate-200" : "border-slate-100 hover:bg-slate-50 text-slate-900"
+                                                    }`}
+                                                >
+                                                    <td className="text-center py-2.5 px-3">
+                                                        <div className={`w-7 h-7 mx-auto rounded-full flex items-center justify-center font-bold text-xs ${
+                                                            isDarkMode ? "bg-slate-800 text-slate-300" : "bg-slate-100 text-slate-700 border border-slate-200"
+                                                        }`}>
+                                                            {item.rank}
+                                                        </div>
+                                                    </td>
+                                                    <td className="py-2.5 px-4 font-extrabold text-sm tracking-tight truncate">
+                                                        <span className={isDarkMode ? "text-slate-100" : "text-[#0F172A]"}>{item.name}</span>
+                                                    </td>
+                                                    <td className="py-2.5 px-4 truncate">
+                                                        <span className="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wide inline-flex items-center gap-1.5 bg-[#0891B2] text-white shadow-xs border border-cyan-400/40">
+                                                            <span className="w-1.5 h-1.5 rounded-full bg-cyan-200 shrink-0" />
+                                                            <span className="truncate">{item.category}</span>
+                                                        </span>
+                                                    </td>
+                                                    {showTargetsAndActuals && (
+                                                        <>
+                                                            <td className={`text-right py-2.5 px-4 font-medium ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>
+                                                                {item.targetValue}
+                                                            </td>
+                                                            <td className={`text-right py-2.5 px-4 font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                                                                {item.actual}
+                                                            </td>
+                                                        </>
+                                                    )}
+                                                    <td className="py-2 px-4">
+                                                        <div className="flex items-center gap-4">
+                                                            <span className="font-extrabold text-sm sm:text-base text-[#0284C7] dark:text-cyan-400 min-w-[50px]">
+                                                                {item.percentage}%
+                                                            </span>
+                                                            <div className={`w-full max-w-[220px] h-3 rounded-full overflow-hidden border ${isDarkMode ? "bg-slate-950 border-slate-800" : "bg-[#E2E8F0] border-slate-300/60"}`}>
+                                                                <div
+                                                                    className="h-full bg-gradient-to-r from-[#06B6D4] to-[#0284C7] transition-all duration-500 rounded-full"
+                                                                    style={{ width: `${Math.min(item.percentage, 100)}%` }}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </motion.div>
+                            </div>
+                        ) : (
+                            <div className="p-6 text-center text-xs font-semibold text-muted-foreground">
+                                No additional executives with at least 1 IPD done.
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
