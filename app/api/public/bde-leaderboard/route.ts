@@ -1,8 +1,9 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { UserRole } from '@/generated/prisma/client'
+import { Prisma, UserRole } from '@/generated/prisma/client'
 import { errorResponse, successResponse } from '@/lib/api-utils'
 import { calculateActual } from '@/lib/analytics/target-progress'
+import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
 import { headcountEmployeeWhere } from '@/lib/hrms/headcount'
 import { startOfMonth, endOfMonth, startOfYear } from 'date-fns'
 
@@ -85,7 +86,7 @@ export async function GET(request: NextRequest) {
     }
     const categoriesList = ['All', ...Array.from(categoriesSet).sort((a, b) => a.localeCompare(b))]
 
-    // 4. Calculate actuals and target achievement for each BD member
+    // 4. Calculate actuals, last IPD date, and target achievement for each BD member
     const allMembersData = await Promise.all(
       bdEmployees.map(async (emp) => {
         const userId = emp.userId
@@ -96,6 +97,28 @@ export async function GET(request: NextRequest) {
         const targetValue = targetMap.get(userId) ?? 0
         const actual = await calculateActual(userId, 'IPD_DONE', periodStart, periodEnd)
         const annualActual = await calculateActual(userId, 'IPD_DONE', yearStart, yearEnd)
+
+        // Find the date of the latest IPD done for this user in the period
+        const completedWhere: Prisma.LeadWhereInput = {
+          bdId: userId,
+          ...canonicalSalesCompletedWhere({ gte: periodStart, lte: periodEnd }),
+        }
+        const latestLead = await prisma.lead.findFirst({
+          where: completedWhere,
+          select: {
+            surgeryDate: true,
+            admissionRecord: { select: { surgeryDate: true } },
+            createdDate: true,
+          },
+          orderBy: [
+            { surgeryDate: 'desc' },
+            { createdDate: 'desc' },
+          ],
+        })
+
+        const lastIpdDate = latestLead
+          ? (latestLead.surgeryDate || latestLead.admissionRecord?.surgeryDate || latestLead.createdDate || null)
+          : null
 
         const percentage = targetValue > 0 ? Math.round((actual / targetValue) * 100 * 10) / 10 : 0
 
@@ -109,6 +132,7 @@ export async function GET(request: NextRequest) {
           actual,
           percentage,
           annualActual,
+          lastIpdTime: lastIpdDate ? new Date(lastIpdDate).getTime() : Infinity,
         }
       })
     )
@@ -119,18 +143,24 @@ export async function GET(request: NextRequest) {
       ? allMembersData.filter((m) => m.category.toUpperCase() === normalizedCat)
       : allMembersData
 
-    // 5. Rank by target achieved percentage (descending), then actual IPD done (descending)
+    // 5. Rank by target achieved percentage (descending), then earliest last IPD done (ascending timestamp tie-breaker), then actual IPD done (descending)
     const sortedByMonthly = [...filteredMembers].sort((a, b) => {
       if (b.percentage !== a.percentage) {
         return b.percentage - a.percentage
       }
+      if (a.lastIpdTime !== b.lastIpdTime) {
+        return a.lastIpdTime - b.lastIpdTime
+      }
       return b.actual - a.actual
     })
 
-    const monthlyRankings = sortedByMonthly.map((m, idx) => ({
-      ...m,
-      rank: idx + 1,
-    }))
+    const monthlyRankings = sortedByMonthly.map((m, idx) => {
+      const { lastIpdTime, ...rest } = m
+      return {
+        ...rest,
+        rank: idx + 1,
+      }
+    })
 
     // 6. Annual YTD Rankings (sorted by annual IPD done)
     const sortedByAnnual = [...filteredMembers].sort((a, b) => b.annualActual - a.annualActual)
