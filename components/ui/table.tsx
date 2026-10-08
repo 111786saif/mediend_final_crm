@@ -400,6 +400,13 @@ function TableHead({
   const isRight = className?.includes("text-right")
   const isCenter = className?.includes("text-center")
 
+  const hasFilter = Boolean(
+    context &&
+    colIndex !== undefined &&
+    context.activeFilters[colIndex] &&
+    context.activeFilters[colIndex].length > 0
+  )
+
   return (
     <th
       data-slot="table-head"
@@ -413,7 +420,13 @@ function TableHead({
         "flex items-center gap-1",
         isRight ? "justify-end" : isCenter ? "justify-center" : "justify-between"
       )}>
-        <span>{props.children}</span>
+        {hasFilter ? (
+          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800 shadow-xs">
+            {props.children}
+          </span>
+        ) : (
+          <span>{props.children}</span>
+        )}
         {filterComponent}
       </div>
     </th>

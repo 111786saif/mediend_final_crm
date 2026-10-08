@@ -152,9 +152,25 @@ export function EntryForm({
     doctors: string[];
   }>({ treatments: [], hospitals: [], doctors: [] });
   const [customFields, setCustomFields] = useState<Record<string, boolean>>({});
+  const [sendToFinance, setSendToFinance] = useState<boolean>(() => {
+    if (request.kind !== "saleProduct") return false;
+    if (request.id) {
+      const existing = state.sales.find((s) => s.id === request.id);
+      if (
+        existing &&
+        ((existing.salesPrice !== undefined && existing.salesPrice > 0) ||
+          (existing.salesPriceWithGst !== undefined && existing.salesPriceWithGst > 0) ||
+          existing.invoiceStatus === "Raised" ||
+          (existing.receivedPayment !== undefined && existing.receivedPayment > 0))
+      ) {
+        return false;
+      }
+    }
+    return true;
+  });
 
   useEffect(() => {
-    if (request.kind === "saleProduct") {
+    if (request.kind === "saleProduct" || request.kind === "location") {
       fetch("/api/masters/pipeline-options", { credentials: "same-origin" })
         .then((res) => res.json())
         .then((json) => {
@@ -260,8 +276,24 @@ export function EntryForm({
   }, []);
 
   const fields = formFields(request.kind, state),
+    financeFields = request.kind === "saleProduct" ? formFields("saleFinance", state) : [],
     isLines = ["purchase", "sale", "saleProduct", "transfer"].includes(request.kind),
     purchase = request.kind === "purchase";
+
+  const handleSendToFinanceChange = (checked: boolean) => {
+    setSendToFinance(checked);
+    if (!checked) {
+      setValues((prev) => ({
+        ...prev,
+        invoiceStatus: prev.invoiceStatus || "Pending",
+        paymentReceivedStatus: prev.paymentReceivedStatus || "Not Received",
+        gstAmount: prev.gstAmount || "0",
+      }));
+      if (lines.length > 0) {
+        recalcFinanceTotals(lines);
+      }
+    }
+  };
 
   const recalcFinanceTotals = (updatedLines: Line[]) => {
     let totalSales = 0;
@@ -531,11 +563,13 @@ export function EntryForm({
               .map((l) => ({
                 balanceId: l.balanceId || "",
                 quantity: Number(l.quantity || 1),
-                unitPrice: parseRupees(l.unitPrice || "0"),
+                unitPrice: (request.kind === "saleProduct" && sendToFinance) ? 0 : parseRupees(l.unitPrice || "0"),
                 unitCost: parseRupees(l.unitCost || "0"),
                 mrp: parseRupees(l.mrp || "0"),
-                gstPercent: Number(l.gstPercent || 0),
-                gstAmount: parseRupees(l.gstAmount || "0"),
+                gstPercent: (request.kind === "saleProduct" && sendToFinance) ? 0 : Number(l.gstPercent || 0),
+                gstAmount: (request.kind === "saleProduct" && sendToFinance)
+                  ? 0
+                  : (parseRupees(l.gstAmount || "0") || Math.round(parseRupees(l.unitPrice || "0") * Number(l.quantity || 1) * (Number(l.gstPercent || 0) / 100))),
               })),
             bdmName: values.bdmName || "",
             managerName: values.managerName || "",
@@ -549,17 +583,18 @@ export function EntryForm({
             sizeUsed: finalSizeUsed,
             remark: values.remark || "",
             stockUsedForm: finalStockUsedForm,
-            invoiceStatus: values.invoiceStatus || "",
-            mrp: parseRupees(values.mrp || "0"),
-            buyPrice: parseRupees(values.buyPrice || "0"),
-            salesPrice: parseRupees(values.salesPrice || "0"),
-            gstPercent: Number(values.gstPercent || 0),
-            gstAmount: parseRupees(values.gstAmount || "0"),
-            salesPriceWithGst: parseRupees(values.salesPriceWithGst || "0"),
-            receivedPayment: parseRupees(values.receivedPayment || "0"),
-            paymentReceivedStatus:
-              values.paymentReceivedStatus ||
-              computePaymentStatus(values.receivedPayment || "0", values.salesPriceWithGst || "0"),
+            invoiceStatus: (request.kind === "saleProduct" && sendToFinance) ? "Pending" : (values.invoiceStatus || "Pending"),
+            mrp: (request.kind === "saleProduct" && sendToFinance) ? 0 : parseRupees(values.mrp || "0"),
+            buyPrice: (request.kind === "saleProduct" && sendToFinance) ? 0 : parseRupees(values.buyPrice || "0"),
+            salesPrice: (request.kind === "saleProduct" && sendToFinance) ? 0 : parseRupees(values.salesPrice || "0"),
+            gstPercent: (request.kind === "saleProduct" && sendToFinance) ? 0 : Number(values.gstPercent || 0),
+            gstAmount: (request.kind === "saleProduct" && sendToFinance) ? 0 : parseRupees(values.gstAmount || "0"),
+            salesPriceWithGst: (request.kind === "saleProduct" && sendToFinance) ? 0 : parseRupees(values.salesPriceWithGst || "0"),
+            receivedPayment: (request.kind === "saleProduct" && sendToFinance) ? 0 : parseRupees(values.receivedPayment || "0"),
+            paymentReceivedStatus: (request.kind === "saleProduct" && sendToFinance)
+              ? "Not Received"
+              : (values.paymentReceivedStatus ||
+                computePaymentStatus(values.receivedPayment || "0", values.salesPriceWithGst || "0")),
           };
           break;
         }
@@ -917,7 +952,9 @@ export function EntryForm({
                     {f.label}
                     {f.required !== false && f.type !== "file" ? " *" : ""}
                   </span>
-                  {request.kind === "saleProduct" && (f.name === "treatment" || f.name === "drName" || f.name === "hospitalName") && (
+                  {((request.kind === "saleProduct" && (f.name === "treatment" || f.name === "drName" || f.name === "hospitalName")) ||
+                    (request.kind === "location" && f.name === "name") ||
+                    (request.kind === "transfer" && f.name === "kind")) && (
                     <button
                       type="button"
                       onClick={() =>
@@ -996,7 +1033,7 @@ export function EntryForm({
                       </div>
                     )}
                   </div>
-                ) : f.type === "select" ? (
+                ) : f.type === "select" && !customFields[f.name] ? (
                   <select
                     required={f.required !== false}
                     value={values[f.name] ?? ""}
@@ -1046,8 +1083,9 @@ export function EntryForm({
                     onChange={(e) => set(f.name, e.target.value)}
                     rows={3}
                   />
-                ) : request.kind === "saleProduct" &&
-                  (f.name === "treatment" || f.name === "drName" || f.name === "hospitalName") &&
+                ) : ((request.kind === "saleProduct" &&
+                  (f.name === "treatment" || f.name === "drName" || f.name === "hospitalName")) ||
+                  (request.kind === "location" && f.name === "name")) &&
                   !customFields[f.name] ? (
                   <select
                     required={f.required !== false}
@@ -1143,9 +1181,13 @@ export function EntryForm({
                         className="inline-flex items-center justify-center border-0 bg-transparent rounded-md p-1.5 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-800 hover:text-red-600 dark:hover:text-red-400 transition-colors disabled:opacity-40"
                         disabled={lines.length === 1}
                         onClick={() =>
-                          setLines((old) =>
-                            old.filter((_, index) => index !== i),
-                          )
+                          setLines((old) => {
+                            const next = old.filter((_, index) => index !== i);
+                            if (request.kind === "saleProduct" && !sendToFinance) {
+                              recalcFinanceTotals(next);
+                            }
+                            return next;
+                          })
                         }
                         aria-label={`Remove item ${i + 1}`}
                       >
@@ -1194,7 +1236,6 @@ export function EntryForm({
                           <label className="flex flex-col gap-1 text-xs font-medium text-slate-600 dark:text-slate-400">
                             Batch / lot
                             <input
-                              required
                               className="w-full px-3 py-2 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
                               value={line.batch ?? ""}
                               maxLength={200}
@@ -1289,33 +1330,84 @@ export function EntryForm({
                           step="1"
                           className="w-full px-3 py-2 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
                           value={line.quantity}
-                          onChange={(e) =>
-                            lineSet(i, "quantity", e.target.value)
-                          }
+                          onChange={(e) => {
+                            lineSet(i, "quantity", e.target.value);
+                            if (request.kind === "saleProduct" && !sendToFinance) {
+                              const updatedLines = lines.map((l, idx) =>
+                                idx === i ? { ...l, quantity: e.target.value } : l
+                              );
+                              recalcFinanceTotals(updatedLines);
+                            }
+                          }}
                         />
                       </label>
-                      {request.kind !== "transfer" && request.kind !== "saleProduct" && (
+                      {request.kind !== "transfer" && (request.kind !== "saleProduct" || !sendToFinance) && (
                         <label className="flex flex-col gap-1 text-xs font-medium text-slate-600 dark:text-slate-400">
                           {purchase
                             ? "Unit purchase cost"
                             : "Unit selling price"}{" "}
                           (₹)
                           <input
-                            required
+                            required={request.kind !== "saleProduct"}
                             inputMode="decimal"
                             className="w-full px-3 py-2 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
                             value={
-                              line[purchase ? "unitCost" : "unitPrice"] ?? "0"
+                              line[purchase ? "unitCost" : "unitPrice"] ?? ""
                             }
-                            onChange={(e) =>
+                            onChange={(e) => {
                               lineSet(
                                 i,
                                 purchase ? "unitCost" : "unitPrice",
                                 e.target.value,
-                              )
-                            }
+                              );
+                              if (request.kind === "saleProduct") {
+                                const updatedLines = lines.map((l, idx) =>
+                                  idx === i ? { ...l, unitPrice: e.target.value } : l
+                                );
+                                recalcFinanceTotals(updatedLines);
+                              }
+                            }}
                           />
                         </label>
+                      )}
+                      {request.kind === "saleProduct" && !sendToFinance && (
+                        <label className="flex flex-col gap-1 text-xs font-medium text-slate-600 dark:text-slate-400">
+                          <span>GST %</span>
+                          <input
+                            type="number"
+                            min="0"
+                            max="100"
+                            step="1"
+                            placeholder="e.g. 18"
+                            className="w-full px-3 py-2 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
+                            value={line.gstPercent ?? ""}
+                            onChange={(e) => {
+                              lineSet(i, "gstPercent", e.target.value);
+                              const updatedLines = lines.map((l, idx) =>
+                                idx === i ? { ...l, gstPercent: e.target.value } : l
+                              );
+                              recalcFinanceTotals(updatedLines);
+                            }}
+                          />
+                        </label>
+                      )}
+                      {request.kind === "saleProduct" && !sendToFinance && (
+                        <div className="sm:col-span-2 flex items-center justify-between text-[11px] bg-slate-100 dark:bg-slate-800/60 p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 flex-wrap gap-2">
+                          {(() => {
+                            const qty = Number(line.quantity || 1);
+                            const price = parseRupees(line.unitPrice || "0") / 100;
+                            const itemSelling = price * qty;
+                            const gstPct = Number(line.gstPercent || 0);
+                            const itemGstAmt = itemSelling * (gstPct / 100);
+                            return (
+                              <>
+                                <span>Item Subtotal: <strong>₹{itemSelling.toFixed(2)}</strong></span>
+                                <span>GST ({gstPct}%): <strong className="text-teal-600 dark:text-teal-400">+₹{itemGstAmt.toFixed(2)}</strong></span>
+                                <span>Item Total with GST: <strong className="text-slate-900 dark:text-slate-100">₹{(itemSelling + itemGstAmt).toFixed(2)}</strong></span>
+                              </>
+                            );
+                          })()}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -1339,13 +1431,96 @@ export function EntryForm({
               >
                 <Plus size={16} /> {isTransfer ? "Add item to transfer" : "Add item / size"}
               </button>
-              {request.kind !== "transfer" && request.kind !== "saleProduct" && (
+              {request.kind !== "transfer" && (request.kind !== "saleProduct" || !sendToFinance) && (
                 <div className="flex justify-between items-center p-3 bg-slate-100 dark:bg-slate-800/60 rounded-lg text-xs font-medium">
                   <span className="text-slate-600 dark:text-slate-400">Item subtotal (before tax)</span>
                   <strong className="text-sm font-bold text-slate-900 dark:text-slate-100">{formatMoney(subtotal)}</strong>
                 </div>
               )}
             </fieldset>
+          )}
+          {request.kind === "saleProduct" && (
+            <div className="border border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50/70 dark:bg-slate-950/70 p-4 space-y-4">
+              <label className="flex items-start gap-3 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  id="send-to-finance-checkbox"
+                  checked={sendToFinance}
+                  onChange={(e) => handleSendToFinanceChange(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 rounded border-slate-300 dark:border-slate-700 text-teal-600 focus:ring-teal-500 cursor-pointer"
+                />
+                <div className="flex flex-col">
+                  <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">
+                    Send to finance for pricing
+                  </span>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                    {sendToFinance
+                      ? "If checked, this sale will be sent to the Sales Finance team to enter pricing and payment details."
+                      : "Unchecked: Enter pricing, GST, and payment details below to complete finance directly."}
+                  </span>
+                </div>
+              </label>
+
+              {!sendToFinance && (
+                <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400">
+                        Sales Finance & Pricing
+                      </h4>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                        Fill total pricing, invoice, and payment status for this sale.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    {financeFields.map((f) => (
+                      <label
+                        key={f.name}
+                        className="flex flex-col gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-400 min-w-0"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span>
+                            {f.label}
+                            {f.required !== false ? " *" : ""}
+                          </span>
+                        </div>
+                        {f.type === "select" ? (
+                          <select
+                            required={f.required !== false}
+                            value={values[f.name] ?? (f.name === "invoiceStatus" ? "Pending" : f.name === "paymentReceivedStatus" ? "Not Received" : "")}
+                            className="w-full px-3 py-2 pr-10 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_1rem_center]"
+                            onChange={(e) => set(f.name, e.target.value)}
+                          >
+                            {f.options?.map((o) => (
+                              <option key={o.value} value={o.value}>
+                                {o.label}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input
+                            required={f.required !== false}
+                            type="text"
+                            inputMode="decimal"
+                            placeholder="0.00"
+                            className="w-full px-3 py-2 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
+                            value={values[f.name] ?? ""}
+                            onChange={(e) => set(f.name, e.target.value)}
+                          />
+                        )}
+                        {f.hint && (
+                          <small className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                            {f.hint}
+                          </small>
+                        )}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           )}
           {error && (
             <div role="alert" className="text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30 p-3.5 rounded-lg border border-red-200 dark:border-red-800/40 text-xs whitespace-pre-wrap mb-4">

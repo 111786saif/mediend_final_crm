@@ -32,7 +32,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Download, ChevronLeft, ChevronRight, Settings2, GripVertical } from 'lucide-react'
+import { Download, ChevronLeft, ChevronRight, ChevronDown, Settings2, GripVertical } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
@@ -515,17 +515,20 @@ export function DataTable<TData, TValue>({
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-4 py-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <span>Show</span>
-            <select
-              value={table.getState().pagination.pageSize}
-              onChange={(e) => table.setPageSize(Number(e.target.value))}
-              className="h-8 rounded-lg border border-border bg-background text-foreground pl-2.5 pr-8 py-1 text-xs font-medium shadow-2xs hover:border-border/80 focus:outline-none focus:ring-2 focus:ring-ring/40 transition-all cursor-pointer"
-            >
-              {pageSizeOptions.map((size) => (
-                <option key={size} value={size}>
-                  {size} rows
-                </option>
-              ))}
-            </select>
+            <div className="relative inline-flex items-center">
+              <select
+                value={table.getState().pagination.pageSize}
+                onChange={(e) => table.setPageSize(Number(e.target.value))}
+                className="h-8 rounded-lg border border-border bg-background text-foreground pl-2.5 pr-8 py-1 text-xs font-medium shadow-2xs hover:border-border/80 focus:outline-none focus:ring-2 focus:ring-ring/40 transition-all cursor-pointer appearance-none"
+              >
+                {pageSizeOptions.map((size) => (
+                  <option key={size} value={size}>
+                    {size} rows
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+            </div>
             <span>per page</span>
           </div>
 

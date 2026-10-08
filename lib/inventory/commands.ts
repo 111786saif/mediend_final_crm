@@ -56,7 +56,7 @@ export const commandSchema = z.discriminatedUnion("type", [
         z.object({
           productId: z.string().uuid(),
           size: z.string().min(1),
-          batch: z.string().min(1),
+          batch: z.string().default(""),
           expiry: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
           quantity: z.number().int().positive(),
           unitCost: z.number().int().nonnegative(),

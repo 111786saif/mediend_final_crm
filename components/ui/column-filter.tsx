@@ -288,16 +288,16 @@ export function ColumnFilter({
           <button
             type="button"
             className={cn(
-              "inline-flex items-center justify-center shrink-0 transition-colors ml-1 p-0.3 rounded-md border",
+              "inline-flex items-center justify-center shrink-0 transition-colors ml-1 p-0.5 rounded-md border",
               hasActiveFilters
-                ? "bg-teal-500/15 text-teal-700 hover:bg-teal-500/25 border-teal-500/20 dark:bg-teal-500/20 dark:text-teal-400"
+                ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 border-emerald-300 dark:border-emerald-800 shadow-xs"
                 : "border-transparent hover:bg-muted text-muted-foreground hover:text-foreground"
             )}
           >
             <ChevronDown
               className={cn(
                 "h-3.5 w-3.5",
-                hasActiveFilters ? "text-teal-700 dark:text-teal-400 font-bold" : "opacity-60"
+                hasActiveFilters ? "text-emerald-600 dark:text-emerald-400 font-bold stroke-[2.5]" : "opacity-60"
               )}
             />
           </button>

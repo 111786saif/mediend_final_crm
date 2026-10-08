@@ -42,22 +42,87 @@ const MONTH_NAMES: Record<string, number> = {
   dec: 11, december: 11,
 }
 
+export const IST_OFFSET_MS = 5.5 * 60 * 60 * 1000 // UTC+5:30 (19,800,000 ms)
+
+export function parseDateBoundaryToIstUnixSeconds(
+  value: string | Date | number | null | undefined,
+  endOfDay: boolean
+): number | null {
+  if (value == null) return null
+
+  if (typeof value === 'number') {
+    return Number.isNaN(value) ? null : Math.floor(value)
+  }
+
+  if (value instanceof Date) {
+    const ms = value.getTime()
+    return Number.isNaN(ms) ? null : Math.floor(ms / 1000)
+  }
+
+  const str = String(value).trim()
+  if (!str) return null
+
+  // Match YYYY-MM-DD
+  const dateOnlyMatch = /^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/.exec(str)
+  if (dateOnlyMatch) {
+    const year = Number(dateOnlyMatch[1])
+    const month = Number(dateOnlyMatch[2]) - 1
+    const day = Number(dateOnlyMatch[3])
+
+    const utcMs = endOfDay
+      ? Date.UTC(year, month, day, 23, 59, 59, 999)
+      : Date.UTC(year, month, day, 0, 0, 0, 0)
+
+    return Math.floor((utcMs - IST_OFFSET_MS) / 1000)
+  }
+
+  // Match DD-MM-YYYY or DD/MM/YYYY
+  const dayFirstMatch = /^(\d{1,2})[-/](\d{1,2})[-/](\d{4})/.exec(str)
+  if (dayFirstMatch) {
+    const day = Number(dayFirstMatch[1])
+    const month = Number(dayFirstMatch[2]) - 1
+    const year = Number(dayFirstMatch[3])
+
+    const utcMs = endOfDay
+      ? Date.UTC(year, month, day, 23, 59, 59, 999)
+      : Date.UTC(year, month, day, 0, 0, 0, 0)
+
+    return Math.floor((utcMs - IST_OFFSET_MS) / 1000)
+  }
+
+  const parsed = new Date(str)
+  const ms = parsed.getTime()
+  if (Number.isNaN(ms)) {
+    return null
+  }
+
+  return Math.floor(ms / 1000)
+}
+
 // Parses human date string like "19 sept", "19 sept 2026", "2026-09-19", "today"
 export function parseHumanDate(dateStr: string, isEndOfDay = false): Date | null {
   const trimmed = dateStr.trim().toLowerCase()
-  const now = new Date()
+  const nowIst = new Date(Date.now() + IST_OFFSET_MS)
 
   if (trimmed === 'today') {
-    return isEndOfDay
-      ? new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999)
-      : new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0)
+    const y = nowIst.getUTCFullYear()
+    const m = nowIst.getUTCMonth()
+    const d = nowIst.getUTCDate()
+    const utcMs = isEndOfDay
+      ? Date.UTC(y, m, d, 23, 59, 59, 999)
+      : Date.UTC(y, m, d, 0, 0, 0, 0)
+    return new Date(utcMs - IST_OFFSET_MS)
   }
 
   if (trimmed === 'yesterday') {
-    const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000)
-    return isEndOfDay
-      ? new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate(), 23, 59, 59, 999)
-      : new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate(), 0, 0, 0, 0)
+    const yesterdayIst = new Date(nowIst.getTime() - 24 * 60 * 60 * 1000)
+    const y = yesterdayIst.getUTCFullYear()
+    const m = yesterdayIst.getUTCMonth()
+    const d = yesterdayIst.getUTCDate()
+    const utcMs = isEndOfDay
+      ? Date.UTC(y, m, d, 23, 59, 59, 999)
+      : Date.UTC(y, m, d, 0, 0, 0, 0)
+    return new Date(utcMs - IST_OFFSET_MS)
   }
 
   // ISO format: YYYY-MM-DD
@@ -66,7 +131,10 @@ export function parseHumanDate(dateStr: string, isEndOfDay = false): Date | null
     const y = parseInt(isoMatch[1], 10)
     const m = parseInt(isoMatch[2], 10) - 1
     const d = parseInt(isoMatch[3], 10)
-    return isEndOfDay ? new Date(y, m, d, 23, 59, 59, 999) : new Date(y, m, d, 0, 0, 0, 0)
+    const utcMs = isEndOfDay
+      ? Date.UTC(y, m, d, 23, 59, 59, 999)
+      : Date.UTC(y, m, d, 0, 0, 0, 0)
+    return new Date(utcMs - IST_OFFSET_MS)
   }
 
   // Day First format: DD-MM-YYYY or DD/MM/YYYY
@@ -75,7 +143,10 @@ export function parseHumanDate(dateStr: string, isEndOfDay = false): Date | null
     const d = parseInt(dayFirstMatch[1], 10)
     const m = parseInt(dayFirstMatch[2], 10) - 1
     const y = parseInt(dayFirstMatch[3], 10)
-    return isEndOfDay ? new Date(y, m, d, 23, 59, 59, 999) : new Date(y, m, d, 0, 0, 0, 0)
+    const utcMs = isEndOfDay
+      ? Date.UTC(y, m, d, 23, 59, 59, 999)
+      : Date.UTC(y, m, d, 0, 0, 0, 0)
+    return new Date(utcMs - IST_OFFSET_MS)
   }
 
   // Textual: "19th sept 2026" or "19 sept"
@@ -85,8 +156,11 @@ export function parseHumanDate(dateStr: string, isEndOfDay = false): Date | null
     const monthKey = textMatch[2].toLowerCase()
     const m = MONTH_NAMES[monthKey]
     if (m !== undefined) {
-      const y = textMatch[3] ? parseInt(textMatch[3], 10) : now.getFullYear()
-      return isEndOfDay ? new Date(y, m, d, 23, 59, 59, 999) : new Date(y, m, d, 0, 0, 0, 0)
+      const y = textMatch[3] ? parseInt(textMatch[3], 10) : nowIst.getUTCFullYear()
+      const utcMs = isEndOfDay
+        ? Date.UTC(y, m, d, 23, 59, 59, 999)
+        : Date.UTC(y, m, d, 0, 0, 0, 0)
+      return new Date(utcMs - IST_OFFSET_MS)
     }
   }
 
@@ -97,8 +171,11 @@ export function parseHumanDate(dateStr: string, isEndOfDay = false): Date | null
     const m = MONTH_NAMES[monthKey]
     if (m !== undefined) {
       const d = parseInt(reverseTextMatch[2], 10)
-      const y = reverseTextMatch[3] ? parseInt(reverseTextMatch[3], 10) : now.getFullYear()
-      return isEndOfDay ? new Date(y, m, d, 23, 59, 59, 999) : new Date(y, m, d, 0, 0, 0, 0)
+      const y = reverseTextMatch[3] ? parseInt(reverseTextMatch[3], 10) : nowIst.getUTCFullYear()
+      const utcMs = isEndOfDay
+        ? Date.UTC(y, m, d, 23, 59, 59, 999)
+        : Date.UTC(y, m, d, 0, 0, 0, 0)
+      return new Date(utcMs - IST_OFFSET_MS)
     }
   }
 
@@ -441,10 +518,14 @@ export function buildPipelineColumnFilterClauses(
     } else if (f.operator === 'between') {
       const tsField = PIPELINE_DATE_COLUMN_TO_TYPESENSE_FIELD[f.field]
       if (tsField && Array.isArray(f.value) && f.value.length === 2) {
-        const start = Math.floor(new Date(f.value[0]).getTime() / 1000)
-        const end = Math.floor(new Date(f.value[1]).getTime() / 1000) + 86399
-        if (!Number.isNaN(start) && !Number.isNaN(end)) {
+        const start = parseDateBoundaryToIstUnixSeconds(f.value[0], false)
+        const end = parseDateBoundaryToIstUnixSeconds(f.value[1], true)
+        if (start !== null && end !== null && !Number.isNaN(start) && !Number.isNaN(end)) {
           clauses.push(`${tsField}:[${start}..${end}]`)
+        } else if (start !== null && !Number.isNaN(start)) {
+          clauses.push(`${tsField}:>=${start}`)
+        } else if (end !== null && !Number.isNaN(end)) {
+          clauses.push(`${tsField}:<=${end}`)
         }
       }
     }
@@ -558,8 +639,8 @@ export function buildPipelineTypesenseFilterBy(
 
   // Date range filters for leadEntryDate
   if (params.startDate || params.endDate) {
-    const start = params.startDate ? Math.floor(new Date(params.startDate).getTime() / 1000) : null
-    const end = params.endDate ? Math.floor(new Date(params.endDate).getTime() / 1000) + 86399 : null
+    const start = parseDateBoundaryToIstUnixSeconds(params.startDate, false)
+    const end = parseDateBoundaryToIstUnixSeconds(params.endDate, true)
     if (start !== null && end !== null && !Number.isNaN(start) && !Number.isNaN(end)) {
       clauses.push(`leadEntryDate:[${start}..${end}]`)
     } else if (start !== null && !Number.isNaN(start)) {

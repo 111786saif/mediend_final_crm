@@ -3020,6 +3020,23 @@ function HeaderCell({
 }) {
   const active = !!sortField && state?.sort === sortField
 
+  const isFilterActive = useMemo(() => {
+    if (!filterValue) return false
+    if (Array.isArray(filterValue)) {
+      return (
+        filterValue.length > 0 &&
+        filterValue.some((v) => (typeof v === 'string' ? v.trim().length > 0 : Boolean(v)))
+      )
+    }
+    if (typeof filterValue === 'string') {
+      return filterValue.trim().length > 0
+    }
+    if (typeof filterValue === 'object') {
+      return Boolean(filterValue.min || filterValue.max || filterValue.from || filterValue.to)
+    }
+    return Boolean(filterValue)
+  }, [filterValue])
+
   return (
     <div className="flex items-center justify-between gap-1.5 whitespace-nowrap w-full">
       {sortField && onSort ? (
@@ -3031,7 +3048,13 @@ function HeaderCell({
             active ? 'text-indigo-600 dark:text-indigo-400 font-black' : 'text-slate-700 dark:text-slate-200'
           )}
         >
-          <span>{label}</span>
+          {isFilterActive ? (
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800 shadow-xs">
+              {label}
+            </span>
+          ) : (
+            <span>{label}</span>
+          )}
           {active ? (
             state!.dir === 'asc' ? (
               <ArrowUp className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400 stroke-[2.5]" />
@@ -3042,6 +3065,10 @@ function HeaderCell({
             <ArrowUpDown className="h-3 w-3 opacity-40 group-hover:opacity-100 transition-opacity" />
           )}
         </button>
+      ) : isFilterActive ? (
+        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800 shadow-xs">
+          {label}
+        </span>
       ) : (
         <span className="font-bold text-slate-700 dark:text-slate-200">{label}</span>
       )}

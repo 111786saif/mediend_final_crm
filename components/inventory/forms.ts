@@ -82,6 +82,7 @@ export function initialValues(
     reason: "",
     receivedPayment: "0",
     paymentReceivedStatus: "Not Received",
+    invoiceStatus: "Pending",
     ...(request.defaults ?? {}),
   };
 

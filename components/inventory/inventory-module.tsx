@@ -1,6 +1,8 @@
 "use client";
 import {
+  createContext,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -15,6 +17,9 @@ import {
   Activity,
   AlertTriangle,
   ArrowLeftRight,
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
   Box,
   Calendar,
   ChevronRight,
@@ -121,6 +126,30 @@ function Badge({
   );
 }
 
+interface FilterConfigItem {
+  field: string;
+  label: string;
+  filterType: "multiSelect" | "search" | "dateRange" | "numberRange" | "boolean";
+  filterable: boolean;
+  options?: Array<{ label: string; value: string }>;
+  min?: number;
+  max?: number;
+}
+
+const InventoryFilterContext = createContext<{
+  filterConfig: FilterConfigItem[];
+  tableStatusConfig: Record<string, Array<{ label: string; value: string }>>;
+  activeFilters: Record<string, any>;
+  setFilter: (field: string, value: any) => void;
+  resetFilters?: () => void;
+}>({
+  filterConfig: [],
+  tableStatusConfig: {},
+  activeFilters: {},
+  setFilter: () => {},
+  resetFilters: () => {},
+});
+
 function Table({
   heads,
   rows,
@@ -133,35 +162,49 @@ function Table({
   heads: string[];
   rows: ReactNode[][];
   empty?: string;
-  tabKey?: Tab;
+  tabKey?: Tab | string;
   enablePagination?: boolean;
   initialPageSize?: number;
   pageSizeOptions?: number[];
 }) {
   const { hasAccess, permissions } = usePermissions();
-  const [columnFilters, setColumnFilters] = useState<Record<string, any>>({});
+  const { filterConfig, tableStatusConfig, activeFilters, setFilter } = useContext(InventoryFilterContext);
 
   const getColKey = (head: string) => {
     const map: Record<string, string> = {
       // Stock
       Item: "item",
       "Implant / batch": "item",
+      "Item / Product": "item",
+      Implant: "item",
       Size: "size",
       Location: "location",
       "On hand": "quantity",
       Quantity: "quantity",
+      Units: "quantity",
+      Sold: "quantity",
       "Unit cost": "unitCost",
+      "Avg cost / unit": "unitCost",
+      "Avg sale / unit": "salesPrice",
+      Sales: "salesPrice",
+      Cost: "buyPrice",
+      "Profit / loss": "profit",
+      Margin: "margin",
       Expiry: "expiry",
       Status: "status",
 
       // Purchases & Sales shared/specific
       Document: "document",
       Vendor: "vendor",
+      "Vendor Name": "vendor",
       "Vendor / billed to": "vendor",
       "Billed to": "billedTo",
-      "Case ref no.": "caseRefNo",
-      "Items & Location": "itemsLocation",
-      "Implant, Batch & Qty": "implantBatchQty",
+      "Case ref no.": "caseReference",
+      "Case Reference No.": "caseReference",
+      "Case / IPD Ref": "caseReference",
+      "Case Ref": "caseReference",
+      "Items & Location": "items",
+      "Implant, Batch & Qty": "items",
       "Unit price": "unitPrice",
       "GST / type": "gstType",
       Total: "total",
@@ -173,11 +216,17 @@ function Table({
       // Sales Product
       Date: "date",
       "BDM Name": "bdmName",
+      BDM: "bdmName",
+      "Manager Name": "managerName",
+      Manager: "managerName",
       "Patient Name": "patientName",
       Treatment: "treatment",
       Circle: "circle",
       "Dr. Name": "drName",
+      Doctor: "drName",
+      "Doctor Name": "drName",
       "Hospital Name": "hospitalName",
+      Hospital: "hospitalName",
       "Surgery Date": "surgeryDate",
       MOP: "mop",
       "Size Used": "sizeUsed",
@@ -193,90 +242,441 @@ function Table({
       "GST %": "gstPercent",
       "GST Amount": "gstAmount",
       "Sales Price with GST": "salesPriceWithGst",
-      "Payment Received/Not": "paymentReceivedStatus",
-      "Payment Status": "paymentReceivedStatus",
+      "Payment Received/Not": "paymentStatus",
+      "Payment Status": "paymentStatus",
 
       // Transfers
       Transfer: "transfer",
       Route: "route",
-      Implants: "implants",
-      Units: "units",
-      "Case / type": "caseType",
-      "Courier & fee": "courierFee",
+      Implants: "items",
+      "Case / type": "caseReference",
+      "Courier & fee": "carrier",
+
+      // Deliveries
+      "Date / transfer": "date",
+      Carrier: "carrier",
+      Fee: "total",
+
+      // Payments
+      Direction: "direction",
+      Amount: "total",
+      Method: "mop",
+      Reference: "reference",
+      Proof: "proof",
+
+      // Masters
+      Name: "name",
+      Details: "details",
+
+      // Activity log
+      "When (IST)": "date",
+      Action: "action",
+      Record: "reference",
+      "Changed by": "changedBy",
+      Reason: "remark",
     };
     return map[head] || head.toLowerCase().replace(/[^a-z0-9]/g, "");
   };
 
   const rbacColumnVisibility = useMemo(() => {
     if (!tabKey) return undefined;
-    const tabResKey = TAB_RESOURCE_KEYS[tabKey];
+    const tabResKey = tabKey ? (TAB_RESOURCE_KEYS as Record<string, string>)[tabKey] : undefined;
     if (!tabResKey) return undefined;
 
     const vis: Record<string, boolean> = {};
     heads.forEach((head, idx) => {
       const colKey = getColKey(head);
       const resKey = `${tabResKey}.column.${colKey}`;
-      // Check if specific column entity key exists in permissions map
       const hasPermConfigured = permissions && Object.prototype.hasOwnProperty.call(permissions, resKey);
       if (hasPermConfigured) {
         vis[`col_${idx}`] = hasAccess(resKey, "READ");
       } else {
-        // If column key is not explicitly registered/configured in permissions, default to visible
         vis[`col_${idx}`] = true;
       }
     });
     return vis;
   }, [heads, tabKey, hasAccess, permissions]);
 
-  // Convert legacy heads + array rows into TanStack ColumnDef schema with ColumnFilter header support
+  // Convert legacy heads + array rows into TanStack ColumnDef schema with backend-configured ColumnFilter
   const columns = useMemo<ColumnDef<ReactNode[]>[]>(() => {
     return heads.map((head, idx) => {
-      // Determine filter options for string cells
-      const rawValues = Array.from(
-        new Set(
-          rows
-            .map((r) => {
-              const val = r[idx];
-              if (typeof val === "string" || typeof val === "number") return String(val).trim();
-              return "";
-            })
-            .filter((v) => v !== "" && v !== "—")
-        )
+      const colKey = getColKey(head);
+      const lowerHead = head.toLowerCase().trim();
+      const isAction =
+        colKey === "actions" ||
+        lowerHead === "actions" ||
+        (lowerHead === "action" && tabKey !== "Activity log");
+
+      // Match column filter config from backend API (/api/inventory/filter-config)
+      const cfg = filterConfig.find(
+        (f) =>
+          f.field === colKey ||
+          f.field.toLowerCase() === colKey.toLowerCase() ||
+          f.label.toLowerCase() === head.toLowerCase()
       );
 
-      const uniqueValues =
-        head === "Circle"
-          ? Array.from(new Set([...rawValues, "Bangalore", "Delhi", "Hyderabad", "Mumbai", "Pune"])).sort()
-          : rawValues;
+      const isDateCol =
+        lowerHead.includes("date") ||
+        lowerHead.includes("expiry") ||
+        lowerHead.includes("when") ||
+        colKey === "date" ||
+        colKey === "surgeryDate" ||
+        colKey === "expiry";
+
+      const isNumberCol =
+        lowerHead.includes("price") ||
+        lowerHead.includes("amount") ||
+        lowerHead.includes("mrp") ||
+        lowerHead.includes("cost") ||
+        lowerHead.includes("total") ||
+        lowerHead.includes("paid") ||
+        lowerHead.includes("outstanding") ||
+        lowerHead.includes("qty") ||
+        lowerHead.includes("quantity") ||
+        lowerHead.includes("units") ||
+        lowerHead.includes("sold") ||
+        lowerHead.includes("margin") ||
+        lowerHead.includes("profit") ||
+        lowerHead.includes("loss") ||
+        lowerHead.includes("fee") ||
+        colKey === "mrp" ||
+        colKey === "buyPrice" ||
+        colKey === "salesPrice" ||
+        colKey === "salesPriceWithGst" ||
+        colKey === "quantity" ||
+        colKey === "total" ||
+        colKey === "paid" ||
+        colKey === "outstanding";
+
+      const isMasterDropdown =
+        colKey === "vendor" ||
+        colKey === "location" ||
+        colKey === "hospitalName" ||
+        colKey === "hospital" ||
+        colKey === "item" ||
+        colKey === "items" ||
+        colKey === "productName" ||
+        colKey === "implant" ||
+        colKey === "bdmName" ||
+        colKey === "managerName" ||
+        colKey === "drName" ||
+        colKey === "treatment" ||
+        colKey === "handledBy" ||
+        colKey === "changedBy" ||
+        colKey === "action" ||
+        lowerHead === "bdm name" ||
+        lowerHead === "bdm" ||
+        lowerHead === "manager name" ||
+        lowerHead === "manager" ||
+        lowerHead === "dr. name" ||
+        lowerHead === "doctor" ||
+        lowerHead === "doctor name" ||
+        lowerHead === "treatment" ||
+        lowerHead === "handled by" ||
+        lowerHead === "changed by" ||
+        lowerHead === "action" ||
+        lowerHead === "vendor" ||
+        lowerHead === "vendor name" ||
+        lowerHead === "location" ||
+        lowerHead === "hospital" ||
+        lowerHead === "hospital name" ||
+        lowerHead === "item" ||
+        lowerHead === "items" ||
+        lowerHead === "implant" ||
+        lowerHead === "implant / batch" ||
+        lowerHead === "item / product" ||
+        lowerHead === "implants" ||
+        lowerHead === "implant, batch & qty" ||
+        lowerHead === "items & location";
+
+      const isDiscreteCategory =
+        isMasterDropdown ||
+        colKey === "circle" ||
+        colKey === "status" ||
+        colKey === "invoiceStatus" ||
+        colKey === "paymentStatus" ||
+        colKey === "paymentReceivedStatus" ||
+        colKey === "gstType" ||
+        colKey === "direction" ||
+        colKey === "size" ||
+        colKey === "mop" ||
+        colKey === "paymentType" ||
+        colKey === "action" ||
+        lowerHead === "status" ||
+        lowerHead === "circle" ||
+        lowerHead === "gst / type" ||
+        lowerHead === "invoice status" ||
+        lowerHead === "payment status" ||
+        lowerHead === "direction" ||
+        lowerHead === "size" ||
+        lowerHead === "mop" ||
+        lowerHead === "action";
+
+      let filterType: "search" | "multiSelect" | "dateRange" | "numberRange" | "boolean" = "search";
+      if (cfg?.filterType) {
+        filterType = cfg.filterType as any;
+      } else if (isDiscreteCategory) {
+        filterType = "multiSelect";
+      } else if (isDateCol) {
+        filterType = "dateRange";
+      } else if (isNumberCol) {
+        filterType = "numberRange";
+      } else {
+        filterType = "search";
+      }
+
+      let filterOptions = cfg?.options ?? [];
+
+      // Contextual status filter options based on table domain
+      if (lowerHead === "status" || colKey === "status") {
+        if (tableStatusConfig && tabKey && tableStatusConfig[tabKey]?.length) {
+          filterOptions = tableStatusConfig[tabKey];
+        } else if (tabKey === "Stock" || tabKey === "Overview") {
+          filterOptions = [
+            { label: "Available", value: "Available" },
+            { label: "Low stock", value: "Low stock" },
+            { label: "Empty", value: "Empty" },
+            { label: "Out of stock", value: "Out of stock" },
+            { label: "Expired", value: "Expired" },
+            { label: "Quarantined", value: "Quarantined" },
+          ];
+        } else if (tabKey === "Purchases") {
+          filterOptions = [
+            { label: "Paid", value: "Paid" },
+            { label: "Part paid", value: "Part paid" },
+            { label: "Unpaid", value: "Unpaid" },
+            { label: "POSTED", value: "POSTED" },
+            { label: "VOID", value: "VOID" },
+          ];
+        } else if (tabKey === "Transfers & kits") {
+          filterOptions = [
+            { label: "IN_TRANSIT", value: "IN_TRANSIT" },
+            { label: "RECEIVED", value: "RECEIVED" },
+            { label: "CANCELLED", value: "CANCELLED" },
+          ];
+        } else if (tabKey === "Delivery expenses") {
+          filterOptions = [
+            { label: "Recorded", value: "Recorded" },
+            { label: "Voided", value: "Voided" },
+          ];
+        } else if (
+          tabKey === "Vendors" ||
+          tabKey === "Implant catalog" ||
+          tabKey === "Locations"
+        ) {
+          filterOptions = [
+            { label: "Active", value: "Active" },
+            { label: "Deleted", value: "Deleted" },
+          ];
+        } else if (tabKey === "Payments" || tabKey === "Sales" || tabKey === "Sales Product" || tabKey === "Sales Finance") {
+          filterOptions = [
+            { label: "Outstanding", value: "Outstanding" },
+            { label: "Paid", value: "Paid" },
+            { label: "Part Paid", value: "Part Paid" },
+            { label: "Unpaid", value: "Unpaid" },
+            { label: "POSTED", value: "POSTED" },
+            { label: "VOID", value: "VOID" },
+          ];
+        }
+      } else if (lowerHead === "action" || colKey === "action") {
+        filterType = "multiSelect";
+        filterOptions =
+          tableStatusConfig?.["Activity log"]?.length
+            ? tableStatusConfig["Activity log"]
+            : cfg?.options?.length
+            ? cfg.options
+            : [
+                { label: "Sale Post", value: "sale.post" },
+                { label: "Purchase Post", value: "purchase.post" },
+                { label: "Document Void", value: "document.void" },
+                { label: "Transfer Dispatch", value: "transfer.dispatch" },
+                { label: "Transfer Receive", value: "transfer.receive" },
+                { label: "Transfer Cancel", value: "transfer.cancel" },
+                { label: "Payment Post", value: "payment.post" },
+                { label: "Delivery Save", value: "delivery.save" },
+                { label: "Delivery Void", value: "delivery.void" },
+                { label: "Stock Adjust", value: "stock.adjust" },
+                { label: "Stock Quarantine", value: "stock.quarantine" },
+                { label: "Vendor Save", value: "vendor.save" },
+                { label: "Product Save", value: "product.save" },
+                { label: "Location Save", value: "location.save" },
+                { label: "Master Archive", value: "master.archive" },
+                { label: "Attachment Upload", value: "attachment.upload" },
+              ];
+      } else if (lowerHead === "invoice status" || colKey === "invoiceStatus") {
+        filterType = "multiSelect";
+        const invCfg = filterConfig.find((f) => f.field === "invoiceStatus");
+        const defaultInvOptions = [
+          { label: "Raised", value: "Raised" },
+          { label: "Pending", value: "Pending" },
+          { label: "Invoice Raised", value: "Invoice Raised" },
+          { label: "Not Raised", value: "Not Raised" },
+          { label: "Need Invoice", value: "Need Invoice" },
+          { label: "CANCELLED", value: "CANCELLED" },
+        ];
+        const combined = [...defaultInvOptions, ...(invCfg?.options || [])];
+        const seen = new Set<string>();
+        filterOptions = combined.filter((o) => {
+          if (seen.has(o.value)) return false;
+          seen.add(o.value);
+          return true;
+        });
+      } else if (
+        lowerHead === "payment status" ||
+        colKey === "paymentStatus" ||
+        colKey === "paymentReceivedStatus"
+      ) {
+        filterType = "multiSelect";
+        const payCfg = filterConfig.find(
+          (f) => f.field === "paymentStatus" || f.field === "paymentReceivedStatus"
+        );
+        const defaultPayOptions = [
+          { label: "Received", value: "Received" },
+          { label: "Part Paid", value: "Part Paid" },
+          { label: "Not Received", value: "Not Received" },
+          { label: "Payment Received", value: "Payment Received" },
+          { label: "Paid", value: "Paid" },
+          { label: "Unpaid", value: "Unpaid" },
+          { label: "Pending", value: "Pending" },
+          { label: "Outstanding", value: "Outstanding" },
+          { label: "POSTED", value: "POSTED" },
+          { label: "VOID", value: "VOID" },
+        ];
+        const combined = [...defaultPayOptions, ...(payCfg?.options || [])];
+        const seen = new Set<string>();
+        filterOptions = combined.filter((o) => {
+          if (seen.has(o.value)) return false;
+          seen.add(o.value);
+          return true;
+        });
+      } else if (
+        lowerHead === "changed by" ||
+        colKey === "changedBy" ||
+        lowerHead === "handled by" ||
+        colKey === "handledBy" ||
+        lowerHead === "bdm name" ||
+        colKey === "bdmName" ||
+        lowerHead === "bdm" ||
+        colKey === "bdm"
+      ) {
+        const bdmCfg = filterConfig.find(
+          (f) =>
+            f.field === "bdmName" ||
+            f.field === "bdm" ||
+            f.field === "changedBy" ||
+            f.field === "handledBy"
+        );
+        if (bdmCfg?.options && bdmCfg.options.length > 0) {
+          filterOptions = bdmCfg.options;
+        }
+      } else if (
+        lowerHead === "manager name" ||
+        lowerHead === "manager" ||
+        colKey === "managerName" ||
+        colKey === "manager"
+      ) {
+        const mgrCfg = filterConfig.find(
+          (f) => f.field === "managerName" || f.field === "manager"
+        );
+        if (mgrCfg?.options && mgrCfg.options.length > 0) {
+          filterOptions = mgrCfg.options;
+        }
+      } else if (
+        lowerHead === "dr. name" ||
+        lowerHead === "doctor" ||
+        lowerHead === "doctor name" ||
+        colKey === "drName" ||
+        colKey === "doctor"
+      ) {
+        const drCfg = filterConfig.find(
+          (f) => f.field === "drName" || f.field === "doctor"
+        );
+        if (drCfg?.options && drCfg.options.length > 0) {
+          filterOptions = drCfg.options;
+        }
+      } else if (lowerHead === "treatment" || colKey === "treatment") {
+        const treatCfg = filterConfig.find((f) => f.field === "treatment");
+        if (treatCfg?.options && treatCfg.options.length > 0) {
+          filterOptions = treatCfg.options;
+        }
+      }
+      const minBound = cfg?.min;
+      const maxBound = cfg?.max;
+
+      const currentValue = activeFilters[colKey];
+      const isOnHand = lowerHead === "on hand" || (lowerHead.includes("on hand") && colKey === "quantity");
 
       return {
         id: `col_${idx}`,
         accessorFn: (row) => row[idx],
-        header: () => {
-          // If options exist or header is standard, attach ColumnFilter
-          if (uniqueValues.length > 0 && uniqueValues.length <= 100) {
-            return (
-              <ColumnFilter
-                options={uniqueValues}
-                value={columnFilters[`col_${idx}`]}
-                onChange={(val) =>
-                  setColumnFilters((prev) => ({ ...prev, [`col_${idx}`]: val }))
-                }
-                type={uniqueValues.length > 15 ? "search" : "multiSelect"}
-                trigger={
-                  <span className="cursor-pointer font-semibold text-slate-700 dark:text-slate-200 inline-flex items-center gap-1.5 hover:text-teal-600">
-                    {head}
-                  </span>
-                }
-              />
-            );
-          }
-          return (
-            <span className="text-[11px] tracking-wider uppercase text-slate-500 dark:text-slate-400 font-semibold">
-              {head}
-            </span>
-          );
+        sortingFn: (rowA, rowB, colId) => {
+          const valA = rowA.getValue(colId);
+          const valB = rowB.getValue(colId);
+          const numA = typeof valA === "number" ? valA : parseFloat(String(valA).replace(/[^0-9.-]/g, "")) || 0;
+          const numB = typeof valB === "number" ? valB : parseFloat(String(valB).replace(/[^0-9.-]/g, "")) || 0;
+          return numA - numB;
         },
+        header: ({ column }) => {
+          const hasFilter = (() => {
+            if (!currentValue) return false;
+            if (Array.isArray(currentValue)) return currentValue.length > 0;
+            if (typeof currentValue === "string") return currentValue.trim().length > 0;
+            if (typeof currentValue === "object") return Boolean((currentValue as any).min || (currentValue as any).max);
+            return Boolean(currentValue);
+          })();
+
+          return (
+            <div className="flex items-center justify-between gap-1.5 whitespace-nowrap min-w-0">
+              {hasFilter ? (
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800 shadow-xs truncate">
+                  {head}
+                </span>
+              ) : (
+                <span className="font-semibold text-slate-700 dark:text-slate-200 truncate">
+                  {head}
+                </span>
+              )}
+            <div className="flex items-center gap-1 shrink-0">
+              {isOnHand && (
+                <button
+                  type="button"
+                  onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                  className={cn(
+                    "inline-flex items-center justify-center p-1 rounded border border-transparent hover:border-slate-200 dark:hover:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100",
+                    column.getIsSorted() && "bg-teal-50 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400 font-bold border-teal-200 dark:border-teal-800"
+                  )}
+                  title={
+                    column.getIsSorted() === "asc"
+                      ? "Sorted: Low to High (click for High to Low)"
+                      : column.getIsSorted() === "desc"
+                      ? "Sorted: High to Low (click to reset)"
+                      : "Sort: Low to High / High to Low"
+                  }
+                >
+                  {column.getIsSorted() === "asc" ? (
+                    <ArrowUp className="h-3.5 w-3.5 text-teal-600 dark:text-teal-400" />
+                  ) : column.getIsSorted() === "desc" ? (
+                    <ArrowDown className="h-3.5 w-3.5 text-teal-600 dark:text-teal-400" />
+                  ) : (
+                    <ArrowUpDown className="h-3.5 w-3.5 opacity-70" />
+                  )}
+                </button>
+              )}
+              {!isAction && (
+                <ColumnFilter
+                  type={filterType}
+                  options={filterOptions}
+                  min={minBound}
+                  max={maxBound}
+                  value={currentValue}
+                  onChange={(val) => setFilter(colKey, val)}
+                  placeholder={filterType === "search" ? `Search ${head}...` : `Filter ${head}...`}
+                />
+              )}
+            </div>
+          </div>
+        );
+      },
         cell: ({ row }) => (
           <div className="text-slate-800 dark:text-slate-200">
             {row.original[idx]}
@@ -284,37 +684,13 @@ function Table({
         ),
       };
     });
-  }, [heads, rows, columnFilters]);
-
-  // Apply column filters on local row arrays
-  const filteredRows = useMemo(() => {
-    return rows.filter((row) => {
-      return Object.entries(columnFilters).every(([colId, filterVal]) => {
-        if (!filterVal || (Array.isArray(filterVal) && filterVal.length === 0)) return true;
-        const colIdx = parseInt(colId.replace("col_", ""), 10);
-        const cellVal = row[colIdx];
-        const cellStr = typeof cellVal === "string" || typeof cellVal === "number" ? String(cellVal).trim().toLowerCase() : "";
-
-        if (Array.isArray(filterVal)) {
-          return filterVal.some((fv) => {
-            const fvStr = String(fv).trim().toLowerCase();
-            return cellStr === fvStr || cellStr.includes(fvStr);
-          });
-        }
-        if (typeof filterVal === "string") {
-          const fvStr = filterVal.trim().toLowerCase();
-          return cellStr === fvStr || cellStr.includes(fvStr);
-        }
-        return true;
-      });
-    });
-  }, [rows, columnFilters]);
+  }, [heads, filterConfig, activeFilters, setFilter, tabKey]);
 
   return (
     <div className="w-full max-w-full overflow-x-auto min-w-0">
       <DataTable
         columns={columns}
-        data={filteredRows}
+        data={rows}
         emptyMessage={empty}
         enablePagination={enablePagination}
         initialPageSize={initialPageSize}
@@ -624,6 +1000,7 @@ export default function InventoryModule({
       );
       if (match) {
         setTab(match[0] as Tab);
+        setActiveFilters({});
       }
     }
   }, [tabParam]);
@@ -631,6 +1008,7 @@ export default function InventoryModule({
   useEffect(() => {
     if (subTabParam === "finance" || subTabParam === "product") {
       setSalesSubTab(subTabParam);
+      setActiveFilters({});
     }
   }, [subTabParam]);
 
@@ -648,10 +1026,84 @@ export default function InventoryModule({
     return data;
   }, []);
 
+  const [filterConfig, setFilterConfig] = useState<FilterConfigItem[]>([]);
+  const [tableStatusConfig, setTableStatusConfig] = useState<Record<string, Array<{ label: string; value: string }>>>({});
+  const [activeFilters, setActiveFilters] = useState<Record<string, any>>({});
+
+  useEffect(() => {
+    fetchJSON("/api/inventory/filter-config")
+      .then((res) => {
+        if (res?.filters && Array.isArray(res.filters)) {
+          setFilterConfig(res.filters);
+        }
+        if (res?.tableStatuses && typeof res.tableStatuses === "object") {
+          setTableStatusConfig(res.tableStatuses);
+        }
+      })
+      .catch((err) => console.error("Failed to fetch filter config:", err));
+  }, [fetchJSON]);
+
+  const setFilter = useCallback((field: string, value: any) => {
+    setActiveFilters((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  }, []);
+
+  const handleResetFilters = useCallback(() => {
+    setFrom("");
+    setTo("");
+    setProductFilter("");
+    setCircleFilter("");
+    setInvoiceFilter("");
+    setPaymentFilter("");
+    setActiveFilters({});
+  }, []);
+
+  const serializedFilters = useMemo(() => {
+    const list: Array<{ field: string; operator: string; value: unknown }> = [];
+    for (const [field, val] of Object.entries(activeFilters)) {
+      if (val === undefined || val === null || val === "" || (Array.isArray(val) && val.length === 0)) continue;
+      const cfg = filterConfig.find((f) => f.field === field);
+      const fType = cfg?.filterType;
+
+      if (typeof val === "string") {
+        if (val.trim()) {
+          list.push({ field, operator: "contains", value: val.trim() });
+        }
+      } else if (Array.isArray(val)) {
+        if (fType === "dateRange" || (val.length === 2 && typeof val[0] === "string" && val[0].includes("-"))) {
+          list.push({ field, operator: "between", value: val });
+        } else {
+          list.push({ field, operator: "in", value: val });
+        }
+      } else if (typeof val === "object" && val !== null && (val.min != null || val.max != null)) {
+        list.push({ field, operator: "between", value: val });
+      } else if (typeof val === "boolean") {
+        list.push({ field, operator: "eq", value: val });
+      }
+    }
+    return list;
+  }, [activeFilters, filterConfig]);
+
+  const currentTab =
+    tab === "Sales"
+      ? salesSubTab === "finance"
+        ? "Sales Finance"
+        : "Sales Product"
+      : tab;
+
   const refresh = useCallback(async () => {
     setLoading(true);
     try {
-      const data: Snapshot = await fetchJSON(apiBase);
+      const tabQuery = currentTab ? `tab=${encodeURIComponent(currentTab)}` : "";
+      const filterQuery =
+        serializedFilters.length > 0
+          ? `filters=${encodeURIComponent(JSON.stringify(serializedFilters))}`
+          : "";
+      const queryParts = [tabQuery, filterQuery].filter(Boolean).join("&");
+      const url = queryParts ? `${apiBase}?${queryParts}` : apiBase;
+      const data: Snapshot = await fetchJSON(url);
       setSnapshot(data);
       setAudit(data.audit);
       setMoreAudit(data.audit.length === 100);
@@ -661,7 +1113,7 @@ export default function InventoryModule({
     } finally {
       setLoading(false);
     }
-  }, [apiBase, fetchJSON]);
+  }, [apiBase, fetchJSON, serializedFilters, currentTab]);
 
   useEffect(() => {
     void refresh();
@@ -740,6 +1192,7 @@ export default function InventoryModule({
     setQuery("");
     setLocation("");
     setStockStatus("");
+    setActiveFilters({});
     router.push(`/inventory?tab=${encodeURIComponent(next)}`);
   }
 
@@ -861,6 +1314,24 @@ export default function InventoryModule({
   ) {
     if (kind === "SALE_PRODUCT") {
       const sDoc = doc as Sale;
+      const totalVal = sDoc.salesPriceWithGst || sDoc.total;
+      const paidVal = (sDoc.receivedPayment !== undefined && sDoc.receivedPayment > 0) ? sDoc.receivedPayment : paid(s, sDoc.id);
+      const outstandingVal = Math.max(0, totalVal - paidVal);
+      const hasPricing = Boolean(
+        (sDoc.salesPrice !== undefined && sDoc.salesPrice > 0) ||
+        (sDoc.salesPriceWithGst !== undefined && sDoc.salesPriceWithGst > 0) ||
+        (sDoc.lines && sDoc.lines.some((l) => l.unitPrice !== undefined && l.unitPrice > 0)) ||
+        sDoc.invoiceStatus === "Raised" ||
+        sDoc.invoiceStatus === "Invoice Raised"
+      );
+
+      const isInvoiceRaised = sDoc.invoiceStatus === "Raised" || sDoc.invoiceStatus === "Invoice Raised" || Boolean(sDoc.reference);
+      const invoiceStatusText = hasPricing ? (isInvoiceRaised ? "Raised" : "Pending") : (sDoc.invoiceStatus || "—");
+
+      const isPaid = sDoc.paymentReceivedStatus === "Received" || sDoc.paymentReceivedStatus === "Payment Received" || (paidVal >= totalVal && totalVal > 0);
+      const isPartPaid = !isPaid && (sDoc.paymentReceivedStatus === "Part Paid" || paidVal > 0);
+      const paymentStatusText = hasPricing ? (isPaid ? "Received" : isPartPaid ? "Part Paid" : "Not Received") : "—";
+
       setDetail({
         title: `Sales Product Details (${short(doc.id)})`,
         body: (
@@ -879,6 +1350,13 @@ export default function InventoryModule({
                 "Dr. Name": sDoc.drName || "—",
                 MOP: sDoc.mop || "—",
                 Remark: sDoc.remark || "—",
+                "Invoice Status": invoiceStatusText,
+                "Total Price": hasPricing ? money(sDoc.salesPrice || sDoc.net) : "—",
+                "GST Amount": hasPricing ? money(sDoc.gstAmount ?? sDoc.tax) : "—",
+                "Total Price with GST": hasPricing ? money(totalVal) : "—",
+                "Received Payment": hasPricing ? money(paidVal) : "—",
+                "Payment Status": paymentStatusText,
+                Outstanding: hasPricing ? money(outstandingVal) : "—",
                 "Handled by": sDoc.handledBy || "—",
               }).map(([k, v]) => (
                 <div key={k}>
@@ -888,30 +1366,88 @@ export default function InventoryModule({
               ))}
             </div>
             <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 pt-2">
-              Implants / Stock items ({sDoc.lines?.length || 0})
+              Items in this Sale & Price Breakdown ({sDoc.lines?.length || 0})
             </h3>
             <Table
-              heads={["Item / Product", "Size", "Batch", "Quantity"]}
+              enablePagination={false}
+              heads={[
+                "Item / batch",
+                "Size",
+                "Qty",
+                "MRP",
+                "Buy Price",
+                "Sales Price",
+                "GST %",
+                "GST Amount",
+                "Total with GST",
+              ]}
               rows={
                 sDoc.lines && sDoc.lines.length > 0
-                  ? sDoc.lines.map((l) => [
-                      <strong key="prod" className="font-semibold block text-slate-900 dark:text-slate-100">
-                        {l.productName || name("products", l.productId) || "Item"}
-                      </strong>,
-                      l.size || "—",
-                      l.batch || "—",
-                      l.quantity,
-                    ])
+                  ? sDoc.lines.map((l) => {
+                      const saleLine = l as any;
+                      const prod = s.products.find((p) => p.id === saleLine.productId);
+                      const mrpVal = saleLine.mrp || prod?.mrp || 0;
+                      const gstPct = saleLine.gstPercent ?? 0;
+                      const gstAmt =
+                        saleLine.gstAmount ??
+                        ((saleLine.unitPrice || 0) * (saleLine.quantity || 1) * (gstPct / 100));
+                      const lineNet = (saleLine.unitPrice || 0) * (saleLine.quantity || 1);
+                      const lineTotal = lineNet + gstAmt;
+
+                      return [
+                        <div key="item">
+                          <strong className="font-semibold block text-slate-900 dark:text-slate-100">
+                            {saleLine.productName || prod?.name || "Item"}
+                          </strong>
+                          {saleLine.batch && (
+                            <small className="text-[11px] text-slate-500 dark:text-slate-400 block">
+                              Batch: {saleLine.batch}
+                            </small>
+                          )}
+                        </div>,
+                        saleLine.size || "—",
+                        saleLine.quantity,
+                        hasPricing && mrpVal > 0 ? money(mrpVal) : "—",
+                        hasPricing && saleLine.unitCost > 0 ? money(saleLine.unitCost) : "—",
+                        hasPricing && saleLine.unitPrice > 0 ? money(saleLine.unitPrice) : "—",
+                        hasPricing ? (gstPct > 0 ? `${gstPct}%` : "0%") : "—",
+                        hasPricing ? (gstAmt > 0 ? money(gstAmt) : "₹0.00") : "—",
+                        hasPricing ? (lineTotal > 0 ? money(lineTotal) : "₹0.00") : "—",
+                      ];
+                    })
                   : [
                       [
                         sDoc.stockUsedForm || "—",
                         sDoc.sizeUsed || "—",
-                        "—",
                         1,
+                        "—",
+                        "—",
+                        "—",
+                        "—",
+                        "—",
+                        "—",
                       ],
                     ]
               }
             />
+            {hasPricing && s.payments.some((p) => p.documentId === doc.id) && (
+              <>
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 pt-2">Payments</h3>
+                <Table
+                  enablePagination={false}
+                  heads={["Date", "Amount", "Method", "Handled by", "Proof"]}
+                  rows={s.payments
+                    .filter((p) => p.documentId === doc.id)
+                    .map((p) => [
+                      p.date,
+                      money(p.amount),
+                      p.method.replaceAll("_", " "),
+                      p.handledBy,
+                      attachment(p.proofId),
+                    ])}
+                />
+              </>
+            )}
             {sDoc.proofId && (
               <p className="text-xs text-slate-600 dark:text-slate-400 pt-2">
                 Attachment / Proof: {attachment(sDoc.proofId)}
@@ -937,6 +1473,8 @@ export default function InventoryModule({
               {Object.entries({
                 "Patient / Billed to": sDoc.patientName || sDoc.billedTo || "—",
                 Date: sDoc.date,
+                "Case Reference No.": sDoc.caseReference || "—",
+                "Hospital Name": sDoc.hospitalName || name("locations", sDoc.locationId) || "—",
                 "Invoice Status": (sDoc.invoiceStatus === "Raised" || sDoc.invoiceStatus === "Invoice Raised" || Boolean(sDoc.reference)) ? "Raised" : "Pending",
                 "Total Price": money(sDoc.salesPrice || sDoc.net),
                 "GST Amount": money(sDoc.gstAmount ?? sDoc.tax),
@@ -956,6 +1494,7 @@ export default function InventoryModule({
               Items in this Sale & Price Breakdown ({sDoc.lines?.length || 0})
             </h3>
             <Table
+              enablePagination={false}
               heads={[
                 "Item / batch",
                 "Size",
@@ -1004,6 +1543,7 @@ export default function InventoryModule({
               <>
                 <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 pt-2">Payments</h3>
                 <Table
+                  enablePagination={false}
                   heads={["Date", "Amount", "Method", "Handled by", "Proof"]}
                   rows={s.payments
                     .filter((p) => p.documentId === doc.id)
@@ -1078,6 +1618,7 @@ export default function InventoryModule({
           </div>
           <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 pt-2">Items</h3>
           <Table
+            enablePagination={false}
             heads={
               kind === "SALE"
                 ? [
@@ -1147,6 +1688,7 @@ export default function InventoryModule({
           />
           <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 pt-2">Payments</h3>
           <Table
+            enablePagination={false}
             heads={["Date", "Amount", "Method", "Handled by", "Proof"]}
             rows={s.payments
               .filter((p) => p.documentId === doc.id)
@@ -1181,6 +1723,7 @@ export default function InventoryModule({
             Case: {t.caseReference || "—"} · {t.notes || "No notes"}
           </p>
           <Table
+            enablePagination={false}
             heads={["Implant", "Size", "Batch", "Units"]}
             rows={t.lines.map((l) => {
               const lot = s.lots.find((x) => x.id === l.lotId);
@@ -1255,11 +1798,7 @@ export default function InventoryModule({
       )}
       <button
         className="inline-flex items-center justify-center gap-1.5 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-semibold px-3 py-1.5 rounded-lg shadow-sm transition-all"
-        onClick={() => {
-          setFrom("");
-          setTo("");
-          setProductFilter("");
-        }}
+        onClick={handleResetFilters}
       >
         Reset filters
       </button>
@@ -1620,6 +2159,8 @@ export default function InventoryModule({
         tabKey="Sales"
         heads={[
           "Patient Name",
+          "Case Reference No.",
+          "Hospital Name",
           "Items",
           "MRP",
           "Buy Price",
@@ -1655,6 +2196,8 @@ export default function InventoryModule({
                 d.reference,
                 d.billedTo,
                 d.patientName,
+                d.caseReference,
+                d.hospitalName,
                 d.invoiceStatus,
                 d.paymentReceivedStatus,
                 d.handledBy,
@@ -1688,6 +2231,16 @@ export default function InventoryModule({
                   {d.reference && <span>• Ref: {d.reference}</span>}
                 </div>
               </div>,
+              d.caseReference ? (
+                <span key="ref" className="font-mono text-xs text-teal-600 dark:text-teal-400 font-medium">
+                  {d.caseReference}
+                </span>
+              ) : (
+                "—"
+              ),
+              <span key="hosp" className="text-xs text-slate-800 dark:text-slate-200">
+                {d.hospitalName || name("locations", d.locationId) || "—"}
+              </span>,
               <div key="items" className="text-xs space-y-1.5 min-w-[150px] max-w-[220px]">
                 {d.lines && d.lines.length > 0 ? (
                   d.lines.map((l, idx) => (
@@ -1798,6 +2351,7 @@ export default function InventoryModule({
           money(l.unitCost),
           l.expiry,
           <Badge
+            key="badge"
             tone={
               status === "Available"
                 ? "green"
@@ -1935,7 +2489,7 @@ export default function InventoryModule({
                   <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">Recent activity</h2>
                   {link("Full activity log", () => navigate("Activity log"))}
                 </div>
-                <Table tabKey={tab}
+                <Table tabKey="Activity log"
                   heads={["When", "Action", "Changed by"]}
                   rows={audit
                     .slice(0, 5)
@@ -2810,7 +3364,8 @@ export default function InventoryModule({
                 : undefined;
 
   return (
-    <div className="w-full">
+    <InventoryFilterContext.Provider value={{ filterConfig, tableStatusConfig, activeFilters, setFilter, resetFilters: handleResetFilters }}>
+      <div className="w-full">
       <header className="sticky top-0 z-20 bg-background/80 px-4 py-2 backdrop-blur-xl dark:bg-background/80 md:px-6 shrink-0 w-full min-w-0">
         <div className="flex items-center justify-between gap-4 w-full min-w-0">
           <div>
@@ -2856,28 +3411,28 @@ export default function InventoryModule({
             >
               <RefreshCw className={loading ? "animate-spin mr-1.5 h-4 w-4" : "mr-1.5 h-4 w-4"} /> Refresh
             </Button>
-            {(tab === "Purchases" ||
+            {(tab === "Stock" ||
+              tab === "Purchases" ||
               tab === "Sales" ||
               tab === "Payments" ||
-              tab === "Implant P&L" ||
+              tab === "Transfers & kits" ||
               tab === "Delivery expenses" ||
+              tab === "Vendors" ||
+              tab === "Implant catalog" ||
+              tab === "Locations" ||
+              tab === "Activity log" ||
+              tab === "Implant P&L" ||
               from ||
               to ||
               productFilter ||
               circleFilter ||
               invoiceFilter ||
-              paymentFilter) && (
+              paymentFilter ||
+              Object.keys(activeFilters).length > 0) && (
               <Button
                 variant="outline"
                 className="px-4 py-2 text-xs font-semibold"
-                onClick={() => {
-                  setFrom("");
-                  setTo("");
-                  setProductFilter("");
-                  setCircleFilter("");
-                  setInvoiceFilter("");
-                  setPaymentFilter("");
-                }}
+                onClick={handleResetFilters}
               >
                 <RotateCcw className="mr-1.5 h-4 w-4" /> Reset
               </Button>
@@ -2936,6 +3491,7 @@ export default function InventoryModule({
       )}
       </div>
     </div>
+    </InventoryFilterContext.Provider>
   );
 }
 

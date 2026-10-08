@@ -399,12 +399,7 @@ export function UnifiedLeaderboardView({
         return data?.rankings || [];
     }, [data?.rankings]);
 
-    // Top 3 ranked executives (Fixed at the top of the standings table)
-    const topThreeStandings = useMemo(() => {
-        return filteredLeaderboard.filter((b) => b.rank <= 3);
-    }, [filteredLeaderboard]);
-
-    // Executives from Rank 4 onwards where IPD done (actual) >= 1 (Vertical Auto-Scrolling Carousel)
+    // Executives from Rank 4 onwards (or all ranks if top 3 section is hidden) where IPD done (actual) >= 1 (Vertical Auto-Scrolling Carousel)
     const scrollingStandings = useMemo(() => {
         return filteredLeaderboard.filter((b) => b.rank > 3 && b.actual >= 1);
     }, [filteredLeaderboard]);
@@ -820,8 +815,9 @@ export function UnifiedLeaderboardView({
                         </div>
                     </div>
 
-                    {/* BDE Standings Table: Fixed Top 3 Rows + Vertical Auto-Scrolling Carousel for Ranks >= 4 (IPD Actual >= 1) */}
+                    {/* BDE Standings Table: Vertical Auto-Scrolling Carousel for Ranks >= 4 (IPD Actual >= 1) */}
                     <div className="overflow-hidden">
+                        {/* Dark Navy Table Header */}
                         <table className="w-full table-fixed caption-bottom text-sm border-collapse">
                             {/* Column Width Definitions to Guarantee Exact Column Alignment */}
                             <colgroup>
@@ -837,7 +833,6 @@ export function UnifiedLeaderboardView({
                                 <col className="w-auto" />
                             </colgroup>
 
-                            {/* Dark Navy Table Header */}
                             <thead className={isDarkMode ? "bg-slate-950 text-slate-300 font-bold text-xs uppercase" : "bg-[#062D4C] text-white font-extrabold text-xs uppercase shadow-md"}>
                                 <tr>
                                     <th className="text-center py-3 px-3">Rank</th>
@@ -852,79 +847,9 @@ export function UnifiedLeaderboardView({
                                     <th className="text-left py-3 px-4">Target Achieved %</th>
                                 </tr>
                             </thead>
-
-                            {/* Section 1: Top 3 Fixed Rows */}
-                            <tbody className="divide-y divide-border">
-                                {topThreeStandings.map((item) => (
-                                    <tr
-                                        key={item.userId}
-                                        className={`transition-colors ${item.rank === 1
-                                            ? isDarkMode ? "bg-slate-800/80 hover:bg-slate-800" : "bg-amber-500/15 hover:bg-amber-500/25"
-                                            : item.rank === 2
-                                                ? isDarkMode ? "bg-slate-800/40 hover:bg-slate-800/60" : "bg-slate-100/70 hover:bg-slate-200/60"
-                                                : isDarkMode ? "bg-slate-800/20 hover:bg-slate-800/40" : "bg-amber-100/50 hover:bg-amber-100/80"
-                                            }`}
-                                    >
-                                        <td className="text-center py-2.5 px-4">
-                                            {item.rank === 1 ? (
-                                                <div className="flex items-center justify-center gap-1">
-                                                    <span className="text-sm font-black text-amber-500">👑</span>
-                                                    <div className="w-7 h-7 rounded-full bg-gradient-to-b from-amber-300 to-amber-500 text-slate-950 font-black text-xs flex items-center justify-center shadow-sm border border-amber-200">
-                                                        1
-                                                    </div>
-                                                </div>
-                                            ) : item.rank === 2 ? (
-                                                <div className="flex items-center justify-center">
-                                                    <div className="w-7 h-7 rounded-full bg-gradient-to-b from-slate-200 to-slate-400 text-slate-950 font-black text-xs flex items-center justify-center shadow-xs border border-slate-100">
-                                                        2
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <div className="flex items-center justify-center">
-                                                    <div className="w-7 h-7 rounded-full bg-gradient-to-b from-amber-500 to-amber-700 text-white font-black text-xs flex items-center justify-center shadow-xs border border-amber-400">
-                                                        3
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </td>
-                                        <td className="py-2.5 px-4 font-extrabold text-sm tracking-tight">
-                                            <span className={isDarkMode ? "text-slate-100" : "text-[#0F172A]"}>{item.name}</span>
-                                        </td>
-                                        <td className="py-2.5 px-4">
-                                            <span className="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wide inline-flex items-center gap-1.5 bg-[#0891B2] text-white shadow-xs border border-cyan-400/40">
-                                                <span className="w-1.5 h-1.5 rounded-full bg-cyan-200 shrink-0" />
-                                                <span>{item.category}</span>
-                                            </span>
-                                        </td>
-                                        {showTargetsAndActuals && (
-                                            <>
-                                                <td className={`text-right py-2.5 px-4 font-medium ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>
-                                                    {item.targetValue}
-                                                </td>
-                                                <td className={`text-right py-2.5 px-4 font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
-                                                    {item.actual}
-                                                </td>
-                                            </>
-                                        )}
-                                        <td className="py-2 px-4">
-                                            <div className="flex items-center gap-4">
-                                                <span className="font-extrabold text-sm sm:text-base text-[#0284C7] dark:text-cyan-400 min-w-[50px]">
-                                                    {item.percentage}%
-                                                </span>
-                                                <div className={`w-full max-w-[220px] h-3 rounded-full overflow-hidden border ${isDarkMode ? "bg-slate-950 border-slate-800" : "bg-[#E2E8F0] border-slate-300/60"}`}>
-                                                    <div
-                                                        className="h-full bg-gradient-to-r from-[#06B6D4] to-[#0284C7] transition-all duration-500 rounded-full"
-                                                        style={{ width: `${Math.min(item.percentage, 100)}%` }}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
                         </table>
 
-                        {/* Section 2: Fixed Height Vertical Carousel Container for Ranks 4+ (364px = exactly 7 rows visible at once) */}
+                        {/* Fixed Height Vertical Carousel Container for Ranks 4+ (364px = exactly 7 rows visible at once) */}
                         {scrollingStandings.length > 0 ? (
                             <div className="relative h-[364px] overflow-hidden border-t border-border">
                                 <motion.div
