@@ -85,6 +85,7 @@ export default function PLOutstandingPage() {
   }, [selectedMonths])
 
   // Filter states
+  const [tableMonthFilter, setTableMonthFilter] = useState<string[]>([])
   const [managerFilter, setManagerFilter] = useState<string[]>([])
   const [bdmFilter, setBdmFilter] = useState<string[]>([])
   const [doctorFilter, setDoctorFilter] = useState<string[]>([])
@@ -94,6 +95,8 @@ export default function PLOutstandingPage() {
   const [hospitalOutstandingAmountFilter, setHospitalOutstandingAmountFilter] = useState<{ min: number | null; max: number | null } | null>(null)
   const [doctorPayoutAmountFilter, setDoctorPayoutAmountFilter] = useState<{ min: number | null; max: number | null } | null>(null)
   const [doctorOutstandingAmountFilter, setDoctorOutstandingAmountFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [mediendPendingFilter, setMediendPendingFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [doctorPendingFilter, setDoctorPendingFilter] = useState<{ min: number | null; max: number | null } | null>(null)
 
   const [categoryFilter, setCategoryFilter] = useState<string[]>([])
   const [paymentTypeFilter, setPaymentTypeFilter] = useState<string[]>([])
@@ -105,6 +108,7 @@ export default function PLOutstandingPage() {
   const [leadRefFilter, setLeadRefFilter] = useState<string>('')
   const [patientFilter, setPatientFilter] = useState<string>('')
   const [treatmentFilter, setTreatmentFilter] = useState<string>('')
+  const [remarksFilter, setRemarksFilter] = useState<string>('')
 
   const [leadReceivedFilter, setLeadReceivedFilter] = useState<string[]>([])
   const [admissionDateFilter, setAdmissionDateFilter] = useState<string[]>([])
@@ -126,6 +130,7 @@ export default function PLOutstandingPage() {
       if (raw) {
         const saved = JSON.parse(raw)
         if (saved.selectedMonths) setSelectedMonths(saved.selectedMonths)
+        if (saved.tableMonthFilter) setTableMonthFilter(saved.tableMonthFilter)
         if (saved.managerFilter) setManagerFilter(saved.managerFilter)
         if (saved.bdmFilter) setBdmFilter(saved.bdmFilter)
         if (saved.doctorFilter) setDoctorFilter(saved.doctorFilter)
@@ -135,6 +140,8 @@ export default function PLOutstandingPage() {
         if (saved.hospitalOutstandingAmountFilter !== undefined) setHospitalOutstandingAmountFilter(saved.hospitalOutstandingAmountFilter)
         if (saved.doctorPayoutAmountFilter !== undefined) setDoctorPayoutAmountFilter(saved.doctorPayoutAmountFilter)
         if (saved.doctorOutstandingAmountFilter !== undefined) setDoctorOutstandingAmountFilter(saved.doctorOutstandingAmountFilter)
+        if (saved.mediendPendingFilter !== undefined) setMediendPendingFilter(saved.mediendPendingFilter)
+        if (saved.doctorPendingFilter !== undefined) setDoctorPendingFilter(saved.doctorPendingFilter)
         if (saved.categoryFilter) setCategoryFilter(saved.categoryFilter)
         if (saved.paymentTypeFilter) setPaymentTypeFilter(saved.paymentTypeFilter)
         if (saved.mediendPayoutFilter) setMediendPayoutFilter(saved.mediendPayoutFilter)
@@ -144,6 +151,7 @@ export default function PLOutstandingPage() {
         if (saved.leadRefFilter !== undefined) setLeadRefFilter(saved.leadRefFilter)
         if (saved.patientFilter !== undefined) setPatientFilter(saved.patientFilter)
         if (saved.treatmentFilter !== undefined) setTreatmentFilter(saved.treatmentFilter)
+        if (saved.remarksFilter !== undefined) setRemarksFilter(saved.remarksFilter)
         if (saved.leadReceivedFilter) setLeadReceivedFilter(saved.leadReceivedFilter)
         if (saved.admissionDateFilter) setAdmissionDateFilter(saved.admissionDateFilter)
         if (saved.surgeryDateFilter) setSurgeryDateFilter(saved.surgeryDateFilter)
@@ -166,6 +174,7 @@ export default function PLOutstandingPage() {
     try {
       window.sessionStorage.setItem('pl-outstanding-filters-v1', JSON.stringify({
         selectedMonths,
+        tableMonthFilter,
         managerFilter,
         bdmFilter,
         doctorFilter,
@@ -175,6 +184,8 @@ export default function PLOutstandingPage() {
         hospitalOutstandingAmountFilter,
         doctorPayoutAmountFilter,
         doctorOutstandingAmountFilter,
+        mediendPendingFilter,
+        doctorPendingFilter,
         categoryFilter,
         paymentTypeFilter,
         mediendPayoutFilter,
@@ -184,6 +195,7 @@ export default function PLOutstandingPage() {
         leadRefFilter,
         patientFilter,
         treatmentFilter,
+        remarksFilter,
         leadReceivedFilter,
         admissionDateFilter,
         surgeryDateFilter,
@@ -201,6 +213,7 @@ export default function PLOutstandingPage() {
   }, [
     hydrated,
     selectedMonths,
+    tableMonthFilter,
     managerFilter,
     bdmFilter,
     doctorFilter,
@@ -210,6 +223,8 @@ export default function PLOutstandingPage() {
     hospitalOutstandingAmountFilter,
     doctorPayoutAmountFilter,
     doctorOutstandingAmountFilter,
+    mediendPendingFilter,
+    doctorPendingFilter,
     categoryFilter,
     paymentTypeFilter,
     mediendPayoutFilter,
@@ -219,6 +234,7 @@ export default function PLOutstandingPage() {
     leadRefFilter,
     patientFilter,
     treatmentFilter,
+    remarksFilter,
     leadReceivedFilter,
     admissionDateFilter,
     surgeryDateFilter,
@@ -279,12 +295,14 @@ export default function PLOutstandingPage() {
   const { data: records, isLoading } = useQuery<Lead[]>({
     queryKey: [
       'outstanding', 'records', dateRange,
+      tableMonthFilter,
       managerFilter, bdmFilter, doctorFilter, hospitalFilter, statusFilter,
       hospitalTotalAmountFilter, hospitalOutstandingAmountFilter,
       doctorPayoutAmountFilter, doctorOutstandingAmountFilter,
+      mediendPendingFilter, doctorPendingFilter,
       categoryFilter, paymentTypeFilter, mediendPayoutFilter, doctorPayoutFilter,
       invoiceStatusFilter, paymentReceivedFilter,
-      leadRefFilter, patientFilter, treatmentFilter,
+      leadRefFilter, patientFilter, treatmentFilter, remarksFilter,
       leadReceivedFilter, admissionDateFilter, surgeryDateFilter,
       totalBillFilter, approvedAmountFilter, deductionTotalFilter,
       deductionPaidFilter, waivedOffFilter, netProfitFilter,
@@ -292,6 +310,7 @@ export default function PLOutstandingPage() {
     queryFn: async () => {
       const filters = []
       // multiSelect
+      if (tableMonthFilter.length > 0) filters.push({ field: 'month', operator: 'in', value: tableMonthFilter })
       if (managerFilter.length > 0) filters.push({ field: 'manager', operator: 'in', value: managerFilter })
       if (bdmFilter.length > 0) filters.push({ field: 'bdm', operator: 'in', value: bdmFilter })
       if (doctorFilter.length > 0) filters.push({ field: 'doctor', operator: 'in', value: doctorFilter })
@@ -310,6 +329,7 @@ export default function PLOutstandingPage() {
       if (leadRefFilter.trim()) filters.push({ field: 'leadRef', operator: 'contains', value: leadRefFilter })
       if (patientFilter.trim()) filters.push({ field: 'patient', operator: 'contains', value: patientFilter })
       if (treatmentFilter.trim()) filters.push({ field: 'treatment', operator: 'contains', value: treatmentFilter })
+      if (remarksFilter.trim()) filters.push({ field: 'remarks', operator: 'contains', value: remarksFilter })
 
       // dateRange
       if (leadReceivedFilter.length === 2 && leadReceivedFilter[0]) {
@@ -334,6 +354,12 @@ export default function PLOutstandingPage() {
       }
       if (doctorOutstandingAmountFilter && (doctorOutstandingAmountFilter.min != null || doctorOutstandingAmountFilter.max != null)) {
         filters.push({ field: 'doctorOutstandingAmount', operator: 'between', value: doctorOutstandingAmountFilter })
+      }
+      if (mediendPendingFilter && (mediendPendingFilter.min != null || mediendPendingFilter.max != null)) {
+        filters.push({ field: 'mediendPending', operator: 'between', value: mediendPendingFilter })
+      }
+      if (doctorPendingFilter && (doctorPendingFilter.min != null || doctorPendingFilter.max != null)) {
+        filters.push({ field: 'doctorPending', operator: 'between', value: doctorPendingFilter })
       }
       if (totalBillFilter && (totalBillFilter.min != null || totalBillFilter.max != null)) {
         filters.push({ field: 'totalBill', operator: 'between', value: totalBillFilter })
@@ -369,9 +395,213 @@ export default function PLOutstandingPage() {
   const [sheetLeadId, setSheetLeadId] = useState<number | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
 
-  const filteredRecords = useMemo(() => records ?? [], [records])
+  const filteredRecords = useMemo(
+    () =>
+      records?.filter((r) => {
+        if (tableMonthFilter.length > 0) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          const rowMonth = resolved.month
+          if (!rowMonth) return false
+          const y = rowMonth.getFullYear()
+          const m = String(rowMonth.getMonth() + 1).padStart(2, '0')
+          const rowMonthKey = `${y}-${m}`
+          if (!tableMonthFilter.includes(rowMonthKey)) return false
+        }
+        if (managerFilter.length > 0) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          if (!resolved.manager || !managerFilter.includes(resolved.manager)) return false
+        }
+        if (bdmFilter.length > 0) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          if (!resolved.bdm || !bdmFilter.includes(resolved.bdm)) return false
+        }
+        if (doctorFilter.length > 0) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          if (!resolved.doctor || !doctorFilter.includes(resolved.doctor)) return false
+        }
+        if (hospitalFilter.length > 0) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          if (!resolved.hospital || !hospitalFilter.includes(resolved.hospital)) return false
+        }
+        if (statusFilter.length > 0) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          if (!resolved.status || !statusFilter.includes(resolved.status)) return false
+        }
+        if (categoryFilter.length > 0) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          if (!resolved.category || !categoryFilter.includes(resolved.category)) return false
+        }
+        if (paymentTypeFilter.length > 0) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          if (!resolved.paymentType || !paymentTypeFilter.includes(resolved.paymentType)) return false
+        }
+        if (mediendPayoutFilter.length > 0) {
+          const val = r.plRecord?.hospitalPayoutStatus || 'PENDING'
+          if (!mediendPayoutFilter.includes(val)) return false
+        }
+        if (doctorPayoutFilter.length > 0) {
+          const val = r.plRecord?.doctorPayoutStatus || 'PENDING'
+          if (!doctorPayoutFilter.includes(val)) return false
+        }
+        if (invoiceStatusFilter.length > 0) {
+          const val = r.plRecord?.mediendInvoiceStatus || 'PENDING'
+          if (!invoiceStatusFilter.includes(val)) return false
+        }
+        if (paymentReceivedFilter !== null) {
+          const oc = r.outstandingCase as { paymentReceived?: boolean } | undefined
+          const isReceived = oc?.paymentReceived === true
+          if (isReceived !== paymentReceivedFilter) return false
+        }
+        if (leadRefFilter.trim()) {
+          const ref = String(r.leadRef || '')
+          if (!ref.toLowerCase().includes(leadRefFilter.trim().toLowerCase())) return false
+        }
+        if (patientFilter.trim()) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          if (!resolved.patient || !resolved.patient.toLowerCase().includes(patientFilter.trim().toLowerCase())) return false
+        }
+        if (treatmentFilter.trim()) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          if (!resolved.treatment || !resolved.treatment.toLowerCase().includes(treatmentFilter.trim().toLowerCase())) return false
+        }
+        if (remarksFilter.trim()) {
+          const oc = r.outstandingCase as { remark2?: string | null } | undefined
+          const pl = r.plRecord as { remarks?: string | null } | undefined
+          const combined = `${oc?.remark2 || ''} ${pl?.remarks || ''}`.toLowerCase()
+          if (!combined.includes(remarksFilter.trim().toLowerCase())) return false
+        }
+        if (leadReceivedFilter.length === 2 && leadReceivedFilter[0]) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          const d = resolved.leadReceivedFromInsuranceAt
+          if (!d) return false
+          const from = new Date(leadReceivedFilter[0])
+          const to = new Date(leadReceivedFilter[1] || leadReceivedFilter[0])
+          to.setHours(23, 59, 59, 999)
+          if (d < from || d > to) return false
+        }
+        if (admissionDateFilter.length === 2 && admissionDateFilter[0]) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          const d = resolved.admission
+          if (!d) return false
+          const from = new Date(admissionDateFilter[0])
+          const to = new Date(admissionDateFilter[1] || admissionDateFilter[0])
+          to.setHours(23, 59, 59, 999)
+          if (d < from || d > to) return false
+        }
+        if (surgeryDateFilter.length === 2 && surgeryDateFilter[0]) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          const d = resolved.surgery
+          if (!d) return false
+          const from = new Date(surgeryDateFilter[0])
+          const to = new Date(surgeryDateFilter[1] || surgeryDateFilter[0])
+          to.setHours(23, 59, 59, 999)
+          if (d < from || d > to) return false
+        }
+        if (totalBillFilter && (totalBillFilter.min != null || totalBillFilter.max != null)) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          const val = resolved.totalBill ?? 0
+          if (totalBillFilter.min != null && val < totalBillFilter.min) return false
+          if (totalBillFilter.max != null && val > totalBillFilter.max) return false
+        }
+        if (approvedAmountFilter && (approvedAmountFilter.min != null || approvedAmountFilter.max != null)) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          const val = resolved.approvedAmount ?? 0
+          if (approvedAmountFilter.min != null && val < approvedAmountFilter.min) return false
+          if (approvedAmountFilter.max != null && val > approvedAmountFilter.max) return false
+        }
+        if (deductionTotalFilter && (deductionTotalFilter.min != null || deductionTotalFilter.max != null)) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          const val = resolved.deductionTotal ?? 0
+          if (deductionTotalFilter.min != null && val < deductionTotalFilter.min) return false
+          if (deductionTotalFilter.max != null && val > deductionTotalFilter.max) return false
+        }
+        if (deductionPaidFilter && (deductionPaidFilter.min != null || deductionPaidFilter.max != null)) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          const val = resolved.deductionPaidByPatient ?? 0
+          if (deductionPaidFilter.min != null && val < deductionPaidFilter.min) return false
+          if (deductionPaidFilter.max != null && val > deductionPaidFilter.max) return false
+        }
+        if (waivedOffFilter && (waivedOffFilter.min != null || waivedOffFilter.max != null)) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          const val = resolved.deductionWaived ?? 0
+          if (waivedOffFilter.min != null && val < waivedOffFilter.min) return false
+          if (waivedOffFilter.max != null && val > waivedOffFilter.max) return false
+        }
+        if (netProfitFilter && (netProfitFilter.min != null || netProfitFilter.max != null)) {
+          const val = (r.plRecord as any)?.finalProfit ?? (r.plRecord as any)?.mediendNetProfit ?? r.netProfit ?? 0
+          if (netProfitFilter.min != null && val < netProfitFilter.min) return false
+          if (netProfitFilter.max != null && val > netProfitFilter.max) return false
+        }
+        if (hospitalTotalAmountFilter && (hospitalTotalAmountFilter.min != null || hospitalTotalAmountFilter.max != null)) {
+          const val = (r.dischargeSheet as any)?.hospitalShareAmount ?? (r.plRecord as any)?.hospitalShareAmount ?? 0
+          if (hospitalTotalAmountFilter.min != null && val < hospitalTotalAmountFilter.min) return false
+          if (hospitalTotalAmountFilter.max != null && val > hospitalTotalAmountFilter.max) return false
+        }
+        if (hospitalOutstandingAmountFilter && (hospitalOutstandingAmountFilter.min != null || hospitalOutstandingAmountFilter.max != null)) {
+          const val = (r.plRecord as Record<string, unknown>)?.hospitalAmountPending as number || 0
+          if (hospitalOutstandingAmountFilter.min != null && val < hospitalOutstandingAmountFilter.min) return false
+          if (hospitalOutstandingAmountFilter.max != null && val > hospitalOutstandingAmountFilter.max) return false
+        }
+        if (doctorPayoutAmountFilter && (doctorPayoutAmountFilter.min != null || doctorPayoutAmountFilter.max != null)) {
+          const val = (r.dischargeSheet as any)?.doctorCharges ?? (r.plRecord as any)?.doctorCharges ?? 0
+          if (doctorPayoutAmountFilter.min != null && val < doctorPayoutAmountFilter.min) return false
+          if (doctorPayoutAmountFilter.max != null && val > doctorPayoutAmountFilter.max) return false
+        }
+        if (doctorOutstandingAmountFilter && (doctorOutstandingAmountFilter.min != null || doctorOutstandingAmountFilter.max != null)) {
+          const val = (r.plRecord as Record<string, unknown>)?.doctorAmountPending as number || 0
+          if (doctorOutstandingAmountFilter.min != null && val < doctorOutstandingAmountFilter.min) return false
+          if (doctorOutstandingAmountFilter.max != null && val > doctorOutstandingAmountFilter.max) return false
+        }
+        if (mediendPendingFilter && (mediendPendingFilter.min != null || mediendPendingFilter.max != null)) {
+          const val = (r.plRecord as Record<string, unknown>)?.hospitalAmountPending as number || 0
+          if (mediendPendingFilter.min != null && val < mediendPendingFilter.min) return false
+          if (mediendPendingFilter.max != null && val > mediendPendingFilter.max) return false
+        }
+        if (doctorPendingFilter && (doctorPendingFilter.min != null || doctorPendingFilter.max != null)) {
+          const val = (r.plRecord as Record<string, unknown>)?.doctorAmountPending as number || 0
+          if (doctorPendingFilter.min != null && val < doctorPendingFilter.min) return false
+          if (doctorPendingFilter.max != null && val > doctorPendingFilter.max) return false
+        }
+        return true
+      }) ?? [],
+    [
+      records,
+      tableMonthFilter,
+      managerFilter,
+      bdmFilter,
+      doctorFilter,
+      hospitalFilter,
+      statusFilter,
+      categoryFilter,
+      paymentTypeFilter,
+      mediendPayoutFilter,
+      doctorPayoutFilter,
+      invoiceStatusFilter,
+      paymentReceivedFilter,
+      leadRefFilter,
+      patientFilter,
+      treatmentFilter,
+      remarksFilter,
+      leadReceivedFilter,
+      admissionDateFilter,
+      surgeryDateFilter,
+      totalBillFilter,
+      approvedAmountFilter,
+      deductionTotalFilter,
+      deductionPaidFilter,
+      waivedOffFilter,
+      netProfitFilter,
+      hospitalTotalAmountFilter,
+      hospitalOutstandingAmountFilter,
+      doctorPayoutAmountFilter,
+      doctorOutstandingAmountFilter,
+      mediendPendingFilter,
+      doctorPendingFilter,
+    ]
+  )
 
   const activeFilterCount =
+    tableMonthFilter.length +
     managerFilter.length +
     bdmFilter.length +
     doctorFilter.length +
@@ -386,6 +616,7 @@ export default function PLOutstandingPage() {
     (leadRefFilter.trim() ? 1 : 0) +
     (patientFilter.trim() ? 1 : 0) +
     (treatmentFilter.trim() ? 1 : 0) +
+    (remarksFilter.trim() ? 1 : 0) +
     (leadReceivedFilter.length > 0 ? 1 : 0) +
     (admissionDateFilter.length > 0 ? 1 : 0) +
     (surgeryDateFilter.length > 0 ? 1 : 0) +
@@ -393,6 +624,8 @@ export default function PLOutstandingPage() {
     (hospitalOutstandingAmountFilter ? 1 : 0) +
     (doctorPayoutAmountFilter ? 1 : 0) +
     (doctorOutstandingAmountFilter ? 1 : 0) +
+    (mediendPendingFilter ? 1 : 0) +
+    (doctorPendingFilter ? 1 : 0) +
     (totalBillFilter ? 1 : 0) +
     (approvedAmountFilter ? 1 : 0) +
     (deductionTotalFilter ? 1 : 0) +
@@ -401,6 +634,7 @@ export default function PLOutstandingPage() {
     (netProfitFilter ? 1 : 0)
 
   const clearFilters = () => {
+    setTableMonthFilter([])
     setManagerFilter([])
     setBdmFilter([])
     setDoctorFilter([])
@@ -415,6 +649,7 @@ export default function PLOutstandingPage() {
     setLeadRefFilter('')
     setPatientFilter('')
     setTreatmentFilter('')
+    setRemarksFilter('')
     setLeadReceivedFilter([])
     setAdmissionDateFilter([])
     setSurgeryDateFilter([])
@@ -422,6 +657,8 @@ export default function PLOutstandingPage() {
     setHospitalOutstandingAmountFilter(null)
     setDoctorPayoutAmountFilter(null)
     setDoctorOutstandingAmountFilter(null)
+    setMediendPendingFilter(null)
+    setDoctorPendingFilter(null)
     setTotalBillFilter(null)
     setApprovedAmountFilter(null)
     setDeductionTotalFilter(null)
@@ -515,7 +752,17 @@ export default function PLOutstandingPage() {
       },
       {
         id: 'month',
-        header: 'Month',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[130px]">
+            <span>Month</span>
+            <ColumnFilter
+              type="multiSelect"
+              options={MONTH_OPTIONS.map((m) => ({ label: m.label, value: m.key }))}
+              value={tableMonthFilter}
+              onChange={(selected) => { setTableMonthFilter(selected); setPage(1) }}
+            />
+          </div>
+        ),
         cell: ({ row }) => {
           const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
           return <div className="whitespace-nowrap">{formatPlMonth(resolved.month)}</div>
@@ -979,7 +1226,16 @@ export default function PLOutstandingPage() {
       },
       {
         id: 'mediendPending',
-        header: 'MediEND Pending',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[170px]">
+            <span>MediEND Pending</span>
+            <ColumnFilter
+              type="numberRange"
+              value={mediendPendingFilter}
+              onChange={(val) => { setMediendPendingFilter(val); setPage(1) }}
+            />
+          </div>
+        ),
         cell: ({ row }) => {
           const hospitalPending = (row.original.plRecord as Record<string, unknown>)?.hospitalAmountPending as number || 0
           return (
@@ -1016,7 +1272,16 @@ export default function PLOutstandingPage() {
       },
       {
         id: 'doctorPending',
-        header: 'Doctor Pending',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[160px]">
+            <span>Doctor Pending</span>
+            <ColumnFilter
+              type="numberRange"
+              value={doctorPendingFilter}
+              onChange={(val) => { setDoctorPendingFilter(val); setPage(1) }}
+            />
+          </div>
+        ),
         cell: ({ row }) => {
           const doctorPending = (row.original.plRecord as Record<string, unknown>)?.doctorAmountPending as number || 0
           return (
@@ -1078,7 +1343,17 @@ export default function PLOutstandingPage() {
       },
       {
         id: 'remarks',
-        header: 'Remarks',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+            <span>Remarks</span>
+            <ColumnFilter
+              type="search"
+              value={remarksFilter}
+              onChange={(val) => { setRemarksFilter(val); setPage(1) }}
+              placeholder="Search remarks..."
+            />
+          </div>
+        ),
         cell: ({ row }) => {
           const oc = row.original.outstandingCase as { paymentReceived?: boolean; remark2?: string | null } | undefined
           return (
@@ -1103,13 +1378,14 @@ export default function PLOutstandingPage() {
     })
   }, [
     filterOptions,
-    leadRefFilter, leadReceivedFilter, managerFilter, bdmFilter, patientFilter,
+    leadRefFilter, tableMonthFilter, leadReceivedFilter, managerFilter, bdmFilter, patientFilter,
     categoryFilter, treatmentFilter, doctorFilter, hospitalFilter,
     admissionDateFilter, surgeryDateFilter, paymentTypeFilter, statusFilter,
     totalBillFilter, approvedAmountFilter, deductionTotalFilter, deductionPaidFilter,
     waivedOffFilter, netProfitFilter, hospitalTotalAmountFilter, hospitalOutstandingAmountFilter,
     doctorPayoutAmountFilter, doctorOutstandingAmountFilter, mediendPayoutFilter,
-    doctorPayoutFilter, invoiceStatusFilter, paymentReceivedFilter, setPage,
+    mediendPendingFilter, doctorPayoutFilter, doctorPendingFilter, invoiceStatusFilter,
+    paymentReceivedFilter, remarksFilter, setPage,
     hasAccess, permissions
   ]);
 

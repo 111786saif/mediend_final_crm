@@ -183,62 +183,147 @@ export function execute(
     }
 
     case "sale.post": {
-      const loc = next.locations.find((l) => l.id === cmd.locationId && !l.archived);
-      if (!loc) throw new InventoryError("Select a valid location.");
-      if (cmd.date > ctx.today) throw new InventoryError("Sale date cannot be in the future.");
+      const existingSale = cmd.id ? next.sales.find((s) => s.id === cmd.id) : undefined;
+      const saleId = existingSale ? existingSale.id : (cmd.id || ctx.id());
+      const firstLineBalance = cmd.lines?.map((l) => next.balances.find((b) => b.id === l.balanceId)).find(Boolean);
+      const loc =
+        (cmd.locationId && cmd.locationId !== "00000000-0000-0000-0000-000000000000"
+          ? next.locations.find((l) => l.id === cmd.locationId && !l.archived)
+          : undefined) ||
+        (firstLineBalance ? next.locations.find((l) => l.id === firstLineBalance.locationId && !l.archived) : undefined) ||
+        next.locations.find((l) => !l.archived);
+      if (cmd.date && cmd.date > ctx.today) throw new InventoryError("Sale date cannot be in the future.");
 
       let net = 0;
-      const lines = cmd.lines.map((l) => {
-        const balance = next.balances.find((b) => b.id === l.balanceId);
-        if (!balance || balance.locationId !== loc.id) throw new InventoryError("Selected stock batch is not available at this location.");
-        if (balance.quarantined) throw new InventoryError("Quarantined stock cannot be sold.");
-        if (balance.quantity < l.quantity) throw new InventoryError("Insufficient stock in selected batch.");
+      let lines = existingSale?.lines || [];
 
-        const lot = next.lots.find((lot) => lot.id === balance.lotId)!;
-        if (lot.expiry < ctx.today) throw new InventoryError(`Expired batch ${lot.batch} cannot be sold.`);
+      if (existingSale) {
+        if (cmd.lines && cmd.lines.length > 0) {
+          lines = existingSale.lines.map((existingLine, idx) => {
+            const updatedLine =
+              cmd.lines?.find((l) => l.balanceId && l.balanceId === existingLine.balanceId) ||
+              cmd.lines?.[idx];
+            return {
+              ...existingLine,
+              unitPrice:
+                updatedLine && updatedLine.unitPrice !== undefined
+                  ? updatedLine.unitPrice
+                  : existingLine.unitPrice,
+              unitCost:
+                updatedLine && updatedLine.unitCost !== undefined
+                  ? updatedLine.unitCost
+                  : existingLine.unitCost,
+              mrp:
+                updatedLine && updatedLine.mrp !== undefined
+                  ? updatedLine.mrp
+                  : existingLine.mrp,
+              gstPercent:
+                updatedLine && updatedLine.gstPercent !== undefined
+                  ? updatedLine.gstPercent
+                  : existingLine.gstPercent,
+              gstAmount:
+                updatedLine && updatedLine.gstAmount !== undefined
+                  ? updatedLine.gstAmount
+                  : existingLine.gstAmount,
+            };
+          });
+        }
+        const totalLinePrice = lines.reduce((sum, l) => sum + l.quantity * l.unitPrice, 0);
+        net =
+          cmd.salesPrice !== undefined
+            ? cmd.salesPrice
+            : (totalLinePrice || existingSale.net || 0);
+      } else if (cmd.lines && cmd.lines.length > 0) {
+        let computedNet = 0;
+        lines = cmd.lines.map((l) => {
+          const balance = next.balances.find((b) => b.id === l.balanceId);
+          if (!balance) throw new InventoryError("Selected stock batch was not found.");
+          const balanceLoc = next.locations.find((bl) => bl.id === balance.locationId && !bl.archived);
+          if (!balanceLoc) throw new InventoryError("Selected stock batch is not available at this location.");
+          if (cmd.locationId && cmd.locationId !== "00000000-0000-0000-0000-000000000000" && !cmd.patientName && loc && balance.locationId !== loc.id) {
+            throw new InventoryError("Selected stock batch is not available at this location.");
+          }
+          if (balance.quarantined) throw new InventoryError("Quarantined stock cannot be sold.");
+          if (balance.quantity < l.quantity) throw new InventoryError("Insufficient stock in selected batch.");
 
-        const product = next.products.find((p) => p.id === lot.productId)!;
-        const beforeBalance = structuredClone(balance);
-        balance.quantity -= l.quantity;
-        changes.push({ collection: "balances", id: balance.id, before: beforeBalance, after: balance });
+          const lot = next.lots.find((lot) => lot.id === balance.lotId)!;
+          if (lot.expiry < ctx.today) throw new InventoryError(`Expired batch ${lot.batch} cannot be sold.`);
 
-        net += l.quantity * l.unitPrice;
-        return {
-          balanceId: l.balanceId,
-          lotId: lot.id,
-          productId: product.id,
-          productName: product.name,
-          size: lot.size,
-          batch: lot.batch,
-          quantity: l.quantity,
-          unitCost: lot.unitCost,
-          unitPrice: l.unitPrice,
-        };
-      });
+          const product = next.products.find((p) => p.id === lot.productId)!;
+          const beforeBalance = structuredClone(balance);
+          balance.quantity -= l.quantity;
+          changes.push({ collection: "balances", id: balance.id, before: beforeBalance, after: balance });
 
-      const total = net + (cmd.gstMode === "WITH_GST" ? cmd.tax : 0);
-      if (cmd.paidNow > total) throw new InventoryError("Initial collection cannot exceed invoice total.");
+          computedNet += l.quantity * (l.unitPrice || 0);
+          return {
+            balanceId: l.balanceId,
+            lotId: lot.id,
+            productId: product.id,
+            productName: product.name,
+            size: lot.size,
+            batch: lot.batch,
+            quantity: l.quantity,
+            unitCost: l.unitCost !== undefined ? l.unitCost : lot.unitCost,
+            unitPrice: l.unitPrice || 0,
+            mrp: l.mrp !== undefined ? l.mrp : product.mrp,
+            gstPercent: l.gstPercent,
+            gstAmount: l.gstAmount,
+          };
+        });
+        net = cmd.salesPrice !== undefined ? cmd.salesPrice : computedNet;
+      }
 
-      const saleId = ctx.id();
+      const totalLineGst = lines.reduce((sum, l) => sum + (l.gstAmount || 0), 0);
+      const computedGst = cmd.gstAmount !== undefined ? cmd.gstAmount : totalLineGst;
+      const total = cmd.salesPriceWithGst !== undefined ? cmd.salesPriceWithGst : (net + (cmd.gstMode === "WITH_GST" ? (computedGst || cmd.tax) : 0));
+      if (cmd.paidNow > total && total > 0) throw new InventoryError("Initial collection cannot exceed invoice total.");
+
       const saleRow = {
         id: saleId,
-        date: cmd.date,
-        locationId: cmd.locationId,
-        billedTo: cmd.billedTo,
-        caseReference: cmd.caseReference,
-        gstMode: cmd.gstMode,
-        documentType: cmd.documentType,
-        reference: cmd.reference,
+        date: cmd.date || existingSale?.date || ctx.today,
+        locationId: loc?.id || cmd.locationId || existingSale?.locationId || "",
+        billedTo: cmd.patientName || cmd.billedTo || existingSale?.billedTo || "Patient",
+        caseReference: cmd.caseReference || cmd.remark || existingSale?.caseReference || "",
+        gstMode: cmd.gstMode || existingSale?.gstMode || "WITH_GST",
+        documentType: cmd.documentType || existingSale?.documentType || "TAX_INVOICE",
+        reference: cmd.reference || existingSale?.reference || "",
         net,
-        tax: cmd.gstMode === "WITH_GST" ? cmd.tax : 0,
+        tax: cmd.gstAmount !== undefined ? cmd.gstAmount : (computedGst || (cmd.gstMode === "WITH_GST" ? cmd.tax : 0) || existingSale?.tax || 0),
         total,
-        handledBy: cmd.handledBy,
-        proofId: cmd.proofId,
+        handledBy: cmd.bdmName || cmd.handledBy || existingSale?.handledBy || "",
+        proofId: cmd.proofId || existingSale?.proofId || "",
         status: "POSTED" as const,
         lines,
+        bdmName: cmd.bdmName || existingSale?.bdmName,
+        managerName: cmd.managerName || existingSale?.managerName,
+        patientName: cmd.patientName || cmd.billedTo || existingSale?.patientName,
+        treatment: cmd.treatment || existingSale?.treatment,
+        circle: cmd.circle || existingSale?.circle,
+        drName: cmd.drName || existingSale?.drName,
+        hospitalName: cmd.hospitalName || loc?.name || existingSale?.hospitalName,
+        surgeryDate: cmd.surgeryDate || cmd.date || existingSale?.surgeryDate,
+        mop: cmd.mop || existingSale?.mop,
+        sizeUsed: cmd.sizeUsed || existingSale?.sizeUsed,
+        remark: cmd.remark || existingSale?.remark,
+        stockUsedForm: cmd.stockUsedForm || existingSale?.stockUsedForm,
+        invoiceStatus: cmd.invoiceStatus || existingSale?.invoiceStatus,
+        mrp: cmd.mrp !== undefined ? cmd.mrp : existingSale?.mrp,
+        buyPrice: cmd.buyPrice !== undefined ? cmd.buyPrice : existingSale?.buyPrice,
+        salesPrice: cmd.salesPrice !== undefined ? cmd.salesPrice : net,
+        gstPercent: cmd.gstPercent !== undefined ? cmd.gstPercent : existingSale?.gstPercent,
+        gstAmount: cmd.gstAmount !== undefined ? cmd.gstAmount : (computedGst || existingSale?.gstAmount || 0),
+        salesPriceWithGst: cmd.salesPriceWithGst !== undefined ? cmd.salesPriceWithGst : total,
+        receivedPayment: cmd.receivedPayment !== undefined ? cmd.receivedPayment : existingSale?.receivedPayment,
+        paymentReceivedStatus: cmd.paymentReceivedStatus || existingSale?.paymentReceivedStatus,
       };
-      next.sales.push(saleRow);
-      changes.push({ collection: "sales", id: saleId, before: null, after: saleRow });
+
+      if (existingSale) {
+        changes.push({ collection: "sales", id: saleId, before: structuredClone(existingSale), after: saleRow });
+        Object.assign(existingSale, saleRow);
+      } else {
+        next.sales.push(saleRow);
+        changes.push({ collection: "sales", id: saleId, before: null, after: saleRow });
+      }
 
       if (cmd.paidNow > 0) {
         const paymentRow = {

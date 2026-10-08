@@ -13,6 +13,8 @@ import {
   parsePipelineQueryParams,
   statusBucketWhere,
 } from '@/lib/pipeline/server-query'
+import { fetchPipelineMetaFromTypesense } from '@/lib/pipeline/typesense-service'
+import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
 
 interface CacheEntry<T> {
   data: T
@@ -111,8 +113,7 @@ async function loadPipelineApplicableUserFilters(user: {
   if (
     user.role === UserRole.TEAM_LEAD ||
     user.role === UserRole.ASSISTANT_CATEGORY_MANAGER ||
-    user.role === UserRole.CATEGORY_MANAGER ||
-    user.role === UserRole.SALES_HEAD
+    user.role === UserRole.CATEGORY_MANAGER
   ) {
     const employee = await getEmployeeByUserId(user.id)
     const subordinates = employee ? await getSubordinates(employee.id, true) : []
@@ -248,9 +249,39 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url)
     const params = parsePipelineQueryParams(searchParams)
-    const { where: roleWhere } = await buildPipelineRoleWhere(user)
+    const { where: roleWhere, subordinateUserIds, teamLeadId } = await buildPipelineRoleWhere(user)
 
-    // Status card counts ignore the selected status bucket so cards stay stable while drilling in.
+    // Primary path: Query metadata facets directly from Typesense (status counts, facet total, categories, circles)
+    const tsMeta = await fetchPipelineMetaFromTypesense(params, user, { subordinateUserIds, teamLeadId })
+    if (tsMeta) {
+      const [sources, leadSources, userFilters] = await Promise.all([
+        getCachedSources(),
+        getCachedLeadSources(),
+        getCachedPipelineApplicableUserFilters(user),
+      ])
+
+      const { bds, bdOwners, teamLeads } = userFilters
+
+      return successResponse({
+        statusCounts: tsMeta.statusCounts,
+        facetTotal: tsMeta.facetTotal,
+        facets: {
+          categories: tsMeta.categories,
+          circles: tsMeta.circles,
+          bds,
+          teamLeads,
+          bdOwners,
+          columnFacets: {
+            tl: teamLeads,
+            bd: bdOwners,
+            source: sources,
+            leadSource: leadSources,
+          },
+        },
+      })
+    }
+
+    // Fallback path: PostgreSQL database aggregation
     const facetWhere = buildPipelineFiltersWhere(params, roleWhere, { includeStatusBucket: false })
 
     const [

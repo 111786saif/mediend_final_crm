@@ -121,7 +121,7 @@ export function ColumnFilter({
   const getQuickRange = (range: 'current' | '3months' | '6months') => {
     const now = new Date()
     let from: Date
-    let to: Date = now
+    const to: Date = now
 
     if (range === 'current') {
       from = new Date(now.getFullYear(), now.getMonth(), 1)
@@ -223,6 +223,21 @@ export function ColumnFilter({
     option.label.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
+  const orderedFilteredOptions = useMemo(() => {
+    const selectedList: FilterOption[] = []
+    const unselectedList: FilterOption[] = []
+
+    filteredOptions.forEach((option) => {
+      if (selected.includes(option.value)) {
+        selectedList.push(option)
+      } else {
+        unselectedList.push(option)
+      }
+    })
+
+    return { selectedList, unselectedList }
+  }, [filteredOptions, selected])
+
   const isAllSelected = useMemo(() => {
     const targetOptions = searchQuery ? filteredOptions : normalizedOptions
     if (targetOptions.length === 0) return false
@@ -273,16 +288,16 @@ export function ColumnFilter({
           <button
             type="button"
             className={cn(
-              "inline-flex items-center justify-center shrink-0 transition-colors ml-1 p-0.3 rounded-md border",
+              "inline-flex items-center justify-center shrink-0 transition-colors ml-1 p-0.5 rounded-md border",
               hasActiveFilters
-                ? "bg-teal-500/15 text-teal-700 hover:bg-teal-500/25 border-teal-500/20 dark:bg-teal-500/20 dark:text-teal-400"
+                ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 border-emerald-300 dark:border-emerald-800 shadow-xs"
                 : "border-transparent hover:bg-muted text-muted-foreground hover:text-foreground"
             )}
           >
             <ChevronDown
               className={cn(
                 "h-3.5 w-3.5",
-                hasActiveFilters ? "text-teal-700 dark:text-teal-400 font-bold" : "opacity-60"
+                hasActiveFilters ? "text-emerald-600 dark:text-emerald-400 font-bold stroke-[2.5]" : "opacity-60"
               )}
             />
           </button>
@@ -432,16 +447,33 @@ export function ColumnFilter({
                   No options found
                 </div>
               ) : (
-                filteredOptions.map((option) => (
-                  <DropdownMenuCheckboxItem
-                    key={option.value}
-                    checked={tempSelected.includes(option.value)}
-                    onCheckedChange={(checked) => handleCheckedChange(option.value, checked)}
-                    onSelect={(e) => e.preventDefault()}
-                  >
-                    {option.label}
-                  </DropdownMenuCheckboxItem>
-                ))
+                <>
+                  {orderedFilteredOptions.selectedList.map((option) => (
+                    <DropdownMenuCheckboxItem
+                      key={option.value}
+                      checked={tempSelected.includes(option.value)}
+                      onCheckedChange={(checked) => handleCheckedChange(option.value, checked)}
+                      onSelect={(e) => e.preventDefault()}
+                      className="font-medium"
+                    >
+                      {option.label}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                  {orderedFilteredOptions.selectedList.length > 0 &&
+                    orderedFilteredOptions.unselectedList.length > 0 && (
+                      <div className="h-px bg-muted my-0.5" />
+                    )}
+                  {orderedFilteredOptions.unselectedList.map((option) => (
+                    <DropdownMenuCheckboxItem
+                      key={option.value}
+                      checked={tempSelected.includes(option.value)}
+                      onCheckedChange={(checked) => handleCheckedChange(option.value, checked)}
+                      onSelect={(e) => e.preventDefault()}
+                    >
+                      {option.label}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </>
               )}
             </div>
           </div>

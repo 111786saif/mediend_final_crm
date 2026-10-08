@@ -282,10 +282,17 @@ function emptyToNull(v: string | null): string | null {
   return v
 }
 
+// Builds the role-based scoping filter and subordinate user IDs for pipeline queries
 export async function buildPipelineRoleWhere(
   user: SessionUser,
-): Promise<{ where: Prisma.LeadWhereInput; subordinateUserIds?: string[] }> {
-  if (user.role === 'EXECUTIVE_ASSISTANT') {
+): Promise<{ where: Prisma.LeadWhereInput; subordinateUserIds?: string[]; teamLeadId?: number | null }> {
+  if (
+    user.role === 'EXECUTIVE_ASSISTANT' ||
+    user.role === 'SUPER_ADMIN' ||
+    user.role === 'ADMIN' ||
+    user.role === 'SALES_HEAD' ||
+    user.role === 'MD'
+  ) {
     return { where: {} }
   }
 
@@ -296,24 +303,43 @@ export async function buildPipelineRoleWhere(
   if (
     user.role === 'TEAM_LEAD' ||
     user.role === 'ASSISTANT_CATEGORY_MANAGER' ||
-    user.role === 'CATEGORY_MANAGER' ||
-    user.role === 'SALES_HEAD'
+    user.role === 'CATEGORY_MANAGER'
   ) {
-    const employee = await getEmployeeByUserId(user.id)
-    const subordinates = employee ? await getSubordinates(employee.id, true) : []
-    const visibleUserIds = [user.id, ...subordinates.map((s) => s.userId)]
+    let visibleUserIds: string[] | undefined = undefined
+    let teamLeadId: number | null = null
+
+    // Try retrieving hierarchy directly from Typesense employee-hierarchy collection
+    try {
+      const { getEmployeeHierarchyFromTypesense } = await import('@/lib/typesense/client')
+      const tsHierarchy = await getEmployeeHierarchyFromTypesense(user.id)
+      if (tsHierarchy && tsHierarchy.subordinateUserIds?.length > 0) {
+        visibleUserIds = tsHierarchy.subordinateUserIds
+        teamLeadId = tsHierarchy.teamLeadNumber ? Number(tsHierarchy.teamLeadNumber) || null : null
+      }
+    } catch {
+      // Typesense offline or unconfigured, fall back to PostgreSQL
+    }
+
+    // Fallback to PostgreSQL if Typesense has no document for this user
+    if (!visibleUserIds) {
+      const employee = await getEmployeeByUserId(user.id)
+      const subordinates = employee ? await getSubordinates(employee.id, true) : []
+      visibleUserIds = [user.id, ...subordinates.map((s: { userId: string }) => s.userId)]
+      teamLeadId = employee?.bdNumber ?? null
+    }
 
     const or: Prisma.LeadWhereInput[] = [
       { bdId: { in: visibleUserIds } },
     ]
 
-    if (employee?.bdNumber) {
-      or.push({ teamLeadId: employee.bdNumber })
+    if (teamLeadId) {
+      or.push({ teamLeadId })
     }
 
     return {
       where: or.length === 1 ? or[0]! : { OR: or },
       subordinateUserIds: visibleUserIds,
+      teamLeadId,
     }
   }
   return { where: {} }
@@ -882,7 +908,7 @@ function buildLeadSourceFilterWhere(values: string[]): Prisma.LeadWhereInput | u
   }
 }
 
-const PIPELINE_STATUS_FILTER_VARIANTS: Record<string, string[]> = {
+export const PIPELINE_STATUS_FILTER_VARIANTS: Record<string, string[]> = {
   'New Lead': ['27', 'New Lead'],
   'Hot Lead': ['28', 'Hot Lead'],
   Interested: ['39', 'Interested'],

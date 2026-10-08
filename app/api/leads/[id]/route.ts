@@ -49,6 +49,7 @@ import { buildEffectiveOpdEntries, getEffectiveOpdCounts } from '@/lib/lead-opd-
 import { leadOpdAppointmentSelect } from '@/lib/lead-opd-records'
 import { resolveLeadCity } from '@/lib/lead-display'
 import { isCaseStageRegression } from '@/lib/case-stage-transition'
+import { syncSingleLeadToTypesense } from '@/lib/typesense/client'
 
 function parseFollowUpDateInput(value: unknown) {
   if (value === undefined) return { provided: false, value: undefined as Date | null | undefined }
@@ -1453,6 +1454,21 @@ export async function PATCH(
       include: {
         bd: { select: prismaBdEmployeeTeamSelect },
         plRecord: true,
+        leadRemarkEntries: {
+          select: {
+            id: true,
+            content: true,
+            createdAt: true,
+            createdBy: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+        },
       },
     })
 
@@ -1490,6 +1506,13 @@ export async function PATCH(
           },
         }
       : mapped
+
+    // Synchronize updated lead record to Typesense directly without redundant database query
+    try {
+      await syncSingleLeadToTypesense(leadWithPl || id)
+    } catch (err) {
+      console.warn('[Typesense] Sync failed for lead update:', err)
+    }
 
     return successResponse(responsePayload, 'Lead updated successfully')
   } catch (error) {

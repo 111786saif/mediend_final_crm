@@ -62,6 +62,22 @@ export function LeadRemarksDrawer({
     if (!leadId || !canSave) return
 
     setSaving(true)
+    // Optimistic UI update for remark
+    queryClient.setQueriesData({ queryKey: ['pipeline', 'table'] }, (oldData: any) => {
+      if (!oldData || !Array.isArray(oldData.leads)) return oldData
+      return {
+        ...oldData,
+        leads: oldData.leads.map((item: any) => {
+          if (item.id !== leadId) return item
+          return {
+            ...item,
+            latestRemark: trimmedDraft,
+            remarks: trimmedDraft,
+          }
+        }),
+      }
+    })
+
     try {
       await apiPost(`/api/leads/${leadId}/remarks`, { content: trimmedDraft })
       toast.success('Remark added')
@@ -69,8 +85,10 @@ export function LeadRemarksDrawer({
       queryClient.invalidateQueries({ queryKey: ['leads'] })
       queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
       queryClient.invalidateQueries({ queryKey: ['lead-remarks', leadId] })
+      queryClient.invalidateQueries({ queryKey: ['pipeline'] })
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to add remark')
+      queryClient.invalidateQueries({ queryKey: ['pipeline'] })
     } finally {
       setSaving(false)
     }

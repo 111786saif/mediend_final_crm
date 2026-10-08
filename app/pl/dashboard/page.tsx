@@ -269,6 +269,21 @@ export default function PLLedgerPage() {
   const [doctorChargesFilter, setDoctorChargesFilter] = useState<{ min: number | null; max: number | null } | null>(null)
   const [implantFilter, setImplantFilter] = useState<{ min: number | null; max: number | null } | null>(null)
   const [netProfitFilter, setNetProfitFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [deductionTotalFilter, setDeductionTotalFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [deductionPatientFilter, setDeductionPatientFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [deductionWaivedFilter, setDeductionWaivedFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [instrumentsFilter, setInstrumentsFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [instrumentsPaidByFilter, setInstrumentsPaidByFilter] = useState<string[]>([])
+  const [actualImplantCostFilter, setActualImplantCostFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [actualInstrumentCostFilter, setActualInstrumentCostFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [hospitalRecoverAmountFilter, setHospitalRecoverAmountFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [dcFilter, setDcFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [cabFilter, setCabFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [referralFilter, setReferralFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [mediendSharePctFilter, setMediendSharePctFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [mediendShareAmtFilter, setMediendShareAmtFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [mediendProfitFilter, setMediendProfitFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [remarksFilter, setRemarksFilter] = useState<string>('')
   const [selectedStage, setSelectedStage] = useState<string | null>(null)
 
   const [hydrated, setHydrated] = useState(false)
@@ -307,6 +322,21 @@ export default function PLLedgerPage() {
         if (saved.doctorChargesFilter !== undefined) setDoctorChargesFilter(saved.doctorChargesFilter)
         if (saved.implantFilter !== undefined) setImplantFilter(saved.implantFilter)
         if (saved.netProfitFilter !== undefined) setNetProfitFilter(saved.netProfitFilter)
+        if (saved.deductionTotalFilter !== undefined) setDeductionTotalFilter(saved.deductionTotalFilter)
+        if (saved.deductionPatientFilter !== undefined) setDeductionPatientFilter(saved.deductionPatientFilter)
+        if (saved.deductionWaivedFilter !== undefined) setDeductionWaivedFilter(saved.deductionWaivedFilter)
+        if (saved.instrumentsFilter !== undefined) setInstrumentsFilter(saved.instrumentsFilter)
+        if (saved.instrumentsPaidByFilter !== undefined) setInstrumentsPaidByFilter(saved.instrumentsPaidByFilter)
+        if (saved.actualImplantCostFilter !== undefined) setActualImplantCostFilter(saved.actualImplantCostFilter)
+        if (saved.actualInstrumentCostFilter !== undefined) setActualInstrumentCostFilter(saved.actualInstrumentCostFilter)
+        if (saved.hospitalRecoverAmountFilter !== undefined) setHospitalRecoverAmountFilter(saved.hospitalRecoverAmountFilter)
+        if (saved.dcFilter !== undefined) setDcFilter(saved.dcFilter)
+        if (saved.cabFilter !== undefined) setCabFilter(saved.cabFilter)
+        if (saved.referralFilter !== undefined) setReferralFilter(saved.referralFilter)
+        if (saved.mediendSharePctFilter !== undefined) setMediendSharePctFilter(saved.mediendSharePctFilter)
+        if (saved.mediendShareAmtFilter !== undefined) setMediendShareAmtFilter(saved.mediendShareAmtFilter)
+        if (saved.mediendProfitFilter !== undefined) setMediendProfitFilter(saved.mediendProfitFilter)
+        if (saved.remarksFilter !== undefined) setRemarksFilter(saved.remarksFilter)
         if (saved.selectedStage !== undefined) setSelectedStage(saved.selectedStage)
       }
     } catch (e) {
@@ -348,6 +378,21 @@ export default function PLLedgerPage() {
         doctorChargesFilter,
         implantFilter,
         netProfitFilter,
+        deductionTotalFilter,
+        deductionPatientFilter,
+        deductionWaivedFilter,
+        instrumentsFilter,
+        instrumentsPaidByFilter,
+        actualImplantCostFilter,
+        actualInstrumentCostFilter,
+        hospitalRecoverAmountFilter,
+        dcFilter,
+        cabFilter,
+        referralFilter,
+        mediendSharePctFilter,
+        mediendShareAmtFilter,
+        mediendProfitFilter,
+        remarksFilter,
         selectedStage,
       }))
     } catch (e) {
@@ -384,6 +429,21 @@ export default function PLLedgerPage() {
     doctorChargesFilter,
     implantFilter,
     netProfitFilter,
+    deductionTotalFilter,
+    deductionPatientFilter,
+    deductionWaivedFilter,
+    instrumentsFilter,
+    instrumentsPaidByFilter,
+    actualImplantCostFilter,
+    actualInstrumentCostFilter,
+    hospitalRecoverAmountFilter,
+    dcFilter,
+    cabFilter,
+    referralFilter,
+    mediendSharePctFilter,
+    mediendShareAmtFilter,
+    mediendProfitFilter,
+    remarksFilter,
     selectedStage,
   ])
 
@@ -414,6 +474,12 @@ export default function PLLedgerPage() {
       totalBillFilter, approvedAmountFilter, amountPaidFilter,
       hospitalSharePctFilter, hospitalShareAmtFilter,
       doctorChargesFilter, implantFilter, netProfitFilter,
+      deductionTotalFilter, deductionPatientFilter, deductionWaivedFilter,
+      instrumentsFilter, instrumentsPaidByFilter,
+      actualImplantCostFilter, actualInstrumentCostFilter, hospitalRecoverAmountFilter,
+      dcFilter, cabFilter, referralFilter,
+      mediendSharePctFilter, mediendShareAmtFilter, mediendProfitFilter,
+      remarksFilter,
     ],
     queryFn: async () => {
       const filters: Array<{ field: string; operator: string; value: unknown }> = []
@@ -429,6 +495,7 @@ export default function PLLedgerPage() {
       if (circleFilter.length > 0) filters.push({ field: 'circle', operator: 'in', value: circleFilter })
       if (paymentTypeFilter.length > 0) filters.push({ field: 'paymentType', operator: 'in', value: paymentTypeFilter })
       if (implantPaidByFilter.length > 0) filters.push({ field: 'implantPaidBy', operator: 'in', value: implantPaidByFilter })
+      if (instrumentsPaidByFilter.length > 0) filters.push({ field: 'instrumentsPaidBy', operator: 'in', value: instrumentsPaidByFilter })
       if (hospPayoutFilter.length > 0) filters.push({ field: 'hospPayout', operator: 'in', value: hospPayoutFilter })
       if (docPayoutFilter.length > 0) filters.push({ field: 'docPayout', operator: 'in', value: docPayoutFilter })
       if (invoiceFilter.length > 0) filters.push({ field: 'invoice', operator: 'in', value: invoiceFilter })
@@ -438,6 +505,7 @@ export default function PLLedgerPage() {
       if (patientFilter.trim()) filters.push({ field: 'patient', operator: 'contains', value: patientFilter })
       if (leadRefFilter.trim()) filters.push({ field: 'leadRef', operator: 'contains', value: leadRefFilter })
       if (commonSearch) filters.push({ field: 'commonSearch', operator: 'contains', value: commonSearch })
+      if (remarksFilter.trim()) filters.push({ field: 'remarks', operator: 'contains', value: remarksFilter })
 
       // dateRange filters
       if (leadReceivedDateFilter.length === 2 && leadReceivedDateFilter[0])
@@ -452,6 +520,12 @@ export default function PLLedgerPage() {
         filters.push({ field: 'totalBill', operator: 'between', value: totalBillFilter })
       if (approvedAmountFilter && (approvedAmountFilter.min != null || approvedAmountFilter.max != null))
         filters.push({ field: 'approvedAmount', operator: 'between', value: approvedAmountFilter })
+      if (deductionTotalFilter && (deductionTotalFilter.min != null || deductionTotalFilter.max != null))
+        filters.push({ field: 'deductionTotal', operator: 'between', value: deductionTotalFilter })
+      if (deductionPatientFilter && (deductionPatientFilter.min != null || deductionPatientFilter.max != null))
+        filters.push({ field: 'deductionPatient', operator: 'between', value: deductionPatientFilter })
+      if (deductionWaivedFilter && (deductionWaivedFilter.min != null || deductionWaivedFilter.max != null))
+        filters.push({ field: 'deductionWaived', operator: 'between', value: deductionWaivedFilter })
       if (amountPaidFilter && (amountPaidFilter.min != null || amountPaidFilter.max != null))
         filters.push({ field: 'amountPaid', operator: 'between', value: amountPaidFilter })
       if (hospitalSharePctFilter && (hospitalSharePctFilter.min != null || hospitalSharePctFilter.max != null))
@@ -462,8 +536,28 @@ export default function PLLedgerPage() {
         filters.push({ field: 'doctorCharges', operator: 'between', value: doctorChargesFilter })
       if (implantFilter && (implantFilter.min != null || implantFilter.max != null))
         filters.push({ field: 'implant', operator: 'between', value: implantFilter })
+      if (instrumentsFilter && (instrumentsFilter.min != null || instrumentsFilter.max != null))
+        filters.push({ field: 'instruments', operator: 'between', value: instrumentsFilter })
+      if (actualImplantCostFilter && (actualImplantCostFilter.min != null || actualImplantCostFilter.max != null))
+        filters.push({ field: 'actualImplantCost', operator: 'between', value: actualImplantCostFilter })
+      if (actualInstrumentCostFilter && (actualInstrumentCostFilter.min != null || actualInstrumentCostFilter.max != null))
+        filters.push({ field: 'actualInstrumentCost', operator: 'between', value: actualInstrumentCostFilter })
+      if (hospitalRecoverAmountFilter && (hospitalRecoverAmountFilter.min != null || hospitalRecoverAmountFilter.max != null))
+        filters.push({ field: 'hospitalRecoverAmount', operator: 'between', value: hospitalRecoverAmountFilter })
+      if (dcFilter && (dcFilter.min != null || dcFilter.max != null))
+        filters.push({ field: 'dc', operator: 'between', value: dcFilter })
+      if (cabFilter && (cabFilter.min != null || cabFilter.max != null))
+        filters.push({ field: 'cab', operator: 'between', value: cabFilter })
+      if (referralFilter && (referralFilter.min != null || referralFilter.max != null))
+        filters.push({ field: 'referral', operator: 'between', value: referralFilter })
+      if (mediendSharePctFilter && (mediendSharePctFilter.min != null || mediendSharePctFilter.max != null))
+        filters.push({ field: 'mediendSharePct', operator: 'between', value: mediendSharePctFilter })
+      if (mediendShareAmtFilter && (mediendShareAmtFilter.min != null || mediendShareAmtFilter.max != null))
+        filters.push({ field: 'mediendShareAmt', operator: 'between', value: mediendShareAmtFilter })
       if (netProfitFilter && (netProfitFilter.min != null || netProfitFilter.max != null))
         filters.push({ field: 'netProfit', operator: 'between', value: netProfitFilter })
+      if (mediendProfitFilter && (mediendProfitFilter.min != null || mediendProfitFilter.max != null))
+        filters.push({ field: 'mediendProfit', operator: 'between', value: mediendProfitFilter })
 
       const params = new URLSearchParams({
         startDate: effectiveDateRange.startDate,
@@ -539,6 +633,10 @@ export default function PLLedgerPage() {
         { label: 'Hospital', value: 'HOSPITAL' },
         { label: 'Mediend', value: 'MEDIEND' },
       ],
+      instrumentsPaidBys: find('instrumentsPaidBy')?.options || [
+        { label: 'Hospital', value: 'HOSPITAL' },
+        { label: 'Mediend', value: 'MEDIEND' },
+      ],
       categories: find('category')?.options || [],
       circles: find('circle')?.options || [],
       paymentTypes: find('paymentType')?.options || [],
@@ -585,14 +683,19 @@ export default function PLLedgerPage() {
 
   const activeFilterCount =
     bdFilter.length + managerFilter.length + statusFilter.length + hospitalFilter.length + doctorFilter.length + outstandingFilter.length +
-    categoryFilter.length + circleFilter.length + paymentTypeFilter.length + implantPaidByFilter.length +
+    categoryFilter.length + circleFilter.length + paymentTypeFilter.length + implantPaidByFilter.length + instrumentsPaidByFilter.length +
     hospPayoutFilter.length + docPayoutFilter.length + invoiceFilter.length +
     tableMonthFilter.length +
     (treatmentFilter.trim() ? 1 : 0) + (patientFilter.trim() ? 1 : 0) + (leadRefFilter.trim() ? 1 : 0) + (commonSearch ? 1 : 0) +
     (customDateRange.startDate ? 1 : 0) +
+    (treatmentFilter.trim() ? 1 : 0) + (patientFilter.trim() ? 1 : 0) + (leadRefFilter.trim() ? 1 : 0) + (remarksFilter.trim() ? 1 : 0) +
     (leadReceivedDateFilter.length > 0 ? 1 : 0) + (admissionDateFilter.length > 0 ? 1 : 0) + (surgeryDateFilter.length > 0 ? 1 : 0) +
     (totalBillFilter ? 1 : 0) + (approvedAmountFilter ? 1 : 0) + (amountPaidFilter ? 1 : 0) +
-    (hospitalSharePctFilter ? 1 : 0) + (hospitalShareAmtFilter ? 1 : 0) + (doctorChargesFilter ? 1 : 0) + (implantFilter ? 1 : 0) + (netProfitFilter ? 1 : 0) +
+    (deductionTotalFilter ? 1 : 0) + (deductionPatientFilter ? 1 : 0) + (deductionWaivedFilter ? 1 : 0) +
+    (hospitalSharePctFilter ? 1 : 0) + (hospitalShareAmtFilter ? 1 : 0) + (doctorChargesFilter ? 1 : 0) + (implantFilter ? 1 : 0) +
+    (instrumentsFilter ? 1 : 0) + (actualImplantCostFilter ? 1 : 0) + (actualInstrumentCostFilter ? 1 : 0) + (hospitalRecoverAmountFilter ? 1 : 0) +
+    (dcFilter ? 1 : 0) + (cabFilter ? 1 : 0) + (referralFilter ? 1 : 0) +
+    (mediendSharePctFilter ? 1 : 0) + (mediendShareAmtFilter ? 1 : 0) + (netProfitFilter ? 1 : 0) + (mediendProfitFilter ? 1 : 0) +
     (selectedStage ? 1 : 0)
 
   const clearFilters = () => {
@@ -606,6 +709,7 @@ export default function PLLedgerPage() {
     setCircleFilter([])
     setPaymentTypeFilter([])
     setImplantPaidByFilter([])
+    setInstrumentsPaidByFilter([])
     setHospPayoutFilter([])
     setDocPayoutFilter([])
     setInvoiceFilter([])
@@ -617,17 +721,31 @@ export default function PLLedgerPage() {
     setCommonSearch('')
     setCustomDateRangeDraft({ startDate: '', endDate: '' })
     setCustomDateRange({ startDate: '', endDate: '' })
+    setRemarksFilter('')
     setLeadReceivedDateFilter([])
     setAdmissionDateFilter([])
     setSurgeryDateFilter([])
     setTotalBillFilter(null)
     setApprovedAmountFilter(null)
     setAmountPaidFilter(null)
+    setDeductionTotalFilter(null)
+    setDeductionPatientFilter(null)
+    setDeductionWaivedFilter(null)
     setHospitalSharePctFilter(null)
     setHospitalShareAmtFilter(null)
     setDoctorChargesFilter(null)
     setImplantFilter(null)
+    setInstrumentsFilter(null)
+    setActualImplantCostFilter(null)
+    setActualInstrumentCostFilter(null)
+    setHospitalRecoverAmountFilter(null)
+    setDcFilter(null)
+    setCabFilter(null)
+    setReferralFilter(null)
+    setMediendSharePctFilter(null)
+    setMediendShareAmtFilter(null)
     setNetProfitFilter(null)
+    setMediendProfitFilter(null)
     setSelectedStage(null)
   }
 
@@ -636,7 +754,7 @@ export default function PLLedgerPage() {
       records?.filter((r) => {
         // Show rows that have either: insurance discharge sheet OR cash case P/L record
         const hasInsuranceDs = !!(r as Lead).dischargeSheet;
-        const isCashCase = r.caseStage?.toString().startsWith('CASH_');
+        const isCashCase = r.caseStage?.toString().startsWith('CASH_') || (r as any).flowType === 'CASH';
         const hasPlData = !!(r as Lead).plRecord;
 
         const isStandalone = Boolean((r as Lead & { standalonePlRecord?: boolean }).standalonePlRecord)
@@ -658,6 +776,30 @@ export default function PLLedgerPage() {
           }
         } else {
           if (!hasInsuranceDs && !(isCashCase && hasPlData) && !isStandalone) return false
+        // Cash cases: only show discharged patients (CASH_DISCHARGED), never CASH_IPD_DONE or other non-discharged stages
+        if (isCashCase) {
+          if (r.caseStage !== 'CASH_DISCHARGED' && r.caseStage !== 'DISCHARGED') return false;
+          if (!hasPlData) return false;
+          if (selectedStage && selectedStage !== 'discharged' && selectedStage !== 'ipd_done') return false;
+        } else {
+          if (selectedStage) {
+            const stage = r.caseStage?.toString() || ''
+            if (selectedStage === 'admitted') {
+              if (stage !== 'ADMITTED') return false
+            } else if (selectedStage === 'ipd_done') {
+              if (stage !== 'IPD_DONE' && stage !== 'DISCHARGED' && stage !== 'PL_PENDING' && stage !== 'OUTSTANDING') return false
+            } else if (selectedStage === 'discharged') {
+              if (stage !== 'DISCHARGED') return false
+            } else if (selectedStage === 'scheduled') {
+              if (stage !== 'PREAUTH_COMPLETE' && stage !== 'INITIATED') return false
+            } else if (selectedStage === 'posted') {
+              if (stage !== 'INITIATED') return false
+            } else if (selectedStage === 'cancelled') {
+              if (stage !== 'CANCELLED') return false
+            }
+          } else {
+            if (!hasInsuranceDs) return false
+          }
         }
 
         if (tableMonthFilter.length > 0) {
@@ -674,9 +816,57 @@ export default function PLLedgerPage() {
           const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
           if (!resolved.manager || !managerFilter.includes(resolved.manager)) return false
         }
+        if (bdFilter.length > 0) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          if (!resolved.bdm || !bdFilter.includes(resolved.bdm)) return false
+        }
+        if (hospitalFilter.length > 0) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          if (!resolved.hospital || !hospitalFilter.includes(resolved.hospital)) return false
+        }
+        if (doctorFilter.length > 0) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          if (!resolved.doctor || !doctorFilter.includes(resolved.doctor)) return false
+        }
+        if (outstandingFilter.length > 0) {
+          const val = r.plRecord?.outstandingStatus || 'NEW'
+          if (!outstandingFilter.includes(val)) return false
+        }
         if (statusFilter.length > 0) {
           const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
           if (!resolved.status || !statusFilter.includes(resolved.status)) return false
+        }
+        if (categoryFilter.length > 0) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          if (!resolved.category || !categoryFilter.includes(resolved.category)) return false
+        }
+        if (circleFilter.length > 0) {
+          const val = String(r.circle || '')
+          if (!val || !circleFilter.includes(val)) return false
+        }
+        if (paymentTypeFilter.length > 0) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          if (!resolved.paymentType || !paymentTypeFilter.includes(resolved.paymentType)) return false
+        }
+        if (hospPayoutFilter.length > 0) {
+          const val = r.plRecord?.hospitalPayoutStatus || 'PENDING'
+          if (!hospPayoutFilter.includes(val)) return false
+        }
+        if (docPayoutFilter.length > 0) {
+          const val = r.plRecord?.doctorPayoutStatus || 'PENDING'
+          if (!docPayoutFilter.includes(val)) return false
+        }
+        if (invoiceFilter.length > 0) {
+          const val = r.plRecord?.mediendInvoiceStatus || 'PENDING'
+          if (!invoiceFilter.includes(val)) return false
+        }
+        if (treatmentFilter.trim()) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          if (!resolved.treatment || !resolved.treatment.toLowerCase().includes(treatmentFilter.trim().toLowerCase())) return false
+        }
+        if (patientFilter.trim()) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          if (!resolved.patient || !resolved.patient.toLowerCase().includes(patientFilter.trim().toLowerCase())) return false
         }
         if (leadRefFilter.trim()) {
           const ref = String(r.leadRef || '')
@@ -691,11 +881,59 @@ export default function PLLedgerPage() {
           to.setHours(23, 59, 59, 999)
           if (d < from || d > to) return false
         }
+        if (admissionDateFilter.length === 2 && admissionDateFilter[0]) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          const d = resolved.admission
+          if (!d) return false
+          const from = new Date(admissionDateFilter[0])
+          const to = new Date(admissionDateFilter[1] || admissionDateFilter[0])
+          to.setHours(23, 59, 59, 999)
+          if (d < from || d > to) return false
+        }
+        if (surgeryDateFilter.length === 2 && surgeryDateFilter[0]) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          const d = resolved.surgery
+          if (!d) return false
+          const from = new Date(surgeryDateFilter[0])
+          const to = new Date(surgeryDateFilter[1] || surgeryDateFilter[0])
+          to.setHours(23, 59, 59, 999)
+          if (d < from || d > to) return false
+        }
+        if (totalBillFilter && (totalBillFilter.min != null || totalBillFilter.max != null)) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          const val = resolved.totalBill ?? 0
+          if (totalBillFilter.min != null && val < totalBillFilter.min) return false
+          if (totalBillFilter.max != null && val > totalBillFilter.max) return false
+        }
+        if (approvedAmountFilter && (approvedAmountFilter.min != null || approvedAmountFilter.max != null)) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          const val = resolved.approvedAmount ?? 0
+          if (approvedAmountFilter.min != null && val < approvedAmountFilter.min) return false
+          if (approvedAmountFilter.max != null && val > approvedAmountFilter.max) return false
+        }
         if (amountPaidFilter && (amountPaidFilter.min != null || amountPaidFilter.max != null)) {
           const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
           const val = (resolved.approvedAmount ?? 0) + (resolved.deductionPaidByPatient ?? 0)
           if (amountPaidFilter.min != null && val < amountPaidFilter.min) return false
           if (amountPaidFilter.max != null && val > amountPaidFilter.max) return false
+        }
+        if (deductionTotalFilter && (deductionTotalFilter.min != null || deductionTotalFilter.max != null)) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          const val = resolved.deductionTotal ?? 0
+          if (deductionTotalFilter.min != null && val < deductionTotalFilter.min) return false
+          if (deductionTotalFilter.max != null && val > deductionTotalFilter.max) return false
+        }
+        if (deductionPatientFilter && (deductionPatientFilter.min != null || deductionPatientFilter.max != null)) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          const val = resolved.deductionPaidByPatient ?? 0
+          if (deductionPatientFilter.min != null && val < deductionPatientFilter.min) return false
+          if (deductionPatientFilter.max != null && val > deductionPatientFilter.max) return false
+        }
+        if (deductionWaivedFilter && (deductionWaivedFilter.min != null || deductionWaivedFilter.max != null)) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          const val = resolved.deductionWaived ?? 0
+          if (deductionWaivedFilter.min != null && val < deductionWaivedFilter.min) return false
+          if (deductionWaivedFilter.max != null && val > deductionWaivedFilter.max) return false
         }
         if (hospitalSharePctFilter && (hospitalSharePctFilter.min != null || hospitalSharePctFilter.max != null)) {
           const raw = (r.plRecord as any)?.hospitalSharePct
@@ -704,6 +942,16 @@ export default function PLLedgerPage() {
           if (isNaN(val)) return false
           if (hospitalSharePctFilter.min != null && val < hospitalSharePctFilter.min) return false
           if (hospitalSharePctFilter.max != null && val > hospitalSharePctFilter.max) return false
+        }
+        if (hospitalShareAmtFilter && (hospitalShareAmtFilter.min != null || hospitalShareAmtFilter.max != null)) {
+          const raw = (r.plRecord as any)?.hospitalShareAmount != null ? Number((r.plRecord as any).hospitalShareAmount) : ((r as any).hospitalShare || 0)
+          if (hospitalShareAmtFilter.min != null && raw < hospitalShareAmtFilter.min) return false
+          if (hospitalShareAmtFilter.max != null && raw > hospitalShareAmtFilter.max) return false
+        }
+        if (doctorChargesFilter && (doctorChargesFilter.min != null || doctorChargesFilter.max != null)) {
+          const raw = (r.plRecord as any)?.doctorCharges != null ? Number((r.plRecord as any).doctorCharges) : ((r as any).doctorShare || 0)
+          if (doctorChargesFilter.min != null && raw < doctorChargesFilter.min) return false
+          if (doctorChargesFilter.max != null && raw > doctorChargesFilter.max) return false
         }
         if (implantFilter && (implantFilter.min != null || implantFilter.max != null)) {
           const raw = (r.plRecord as any)?.implantCost != null ? Number((r.plRecord as any).implantCost) : ((r as any).implantAmount ? Number((r as any).implantAmount) : 0)
@@ -714,6 +962,79 @@ export default function PLLedgerPage() {
           const val = (r.plRecord as any)?.implantPaidBy
           if (!val || !implantPaidByFilter.includes(String(val))) return false
         }
+        if (instrumentsFilter && (instrumentsFilter.min != null || instrumentsFilter.max != null)) {
+          const raw = (r.plRecord as any)?.instrumentsCost
+          const val = raw != null ? Number(raw) : 0
+          if (instrumentsFilter.min != null && val < instrumentsFilter.min) return false
+          if (instrumentsFilter.max != null && val > instrumentsFilter.max) return false
+        }
+        if (instrumentsPaidByFilter.length > 0) {
+          const val = (r.plRecord as any)?.instrumentsPaidBy
+          if (!val || !instrumentsPaidByFilter.includes(String(val))) return false
+        }
+        if (actualImplantCostFilter && (actualImplantCostFilter.min != null || actualImplantCostFilter.max != null)) {
+          const raw = (r.plRecord as any)?.actualImplantCost
+          const val = raw != null ? Number(raw) : 0
+          if (actualImplantCostFilter.min != null && val < actualImplantCostFilter.min) return false
+          if (actualImplantCostFilter.max != null && val > actualImplantCostFilter.max) return false
+        }
+        if (actualInstrumentCostFilter && (actualInstrumentCostFilter.min != null || actualInstrumentCostFilter.max != null)) {
+          const raw = (r.plRecord as any)?.actualInstrumentCost
+          const val = raw != null ? Number(raw) : 0
+          if (actualInstrumentCostFilter.min != null && val < actualInstrumentCostFilter.min) return false
+          if (actualInstrumentCostFilter.max != null && val > actualInstrumentCostFilter.max) return false
+        }
+        if (hospitalRecoverAmountFilter && (hospitalRecoverAmountFilter.min != null || hospitalRecoverAmountFilter.max != null)) {
+          const raw = (r.plRecord as any)?.hospitalRecoverAmount
+          const val = raw != null ? Number(raw) : 0
+          if (hospitalRecoverAmountFilter.min != null && val < hospitalRecoverAmountFilter.min) return false
+          if (hospitalRecoverAmountFilter.max != null && val > hospitalRecoverAmountFilter.max) return false
+        }
+        if (dcFilter && (dcFilter.min != null || dcFilter.max != null)) {
+          const raw = (r.plRecord as any)?.dcCharges
+          const val = raw != null ? Number(raw) : 0
+          if (dcFilter.min != null && val < dcFilter.min) return false
+          if (dcFilter.max != null && val > dcFilter.max) return false
+        }
+        if (cabFilter && (cabFilter.min != null || cabFilter.max != null)) {
+          const raw = (r.plRecord as any)?.cabCharges
+          const val = raw != null ? Number(raw) : 0
+          if (cabFilter.min != null && val < cabFilter.min) return false
+          if (cabFilter.max != null && val > cabFilter.max) return false
+        }
+        if (referralFilter && (referralFilter.min != null || referralFilter.max != null)) {
+          const raw = (r.plRecord as any)?.referralAmount
+          const val = raw != null ? Number(raw) : 0
+          if (referralFilter.min != null && val < referralFilter.min) return false
+          if (referralFilter.max != null && val > referralFilter.max) return false
+        }
+        if (mediendSharePctFilter && (mediendSharePctFilter.min != null || mediendSharePctFilter.max != null)) {
+          const raw = (r.plRecord as any)?.mediendSharePct
+          const val = raw != null ? Number(raw) : 0
+          if (mediendSharePctFilter.min != null && val < mediendSharePctFilter.min) return false
+          if (mediendSharePctFilter.max != null && val > mediendSharePctFilter.max) return false
+        }
+        if (mediendShareAmtFilter && (mediendShareAmtFilter.min != null || mediendShareAmtFilter.max != null)) {
+          const raw = (r.plRecord as any)?.mediendShareAmount ?? (r as any).mediendProfit
+          const val = raw != null ? Number(raw) : 0
+          if (mediendShareAmtFilter.min != null && val < mediendShareAmtFilter.min) return false
+          if (mediendShareAmtFilter.max != null && val > mediendShareAmtFilter.max) return false
+        }
+        if (netProfitFilter && (netProfitFilter.min != null || netProfitFilter.max != null)) {
+          const val = r.plRecord?.finalProfit ?? r.plRecord?.mediendNetProfit ?? r.netProfit ?? 0
+          if (netProfitFilter.min != null && val < netProfitFilter.min) return false
+          if (netProfitFilter.max != null && val > netProfitFilter.max) return false
+        }
+        if (mediendProfitFilter && (mediendProfitFilter.min != null || mediendProfitFilter.max != null)) {
+          const raw = (r.plRecord as any)?.mediendProfit ?? (r as any).mediendProfit
+          const val = raw != null ? Number(raw) : 0
+          if (mediendProfitFilter.min != null && val < mediendProfitFilter.min) return false
+          if (mediendProfitFilter.max != null && val > mediendProfitFilter.max) return false
+        }
+        if (remarksFilter.trim()) {
+          const val = String((r.plRecord as any)?.remarks || '')
+          if (!val.toLowerCase().includes(remarksFilter.trim().toLowerCase())) return false
+        }
 
         return true
       }),
@@ -722,13 +1043,47 @@ export default function PLLedgerPage() {
       selectedStage,
       tableMonthFilter,
       managerFilter,
+      bdFilter,
+      hospitalFilter,
+      doctorFilter,
+      outstandingFilter,
       statusFilter,
+      categoryFilter,
+      circleFilter,
+      paymentTypeFilter,
+      hospPayoutFilter,
+      docPayoutFilter,
+      invoiceFilter,
+      treatmentFilter,
+      patientFilter,
       leadRefFilter,
       leadReceivedDateFilter,
+      admissionDateFilter,
+      surgeryDateFilter,
+      totalBillFilter,
+      approvedAmountFilter,
       amountPaidFilter,
+      deductionTotalFilter,
+      deductionPatientFilter,
+      deductionWaivedFilter,
       hospitalSharePctFilter,
+      hospitalShareAmtFilter,
+      doctorChargesFilter,
       implantFilter,
       implantPaidByFilter,
+      instrumentsFilter,
+      instrumentsPaidByFilter,
+      actualImplantCostFilter,
+      actualInstrumentCostFilter,
+      hospitalRecoverAmountFilter,
+      dcFilter,
+      cabFilter,
+      referralFilter,
+      mediendSharePctFilter,
+      mediendShareAmtFilter,
+      netProfitFilter,
+      mediendProfitFilter,
+      remarksFilter,
     ]
   )
 
@@ -886,6 +1241,19 @@ export default function PLLedgerPage() {
     }
   }
 
+  const handleOpenSheet = useCallback(
+    (record: Lead) => {
+      const plStatus = record.plRecord?.outstandingStatus || 'NEW'
+      if (plStatus === 'OUTSTANDING' && user?.role === 'PL_HEAD') {
+        toast.error('Outstanding records can only be edited by Project Head / Executive Assistant')
+        return
+      }
+      setSheetLeadId(record.id)
+      setSheetOpen(true)
+    },
+    [user?.role]
+  )
+
   const columns = useMemo<ColumnDef<any>[]>(() => {
     const paidBy = (v: unknown) => (v === 'HOSPITAL' ? 'Hospital' : v === 'MEDIEND' ? 'Mediend' : '—')
     const cols: ColumnDef<any>[] = [
@@ -901,12 +1269,17 @@ export default function PLLedgerPage() {
         cell: ({ row }) => {
           const record = row.original
           return (
-            <div className="flex items-center gap-0.5">
-              <span className="truncate max-w-[120px]" title={String(record.leadRef ?? '')}>
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => handleOpenSheet(record)}
+                className="font-medium text-primary hover:underline hover:text-primary/80 transition-colors text-left truncate max-w-[120px] cursor-pointer"
+                title={String(record.leadRef ?? '')}
+              >
                 {record.leadRef ?? '—'}
-              </span>
+              </button>
               {record.leadRef && (
-                <CopyLeadRefButton leadRef={String(record.leadRef)} className="h-7 w-7" />
+                <CopyLeadRefButton leadRef={String(record.leadRef)} className="h-7 w-7 shrink-0" />
               )}
             </div>
           )
@@ -1179,19 +1552,34 @@ export default function PLLedgerPage() {
       },
       {
         id: 'deductionTotal',
-        header: 'Total Deduction',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Total Deduction</span>
+            <ColumnFilter value={deductionTotalFilter} onChange={setDeductionTotalFilter} type="numberRange" />
+          </div>
+        ),
         accessorFn: (row) => resolvePlRow(row as any).deductionTotal,
         cell: ({ getValue }) => formatPlRupee(getValue() as any),
       },
       {
         id: 'deductionPatient',
-        header: 'Deduction Paid by Patient',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Deduction Paid by Patient</span>
+            <ColumnFilter value={deductionPatientFilter} onChange={setDeductionPatientFilter} type="numberRange" />
+          </div>
+        ),
         accessorFn: (row) => resolvePlRow(row as any).deductionPaidByPatient,
         cell: ({ getValue }) => formatPlRupee(getValue() as any),
       },
       {
         id: 'deductionWaived',
-        header: 'Waived Off',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Waived Off</span>
+            <ColumnFilter value={deductionWaivedFilter} onChange={setDeductionWaivedFilter} type="numberRange" />
+          </div>
+        ),
         accessorFn: (row) => resolvePlRow(row as any).deductionWaived,
         cell: ({ getValue }) => formatPlRupee(getValue() as any),
       },
@@ -1271,61 +1659,116 @@ export default function PLLedgerPage() {
       },
       {
         id: 'instruments',
-        header: 'Instrument',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Instrument</span>
+            <ColumnFilter value={instrumentsFilter} onChange={setInstrumentsFilter} type="numberRange" />
+          </div>
+        ),
         accessorFn: (row) => row.plRecord?.instrumentsCost != null ? Number(row.plRecord.instrumentsCost) : null,
         cell: ({ getValue }) => rupee(getValue() as any),
       },
       {
         id: 'instrumentsPaidBy',
-        header: 'Instr. by',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Instr. by</span>
+            <ColumnFilter
+              options={filterOptions.instrumentsPaidBys}
+              value={instrumentsPaidByFilter}
+              onChange={setInstrumentsPaidByFilter}
+              type="multiSelect"
+            />
+          </div>
+        ),
         accessorFn: (row) => row.plRecord?.instrumentsPaidBy,
         cell: ({ getValue }) => paidBy(getValue()),
       },
       {
         id: 'actualImplantCost',
-        header: 'Actual Implant',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Actual Implant</span>
+            <ColumnFilter value={actualImplantCostFilter} onChange={setActualImplantCostFilter} type="numberRange" />
+          </div>
+        ),
         accessorFn: (row) => row.plRecord?.actualImplantCost != null ? Number(row.plRecord.actualImplantCost) : null,
         cell: ({ getValue }) => rupee(getValue() as any),
       },
       {
         id: 'actualInstrumentCost',
-        header: 'Actual Instrument',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Actual Instrument</span>
+            <ColumnFilter value={actualInstrumentCostFilter} onChange={setActualInstrumentCostFilter} type="numberRange" />
+          </div>
+        ),
         accessorFn: (row) => row.plRecord?.actualInstrumentCost != null ? Number(row.plRecord.actualInstrumentCost) : null,
         cell: ({ getValue }) => rupee(getValue() as any),
       },
       {
         id: 'hospitalRecoverAmount',
-        header: 'Hospital Recover',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Hospital Recover</span>
+            <ColumnFilter value={hospitalRecoverAmountFilter} onChange={setHospitalRecoverAmountFilter} type="numberRange" />
+          </div>
+        ),
         accessorFn: (row) => row.plRecord?.hospitalRecoverAmount != null ? Number(row.plRecord.hospitalRecoverAmount) : null,
         cell: ({ getValue }) => rupee(getValue() as any),
       },
       {
         id: 'dc',
-        header: 'D&C',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>D&C</span>
+            <ColumnFilter value={dcFilter} onChange={setDcFilter} type="numberRange" />
+          </div>
+        ),
         accessorFn: (row) => row.plRecord?.dcCharges != null ? Number(row.plRecord.dcCharges) : null,
         cell: ({ getValue }) => rupee(getValue() as any),
       },
       {
         id: 'cab',
-        header: 'Cab',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Cab</span>
+            <ColumnFilter value={cabFilter} onChange={setCabFilter} type="numberRange" />
+          </div>
+        ),
         accessorFn: (row) => row.plRecord?.cabCharges != null ? Number(row.plRecord.cabCharges) : null,
         cell: ({ getValue }) => rupee(getValue() as any),
       },
       {
         id: 'referral',
-        header: 'Referral',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Referral</span>
+            <ColumnFilter value={referralFilter} onChange={setReferralFilter} type="numberRange" />
+          </div>
+        ),
         accessorFn: (row) => row.plRecord?.referralAmount != null ? Number(row.plRecord.referralAmount) : null,
         cell: ({ getValue }) => rupee(getValue() as any),
       },
       {
         id: 'mediendSharePct',
-        header: 'MediEND Net %',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>MediEND Net %</span>
+            <ColumnFilter value={mediendSharePctFilter} onChange={setMediendSharePctFilter} type="numberRange" min={0} max={100} />
+          </div>
+        ),
         accessorFn: (row) => row.plRecord?.mediendSharePct,
         cell: ({ getValue }) => getValue() != null ? `${getValue()}%` : '—',
       },
       {
         id: 'mediendShareAmt',
-        header: 'MediEND Net',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>MediEND Net</span>
+            <ColumnFilter value={mediendShareAmtFilter} onChange={setMediendShareAmtFilter} type="numberRange" />
+          </div>
+        ),
         accessorFn: (row) => row.plRecord?.mediendShareAmount != null ? Number(row.plRecord.mediendShareAmount) : ((row as any).mediendProfit || null),
         cell: ({ getValue }) => rupee(getValue() as any),
       },
@@ -1342,13 +1785,23 @@ export default function PLLedgerPage() {
       },
       {
         id: 'mediendProfit',
-        header: 'Mediend Profit',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Mediend Profit</span>
+            <ColumnFilter value={mediendProfitFilter} onChange={setMediendProfitFilter} type="numberRange" />
+          </div>
+        ),
         accessorFn: (row) => (row.plRecord as any)?.mediendProfit != null ? Number((row.plRecord as any).mediendProfit) : ((row as any).mediendProfit ? Number((row as any).mediendProfit) : null),
         cell: ({ getValue }) => getValue() != null ? `₹${(getValue() as number).toLocaleString('en-IN')}` : '—',
       },
       {
         id: 'remarks',
-        header: 'Remarks',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Remarks</span>
+            <ColumnFilter value={remarksFilter} onChange={setRemarksFilter} type="search" placeholder="Search remarks..." />
+          </div>
+        ),
         accessorFn: (row) => row.plRecord?.remarks,
         cell: ({ getValue }) => (
           <span className="truncate max-w-[120px] block" title={String(getValue() || '')}>
@@ -1488,7 +1941,8 @@ export default function PLLedgerPage() {
     docPayoutFilter,
     invoiceFilter,
     hasAccess,
-    permissions
+    permissions,
+    handleOpenSheet,
   ])
 
   return (

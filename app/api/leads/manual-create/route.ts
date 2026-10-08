@@ -219,6 +219,14 @@ export async function POST(request: NextRequest) {
       actorUserId: currentUser.id,
     })
 
+    // Sync newly created manual lead to Typesense immediately so it shows in the table
+    try {
+      const { syncSingleLeadToTypesense } = await import('@/lib/typesense/client')
+      await syncSingleLeadToTypesense(lead.id)
+    } catch (tsErr) {
+      console.warn('[Typesense] Error syncing new manual lead to Typesense:', tsErr)
+    }
+
     return successResponse(
       lead,
       duplicateLead ? 'Duplicate lead created successfully' : 'Lead created successfully'

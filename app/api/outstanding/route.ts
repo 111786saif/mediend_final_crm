@@ -332,6 +332,50 @@ export async function GET(request: NextRequest) {
                   dischargeSheet: { waivedOffAmount: range },
                 })
               }
+            } else if (field === 'remarks') {
+              if (typeof value === 'string' && value.trim()) {
+                filterConditions.push({
+                  OR: [
+                    { outstandingCase: { remark2: { contains: value.trim(), mode: 'insensitive' } } },
+                    { plRecord: { remarks: { contains: value.trim(), mode: 'insensitive' } } },
+                  ],
+                })
+              }
+            } else if (field === 'month') {
+              if (Array.isArray(value) && value.length > 0) {
+                const monthOrs: Prisma.LeadWhereInput[] = value.map((mKey: string) => {
+                  const [y, m] = mKey.split('-').map(Number)
+                  const start = new Date(y, m - 1, 1)
+                  const end = new Date(y, m, 0)
+                  end.setHours(23, 59, 59, 999)
+                  const range = { gte: start, lte: end }
+                  return {
+                    OR: [
+                      { plRecord: { month: range } },
+                      { plRecord: { surgeryDate: range } },
+                      { surgeryDate: range },
+                      { dischargeSheet: { surgeryDate: range } },
+                    ],
+                  }
+                })
+                filterConditions.push({ OR: monthOrs })
+              }
+            } else if (field === 'mediendPending') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({ plRecord: { hospitalAmountPending: range } })
+              }
+            } else if (field === 'doctorPending') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({ plRecord: { doctorAmountPending: range } })
+              }
             } else if (field === 'netProfit') {
               const { min, max } = value as { min: number | null; max: number | null }
               const range: Prisma.FloatFilter = {}

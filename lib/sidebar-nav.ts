@@ -34,6 +34,7 @@ import {
   Package,
   PieChart,
   Plus,
+  Receipt,
   Route,
   Settings,
   Shield,
@@ -59,6 +60,7 @@ export interface NavItem {
   icon: React.ComponentType<{ className?: string }>
   permission?: Permission
   roles?: string[]
+  children?: NavItem[]
 }
 
 export const navItems: NavItem[] = [
@@ -620,9 +622,14 @@ export const navItems: NavItem[] = [
     icon: ArrowLeftRight,
   },
   {
-    title: 'Inv Sales',
-    url: '/inventory?tab=Sales',
-    icon: ClipboardList,
+    title: 'Sales Product',
+    url: '/inventory?tab=Sales&subTab=product',
+    icon: Package,
+  },
+  {
+    title: 'Sales Finance',
+    url: '/inventory?tab=Sales&subTab=finance',
+    icon: Receipt,
   },
   {
     title: 'Inv Payments',

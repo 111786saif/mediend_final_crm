@@ -122,6 +122,18 @@ const HIDDEN_FORM_FIELD_KEYS = new Set([
 
 const HIDDEN_FORM_SECTIONS = new Set(['Communication', 'Tracking'])
 const INDIA_TIME_ZONE = 'Asia/Kolkata'
+const MANUAL_CREATE_FIELDS = MANUAL_MYSQL_LEAD_FIELDS.map((field) =>
+  field.key === 'campaign_id'
+    ? {
+        ...field,
+        required: true,
+        helperText: 'Required. Used for campaign-based CRM auto-assignment.',
+      }
+    : field
+)
+const MANUAL_CREATE_REQUIRED_FIELD_KEYS = MANUAL_CREATE_FIELDS.filter(
+  (field) => field.required
+).map((field) => field.key)
 
 function getCurrentIndiaDateTimeLocalValue(now = new Date()) {
   return formatDateTimeLocalValueInTimeZone(now, INDIA_TIME_ZONE)
@@ -233,7 +245,7 @@ export function IncomingLeadsManualCreateDialog({
     () =>
       MANUAL_MYSQL_LEAD_SECTION_ORDER.map((section) => ({
         section,
-        fields: MANUAL_MYSQL_LEAD_FIELDS.filter(
+        fields: MANUAL_CREATE_FIELDS.filter(
           (field) => field.section === section && !HIDDEN_FORM_FIELD_KEYS.has(field.key)
         ),
       })).filter(
@@ -331,6 +343,14 @@ export function IncomingLeadsManualCreateDialog({
   }
 
   const submitForm = () => {
+    const missingFields = MANUAL_CREATE_REQUIRED_FIELD_KEYS.filter(
+      (key) => !formValues[key]?.trim()
+    )
+    if (missingFields.length > 0) {
+      toast.error(`Missing required fields: ${missingFields.join(', ')}`)
+      return
+    }
+
     if (!isValidDateTimeLocalValue(manualLeadDate)) {
       toast.error('Lead date is invalid')
       return
@@ -594,6 +614,7 @@ export function IncomingLeadsManualCreateDialog({
                           ) : (
                             <Input
                               type={field.type === 'number' ? 'number' : 'text'}
+                              required={field.required}
                               value={formValues[field.key] ?? ''}
                               onChange={(event) => handleFieldChange(field.key, event.target.value)}
                               placeholder={field.sample || field.helperText || field.label}

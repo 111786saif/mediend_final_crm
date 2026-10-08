@@ -75,6 +75,8 @@ export const NAV_TITLE_TO_RESOURCE: Record<string, string> = {
   'Inv Purchases': 'inventory.purchases',
   'Inv Transfers & Kits': 'inventory.transfers',
   'Inv Sales': 'inventory.sales',
+  'Sales Product': 'inventory.sales',
+  'Sales Finance': 'inventory.sales',
   'Inv Payments': 'inventory.payments',
   'Inv Implant P&L': 'inventory.implant_pnl',
   'Inv Delivery Expenses': 'inventory.delivery_expenses',

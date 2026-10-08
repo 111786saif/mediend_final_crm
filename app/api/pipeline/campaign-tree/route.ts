@@ -9,6 +9,7 @@ import {
   buildPipelineRoleWhere,
   parsePipelineQueryParams,
 } from '@/lib/pipeline/server-query'
+import { fetchPipelineMatchedLeadIdsFromTypesense } from '@/lib/pipeline/typesense-service'
 
 type CampaignGroup = {
   groupValue: string
@@ -70,9 +71,35 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url)
     const params = parsePipelineQueryParams(searchParams)
-    const { where: roleWhere } = await buildPipelineRoleWhere(user)
+    const { where: roleWhere, subordinateUserIds, teamLeadId } = await buildPipelineRoleWhere(user)
 
-    const facetWhere = buildPipelineFiltersWhere(params, roleWhere, { includeStatusBucket: false })
+    let facetWhere = buildPipelineFiltersWhere(params, roleWhere, { includeStatusBucket: false })
+
+    // Accelerate with Typesense when search query is provided (transparent fallback if offline or unconfigured)
+    const hasSearchQuery = Boolean(params.search && params.search.trim().length > 0)
+    const tsMatched = hasSearchQuery
+      ? await fetchPipelineMatchedLeadIdsFromTypesense(
+          params,
+          user,
+          { subordinateUserIds, teamLeadId },
+          { includeStatusBucket: false, perPage: 250 }
+        )
+      : null
+
+    if (tsMatched && (tsMatched.matchedLeadIds.length > 0 || (tsMatched.matchedLeadRefs && tsMatched.matchedLeadRefs.length > 0))) {
+      const paramsWithoutSearch = { ...params, search: '' }
+      const baseWhere = buildPipelineFiltersWhere(paramsWithoutSearch, roleWhere, { includeStatusBucket: false })
+      const matchConditions: Array<Record<string, unknown>> = []
+      if (tsMatched.matchedLeadIds.length > 0) matchConditions.push({ id: { in: tsMatched.matchedLeadIds } })
+      if (tsMatched.matchedLeadRefs && tsMatched.matchedLeadRefs.length > 0) matchConditions.push({ leadRef: { in: tsMatched.matchedLeadRefs } })
+      facetWhere = {
+        AND: [
+          baseWhere,
+          matchConditions.length === 1 ? matchConditions[0]! : { OR: matchConditions },
+        ],
+      }
+    }
+
     const campaignTree = await loadCampaignTree(facetWhere, params.groupBy)
 
     return successResponse({ campaignTree })

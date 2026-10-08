@@ -40,11 +40,15 @@ export async function calculateActual(
 
   const baseWhere: Prisma.LeadWhereInput = {
     bdId,
-    pipelineStage: 'COMPLETED',
-    OR: [
-      { conversionDate: { gte: start, lte: end } },
-      { AND: [{ conversionDate: null }, { surgeryDate: { gte: start, lte: end } }] },
-      { AND: [{ conversionDate: null }, { surgeryDate: null }, { leadEntryDate: { gte: start, lte: end } }] },
+    caseStage: { in: ['IPD_DONE', 'CASH_IPD_DONE', 'DISCHARGED', 'CASH_DISCHARGED'] },
+    AND: [
+      {
+        OR: [
+          { conversionDate: { gte: start, lte: end } },
+          { AND: [{ conversionDate: null }, { surgeryDate: { gte: start, lte: end } }] },
+          { AND: [{ conversionDate: null }, { surgeryDate: null }, { leadEntryDate: { gte: start, lte: end } }] },
+        ],
+      },
     ],
   }
 

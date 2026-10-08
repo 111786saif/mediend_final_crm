@@ -234,9 +234,9 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
               : '/bd/pipeline',
         label:
           u.role === 'SALES_HEAD' ||
-          u.role === 'CATEGORY_MANAGER' ||
-          u.role === 'TEAM_LEAD' ||
-          u.role === 'ASSISTANT_CATEGORY_MANAGER'
+            u.role === 'CATEGORY_MANAGER' ||
+            u.role === 'TEAM_LEAD' ||
+            u.role === 'ASSISTANT_CATEGORY_MANAGER'
             ? 'Dashboard'
             : 'Pipeline',
         icon: LayoutDashboard,
@@ -300,18 +300,18 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
     const profileOrMdApprovalsItem: BottomNavItem =
       u.role === 'MD'
         ? {
-            href: '/md/md-approvals',
-            label: 'MD Approvals',
-            icon: UserCheck,
-            badge: badgeCounts?.pendingMDApprovals ?? 0,
-            matchPrefixes: ['/md/md-approvals'],
-          }
+          href: '/md/md-approvals',
+          label: 'MD Approvals',
+          icon: UserCheck,
+          badge: badgeCounts?.pendingMDApprovals ?? 0,
+          matchPrefixes: ['/md/md-approvals'],
+        }
         : {
-            href: '/profile',
-            label: 'Profile',
-            icon: UserCircle,
-            matchPrefixes: ['/profile'],
-          }
+          href: '/profile',
+          label: 'Profile',
+          icon: UserCircle,
+          matchPrefixes: ['/profile'],
+        }
 
     const leftItems = left.map(({ show, ...item }) => item)
     const rightItems = [...right.map(({ show, ...item }) => item), profileOrMdApprovalsItem]
@@ -326,18 +326,19 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
   const isDocumentationPage = pathname?.startsWith('/documentation')
   const isOnboardingPage = pathname === '/onboarding' || pathname?.startsWith('/onboarding/')
   const isLeadContactPage = pathname?.startsWith('/lead-contact/')
+  const isPublicLeaderboardPage = pathname === '/bde-leaderboard' || pathname === '/leaderboard' || pathname?.startsWith('/bde-leaderboard/') || pathname?.startsWith('/leaderboard/')
 
   const shouldShowSidebar =
-    !isLoading && user && !isLoginPage && !isPayslipPage && !isDocumentViewPage && !isPrintPage && !isAcknowledgePage && !isDocumentationPage && !isOnboardingPage && !isLeadContactPage
+    !isLoading && user && !isLoginPage && !isPayslipPage && !isDocumentViewPage && !isPrintPage && !isAcknowledgePage && !isDocumentationPage && !isOnboardingPage && !isLeadContactPage && !isPublicLeaderboardPage
 
-  if (isLoginPage || isPayslipPage || isDocumentViewPage || isPrintPage || isAcknowledgePage || isDocumentationPage || isOnboardingPage || isLeadContactPage) {
-    return <>{user ? <LeadAssignedPopup /> : null}{children}</>
+  if (isLoginPage || isPayslipPage || isDocumentViewPage || isPrintPage || isAcknowledgePage || isDocumentationPage || isOnboardingPage || isLeadContactPage || isPublicLeaderboardPage) {
+    return <>{children}</>
   }
 
   return (
     <ProtectedRoute>
       {user ? <LeadAssignedPopup /> : null}
-      {user?.role === 'BD' ? <KnowlarityCallListener /> : null}
+      {user ? <KnowlarityCallListener /> : null}
       <MeetReminderPopup />
       <FollowUpReminderPopup />
       <ChatMessagePopup />
@@ -374,8 +375,8 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
                   user?.role === 'TEAM_LEAD' ||
                   user?.role === 'ASSISTANT_CATEGORY_MANAGER' ||
                   user?.role === 'CATEGORY_MANAGER') && (
-                  <BMICalculator />
-                )}
+                    <BMICalculator />
+                  )}
                 <NotificationBell />
               </div>
             </header>

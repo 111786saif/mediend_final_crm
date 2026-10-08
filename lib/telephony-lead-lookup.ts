@@ -81,10 +81,6 @@ export async function lookupPatientByPhone(rawPhone: string): Promise<PatientLoo
     return p1 === last10 || p2 === last10
   })
 
-  if (!matchedLead && leads.length > 0) {
-    matchedLead = leads[0]
-  }
-
   if (!matchedLead && last10.length >= 6) {
     try {
       const likePattern = `%${last10}%`

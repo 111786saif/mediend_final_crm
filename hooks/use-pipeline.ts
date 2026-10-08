@@ -300,6 +300,10 @@ export function usePipelinePage(
     enabled,
     placeholderData: (prev) => prev,
     staleTime: 10_000,
+    retry: (failureCount, error: any) => {
+      if (error?.message?.includes('502')) return false
+      return failureCount < 1
+    },
   })
 
   // 2. Metadata Query: Background 60s cache
@@ -309,6 +313,10 @@ export function usePipelinePage(
     enabled,
     placeholderData: (prev) => prev,
     staleTime: 60_000,
+    retry: (failureCount, error: any) => {
+      if (error?.message?.includes('502')) return false
+      return failureCount < 1
+    },
   })
 
   // 3. Campaign Tree Query: Background 120s cache
@@ -318,6 +326,10 @@ export function usePipelinePage(
     enabled,
     placeholderData: (prev) => prev,
     staleTime: 120_000,
+    retry: (failureCount, error: any) => {
+      if (error?.message?.includes('502')) return false
+      return failureCount < 1
+    },
   })
 
   // Combined response data for full backward compatibility

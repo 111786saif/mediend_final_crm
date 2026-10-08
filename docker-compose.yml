@@ -723,6 +723,74 @@ services:
       - tools
     entrypoint: ["bun", "run", "scripts/reset-may-2026-discharges.ts"]
 
+  # Typesense: recreate and re-sync all collections from PostgreSQL (sales-pipeline + employee-hierarchy)
+  # Drops existing collections, recreates schema, and indexes all leads fresh from the DB.
+  # Usage: docker compose --profile tools run --rm typesense-recreate
+  typesense-recreate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    env_file:
+      - /root/mediend.workspace/.env
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "typesense:recreate"]
+
+  # Typesense: create collections if they don't exist yet (safe to run on first deploy)
+  # Usage: docker compose --profile tools run --rm typesense-create
+  typesense-create:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    env_file:
+      - /root/mediend.workspace/.env
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "typesense:create"]
+
+  # Typesense: delete all collections (WARNING: clears all indexed data)
+  # Usage: docker compose --profile tools run --rm typesense-reset
+  typesense-reset:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    env_file:
+      - /root/mediend.workspace/.env
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "typesense:reset"]
+
+  # Typesense: incremental leads sync (queries recently modified leads and upserts to Typesense)
+  # Usage: docker compose --profile tools run --rm typesense-sync
+  # Full sync: docker compose --profile tools run --rm typesense-sync -- --full
+  typesense-sync:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    env_file:
+      - /root/mediend.workspace/.env
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "scripts/typesense/sync.ts"]
+
+  # Typesense: persistent daemon syncing leads every TYPESENSE_SYNC_INTERVAL_MINUTES (default 5m)
+  # Usage: docker compose up -d typesense-sync-daemon
+  typesense-sync-daemon:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    restart: unless-stopped
+    env_file:
+      - /root/mediend.workspace/.env
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "scripts/typesense/sync.ts", "--daemon"]
+
 volumes:
   pgdata:
   redis-data:

@@ -1,6 +1,8 @@
 "use client";
 import {
+  createContext,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -15,6 +17,9 @@ import {
   Activity,
   AlertTriangle,
   ArrowLeftRight,
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
   Box,
   Calendar,
   ChevronRight,
@@ -24,7 +29,9 @@ import {
   Info,
   LayoutDashboard,
   MapPin,
+  Package,
   Plus,
+  Receipt,
   RefreshCw,
   RotateCcw,
   Search,
@@ -51,6 +58,19 @@ import { formatMoney as money, moneyInput } from "@/lib/inventory/money";
 import { paid, todayIndia } from "@/lib/inventory/engine";
 import { EntryForm } from "./entry-form";
 import type { FormRequest } from "./forms";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarPicker } from "@/components/ui/calendar";
+import {
+  format,
+  parseISO,
+  isValid,
+  startOfMonth,
+  endOfMonth,
+  subDays,
+  subMonths,
+} from "date-fns";
+import type { DateRange } from "react-day-picker";
+import { cn } from "@/lib/utils";
 
 const tabs = [
   ["Overview", LayoutDashboard],
@@ -106,41 +126,85 @@ function Badge({
   );
 }
 
+interface FilterConfigItem {
+  field: string;
+  label: string;
+  filterType: "multiSelect" | "search" | "dateRange" | "numberRange" | "boolean";
+  filterable: boolean;
+  options?: Array<{ label: string; value: string }>;
+  min?: number;
+  max?: number;
+}
+
+const InventoryFilterContext = createContext<{
+  filterConfig: FilterConfigItem[];
+  tableStatusConfig: Record<string, Array<{ label: string; value: string }>>;
+  activeFilters: Record<string, any>;
+  setFilter: (field: string, value: any) => void;
+  resetFilters?: () => void;
+}>({
+  filterConfig: [],
+  tableStatusConfig: {},
+  activeFilters: {},
+  setFilter: () => {},
+  resetFilters: () => {},
+});
+
 function Table({
   heads,
   rows,
   empty = "No records found.",
   tabKey,
+  enablePagination = true,
+  initialPageSize = 10,
+  pageSizeOptions = [10, 20, 50, 100],
 }: {
   heads: string[];
   rows: ReactNode[][];
   empty?: string;
-  tabKey?: Tab;
+  tabKey?: Tab | string;
+  enablePagination?: boolean;
+  initialPageSize?: number;
+  pageSizeOptions?: number[];
 }) {
   const { hasAccess, permissions } = usePermissions();
-  const [columnFilters, setColumnFilters] = useState<Record<string, any>>({});
+  const { filterConfig, tableStatusConfig, activeFilters, setFilter } = useContext(InventoryFilterContext);
 
   const getColKey = (head: string) => {
     const map: Record<string, string> = {
       // Stock
       Item: "item",
       "Implant / batch": "item",
+      "Item / Product": "item",
+      Implant: "item",
       Size: "size",
       Location: "location",
       "On hand": "quantity",
       Quantity: "quantity",
+      Units: "quantity",
+      Sold: "quantity",
       "Unit cost": "unitCost",
+      "Avg cost / unit": "unitCost",
+      "Avg sale / unit": "salesPrice",
+      Sales: "salesPrice",
+      Cost: "buyPrice",
+      "Profit / loss": "profit",
+      Margin: "margin",
       Expiry: "expiry",
       Status: "status",
 
       // Purchases & Sales shared/specific
       Document: "document",
       Vendor: "vendor",
+      "Vendor Name": "vendor",
       "Vendor / billed to": "vendor",
       "Billed to": "billedTo",
-      "Case ref no.": "caseRefNo",
-      "Items & Location": "itemsLocation",
-      "Implant, Batch & Qty": "implantBatchQty",
+      "Case ref no.": "caseReference",
+      "Case Reference No.": "caseReference",
+      "Case / IPD Ref": "caseReference",
+      "Case Ref": "caseReference",
+      "Items & Location": "items",
+      "Implant, Batch & Qty": "items",
       "Unit price": "unitPrice",
       "GST / type": "gstType",
       Total: "total",
@@ -149,82 +213,470 @@ function Table({
       "Handled by": "handledBy",
       Actions: "actions",
 
+      // Sales Product
+      Date: "date",
+      "BDM Name": "bdmName",
+      BDM: "bdmName",
+      "Manager Name": "managerName",
+      Manager: "managerName",
+      "Patient Name": "patientName",
+      Treatment: "treatment",
+      Circle: "circle",
+      "Dr. Name": "drName",
+      Doctor: "drName",
+      "Doctor Name": "drName",
+      "Hospital Name": "hospitalName",
+      Hospital: "hospitalName",
+      "Surgery Date": "surgeryDate",
+      MOP: "mop",
+      "Size Used": "sizeUsed",
+      Remark: "remark",
+      "Stock Used Form": "stockUsedForm",
+
+      // Sales Finance
+      "Invoice Raised/Need": "invoiceStatus",
+      "Invoice Status": "invoiceStatus",
+      MRP: "mrp",
+      "Buy Price": "buyPrice",
+      "Sales Price": "salesPrice",
+      "GST %": "gstPercent",
+      "GST Amount": "gstAmount",
+      "Sales Price with GST": "salesPriceWithGst",
+      "Payment Received/Not": "paymentStatus",
+      "Payment Status": "paymentStatus",
+
       // Transfers
       Transfer: "transfer",
       Route: "route",
-      Implants: "implants",
-      Units: "units",
-      "Case / type": "caseType",
-      "Courier & fee": "courierFee",
+      Implants: "items",
+      "Case / type": "caseReference",
+      "Courier & fee": "carrier",
+
+      // Deliveries
+      "Date / transfer": "date",
+      Carrier: "carrier",
+      Fee: "total",
+
+      // Payments
+      Direction: "direction",
+      Amount: "total",
+      Method: "mop",
+      Reference: "reference",
+      Proof: "proof",
+
+      // Masters
+      Name: "name",
+      Details: "details",
+
+      // Activity log
+      "When (IST)": "date",
+      Action: "action",
+      Record: "reference",
+      "Changed by": "changedBy",
+      Reason: "remark",
     };
     return map[head] || head.toLowerCase().replace(/[^a-z0-9]/g, "");
   };
 
   const rbacColumnVisibility = useMemo(() => {
     if (!tabKey) return undefined;
-    const tabResKey = TAB_RESOURCE_KEYS[tabKey];
+    const tabResKey = tabKey ? (TAB_RESOURCE_KEYS as Record<string, string>)[tabKey] : undefined;
     if (!tabResKey) return undefined;
 
     const vis: Record<string, boolean> = {};
     heads.forEach((head, idx) => {
       const colKey = getColKey(head);
       const resKey = `${tabResKey}.column.${colKey}`;
-      // Check if specific column entity key exists in permissions map
       const hasPermConfigured = permissions && Object.prototype.hasOwnProperty.call(permissions, resKey);
       if (hasPermConfigured) {
         vis[`col_${idx}`] = hasAccess(resKey, "READ");
       } else {
-        // If column key is not explicitly registered/configured in permissions, default to visible
         vis[`col_${idx}`] = true;
       }
     });
     return vis;
   }, [heads, tabKey, hasAccess, permissions]);
 
-  // Convert legacy heads + array rows into TanStack ColumnDef schema with ColumnFilter header support
+  // Convert legacy heads + array rows into TanStack ColumnDef schema with backend-configured ColumnFilter
   const columns = useMemo<ColumnDef<ReactNode[]>[]>(() => {
     return heads.map((head, idx) => {
-      // Determine filter options for string cells
-      const uniqueValues = Array.from(
-        new Set(
-          rows
-            .map((r) => {
-              const val = r[idx];
-              if (typeof val === "string" || typeof val === "number") return String(val);
-              return "";
-            })
-            .filter((v) => v !== "" && v !== "—")
-        )
+      const colKey = getColKey(head);
+      const lowerHead = head.toLowerCase().trim();
+      const isAction =
+        colKey === "actions" ||
+        lowerHead === "actions" ||
+        (lowerHead === "action" && tabKey !== "Activity log");
+
+      // Match column filter config from backend API (/api/inventory/filter-config)
+      const cfg = filterConfig.find(
+        (f) =>
+          f.field === colKey ||
+          f.field.toLowerCase() === colKey.toLowerCase() ||
+          f.label.toLowerCase() === head.toLowerCase()
       );
+
+      const isDateCol =
+        lowerHead.includes("date") ||
+        lowerHead.includes("expiry") ||
+        lowerHead.includes("when") ||
+        colKey === "date" ||
+        colKey === "surgeryDate" ||
+        colKey === "expiry";
+
+      const isNumberCol =
+        lowerHead.includes("price") ||
+        lowerHead.includes("amount") ||
+        lowerHead.includes("mrp") ||
+        lowerHead.includes("cost") ||
+        lowerHead.includes("total") ||
+        lowerHead.includes("paid") ||
+        lowerHead.includes("outstanding") ||
+        lowerHead.includes("qty") ||
+        lowerHead.includes("quantity") ||
+        lowerHead.includes("units") ||
+        lowerHead.includes("sold") ||
+        lowerHead.includes("margin") ||
+        lowerHead.includes("profit") ||
+        lowerHead.includes("loss") ||
+        lowerHead.includes("fee") ||
+        colKey === "mrp" ||
+        colKey === "buyPrice" ||
+        colKey === "salesPrice" ||
+        colKey === "salesPriceWithGst" ||
+        colKey === "quantity" ||
+        colKey === "total" ||
+        colKey === "paid" ||
+        colKey === "outstanding";
+
+      const isMasterDropdown =
+        colKey === "vendor" ||
+        colKey === "location" ||
+        colKey === "hospitalName" ||
+        colKey === "hospital" ||
+        colKey === "item" ||
+        colKey === "items" ||
+        colKey === "productName" ||
+        colKey === "implant" ||
+        colKey === "bdmName" ||
+        colKey === "managerName" ||
+        colKey === "drName" ||
+        colKey === "treatment" ||
+        colKey === "handledBy" ||
+        colKey === "changedBy" ||
+        colKey === "action" ||
+        lowerHead === "bdm name" ||
+        lowerHead === "bdm" ||
+        lowerHead === "manager name" ||
+        lowerHead === "manager" ||
+        lowerHead === "dr. name" ||
+        lowerHead === "doctor" ||
+        lowerHead === "doctor name" ||
+        lowerHead === "treatment" ||
+        lowerHead === "handled by" ||
+        lowerHead === "changed by" ||
+        lowerHead === "action" ||
+        lowerHead === "vendor" ||
+        lowerHead === "vendor name" ||
+        lowerHead === "location" ||
+        lowerHead === "hospital" ||
+        lowerHead === "hospital name" ||
+        lowerHead === "item" ||
+        lowerHead === "items" ||
+        lowerHead === "implant" ||
+        lowerHead === "implant / batch" ||
+        lowerHead === "item / product" ||
+        lowerHead === "implants" ||
+        lowerHead === "implant, batch & qty" ||
+        lowerHead === "items & location";
+
+      const isDiscreteCategory =
+        isMasterDropdown ||
+        colKey === "circle" ||
+        colKey === "status" ||
+        colKey === "invoiceStatus" ||
+        colKey === "paymentStatus" ||
+        colKey === "paymentReceivedStatus" ||
+        colKey === "gstType" ||
+        colKey === "direction" ||
+        colKey === "size" ||
+        colKey === "mop" ||
+        colKey === "paymentType" ||
+        colKey === "action" ||
+        lowerHead === "status" ||
+        lowerHead === "circle" ||
+        lowerHead === "gst / type" ||
+        lowerHead === "invoice status" ||
+        lowerHead === "payment status" ||
+        lowerHead === "direction" ||
+        lowerHead === "size" ||
+        lowerHead === "mop" ||
+        lowerHead === "action";
+
+      let filterType: "search" | "multiSelect" | "dateRange" | "numberRange" | "boolean" = "search";
+      if (cfg?.filterType) {
+        filterType = cfg.filterType as any;
+      } else if (isDiscreteCategory) {
+        filterType = "multiSelect";
+      } else if (isDateCol) {
+        filterType = "dateRange";
+      } else if (isNumberCol) {
+        filterType = "numberRange";
+      } else {
+        filterType = "search";
+      }
+
+      let filterOptions = cfg?.options ?? [];
+
+      // Contextual status filter options based on table domain
+      if (lowerHead === "status" || colKey === "status") {
+        if (tableStatusConfig && tabKey && tableStatusConfig[tabKey]?.length) {
+          filterOptions = tableStatusConfig[tabKey];
+        } else if (tabKey === "Stock" || tabKey === "Overview") {
+          filterOptions = [
+            { label: "Available", value: "Available" },
+            { label: "Low stock", value: "Low stock" },
+            { label: "Empty", value: "Empty" },
+            { label: "Out of stock", value: "Out of stock" },
+            { label: "Expired", value: "Expired" },
+            { label: "Quarantined", value: "Quarantined" },
+          ];
+        } else if (tabKey === "Purchases") {
+          filterOptions = [
+            { label: "Paid", value: "Paid" },
+            { label: "Part paid", value: "Part paid" },
+            { label: "Unpaid", value: "Unpaid" },
+            { label: "POSTED", value: "POSTED" },
+            { label: "VOID", value: "VOID" },
+          ];
+        } else if (tabKey === "Transfers & kits") {
+          filterOptions = [
+            { label: "IN_TRANSIT", value: "IN_TRANSIT" },
+            { label: "RECEIVED", value: "RECEIVED" },
+            { label: "CANCELLED", value: "CANCELLED" },
+          ];
+        } else if (tabKey === "Delivery expenses") {
+          filterOptions = [
+            { label: "Recorded", value: "Recorded" },
+            { label: "Voided", value: "Voided" },
+          ];
+        } else if (
+          tabKey === "Vendors" ||
+          tabKey === "Implant catalog" ||
+          tabKey === "Locations"
+        ) {
+          filterOptions = [
+            { label: "Active", value: "Active" },
+            { label: "Deleted", value: "Deleted" },
+          ];
+        } else if (tabKey === "Payments" || tabKey === "Sales" || tabKey === "Sales Product" || tabKey === "Sales Finance") {
+          filterOptions = [
+            { label: "Outstanding", value: "Outstanding" },
+            { label: "Paid", value: "Paid" },
+            { label: "Part Paid", value: "Part Paid" },
+            { label: "Unpaid", value: "Unpaid" },
+            { label: "POSTED", value: "POSTED" },
+            { label: "VOID", value: "VOID" },
+          ];
+        }
+      } else if (lowerHead === "action" || colKey === "action") {
+        filterType = "multiSelect";
+        filterOptions =
+          tableStatusConfig?.["Activity log"]?.length
+            ? tableStatusConfig["Activity log"]
+            : cfg?.options?.length
+            ? cfg.options
+            : [
+                { label: "Sale Post", value: "sale.post" },
+                { label: "Purchase Post", value: "purchase.post" },
+                { label: "Document Void", value: "document.void" },
+                { label: "Transfer Dispatch", value: "transfer.dispatch" },
+                { label: "Transfer Receive", value: "transfer.receive" },
+                { label: "Transfer Cancel", value: "transfer.cancel" },
+                { label: "Payment Post", value: "payment.post" },
+                { label: "Delivery Save", value: "delivery.save" },
+                { label: "Delivery Void", value: "delivery.void" },
+                { label: "Stock Adjust", value: "stock.adjust" },
+                { label: "Stock Quarantine", value: "stock.quarantine" },
+                { label: "Vendor Save", value: "vendor.save" },
+                { label: "Product Save", value: "product.save" },
+                { label: "Location Save", value: "location.save" },
+                { label: "Master Archive", value: "master.archive" },
+                { label: "Attachment Upload", value: "attachment.upload" },
+              ];
+      } else if (lowerHead === "invoice status" || colKey === "invoiceStatus") {
+        filterType = "multiSelect";
+        const invCfg = filterConfig.find((f) => f.field === "invoiceStatus");
+        const defaultInvOptions = [
+          { label: "Raised", value: "Raised" },
+          { label: "Pending", value: "Pending" },
+          { label: "Invoice Raised", value: "Invoice Raised" },
+          { label: "Not Raised", value: "Not Raised" },
+          { label: "Need Invoice", value: "Need Invoice" },
+          { label: "CANCELLED", value: "CANCELLED" },
+        ];
+        const combined = [...defaultInvOptions, ...(invCfg?.options || [])];
+        const seen = new Set<string>();
+        filterOptions = combined.filter((o) => {
+          if (seen.has(o.value)) return false;
+          seen.add(o.value);
+          return true;
+        });
+      } else if (
+        lowerHead === "payment status" ||
+        colKey === "paymentStatus" ||
+        colKey === "paymentReceivedStatus"
+      ) {
+        filterType = "multiSelect";
+        const payCfg = filterConfig.find(
+          (f) => f.field === "paymentStatus" || f.field === "paymentReceivedStatus"
+        );
+        const defaultPayOptions = [
+          { label: "Received", value: "Received" },
+          { label: "Part Paid", value: "Part Paid" },
+          { label: "Not Received", value: "Not Received" },
+          { label: "Payment Received", value: "Payment Received" },
+          { label: "Paid", value: "Paid" },
+          { label: "Unpaid", value: "Unpaid" },
+          { label: "Pending", value: "Pending" },
+          { label: "Outstanding", value: "Outstanding" },
+          { label: "POSTED", value: "POSTED" },
+          { label: "VOID", value: "VOID" },
+        ];
+        const combined = [...defaultPayOptions, ...(payCfg?.options || [])];
+        const seen = new Set<string>();
+        filterOptions = combined.filter((o) => {
+          if (seen.has(o.value)) return false;
+          seen.add(o.value);
+          return true;
+        });
+      } else if (
+        lowerHead === "changed by" ||
+        colKey === "changedBy" ||
+        lowerHead === "handled by" ||
+        colKey === "handledBy" ||
+        lowerHead === "bdm name" ||
+        colKey === "bdmName" ||
+        lowerHead === "bdm" ||
+        colKey === "bdm"
+      ) {
+        const bdmCfg = filterConfig.find(
+          (f) =>
+            f.field === "bdmName" ||
+            f.field === "bdm" ||
+            f.field === "changedBy" ||
+            f.field === "handledBy"
+        );
+        if (bdmCfg?.options && bdmCfg.options.length > 0) {
+          filterOptions = bdmCfg.options;
+        }
+      } else if (
+        lowerHead === "manager name" ||
+        lowerHead === "manager" ||
+        colKey === "managerName" ||
+        colKey === "manager"
+      ) {
+        const mgrCfg = filterConfig.find(
+          (f) => f.field === "managerName" || f.field === "manager"
+        );
+        if (mgrCfg?.options && mgrCfg.options.length > 0) {
+          filterOptions = mgrCfg.options;
+        }
+      } else if (
+        lowerHead === "dr. name" ||
+        lowerHead === "doctor" ||
+        lowerHead === "doctor name" ||
+        colKey === "drName" ||
+        colKey === "doctor"
+      ) {
+        const drCfg = filterConfig.find(
+          (f) => f.field === "drName" || f.field === "doctor"
+        );
+        if (drCfg?.options && drCfg.options.length > 0) {
+          filterOptions = drCfg.options;
+        }
+      } else if (lowerHead === "treatment" || colKey === "treatment") {
+        const treatCfg = filterConfig.find((f) => f.field === "treatment");
+        if (treatCfg?.options && treatCfg.options.length > 0) {
+          filterOptions = treatCfg.options;
+        }
+      }
+      const minBound = cfg?.min;
+      const maxBound = cfg?.max;
+
+      const currentValue = activeFilters[colKey];
+      const isOnHand = lowerHead === "on hand" || (lowerHead.includes("on hand") && colKey === "quantity");
 
       return {
         id: `col_${idx}`,
         accessorFn: (row) => row[idx],
-        header: () => {
-          // If options exist or header is standard, attach ColumnFilter
-          if (uniqueValues.length > 0 && uniqueValues.length <= 100) {
-            return (
-              <ColumnFilter
-                options={uniqueValues}
-                value={columnFilters[`col_${idx}`]}
-                onChange={(val) =>
-                  setColumnFilters((prev) => ({ ...prev, [`col_${idx}`]: val }))
-                }
-                type={uniqueValues.length > 15 ? "search" : "multiSelect"}
-                trigger={
-                  <span className="cursor-pointer font-semibold text-slate-700 dark:text-slate-200 inline-flex items-center gap-1.5 hover:text-teal-600">
-                    {head}
-                  </span>
-                }
-              />
-            );
-          }
-          return (
-            <span className="text-[11px] tracking-wider uppercase text-slate-500 dark:text-slate-400 font-semibold">
-              {head}
-            </span>
-          );
+        sortingFn: (rowA, rowB, colId) => {
+          const valA = rowA.getValue(colId);
+          const valB = rowB.getValue(colId);
+          const numA = typeof valA === "number" ? valA : parseFloat(String(valA).replace(/[^0-9.-]/g, "")) || 0;
+          const numB = typeof valB === "number" ? valB : parseFloat(String(valB).replace(/[^0-9.-]/g, "")) || 0;
+          return numA - numB;
         },
+        header: ({ column }) => {
+          const hasFilter = (() => {
+            if (!currentValue) return false;
+            if (Array.isArray(currentValue)) return currentValue.length > 0;
+            if (typeof currentValue === "string") return currentValue.trim().length > 0;
+            if (typeof currentValue === "object") return Boolean((currentValue as any).min || (currentValue as any).max);
+            return Boolean(currentValue);
+          })();
+
+          return (
+            <div className="flex items-center justify-between gap-1.5 whitespace-nowrap min-w-0">
+              {hasFilter ? (
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800 shadow-xs truncate">
+                  {head}
+                </span>
+              ) : (
+                <span className="font-semibold text-slate-700 dark:text-slate-200 truncate">
+                  {head}
+                </span>
+              )}
+            <div className="flex items-center gap-1 shrink-0">
+              {isOnHand && (
+                <button
+                  type="button"
+                  onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                  className={cn(
+                    "inline-flex items-center justify-center p-1 rounded border border-transparent hover:border-slate-200 dark:hover:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100",
+                    column.getIsSorted() && "bg-teal-50 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400 font-bold border-teal-200 dark:border-teal-800"
+                  )}
+                  title={
+                    column.getIsSorted() === "asc"
+                      ? "Sorted: Low to High (click for High to Low)"
+                      : column.getIsSorted() === "desc"
+                      ? "Sorted: High to Low (click to reset)"
+                      : "Sort: Low to High / High to Low"
+                  }
+                >
+                  {column.getIsSorted() === "asc" ? (
+                    <ArrowUp className="h-3.5 w-3.5 text-teal-600 dark:text-teal-400" />
+                  ) : column.getIsSorted() === "desc" ? (
+                    <ArrowDown className="h-3.5 w-3.5 text-teal-600 dark:text-teal-400" />
+                  ) : (
+                    <ArrowUpDown className="h-3.5 w-3.5 opacity-70" />
+                  )}
+                </button>
+              )}
+              {!isAction && (
+                <ColumnFilter
+                  type={filterType}
+                  options={filterOptions}
+                  min={minBound}
+                  max={maxBound}
+                  value={currentValue}
+                  onChange={(val) => setFilter(colKey, val)}
+                  placeholder={filterType === "search" ? `Search ${head}...` : `Filter ${head}...`}
+                />
+              )}
+            </div>
+          </div>
+        );
+      },
         cell: ({ row }) => (
           <div className="text-slate-800 dark:text-slate-200">
             {row.original[idx]}
@@ -232,36 +684,17 @@ function Table({
         ),
       };
     });
-  }, [heads, rows, columnFilters]);
-
-  // Apply column filters on local row arrays
-  const filteredRows = useMemo(() => {
-    return rows.filter((row) => {
-      return Object.entries(columnFilters).every(([colId, filterVal]) => {
-        if (!filterVal || (Array.isArray(filterVal) && filterVal.length === 0)) return true;
-        const colIdx = parseInt(colId.replace("col_", ""), 10);
-        const cellVal = row[colIdx];
-        const cellStr = typeof cellVal === "string" || typeof cellVal === "number" ? String(cellVal).toLowerCase() : "";
-
-        if (Array.isArray(filterVal)) {
-          return filterVal.some((fv) => cellStr.includes(String(fv).toLowerCase()));
-        }
-        if (typeof filterVal === "string") {
-          return cellStr.includes(filterVal.toLowerCase());
-        }
-        return true;
-      });
-    });
-  }, [rows, columnFilters]);
+  }, [heads, filterConfig, activeFilters, setFilter, tabKey]);
 
   return (
     <div className="w-full max-w-full overflow-x-auto min-w-0">
       <DataTable
         columns={columns}
-        data={filteredRows}
+        data={rows}
         emptyMessage={empty}
-        enablePagination={filteredRows.length > 25}
-        initialPageSize={25}
+        enablePagination={enablePagination}
+        initialPageSize={initialPageSize}
+        pageSizeOptions={pageSizeOptions}
         columnVisibility={rbacColumnVisibility}
         tableContainerClassName="border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 shadow-xs overflow-x-auto w-full max-w-full"
       />
@@ -287,6 +720,190 @@ function Stat({
   );
 }
 
+function InventoryDateRangePicker({
+  from,
+  to,
+  onChange,
+}: {
+  from: string;
+  to: string;
+  onChange: (from: string, to: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+
+  const initialRange = useMemo<DateRange | undefined>(() => {
+    if (!from) return undefined;
+    const parsedFrom = parseISO(from);
+    if (!isValid(parsedFrom)) return undefined;
+    const parsedTo = to ? parseISO(to) : parsedFrom;
+    return {
+      from: parsedFrom,
+      to: isValid(parsedTo) ? parsedTo : parsedFrom,
+    };
+  }, [from, to]);
+
+  const [tempRange, setTempRange] = useState<DateRange | undefined>(initialRange);
+
+  useEffect(() => {
+    setTempRange(initialRange);
+  }, [initialRange, open]);
+
+  const hasRange = Boolean(from || to);
+
+  const label = useMemo(() => {
+    if (from && to) {
+      const pFrom = parseISO(from);
+      const pTo = parseISO(to);
+      if (isValid(pFrom) && isValid(pTo)) {
+        if (from === to) return format(pFrom, "dd MMM yy");
+        return `${format(pFrom, "dd MMM")} – ${format(pTo, "dd MMM yy")}`;
+      }
+    } else if (from) {
+      const pFrom = parseISO(from);
+      if (isValid(pFrom)) return `From ${format(pFrom, "dd MMM")}`;
+    } else if (to) {
+      const pTo = parseISO(to);
+      if (isValid(pTo)) return `Until ${format(pTo, "dd MMM")}`;
+    }
+    return "Date range";
+  }, [from, to]);
+
+  const applyRange = (range: DateRange | undefined) => {
+    if (range?.from) {
+      const f = format(range.from, "yyyy-MM-dd");
+      const t = range.to ? format(range.to, "yyyy-MM-dd") : f;
+      onChange(f, t);
+    } else {
+      onChange("", "");
+    }
+    setOpen(false);
+  };
+
+  const handleClear = () => {
+    setTempRange(undefined);
+    onChange("", "");
+    setOpen(false);
+  };
+
+  const setPreset = (preset: "thisMonth" | "last30Days" | "3months") => {
+    const now = new Date();
+    let nFrom: Date;
+    let nTo: Date = now;
+    if (preset === "thisMonth") {
+      nFrom = startOfMonth(now);
+      nTo = endOfMonth(now);
+    } else if (preset === "last30Days") {
+      nFrom = subDays(now, 30);
+    } else {
+      nFrom = subMonths(now, 3);
+    }
+    setTempRange({ from: nFrom, to: nTo });
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className={cn(
+            "h-8 px-2.5 inline-flex items-center gap-1.5 text-xs font-medium rounded-lg border transition-all cursor-pointer select-none",
+            hasRange
+              ? "border-teal-500/60 bg-teal-50/60 dark:bg-teal-950/30 text-teal-950 dark:text-teal-100 font-semibold shadow-2xs"
+              : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700 shadow-2xs"
+          )}
+        >
+          <Calendar className={cn("h-3.5 w-3.5 shrink-0", hasRange ? "text-teal-600 dark:text-teal-400" : "text-slate-400")} />
+          <span className="truncate max-w-[140px]">{label}</span>
+          {hasRange ? (
+            <span
+              role="button"
+              tabIndex={0}
+              aria-label="Clear date range"
+              className="ml-0.5 p-0.5 rounded-full hover:bg-teal-100 dark:hover:bg-teal-900 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClear();
+              }}
+            >
+              <X className="h-3 w-3" />
+            </span>
+          ) : (
+            <span className="text-[9px] text-slate-400">▼</span>
+          )}
+        </button>
+      </PopoverTrigger>
+      <PopoverContent align="start" sideOffset={6} className="w-[300px] p-0 z-50 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl rounded-xl overflow-hidden">
+        <div className="flex flex-col w-full">
+          <div className="grid grid-cols-3 gap-1.5 p-2.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50">
+            <button
+              type="button"
+              className="h-7 text-[11px] px-2 rounded-lg font-medium border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors shadow-2xs text-center cursor-pointer"
+              onClick={() => setPreset("thisMonth")}
+            >
+              This Month
+            </button>
+            <button
+              type="button"
+              className="h-7 text-[11px] px-2 rounded-lg font-medium border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors shadow-2xs text-center cursor-pointer"
+              onClick={() => setPreset("last30Days")}
+            >
+              Last 30 Days
+            </button>
+            <button
+              type="button"
+              className="h-7 text-[11px] px-2 rounded-lg font-medium border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors shadow-2xs text-center cursor-pointer"
+              onClick={() => setPreset("3months")}
+            >
+              3 Months
+            </button>
+          </div>
+          <div className="p-3 w-full">
+            <CalendarPicker
+              mode="range"
+              selected={tempRange}
+              onSelect={setTempRange}
+              numberOfMonths={1}
+              className="p-0 w-full"
+              classNames={{
+                root: "w-full",
+                months: "w-full",
+                month: "w-full space-y-2",
+                table: "w-full border-collapse space-y-1",
+                weekdays: "flex w-full justify-between mb-1",
+                weekday: "text-muted-foreground w-8 text-center font-normal text-[0.8rem] select-none",
+                week: "flex w-full mt-1 justify-between",
+                day: "h-8 w-8 text-center text-xs p-0 relative focus-within:relative focus-within:z-20 data-[range-middle=true]:bg-teal-500/15 data-[range-middle=true]:text-teal-800 dark:data-[range-middle=true]:text-teal-200 data-[range-start=true]:bg-teal-600 data-[range-start=true]:text-white data-[range-end=true]:bg-teal-600 data-[range-end=true]:text-white data-[selected-single=true]:bg-teal-600 data-[selected-single=true]:text-white rounded-lg flex items-center justify-center font-medium",
+                today: "bg-accent text-accent-foreground font-bold rounded-lg",
+                outside: "text-muted-foreground opacity-40",
+                disabled: "text-muted-foreground opacity-40",
+              }}
+            />
+          </div>
+          <div className="flex items-center justify-between gap-2 p-2.5 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50">
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              onClick={handleClear}
+              className="h-7 px-2.5 text-xs text-muted-foreground hover:text-foreground rounded-lg"
+            >
+              Clear
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => applyRange(tempRange)}
+              className="h-7 px-3.5 text-xs font-semibold bg-teal-600 hover:bg-teal-700 text-white rounded-lg shadow-2xs"
+            >
+              Apply
+            </Button>
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 export interface InventoryModuleProps {
   apiBase?: string;
   initialTab?: Tab;
@@ -299,6 +916,10 @@ export default function InventoryModule({
   const { hasAccess, permissionsReady } = usePermissions();
   const searchParams = useSearchParams();
   const tabParam = searchParams?.get("tab");
+  const subTabParam = searchParams?.get("subTab");
+  const [salesSubTab, setSalesSubTab] = useState<"product" | "finance">(
+    subTabParam === "finance" ? "finance" : "product"
+  );
   const [snapshot, setSnapshot] = useState<Snapshot>(),
     [tab, setTab] = useState<Tab>(initialTab),
     [loading, setLoading] = useState(true),
@@ -316,8 +937,54 @@ export default function InventoryModule({
     [paymentView, setPaymentView] = useState<"SALE" | "PURCHASE" | "HISTORY">(
       "SALE",
     ),
+    [circleFilter, setCircleFilter] = useState(""),
+    [invoiceFilter, setInvoiceFilter] = useState(""),
+    [paymentFilter, setPaymentFilter] = useState(""),
     [audit, setAudit] = useState<Audit[]>([]),
     [moreAudit, setMoreAudit] = useState(true);
+
+  const getSaleCircle = useCallback((sale: Sale): string => {
+    if (sale.circle?.trim()) return sale.circle.trim();
+    const locName = snapshot?.state?.locations?.find((l) => l.id === sale.locationId)?.name || "";
+    const locAddress = snapshot?.state?.locations?.find((l) => l.id === sale.locationId)?.address || "";
+    const textToSearch = `${sale.hospitalName || ""} ${sale.billedTo || ""} ${locName} ${locAddress}`.toLowerCase();
+    for (const c of ["Pune", "Mumbai", "Delhi", "Bangalore", "Hyderabad"]) {
+      if (textToSearch.includes(c.toLowerCase())) return c;
+    }
+    return "";
+  }, [snapshot?.state?.locations]);
+
+  const circleOptions = useMemo(() => {
+    const map = new Map<string, string>();
+    ["Pune", "Mumbai", "Delhi", "Bangalore", "Hyderabad"].forEach((c) => {
+      map.set(c.toLowerCase(), c);
+    });
+    (snapshot?.state?.sales || []).forEach((sale) => {
+      const c = getSaleCircle(sale);
+      if (c) {
+        const key = c.toLowerCase();
+        if (!map.has(key)) {
+          const formatted = c.charAt(0).toUpperCase() + c.slice(1);
+          map.set(key, formatted);
+        }
+      }
+    });
+    return Array.from(map.values()).sort();
+  }, [snapshot?.state?.sales, getSaleCircle]);
+
+  const matchesDateRange = useCallback(
+    (item: { date?: string; createdAt?: string } | null | undefined): boolean => {
+      if (!from && !to) return true;
+      if (!item) return true;
+      const rawDate = item.date || item.createdAt || "";
+      if (!rawDate) return true;
+      const itemDate = rawDate.slice(0, 10);
+      if (from && itemDate < from) return false;
+      if (to && itemDate > to) return false;
+      return true;
+    },
+    [from, to]
+  );
 
   const pending = useRef<{ key: string; requestId: string } | undefined>(
       undefined,
@@ -333,9 +1000,17 @@ export default function InventoryModule({
       );
       if (match) {
         setTab(match[0] as Tab);
+        setActiveFilters({});
       }
     }
   }, [tabParam]);
+
+  useEffect(() => {
+    if (subTabParam === "finance" || subTabParam === "product") {
+      setSalesSubTab(subTabParam);
+      setActiveFilters({});
+    }
+  }, [subTabParam]);
 
   const fetchJSON = useCallback(async (path: string, init?: RequestInit) => {
     const r = await fetch(path, {
@@ -351,10 +1026,84 @@ export default function InventoryModule({
     return data;
   }, []);
 
+  const [filterConfig, setFilterConfig] = useState<FilterConfigItem[]>([]);
+  const [tableStatusConfig, setTableStatusConfig] = useState<Record<string, Array<{ label: string; value: string }>>>({});
+  const [activeFilters, setActiveFilters] = useState<Record<string, any>>({});
+
+  useEffect(() => {
+    fetchJSON("/api/inventory/filter-config")
+      .then((res) => {
+        if (res?.filters && Array.isArray(res.filters)) {
+          setFilterConfig(res.filters);
+        }
+        if (res?.tableStatuses && typeof res.tableStatuses === "object") {
+          setTableStatusConfig(res.tableStatuses);
+        }
+      })
+      .catch((err) => console.error("Failed to fetch filter config:", err));
+  }, [fetchJSON]);
+
+  const setFilter = useCallback((field: string, value: any) => {
+    setActiveFilters((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  }, []);
+
+  const handleResetFilters = useCallback(() => {
+    setFrom("");
+    setTo("");
+    setProductFilter("");
+    setCircleFilter("");
+    setInvoiceFilter("");
+    setPaymentFilter("");
+    setActiveFilters({});
+  }, []);
+
+  const serializedFilters = useMemo(() => {
+    const list: Array<{ field: string; operator: string; value: unknown }> = [];
+    for (const [field, val] of Object.entries(activeFilters)) {
+      if (val === undefined || val === null || val === "" || (Array.isArray(val) && val.length === 0)) continue;
+      const cfg = filterConfig.find((f) => f.field === field);
+      const fType = cfg?.filterType;
+
+      if (typeof val === "string") {
+        if (val.trim()) {
+          list.push({ field, operator: "contains", value: val.trim() });
+        }
+      } else if (Array.isArray(val)) {
+        if (fType === "dateRange" || (val.length === 2 && typeof val[0] === "string" && val[0].includes("-"))) {
+          list.push({ field, operator: "between", value: val });
+        } else {
+          list.push({ field, operator: "in", value: val });
+        }
+      } else if (typeof val === "object" && val !== null && (val.min != null || val.max != null)) {
+        list.push({ field, operator: "between", value: val });
+      } else if (typeof val === "boolean") {
+        list.push({ field, operator: "eq", value: val });
+      }
+    }
+    return list;
+  }, [activeFilters, filterConfig]);
+
+  const currentTab =
+    tab === "Sales"
+      ? salesSubTab === "finance"
+        ? "Sales Finance"
+        : "Sales Product"
+      : tab;
+
   const refresh = useCallback(async () => {
     setLoading(true);
     try {
-      const data: Snapshot = await fetchJSON(apiBase);
+      const tabQuery = currentTab ? `tab=${encodeURIComponent(currentTab)}` : "";
+      const filterQuery =
+        serializedFilters.length > 0
+          ? `filters=${encodeURIComponent(JSON.stringify(serializedFilters))}`
+          : "";
+      const queryParts = [tabQuery, filterQuery].filter(Boolean).join("&");
+      const url = queryParts ? `${apiBase}?${queryParts}` : apiBase;
+      const data: Snapshot = await fetchJSON(url);
       setSnapshot(data);
       setAudit(data.audit);
       setMoreAudit(data.audit.length === 100);
@@ -364,7 +1113,7 @@ export default function InventoryModule({
     } finally {
       setLoading(false);
     }
-  }, [apiBase, fetchJSON]);
+  }, [apiBase, fetchJSON, serializedFilters, currentTab]);
 
   useEffect(() => {
     void refresh();
@@ -443,6 +1192,7 @@ export default function InventoryModule({
     setQuery("");
     setLocation("");
     setStockStatus("");
+    setActiveFilters({});
     router.push(`/inventory?tab=${encodeURIComponent(next)}`);
   }
 
@@ -498,6 +1248,7 @@ export default function InventoryModule({
   }
 
   const s: InventoryState = snapshot.state,
+    actorName = snapshot.actor.name,
     write = snapshot.actor.permissions.includes("write"),
     admin = snapshot.actor.permissions.includes("admin"),
     totals = dashboard(s),
@@ -557,26 +1308,308 @@ export default function InventoryModule({
       <span className="text-slate-400 dark:text-slate-500">—</span>
     );
 
-  function docDetail(doc: Purchase | Sale, kind: "PURCHASE" | "SALE") {
+  function docDetail(
+    doc: Purchase | Sale,
+    kind: "PURCHASE" | "SALE" | "SALE_PRODUCT" | "SALE_FINANCE",
+  ) {
+    if (kind === "SALE_PRODUCT") {
+      const sDoc = doc as Sale;
+      const totalVal = sDoc.salesPriceWithGst || sDoc.total;
+      const paidVal = (sDoc.receivedPayment !== undefined && sDoc.receivedPayment > 0) ? sDoc.receivedPayment : paid(s, sDoc.id);
+      const outstandingVal = Math.max(0, totalVal - paidVal);
+      const hasPricing = Boolean(
+        (sDoc.salesPrice !== undefined && sDoc.salesPrice > 0) ||
+        (sDoc.salesPriceWithGst !== undefined && sDoc.salesPriceWithGst > 0) ||
+        (sDoc.lines && sDoc.lines.some((l) => l.unitPrice !== undefined && l.unitPrice > 0)) ||
+        sDoc.invoiceStatus === "Raised" ||
+        sDoc.invoiceStatus === "Invoice Raised"
+      );
+
+      const isInvoiceRaised = sDoc.invoiceStatus === "Raised" || sDoc.invoiceStatus === "Invoice Raised" || Boolean(sDoc.reference);
+      const invoiceStatusText = hasPricing ? (isInvoiceRaised ? "Raised" : "Pending") : (sDoc.invoiceStatus || "—");
+
+      const isPaid = sDoc.paymentReceivedStatus === "Received" || sDoc.paymentReceivedStatus === "Payment Received" || (paidVal >= totalVal && totalVal > 0);
+      const isPartPaid = !isPaid && (sDoc.paymentReceivedStatus === "Part Paid" || paidVal > 0);
+      const paymentStatusText = hasPricing ? (isPaid ? "Received" : isPartPaid ? "Part Paid" : "Not Received") : "—";
+
+      setDetail({
+        title: `Sales Product Details (${short(doc.id)})`,
+        body: (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-800">
+              {Object.entries({
+                "Case / IPD Ref": sDoc.caseReference || "—",
+                Date: sDoc.date,
+                "Surgery Date": sDoc.surgeryDate || sDoc.date || "—",
+                "Patient Name": sDoc.patientName || sDoc.billedTo || "—",
+                "BDM Name": sDoc.bdmName || "—",
+                "Manager Name": sDoc.managerName || "—",
+                Treatment: sDoc.treatment || "—",
+                Circle: sDoc.circle || "—",
+                "Hospital Name": sDoc.hospitalName || name("locations", sDoc.locationId) || "—",
+                "Dr. Name": sDoc.drName || "—",
+                MOP: sDoc.mop || "—",
+                Remark: sDoc.remark || "—",
+                "Invoice Status": invoiceStatusText,
+                "Total Price": hasPricing ? money(sDoc.salesPrice || sDoc.net) : "—",
+                "GST Amount": hasPricing ? money(sDoc.gstAmount ?? sDoc.tax) : "—",
+                "Total Price with GST": hasPricing ? money(totalVal) : "—",
+                "Received Payment": hasPricing ? money(paidVal) : "—",
+                "Payment Status": paymentStatusText,
+                Outstanding: hasPricing ? money(outstandingVal) : "—",
+                "Handled by": sDoc.handledBy || "—",
+              }).map(([k, v]) => (
+                <div key={k}>
+                  <small className="text-[11px] text-slate-500 dark:text-slate-400 block">{k}</small>
+                  <strong className="text-xs font-semibold text-slate-900 dark:text-slate-100">{v}</strong>
+                </div>
+              ))}
+            </div>
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 pt-2">
+              Items in this Sale & Price Breakdown ({sDoc.lines?.length || 0})
+            </h3>
+            <Table
+              enablePagination={false}
+              heads={[
+                "Item / batch",
+                "Size",
+                "Qty",
+                "MRP",
+                "Buy Price",
+                "Sales Price",
+                "GST %",
+                "GST Amount",
+                "Total with GST",
+              ]}
+              rows={
+                sDoc.lines && sDoc.lines.length > 0
+                  ? sDoc.lines.map((l) => {
+                      const saleLine = l as any;
+                      const prod = s.products.find((p) => p.id === saleLine.productId);
+                      const mrpVal = saleLine.mrp || prod?.mrp || 0;
+                      const gstPct = saleLine.gstPercent ?? 0;
+                      const gstAmt =
+                        saleLine.gstAmount ??
+                        ((saleLine.unitPrice || 0) * (saleLine.quantity || 1) * (gstPct / 100));
+                      const lineNet = (saleLine.unitPrice || 0) * (saleLine.quantity || 1);
+                      const lineTotal = lineNet + gstAmt;
+
+                      return [
+                        <div key="item">
+                          <strong className="font-semibold block text-slate-900 dark:text-slate-100">
+                            {saleLine.productName || prod?.name || "Item"}
+                          </strong>
+                          {saleLine.batch && (
+                            <small className="text-[11px] text-slate-500 dark:text-slate-400 block">
+                              Batch: {saleLine.batch}
+                            </small>
+                          )}
+                        </div>,
+                        saleLine.size || "—",
+                        saleLine.quantity,
+                        hasPricing && mrpVal > 0 ? money(mrpVal) : "—",
+                        hasPricing && saleLine.unitCost > 0 ? money(saleLine.unitCost) : "—",
+                        hasPricing && saleLine.unitPrice > 0 ? money(saleLine.unitPrice) : "—",
+                        hasPricing ? (gstPct > 0 ? `${gstPct}%` : "0%") : "—",
+                        hasPricing ? (gstAmt > 0 ? money(gstAmt) : "₹0.00") : "—",
+                        hasPricing ? (lineTotal > 0 ? money(lineTotal) : "₹0.00") : "—",
+                      ];
+                    })
+                  : [
+                      [
+                        sDoc.stockUsedForm || "—",
+                        sDoc.sizeUsed || "—",
+                        1,
+                        "—",
+                        "—",
+                        "—",
+                        "—",
+                        "—",
+                        "—",
+                      ],
+                    ]
+              }
+            />
+            {hasPricing && s.payments.some((p) => p.documentId === doc.id) && (
+              <>
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 pt-2">Payments</h3>
+                <Table
+                  enablePagination={false}
+                  heads={["Date", "Amount", "Method", "Handled by", "Proof"]}
+                  rows={s.payments
+                    .filter((p) => p.documentId === doc.id)
+                    .map((p) => [
+                      p.date,
+                      money(p.amount),
+                      p.method.replaceAll("_", " "),
+                      p.handledBy,
+                      attachment(p.proofId),
+                    ])}
+                />
+              </>
+            )}
+            {sDoc.proofId && (
+              <p className="text-xs text-slate-600 dark:text-slate-400 pt-2">
+                Attachment / Proof: {attachment(sDoc.proofId)}
+              </p>
+            )}
+          </div>
+        ),
+      });
+      return;
+    }
+
+    if (kind === "SALE_FINANCE") {
+      const sDoc = doc as Sale;
+      const totalVal = sDoc.salesPriceWithGst || sDoc.total;
+      const paidVal = (sDoc.receivedPayment !== undefined && sDoc.receivedPayment > 0) ? sDoc.receivedPayment : paid(s, sDoc.id);
+      const outstandingVal = Math.max(0, totalVal - paidVal);
+
+      setDetail({
+        title: `Sales Finance Details (${short(doc.id)})`,
+        body: (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-800">
+              {Object.entries({
+                "Patient / Billed to": sDoc.patientName || sDoc.billedTo || "—",
+                Date: sDoc.date,
+                "Case Reference No.": sDoc.caseReference || "—",
+                "Hospital Name": sDoc.hospitalName || name("locations", sDoc.locationId) || "—",
+                "Invoice Status": (sDoc.invoiceStatus === "Raised" || sDoc.invoiceStatus === "Invoice Raised" || Boolean(sDoc.reference)) ? "Raised" : "Pending",
+                "Total Price": money(sDoc.salesPrice || sDoc.net),
+                "GST Amount": money(sDoc.gstAmount ?? sDoc.tax),
+                "Total Price with GST": money(totalVal),
+                "Received Payment": money(paidVal),
+                "Payment Status": (sDoc.paymentReceivedStatus === "Received" || sDoc.paymentReceivedStatus === "Payment Received" || (paidVal >= totalVal && totalVal > 0)) ? "Received" : (sDoc.paymentReceivedStatus === "Part Paid" || paidVal > 0) ? "Part Paid" : "Not Received",
+                Outstanding: money(outstandingVal),
+                "Handled by": sDoc.handledBy || "—",
+              }).map(([k, v]) => (
+                <div key={k}>
+                  <small className="text-[11px] text-slate-500 dark:text-slate-400 block">{k}</small>
+                  <strong className="text-xs font-semibold text-slate-900 dark:text-slate-100">{v}</strong>
+                </div>
+              ))}
+            </div>
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 pt-2">
+              Items in this Sale & Price Breakdown ({sDoc.lines?.length || 0})
+            </h3>
+            <Table
+              enablePagination={false}
+              heads={[
+                "Item / batch",
+                "Size",
+                "Qty",
+                "MRP",
+                "Buy Price",
+                "Sales Price",
+                "GST %",
+                "GST Amount",
+                "Total with GST",
+              ]}
+              rows={sDoc.lines.map((l) => {
+                const saleLine = l as any;
+                const prod = s.products.find((p) => p.id === saleLine.productId);
+                const mrpVal = saleLine.mrp || prod?.mrp || 0;
+                const gstPct = saleLine.gstPercent ?? 0;
+                const gstAmt =
+                  saleLine.gstAmount ??
+                  ((saleLine.unitPrice || 0) * (saleLine.quantity || 1) * (gstPct / 100));
+                const lineNet = (saleLine.unitPrice || 0) * (saleLine.quantity || 1);
+                const lineTotal = lineNet + gstAmt;
+
+                return [
+                  <div key="item">
+                    <strong className="font-semibold block text-slate-900 dark:text-slate-100">
+                      {saleLine.productName || prod?.name || "Item"}
+                    </strong>
+                    {saleLine.batch && (
+                      <small className="text-[11px] text-slate-500 dark:text-slate-400 block">
+                        Batch: {saleLine.batch}
+                      </small>
+                    )}
+                  </div>,
+                  saleLine.size || "—",
+                  saleLine.quantity,
+                  mrpVal > 0 ? money(mrpVal) : "—",
+                  saleLine.unitCost > 0 ? money(saleLine.unitCost) : "—",
+                  saleLine.unitPrice > 0 ? money(saleLine.unitPrice) : "—",
+                  gstPct > 0 ? `${gstPct}%` : "0%",
+                  gstAmt > 0 ? money(gstAmt) : "₹0.00",
+                  lineTotal > 0 ? money(lineTotal) : "₹0.00",
+                ];
+              })}
+            />
+            {s.payments.some((p) => p.documentId === doc.id) && (
+              <>
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 pt-2">Payments</h3>
+                <Table
+                  enablePagination={false}
+                  heads={["Date", "Amount", "Method", "Handled by", "Proof"]}
+                  rows={s.payments
+                    .filter((p) => p.documentId === doc.id)
+                    .map((p) => [
+                      p.date,
+                      money(p.amount),
+                      p.method.replaceAll("_", " "),
+                      p.handledBy,
+                      attachment(p.proofId),
+                    ])}
+                />
+              </>
+            )}
+            {sDoc.proofId && (
+              <p className="text-xs text-slate-600 dark:text-slate-400 pt-2">
+                Attachment / Proof: {attachment(sDoc.proofId)}
+              </p>
+            )}
+          </div>
+        ),
+      });
+      return;
+    }
+
     setDetail({
       title: `${kind === "SALE" ? "Sale" : "Purchase"} ${short(doc.id)}`,
       body: (
         <div className="space-y-4">
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-800">
-            {Object.entries({
-              Date: doc.date,
-              Location: name("locations", doc.locationId),
-              "GST treatment": doc.gstMode.replaceAll("_", " "),
-              "Document type": doc.documentType,
-              Reference: doc.reference || "—",
-              "Handled by": doc.handledBy,
-              "Net amount": money(doc.net),
-              Tax: money(doc.tax),
-              Total: money(doc.total),
-              Paid: money(paid(s, doc.id)),
-              Outstanding: money(doc.total - paid(s, doc.id)),
-              Status: doc.status,
-            }).map(([k, v]) => (
+            {Object.entries(
+              kind === "SALE"
+                ? {
+                    Date: doc.date,
+                    Location: name("locations", doc.locationId),
+                    "Patient / Billed to": (doc as Sale).patientName || (doc as Sale).billedTo,
+                    "Case Ref": (doc as Sale).caseReference || "—",
+                    Hospital: (doc as Sale).hospitalName || "—",
+                    Doctor: (doc as Sale).drName || "—",
+                    BDM: (doc as Sale).bdmName || "—",
+                    "Invoice Status": (doc as Sale).invoiceStatus === "Raised" || (doc as Sale).invoiceStatus === "Invoice Raised" || Boolean(doc.reference) ? "Raised" : "Pending",
+                    MRP: money((doc as Sale).mrp || 0),
+                    "Buy Price": money((doc as Sale).buyPrice || 0),
+                    "Sales Price (Total)": money((doc as Sale).salesPrice || doc.net),
+                    "GST %": (doc as Sale).gstPercent ? `${(doc as Sale).gstPercent}%` : doc.net > 0 && doc.tax > 0 ? `${Math.round((doc.tax / doc.net) * 100)}%` : "0%",
+                    "GST Amount": money((doc as Sale).gstAmount ?? doc.tax),
+                    "Total with GST": money((doc as Sale).salesPriceWithGst || doc.total),
+                    "Payment Status": (doc as Sale).paymentReceivedStatus === "Received" || (doc as Sale).paymentReceivedStatus === "Payment Received" || (doc.total > 0 && paid(s, doc.id) >= doc.total) ? "Received" : (doc as Sale).paymentReceivedStatus === "Part Paid" || paid(s, doc.id) > 0 ? "Part Paid" : "Not Received",
+                    Paid: money(paid(s, doc.id)),
+                    Outstanding: money(doc.total - paid(s, doc.id)),
+                    Status: doc.status,
+                  }
+                : {
+                    Date: doc.date,
+                    Location: name("locations", doc.locationId),
+                    "GST treatment": doc.gstMode.replaceAll("_", " "),
+                    "Document type": doc.documentType,
+                    Reference: doc.reference || "—",
+                    "Handled by": doc.handledBy,
+                    "Net amount": money(doc.net),
+                    Tax: money(doc.tax),
+                    Total: money(doc.total),
+                    Paid: money(paid(s, doc.id)),
+                    Outstanding: money(doc.total - paid(s, doc.id)),
+                    Status: doc.status,
+                  },
+            ).map(([k, v]) => (
               <div key={k}>
                 <small className="text-[11px] text-slate-500 dark:text-slate-400 block">{k}</small>
                 <strong className="text-xs font-semibold text-slate-900 dark:text-slate-100">{v}</strong>
@@ -585,26 +1618,77 @@ export default function InventoryModule({
           </div>
           <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 pt-2">Items</h3>
           <Table
-            heads={[
-              "Item / batch",
-              "Size",
-              "Qty",
-              "Cost / unit",
-              "Sale / unit",
-            ]}
-            rows={doc.lines.map((l) => [
-              <>
-                <strong className="font-semibold">{l.productName}</strong>
-                <small className="text-[11px] text-slate-500 dark:text-slate-400 block">{l.batch}</small>
-              </>,
-              l.size,
-              l.quantity,
-              money(l.unitCost),
-              kind === "SALE" && "unitPrice" in l ? money(l.unitPrice) : "—",
-            ])}
+            enablePagination={false}
+            heads={
+              kind === "SALE"
+                ? [
+                    "Item / batch",
+                    "Size",
+                    "Qty",
+                    "MRP",
+                    "Buy Price",
+                    "Sales Price",
+                    "GST %",
+                    "GST Amount",
+                    "Total with GST",
+                  ]
+                : [
+                    "Item / batch",
+                    "Size",
+                    "Qty",
+                    "Cost / unit",
+                    "Sale / unit",
+                  ]
+            }
+            rows={doc.lines.map((l) => {
+              if (kind === "SALE") {
+                const saleLine = l as any;
+                const prod = s.products.find((p) => p.id === saleLine.productId);
+                const mrpVal = saleLine.mrp || prod?.mrp || 0;
+                const gstPct = saleLine.gstPercent ?? 0;
+                const gstAmt =
+                  saleLine.gstAmount ??
+                  ((saleLine.unitPrice || 0) * (saleLine.quantity || 1) * (gstPct / 100));
+                const lineNet = (saleLine.unitPrice || 0) * (saleLine.quantity || 1);
+                const lineTotal = lineNet + gstAmt;
+
+                return [
+                  <div key="item">
+                    <strong className="font-semibold block text-slate-900 dark:text-slate-100">
+                      {saleLine.productName || prod?.name || "Item"}
+                    </strong>
+                    {saleLine.batch && (
+                      <small className="text-[11px] text-slate-500 dark:text-slate-400 block">
+                        Batch: {saleLine.batch}
+                      </small>
+                    )}
+                  </div>,
+                  saleLine.size || "—",
+                  saleLine.quantity,
+                  mrpVal > 0 ? money(mrpVal) : "—",
+                  saleLine.unitCost > 0 ? money(saleLine.unitCost) : "—",
+                  saleLine.unitPrice > 0 ? money(saleLine.unitPrice) : "—",
+                  gstPct > 0 ? `${gstPct}%` : "0%",
+                  gstAmt > 0 ? money(gstAmt) : "₹0.00",
+                  lineTotal > 0 ? money(lineTotal) : "₹0.00",
+                ];
+              }
+
+              return [
+                <>
+                  <strong className="font-semibold">{l.productName}</strong>
+                  <small className="text-[11px] text-slate-500 dark:text-slate-400 block">{l.batch}</small>
+                </>,
+                l.size,
+                l.quantity,
+                money(l.unitCost),
+                "salePrice" in l ? money((l as any).salePrice) : "—",
+              ];
+            })}
           />
           <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 pt-2">Payments</h3>
           <Table
+            enablePagination={false}
             heads={["Date", "Amount", "Method", "Handled by", "Proof"]}
             rows={s.payments
               .filter((p) => p.documentId === doc.id)
@@ -639,6 +1723,7 @@ export default function InventoryModule({
             Case: {t.caseReference || "—"} · {t.notes || "No notes"}
           </p>
           <Table
+            enablePagination={false}
             heads={["Implant", "Size", "Batch", "Units"]}
             rows={t.lines.map((l) => {
               const lot = s.lots.find((x) => x.id === l.lotId);
@@ -713,11 +1798,7 @@ export default function InventoryModule({
       )}
       <button
         className="inline-flex items-center justify-center gap-1.5 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-semibold px-3 py-1.5 rounded-lg shadow-sm transition-all"
-        onClick={() => {
-          setFrom("");
-          setTo("");
-          setProductFilter("");
-        }}
+        onClick={handleResetFilters}
       >
         Reset filters
       </button>
@@ -747,6 +1828,7 @@ export default function InventoryModule({
               (d) =>
                 (!onlyOutstanding ||
                   (d.status === "POSTED" && paid(s, d.id) < d.total)) &&
+                matchesDateRange(d) &&
                 matches(
                   d.id,
                   d.reference,
@@ -859,6 +1941,7 @@ export default function InventoryModule({
             (d) =>
               (!onlyOutstanding ||
                 (d.status === "POSTED" && paid(s, d.id) < d.total)) &&
+              matchesDateRange(d) &&
               matches(
                 d.id,
                 d.reference,
@@ -958,6 +2041,254 @@ export default function InventoryModule({
     );
   }
 
+  function salesProductTable() {
+    const sales = s.sales;
+    return (
+      <Table
+        tabKey="Sales"
+        heads={[
+          "Date",
+          "Patient Name",
+          "BDM Name",
+          "Manager Name",
+          "Treatment",
+          "Circle",
+          "Dr. Name",
+          "Hospital Name",
+          "Surgery Date",
+          "MOP",
+          "Items",
+          "Remark",
+          "Actions",
+        ]}
+        rows={sales
+          .filter((d) => {
+            if (!matchesDateRange(d)) return false;
+            if (circleFilter) {
+              const rowCircle = getSaleCircle(d);
+              if (!rowCircle || rowCircle.toLowerCase() !== circleFilter.trim().toLowerCase()) {
+                return false;
+              }
+            }
+            return matches(
+              d.id,
+              d.date,
+              d.reference,
+              d.billedTo,
+              d.caseReference,
+              d.handledBy,
+              d.bdmName,
+              d.managerName,
+              d.patientName,
+              d.treatment,
+              d.circle,
+              getSaleCircle(d),
+              d.drName,
+              d.hospitalName,
+              d.surgeryDate,
+              d.mop,
+              d.sizeUsed,
+              d.remark,
+              d.stockUsedForm,
+              ...d.lines.map((l) => `${l.productName || name("products", l.productId)} ${l.batch}`),
+            );
+          })
+          .slice()
+          .reverse()
+          .map((d) => [
+            <div key="date">
+              <strong className="font-semibold text-slate-900 dark:text-slate-100">{d.date}</strong>
+              {d.caseReference && (
+                <span className="block text-[11px] text-teal-600 dark:text-teal-400 font-mono mt-0.5">
+                  Ref: {d.caseReference}
+                </span>
+              )}
+            </div>,
+            d.patientName || d.billedTo || "—",
+            d.bdmName || d.handledBy || "—",
+            d.managerName || "—",
+            d.treatment || "—",
+            getSaleCircle(d) || "—",
+            d.drName || "—",
+            d.hospitalName || name("locations", d.locationId) || "—",
+            d.surgeryDate || d.date || "—",
+            d.mop || String(s.payments.find((p) => p.documentId === d.id)?.method || "—").replace(/_/g, " "),
+            <div key="items" className="text-xs space-y-1.5 min-w-[150px] max-w-[220px]">
+              {d.lines && d.lines.length > 0 ? (
+                d.lines.map((l, idx) => (
+                  <div key={idx} className="border-b border-slate-100 dark:border-slate-800/60 pb-1 last:border-0 last:pb-0">
+                    <div className="font-medium text-slate-900 dark:text-slate-100 truncate" title={l.productName || name("products", l.productId) || "Item"}>
+                      {l.productName || name("products", l.productId) || "Item"}
+                    </div>
+                    <div className="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400 flex-wrap">
+                      {l.size && <span>Size: {l.size}</span>}
+                      {l.batch && <span>Batch: {l.batch}</span>}
+                      <span>Qty: {l.quantity}</span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <span className="text-slate-600 dark:text-slate-300">
+                  {d.stockUsedForm || d.sizeUsed || "—"}
+                </span>
+              )}
+            </div>,
+            d.remark || d.caseReference || "—",
+            <div key="actions" className="flex flex-row items-center gap-1.5 flex-nowrap whitespace-nowrap">
+              {paymentButton(d, "SALE")}
+              {link("Details", () => docDetail(d, "SALE_PRODUCT"))}
+              {button("Edit", { kind: "saleProduct", id: d.id })}
+              {admin &&
+                d.status === "POSTED" &&
+                paid(s, d.id) === 0 &&
+                button(
+                  "Void",
+                  { kind: "void", id: d.id, defaults: { documentKind: "SALE" } },
+                  true,
+                )}
+            </div>,
+          ])}
+      />
+    );
+  }
+
+  function salesFinanceTable() {
+    const sales = s.sales;
+    return (
+      <Table
+        tabKey="Sales"
+        heads={[
+          "Patient Name",
+          "Case Reference No.",
+          "Hospital Name",
+          "Items",
+          "MRP",
+          "Buy Price",
+          "Sales Price",
+          "Sales Price with GST",
+          "Invoice Status",
+          "Payment Status",
+          "Actions",
+        ]}
+        rows={sales
+          .filter((d) => {
+            if (!matchesDateRange(d)) return false;
+            const isInvoiceRaised = d.invoiceStatus === "Raised" || d.invoiceStatus === "Invoice Raised" || Boolean(d.reference);
+            const invStatus = isInvoiceRaised ? "Raised" : "Pending";
+            if (invoiceFilter && invStatus.toLowerCase() !== invoiceFilter.toLowerCase()) {
+              return false;
+            }
+
+            const totalAmt = d.salesPriceWithGst || d.total;
+            const paidAmt = d.receivedPayment !== undefined && d.receivedPayment > 0 ? d.receivedPayment : paid(s, d.id);
+            const isPaid = d.paymentReceivedStatus === "Received" || d.paymentReceivedStatus === "Payment Received" || (paidAmt >= totalAmt && totalAmt > 0);
+            const isPartPaid = !isPaid && (d.paymentReceivedStatus === "Part Paid" || paidAmt > 0);
+            const payStatus = isPaid ? "Received" : isPartPaid ? "Part Paid" : "Not Received";
+            if (paymentFilter && payStatus.toLowerCase() !== paymentFilter.toLowerCase()) {
+              return false;
+            }
+            return true;
+          })
+          .filter(
+            (d) =>
+              matches(
+                d.id,
+                d.reference,
+                d.billedTo,
+                d.patientName,
+                d.caseReference,
+                d.hospitalName,
+                d.invoiceStatus,
+                d.paymentReceivedStatus,
+                d.handledBy,
+                d.stockUsedForm,
+                d.sizeUsed,
+                ...d.lines.map((l) => `${l.productName || name("products", l.productId)} ${l.batch}`),
+              ),
+          )
+          .slice()
+          .reverse()
+          .map((d) => {
+            const mrpVal = d.mrp ?? d.lines.reduce((sum, l) => sum + (s.products.find((p) => p.id === l.productId)?.mrp || 0) * l.quantity, 0);
+            const buyPriceVal = d.buyPrice ?? d.lines.reduce((sum, l) => sum + l.unitCost * l.quantity, 0);
+            const salesPriceVal = d.salesPrice ?? d.net;
+            const salesPriceWithGstVal = d.salesPriceWithGst ?? d.total;
+
+            const isInvoiceRaised = d.invoiceStatus === "Raised" || d.invoiceStatus === "Invoice Raised" || Boolean(d.reference);
+            const invoiceStatusText = isInvoiceRaised ? "Raised" : "Pending";
+
+            const totalAmt = d.salesPriceWithGst || d.total;
+            const paidAmt = d.receivedPayment !== undefined && d.receivedPayment > 0 ? d.receivedPayment : paid(s, d.id);
+            const isPaid = d.paymentReceivedStatus === "Received" || d.paymentReceivedStatus === "Payment Received" || (paidAmt >= totalAmt && totalAmt > 0);
+            const isPartPaid = !isPaid && (d.paymentReceivedStatus === "Part Paid" || paidAmt > 0);
+            const paymentStatusText = isPaid ? "Received" : isPartPaid ? "Part Paid" : "Not Received";
+
+            return [
+              <div key="pat" className="space-y-1">
+                <strong className="font-semibold text-slate-900 dark:text-slate-100 block">{d.patientName || d.billedTo || "Patient"}</strong>
+                <div className="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400">
+                  <span>{d.date}</span>
+                  {d.reference && <span>• Ref: {d.reference}</span>}
+                </div>
+              </div>,
+              d.caseReference ? (
+                <span key="ref" className="font-mono text-xs text-teal-600 dark:text-teal-400 font-medium">
+                  {d.caseReference}
+                </span>
+              ) : (
+                "—"
+              ),
+              <span key="hosp" className="text-xs text-slate-800 dark:text-slate-200">
+                {d.hospitalName || name("locations", d.locationId) || "—"}
+              </span>,
+              <div key="items" className="text-xs space-y-1.5 min-w-[150px] max-w-[220px]">
+                {d.lines && d.lines.length > 0 ? (
+                  d.lines.map((l, idx) => (
+                    <div key={idx} className="border-b border-slate-100 dark:border-slate-800/60 pb-1 last:border-0 last:pb-0">
+                      <div className="font-medium text-slate-900 dark:text-slate-100 truncate" title={l.productName || name("products", l.productId) || "Item"}>
+                        {l.productName || name("products", l.productId) || "Item"}
+                      </div>
+                      <div className="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400 flex-wrap">
+                        {l.size && <span>Size: {l.size}</span>}
+                        <span>Qty: {l.quantity}</span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <span className="text-slate-600 dark:text-slate-300">
+                    {d.stockUsedForm || d.sizeUsed || "—"}
+                  </span>
+                )}
+              </div>,
+              money(mrpVal),
+              money(buyPriceVal),
+              money(salesPriceVal),
+              money(salesPriceWithGstVal),
+              <Badge key="inv" tone={isInvoiceRaised ? "green" : "amber"}>
+                {invoiceStatusText}
+              </Badge>,
+              <Badge key="pay" tone={isPaid ? "green" : isPartPaid ? "amber" : "red"}>
+                {paymentStatusText}
+              </Badge>,
+              <div key="actions" className="flex flex-row items-center gap-1.5 flex-nowrap whitespace-nowrap">
+                {paymentButton(d, "SALE")}
+                {link("Details", () => docDetail(d, "SALE_FINANCE"))}
+                {button("Edit", { kind: "saleFinance", id: d.id })}
+                {admin &&
+                  d.status === "POSTED" &&
+                  paid(s, d.id) === 0 &&
+                  button(
+                    "Void",
+                    { kind: "void", id: d.id, defaults: { documentKind: "SALE" } },
+                    true,
+                  )}
+              </div>,
+            ];
+          })}
+      />
+    );
+  }
+
   const stockRows = s.balances.map((b) => {
     const l = s.lots.find((x) => x.id === b.lotId)!,
       p = s.products.find((p) => p.id === l.productId)!;
@@ -1020,6 +2351,7 @@ export default function InventoryModule({
           money(l.unitCost),
           l.expiry,
           <Badge
+            key="badge"
             tone={
               status === "Available"
                 ? "green"
@@ -1157,7 +2489,7 @@ export default function InventoryModule({
                   <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">Recent activity</h2>
                   {link("Full activity log", () => navigate("Activity log"))}
                 </div>
-                <Table tabKey={tab}
+                <Table tabKey="Activity log"
                   heads={["When", "Action", "Changed by"]}
                   rows={audit
                     .slice(0, 5)
@@ -1323,14 +2655,65 @@ export default function InventoryModule({
         </div>
       );
       case "Purchases":
-      case "Sales":
         return (
           <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
             <div className="flex items-center flex-wrap gap-3 p-4 border-b border-slate-200 dark:border-slate-800">
-              <SearchBox query={query} set={setQuery} placeholder="Search document, vendor or billed-to name…" />
+              <SearchBox query={query} set={setQuery} placeholder="Search document or vendor name…" />
             </div>
-            {documentTable(tab === "Purchases" ? "PURCHASE" : "SALE")}
+            {documentTable("PURCHASE")}
           </section>
+        );
+      case "Sales":
+        return (
+          <div className="space-y-4">
+            <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+              <div className="flex items-center flex-wrap gap-3 p-4 border-b border-slate-200 dark:border-slate-800">
+                <SearchBox
+                  query={query}
+                  set={setQuery}
+                  placeholder={`Search ${salesSubTab === "product" ? "Sales Product" : "Sales Finance"} records…`}
+                />
+                {salesSubTab === "product" && (
+                  <select
+                    value={circleFilter}
+                    onChange={(e) => setCircleFilter(e.target.value)}
+                    className="px-3.5 py-2 pr-9 text-xs rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-no-repeat bg-[right_1rem_center] cursor-pointer shadow-xs"
+                  >
+                    <option value="">All Circles</option>
+                    {circleOptions.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                )}
+                {salesSubTab === "finance" && (
+                  <>
+                    <select
+                      value={invoiceFilter}
+                      onChange={(e) => setInvoiceFilter(e.target.value)}
+                      className="px-3.5 py-2 pr-9 text-xs rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-no-repeat bg-[right_1rem_center] cursor-pointer shadow-xs"
+                    >
+                      <option value="">All Invoices</option>
+                      <option value="Raised">Raised</option>
+                      <option value="Pending">Pending</option>
+                    </select>
+                    <select
+                      value={paymentFilter}
+                      onChange={(e) => setPaymentFilter(e.target.value)}
+                      className="px-3.5 py-2 pr-9 text-xs rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-no-repeat bg-[right_1rem_center] cursor-pointer shadow-xs"
+                    >
+                      <option value="">All Payment Status</option>
+                      <option value="Received">Received</option>
+                      <option value="Part Paid">Part Paid</option>
+                      <option value="Not Received">Not Received</option>
+                    </select>
+                  </>
+                )}
+              </div>
+              {salesSubTab === "product" ? salesProductTable() : salesFinanceTable()}
+            </section>
+          </div>
         );
       case "Transfers & kits": {
         const inTransitCount = s.transfers.filter((t) => t.status === "IN_TRANSIT").length;
@@ -1485,11 +2868,12 @@ export default function InventoryModule({
         );
       }
       case "Payments": {
-        const collectedAmount = s.payments
+        const filteredPayments = s.payments.filter(matchesDateRange);
+        const collectedAmount = filteredPayments
           .filter((p) => p.documentKind === "SALE")
           .reduce((acc, p) => acc + p.amount, 0);
 
-        const paidToVendorsAmount = s.payments
+        const paidToVendorsAmount = filteredPayments
           .filter((p) => p.documentKind === "PURCHASE")
           .reduce((acc, p) => acc + p.amount, 0);
 
@@ -1551,7 +2935,7 @@ export default function InventoryModule({
                     "Reference",
                     "Proof",
                   ]}
-                  rows={s.payments
+                  rows={filteredPayments
                     .slice()
                     .reverse()
                     .map((p) => [
@@ -1966,7 +3350,9 @@ export default function InventoryModule({
     tab === "Overview" || tab === "Stock" || tab === "Purchases"
       ? { kind: "purchase" }
       : tab === "Sales"
-        ? { kind: "sale", defaults: { handledBy: snapshot.actor.name } }
+        ? salesSubTab === "finance"
+          ? undefined
+          : { kind: "saleProduct", defaults: { handledBy: actorName } }
         : tab === "Transfers & kits"
           ? { kind: "transfer" }
           : tab === "Vendors"
@@ -1978,60 +3364,44 @@ export default function InventoryModule({
                 : undefined;
 
   return (
-    <div className="w-full">
+    <InventoryFilterContext.Provider value={{ filterConfig, tableStatusConfig, activeFilters, setFilter, resetFilters: handleResetFilters }}>
+      <div className="w-full">
       <header className="sticky top-0 z-20 bg-background/80 px-4 py-2 backdrop-blur-xl dark:bg-background/80 md:px-6 shrink-0 w-full min-w-0">
         <div className="flex items-center justify-between gap-4 w-full min-w-0">
           <div>
             <h1 className="text-xl font-bold tracking-tight md:text-2xl text-foreground">
-              {tab === "Overview" ? "Inventory overview" : tab}
+              {tab === "Overview"
+                ? "Inventory overview"
+                : tab === "Sales"
+                  ? salesSubTab === "finance"
+                    ? "Sales Finance"
+                    : "Sales Product"
+                  : tab}
             </h1>
             <p className="text-xs text-muted-foreground hidden sm:block">
               {tab === "Overview"
                 ? "Every implant. Every location. One clear picture."
-                : "Manage your implant inventory with a complete record of every change."}
+                : tab === "Sales"
+                  ? salesSubTab === "finance"
+                    ? "Track and manage pricing, invoices, GST, and payment collections for recorded sales."
+                    : "Record surgeries, patient case references, and implants or stock items consumed."
+                  : "Manage your implant inventory with a complete record of every change."}
             </p>
           </div>
           <div className="flex items-center gap-2.5 flex-wrap">
-            {(tab === "Implant P&L" || tab === "Delivery expenses") && (
-              <div className="flex items-center gap-2 mr-1">
-                <div className="relative flex items-center border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 px-2.5 py-1.5 focus-within:ring-2 focus-within:ring-teal-500">
-                  <Calendar size={14} className="text-slate-400 shrink-0 mr-1.5 pointer-events-none" />
-                  <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-1 select-none">From:</span>
-                  <input
-                    type="date"
-                    aria-label="From date"
-                    className="bg-transparent text-slate-900 dark:text-slate-100 text-xs focus:outline-none font-medium cursor-pointer"
-                    value={from}
-                    max={to || undefined}
-                    onChange={(e) => {
-                      if (to && e.target.value > to) {
-                        setNotice("From must be before To.");
-                        return;
-                      }
-                      setFrom(e.target.value);
-                    }}
-                  />
-                </div>
-                <span className="text-xs text-slate-400 font-medium">to</span>
-                <div className="relative flex items-center border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 px-2.5 py-1.5 focus-within:ring-2 focus-within:ring-teal-500">
-                  <Calendar size={14} className="text-slate-400 shrink-0 mr-1.5 pointer-events-none" />
-                  <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-1 select-none">To:</span>
-                  <input
-                    type="date"
-                    aria-label="To date"
-                    className="bg-transparent text-slate-900 dark:text-slate-100 text-xs focus:outline-none font-medium cursor-pointer"
-                    value={to}
-                    min={from || undefined}
-                    onChange={(e) => {
-                      if (from && e.target.value < from) {
-                        setNotice("To must be after From.");
-                        return;
-                      }
-                      setTo(e.target.value);
-                    }}
-                  />
-                </div>
-              </div>
+            {(tab === "Purchases" ||
+              tab === "Sales" ||
+              tab === "Payments" ||
+              tab === "Implant P&L" ||
+              tab === "Delivery expenses") && (
+              <InventoryDateRangePicker
+                from={from}
+                to={to}
+                onChange={(nextFrom, nextTo) => {
+                  setFrom(nextFrom);
+                  setTo(nextTo);
+                }}
+              />
             )}
             <Button
               variant="outline"
@@ -2041,15 +3411,28 @@ export default function InventoryModule({
             >
               <RefreshCw className={loading ? "animate-spin mr-1.5 h-4 w-4" : "mr-1.5 h-4 w-4"} /> Refresh
             </Button>
-            {(tab === "Implant P&L" || tab === "Delivery expenses" || from || to || productFilter) && (
+            {(tab === "Stock" ||
+              tab === "Purchases" ||
+              tab === "Sales" ||
+              tab === "Payments" ||
+              tab === "Transfers & kits" ||
+              tab === "Delivery expenses" ||
+              tab === "Vendors" ||
+              tab === "Implant catalog" ||
+              tab === "Locations" ||
+              tab === "Activity log" ||
+              tab === "Implant P&L" ||
+              from ||
+              to ||
+              productFilter ||
+              circleFilter ||
+              invoiceFilter ||
+              paymentFilter ||
+              Object.keys(activeFilters).length > 0) && (
               <Button
                 variant="outline"
                 className="px-4 py-2 text-xs font-semibold"
-                onClick={() => {
-                  setFrom("");
-                  setTo("");
-                  setProductFilter("");
-                }}
+                onClick={handleResetFilters}
               >
                 <RotateCcw className="mr-1.5 h-4 w-4" /> Reset
               </Button>
@@ -2068,11 +3451,13 @@ export default function InventoryModule({
                 <Plus className="mr-1.5 h-4 w-4" />
                 {mainAction.kind === "purchase"
                   ? "Receive purchase"
-                  : mainAction.kind === "sale"
-                    ? "Record sale"
-                    : mainAction.kind === "transfer"
-                      ? "Transfer stock"
-                      : `Add ${mainAction.kind}`}
+                  : mainAction.kind === "saleProduct"
+                    ? "Add Sales Product"
+                    : mainAction.kind === "sale"
+                      ? "Record sale"
+                      : mainAction.kind === "transfer"
+                        ? "Transfer stock"
+                        : `Add ${mainAction.kind}`}
               </Button>
             )}
           </div>
@@ -2106,6 +3491,7 @@ export default function InventoryModule({
       )}
       </div>
     </div>
+    </InventoryFilterContext.Provider>
   );
 }
 

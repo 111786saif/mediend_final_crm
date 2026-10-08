@@ -95,11 +95,13 @@ export async function GET(request: NextRequest) {
     allCompletedThisYear.forEach((lead) => {
       const d = resolveIpdDate({ surgeryDate: lead.surgeryDate, admissionSurgeryDate: lead.admissionRecord?.surgeryDate })
       if (!d) return
-      if (d.getUTCFullYear() !== currentYear) return
-      const m = d.getUTCMonth() + 1
+      const dateStr = d.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' })
+      const istY = parseInt(dateStr.slice(0, 4), 10)
+      if (istY !== currentYear) return
+      const m = parseInt(dateStr.slice(5, 7), 10)
+      const day = parseInt(dateStr.slice(8, 10), 10)
       const key = String(m)
       monthCounts.set(key, (monthCounts.get(key) ?? 0) + 1)
-      const day = d.getUTCDate()
       if (day <= dayOfMonth) {
         monthCountsUpToThisDay.set(key, (monthCountsUpToThisDay.get(key) ?? 0) + 1)
       }
