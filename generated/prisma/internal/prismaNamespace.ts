@@ -14787,6 +14787,7 @@ export type InsuranceCaseScalarFieldEnum = (typeof InsuranceCaseScalarFieldEnum)
 export const PLRecordScalarFieldEnum = {
   id: 'id',
   leadId: 'leadId',
+  leadRef: 'leadRef',
   outstandingStatus: 'outstandingStatus',
   month: 'month',
   admissionDate: 'admissionDate',

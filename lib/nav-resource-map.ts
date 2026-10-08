@@ -12,6 +12,7 @@ export const NAV_TITLE_TO_RESOURCE: Record<string, string> = {
   Meets: 'main.meets',
   Dashboard: 'main.dashboard',
   'Sales Dashboard': 'sales.sales_dashboard',
+  'KPI Dashboard': 'sales.sales_dashboard',
   Incentive: 'main.incentive',
   'Finance Dashboard': 'main.finance_dashboard',
   'MD HR Dashboard': 'main.md_hr_dashboard',

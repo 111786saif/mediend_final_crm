@@ -19,7 +19,7 @@ export default function PlImportPage() {
   const [rows, setRows] = useState<ImportRow[]>([])
   const [fileName, setFileName] = useState('')
   const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState<{ imported: number; unmatched: string[]; invalid: string[] } | null>(null)
+  const [result, setResult] = useState<{ created: number; updated: number; invalid: string[] } | null>(null)
   const readFile = async (file: File) => {
     try {
       const XLSX = await import('xlsx')
@@ -38,12 +38,12 @@ export default function PlImportPage() {
     finally { setLoading(false) }
   }
   return <ProtectedRoute resource="insurance_pl.pl_ledger"><main className="space-y-6 p-4 md:p-6 max-w-5xl">
-    <div><h1 className="text-2xl font-bold">P&L Excel Import</h1><p className="text-muted-foreground mt-1">Upload the completed P&amp;L Ledger format. Rows match existing cases using Lead ref.</p></div>
+    <div><h1 className="text-2xl font-bold">P&L Excel Import</h1><p className="text-muted-foreground mt-1">Upload the completed P&amp;L Ledger format. Lead Ref updates an existing CRM case when available, otherwise it creates a P&amp;L record.</p></div>
     <Card><CardHeader><CardTitle>1. Download the sample</CardTitle><CardDescription>Use this P&amp;L Ledger column layout. Do not change the Lead ref header.</CardDescription></CardHeader><CardContent><Button asChild><a href="/api/pl/import/sample"><Download className="mr-2 h-4 w-4" />Download sample Excel file</a></Button></CardContent></Card>
-    <Card><CardHeader><CardTitle>2. Upload and review</CardTitle><CardDescription>Up to 1,000 rows. The import updates existing leads only; unmatched rows are reported and skipped.</CardDescription></CardHeader><CardContent className="space-y-4"><Input type="file" accept=".xlsx,.xls,.csv" onChange={(event) => { const file = event.target.files?.[0]; if (file) void readFile(file) }} />
+    <Card><CardHeader><CardTitle>2. Upload and review</CardTitle><CardDescription>Up to 1,000 rows. Existing Lead Refs are updated; new Lead Refs create a P&amp;L record.</CardDescription></CardHeader><CardContent className="space-y-4"><Input type="file" accept=".xlsx,.xls,.csv" onChange={(event) => { const file = event.target.files?.[0]; if (file) void readFile(file) }} />
       {rows.length > 0 && <div className="rounded-md border p-4 flex flex-wrap items-center justify-between gap-3"><div><p className="font-medium">{fileName}</p><p className="text-sm text-muted-foreground">{rows.length} rows ready. Preview: {String(Object.entries(rows[0]).find(([key]) => key.trim().replace(/\s+/g, ' ').toLowerCase() === 'lead ref')?.[1] || 'missing Lead ref')}</p></div><Button onClick={() => void importRows()} disabled={loading}>{loading ? 'Importing…' : <><Upload className="mr-2 h-4 w-4" />Import {rows.length}</>}</Button></div>}
     </CardContent></Card>
-    {result && <Card><CardHeader><CardTitle>Import result</CardTitle></CardHeader><CardContent className="space-y-2"><p><b>{result.imported}</b> rows imported.</p><p><b>{result.unmatched.length}</b> Lead refs were not found.</p><p><b>{result.invalid.length}</b> rows were invalid.</p>{result.unmatched.length > 0 && <p className="text-sm text-muted-foreground break-words">Unmatched Lead refs: {result.unmatched.slice(0, 30).join(', ')}</p>}{result.invalid.map((message) => <p key={message} className="text-sm text-destructive">{message}</p>)}</CardContent></Card>}
-    <div className="flex gap-2 text-sm text-muted-foreground"><FileSpreadsheet className="h-4 w-4 shrink-0" />Dates and numeric fields are validated before saving. Existing patient cases are never created by this importer.</div>
+    {result && <Card><CardHeader><CardTitle>Import result</CardTitle></CardHeader><CardContent className="space-y-2"><p><b>{result.created}</b> new P&amp;L records created.</p><p><b>{result.updated}</b> existing Lead Ref records updated.</p><p><b>{result.invalid.length}</b> rows were invalid.</p>{result.invalid.map((message) => <p key={message} className="text-sm text-destructive">{message}</p>)}</CardContent></Card>}
+    <div className="flex gap-2 text-sm text-muted-foreground"><FileSpreadsheet className="h-4 w-4 shrink-0" />Dates and numeric fields are validated before saving. A new P&amp;L record is created when its Lead Ref is not in CRM.</div>
   </main></ProtectedRoute>
 }

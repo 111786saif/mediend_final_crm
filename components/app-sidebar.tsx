@@ -255,10 +255,11 @@ export function AppSidebar() {
         hasAccess('sales.sales_head_targets', 'READ')
       )
     }
-    if (item.title === 'Sales Dashboard') {
+    if (item.title === 'Sales Dashboard' || item.title === 'KPI Dashboard') {
       return (
         hasAccess('sales.sales_dashboard', 'READ') ||
-        hasAccess('sales.md_sales_dashboard', 'READ')
+        hasAccess('sales.md_sales_dashboard', 'READ') ||
+        ['SUPER_ADMIN', 'CRM_ADMIN', 'PL_HEAD', 'FINANCE_HEAD'].includes(role)
       )
     }
     if (item.title === 'OPD Monitoring') {

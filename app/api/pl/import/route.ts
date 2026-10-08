@@ -50,14 +50,14 @@ export async function POST(request: NextRequest) {
     const body = await request.json() as { rows?: ImportRow[] }
     const rows = Array.isArray(body.rows) ? body.rows.slice(0, 1000) : []
     if (!rows.length) return errorResponse('No import rows supplied', 400)
-    const result = { imported: 0, unmatched: [] as string[], invalid: [] as string[] }
+    const result = { created: 0, updated: 0, invalid: [] as string[] }
     for (let index = 0; index < rows.length; index += 1) {
       const row = rows[index]
       const leadRef = text(row, 'Lead ref', 'Lead Ref')
       if (!leadRef) { result.invalid.push(`Row ${index + 2}: Lead ref is required`); continue }
       const lead = await prisma.lead.findUnique({ where: { leadRef }, select: { id: true } })
-      if (!lead) { result.unmatched.push(leadRef); continue }
       const plData: Record<string, unknown> = {
+        leadRef,
         month: date(row, 'Month'),
         admissionDate: date(row, 'Admission', 'Admission Date', 'Arrival Date'),
         surgeryDate: date(row, 'Surgery', 'Surgery Date'),
@@ -101,28 +101,43 @@ export async function POST(request: NextRequest) {
       const totalDeduction = number(row, 'Total Deduction')
       const deductionPaidByPatient = number(row, 'Deduction Paid by Patient', 'Cash/Ded. Paid')
       const waivedOff = number(row, 'Waived Off', 'Wavied off')
-      await prisma.$transaction([
-        prisma.lead.update({
-          where: { id: lead.id },
-          data: {
-            source: text(row, 'Lead Source'),
-            insuranceName: text(row, 'Insurance Company'),
-            tpa: text(row, 'TPA'),
-            deduction: totalDeduction,
-            copay: deductionPaidByPatient,
-          },
-        }),
-        prisma.dischargeSheet.updateMany({
-          where: { leadId: lead.id },
-          data: {
-            deductionAmount: totalDeduction,
-            cashOrDedPaid: deductionPaidByPatient,
-            waivedOffAmount: waivedOff,
-          },
-        }),
-        prisma.pLRecord.upsert({ where: { leadId: lead.id }, create: { leadId: lead.id, ...compact, handledById: user.id } as any, update: compact as any }),
-      ])
-      result.imported += 1
+      if (lead) {
+        await prisma.$transaction([
+          prisma.lead.update({
+            where: { id: lead.id },
+            data: {
+              source: text(row, 'Lead Source'),
+              insuranceName: text(row, 'Insurance Company'),
+              tpa: text(row, 'TPA'),
+              deduction: totalDeduction,
+              copay: deductionPaidByPatient,
+            },
+          }),
+          prisma.dischargeSheet.updateMany({
+            where: { leadId: lead.id },
+            data: {
+              deductionAmount: totalDeduction,
+              cashOrDedPaid: deductionPaidByPatient,
+              waivedOffAmount: waivedOff,
+            },
+          }),
+          prisma.pLRecord.upsert({ where: { leadId: lead.id }, create: { leadId: lead.id, ...compact, handledById: user.id } as any, update: compact as any }),
+        ])
+        result.updated += 1
+        continue
+      }
+
+      const existingStandalone = await prisma.pLRecord.findFirst({
+        where: { leadRef: { equals: leadRef, mode: 'insensitive' } },
+        select: { id: true },
+      })
+      if (existingStandalone) {
+        await prisma.pLRecord.update({ where: { id: existingStandalone.id }, data: compact as any })
+        result.updated += 1
+      } else {
+        await prisma.pLRecord.create({ data: { ...compact, handledById: user.id } as any })
+        result.created += 1
+      }
     }
     return successResponse(result)
   } catch (error) { console.error('P&L import failed', error); return errorResponse('P&L import failed', 500) }

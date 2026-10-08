@@ -1062,9 +1062,10 @@ model InsuranceCase {
 }
 
 model PLRecord {
-  id     String @id @default(cuid())
-  leadId Int @unique
-  lead   Lead   @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  id           String  @id @default(cuid())
+  leadId       Int?    @unique
+  lead         Lead?   @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  leadRef      String? @unique // Excel import key; retained when no CRM Lead exists yet
 
   // Workflow
   outstandingStatus PLOutstandingStatus @default(NEW)

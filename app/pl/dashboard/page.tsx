@@ -474,8 +474,11 @@ export default function PLLedgerPage() {
       if (filters.length > 0) {
         params.set('filters', JSON.stringify(filters))
       }
-      const leads = await apiGet<Lead[]>(`/api/leads?${params.toString()}`)
-      return leads.map((lead: Lead) => ({
+      const [leads, standaloneRecords] = await Promise.all([
+        apiGet<Lead[]>(`/api/leads?${params.toString()}`),
+        apiGet<Lead[]>(`/api/pl/standalone-records?${params.toString()}`),
+      ])
+      return [...leads, ...standaloneRecords].map((lead: Lead) => ({
         ...lead,
         plRecord: lead.plRecord || {
           finalProfit: lead.netProfit || 0,
@@ -636,6 +639,8 @@ export default function PLLedgerPage() {
         const isCashCase = r.caseStage?.toString().startsWith('CASH_');
         const hasPlData = !!(r as Lead).plRecord;
 
+        const isStandalone = Boolean((r as Lead & { standalonePlRecord?: boolean }).standalonePlRecord)
+
         if (selectedStage) {
           const stage = r.caseStage?.toString() || ''
           if (selectedStage === 'admitted') {
@@ -652,7 +657,7 @@ export default function PLLedgerPage() {
             if (stage !== 'CANCELLED') return false
           }
         } else {
-          if (!hasInsuranceDs && !(isCashCase && hasPlData)) return false
+          if (!hasInsuranceDs && !(isCashCase && hasPlData) && !isStandalone) return false
         }
 
         if (tableMonthFilter.length > 0) {
@@ -2114,6 +2119,10 @@ export default function PLLedgerPage() {
                 isLoading={isLoading}
                 emptyMessage="No P&L records found"
                 onRowClick={(record) => {
+                  if (typeof record.id !== 'number') {
+                    toast.info('This imported P&L record has no CRM Lead yet and cannot be opened in the case editor.')
+                    return
+                  }
                   const plStatus = record.plRecord?.outstandingStatus || 'NEW'
                   if (plStatus === 'OUTSTANDING' && user?.role === 'PL_HEAD') {
                     toast.error('Outstanding records can only be edited by Project Head / Executive Assistant')
