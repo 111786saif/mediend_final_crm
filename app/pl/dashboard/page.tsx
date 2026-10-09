@@ -798,8 +798,11 @@ export default function PLLedgerPage() {
               if (stage !== 'CANCELLED') return false
             }
           } else {
-            if (!hasInsuranceDs) return false
+            // Excel-imported P&L rows can be standalone until they are linked to a CRM lead.
+            // They are valid ledger rows and must not be hidden for lacking a discharge sheet.
+            if (!hasInsuranceDs && !isStandalone) return false
           }
+        }
         }
 
         if (tableMonthFilter.length > 0) {

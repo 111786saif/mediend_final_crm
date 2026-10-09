@@ -38,6 +38,16 @@ import {
 
 const DISMISSED_CALL_WINDOW_MS = 2 * 60 * 1000
 const DISMISSED_CALLS_STORAGE_KEY = 'knowlarity-dismissed-call-popups'
+function readDismissedCallKeys() {
+  try {
+    const stored = window.sessionStorage.getItem(DISMISSED_CALLS_STORAGE_KEY)
+    const entries = stored ? (JSON.parse(stored) as Array<[string, number]>) : []
+    const now = Date.now()
+    return new Map(entries.filter(([, expiresAt]) => Number.isFinite(expiresAt) && expiresAt > now))
+  } catch {
+    return new Map<string, number>()
+  }
+}
 
 type PatientLookup = {
   found: boolean
