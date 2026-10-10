@@ -181,6 +181,12 @@ export const navItems: NavItem[] = [
     roles: ['EXECUTIVE_ASSISTANT', 'MD', 'ADMIN', 'TESTER', 'PL_HEAD'],
   },
   {
+    title: 'eOffice',
+    url: '/eoffice',
+    icon: FolderTree,
+    roles: ['SUPER_ADMIN', 'MD', 'ADMIN'],
+  },
+  {
     title: 'Facebook Settings',
     url: '/admin/facebook-settings',
     icon: Settings,

@@ -268,6 +268,9 @@ export function AppSidebar() {
         ['SUPER_ADMIN', 'CRM_ADMIN', 'PL_HEAD', 'FINANCE_HEAD'].includes(role)
       )
     }
+    if (item.title === 'eOffice') {
+      return ['SUPER_ADMIN', 'MD', 'ADMIN'].includes(role)
+    }
     if (item.title === 'OPD Monitoring') {
       return canAccessSalesOpdMonitoring(role)
     }

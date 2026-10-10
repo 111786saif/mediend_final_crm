@@ -19,6 +19,7 @@ export const NAV_TITLE_TO_RESOURCE: Record<string, string> = {
   'MD Attendance': 'main.md_attendance',
   'MD Leave balances': 'main.md_leave_balances',
   'Master Data': 'main.master_data',
+  eOffice: 'main.it_permissions',
   'Facebook Settings': 'main.it_permissions',
   'Role & Module Access': 'main.it_permissions',
   'Doctor Admin': 'main.doctor_admin',
